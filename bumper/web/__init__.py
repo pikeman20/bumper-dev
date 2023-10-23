@@ -1,1 +1,1 @@
-"""web module."""
+"""Web module."""

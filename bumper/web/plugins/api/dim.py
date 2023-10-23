@@ -11,53 +11,14 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-import bumper
-from bumper.db import bot_get
-from bumper.models import ERR_COMMON
+from bumper.utils import db
+from bumper.utils.settings import config as bumper_isc
+from bumper.utils.utils import default_exception_str_builder
+from bumper.web import models
 
 from .. import WebserverPlugin
 
-
-async def _handle_dim_devmanager(request: Request) -> Response:
-    # Used in EcoVacs Home App
-    try:
-        json_body = json.loads(await request.text())
-
-        randomid = "".join(random.sample(string.ascii_letters, 6))
-        did = ""
-        if "toId" in json_body:  # Its a command
-            did = json_body["toId"]
-
-        if did != "":
-            bot = bot_get(did)
-            if bot and bot["company"] == "eco-ng" and bot["mqtt_connection"]:
-                retcmd = await bumper.mqtt_helperbot.send_command(json_body, randomid)
-                body = retcmd
-                logging.debug("Send Bot - %s", json_body)
-                logging.debug("Bot Response - %s", body)
-                return web.json_response(body)
-
-            # No response, send error back
-            logging.error("No bots with DID: %s connected to MQTT", json_body["toId"])
-            body = {"id": randomid, "errno": ERR_COMMON, "ret": "fail"}
-            return web.json_response(body)
-
-        if "td" in json_body:  # Seen when doing initial wifi config
-            if json_body["td"] == "PollSCResult":
-                body = {"ret": "ok"}
-                return web.json_response(body)
-
-            if json_body["td"] == "HasUnreadMsg":  # EcoVacs Home
-                body = {"ret": "ok", "unRead": False}
-                return web.json_response(body)
-
-            if json_body["td"] == "ReceiveShareDevice":  # EcoVacs Home
-                body = {"ret": "ok"}
-                return web.json_response(body)
-    except Exception:  # pylint: disable=broad-except
-        logging.error("Unexpected exception occurred", exc_info=True)
-
-    raise HTTPInternalServerError
+_LOGGER = logging.getLogger("web_route_api_dim")
 
 
 class DimPlugin(WebserverPlugin):
@@ -68,8 +29,47 @@ class DimPlugin(WebserverPlugin):
         """Plugin routes."""
         return [
             web.route(
-                "*",
+                "POST",
                 "/dim/devmanager.do",
-                _handle_dim_devmanager,
+                _handle_dev_manager,
             ),
         ]
+
+
+async def _handle_dev_manager(request: Request) -> Response:
+    """Dev Manager."""
+    # EcoVacs Home
+    try:
+        if bumper_isc.mqtt_helperbot is None:
+            raise Exception("'bumper.mqtt_helperbot' is None")
+
+        json_body = json.loads(await request.text())
+
+        random_id = "".join(random.sample(string.ascii_letters, 6))
+        did = json_body.get("toId", None)
+
+        if did is not None:
+            bot = db.bot_get(did)
+            if bot is not None and bot.get("company", "") == "eco-ng" and bot["mqtt_connection"]:
+                body = await bumper_isc.mqtt_helperbot.send_command(json_body, random_id)
+                _LOGGER.debug(f"Send Bot - {json_body}")
+                _LOGGER.debug(f"Bot Response - {body}")
+                return web.json_response(body)
+
+            # No response, send error back
+            _LOGGER.error(f"No bots with DID :: {json_body.get('toId')} :: connected to MQTT")
+            return web.json_response({"id": random_id, "errno": models.ERR_COMMON, "ret": "fail"})
+
+        td = json_body.get("td", None)
+        if td is not None:
+            if td == "PollSCResult":  # Seen when doing initial wifi config
+                return web.json_response({"ret": "ok"})
+
+            if td == "HasUnreadMsg":  # EcoVacs Home
+                return web.json_response({"ret": "ok", "unRead": False})
+
+            if td == "ReceiveShareDevice":  # EcoVacs Home
+                return web.json_response({"ret": "ok"})
+    except Exception as e:
+        _LOGGER.error(default_exception_str_builder(e, "during handling request"), exc_info=True)
+    raise HTTPInternalServerError

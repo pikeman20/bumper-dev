@@ -7,7 +7,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.util import convert_to_millis, get_current_time_as_millis
+from bumper.utils import utils
 
 from ... import WebserverPlugin, get_success_response
 from . import BASE_URL
@@ -29,15 +29,14 @@ class CampaignPlugin(WebserverPlugin):
 
 
 async def _handle_home_page_alert(_: Request) -> Response:
+    """Homepage alert."""
     return get_success_response(
         {
             "clickSchemeUrl": None,
             "clickWebUrl": None,
             "hasCampaign": "N",
             "imageUrl": None,
-            "nextAlertTime": convert_to_millis(
-                (datetime.now() + timedelta(hours=12)).timestamp()
-            ),
-            "serverTime": get_current_time_as_millis(),
+            "nextAlertTime": utils.convert_to_millis((datetime.now() + timedelta(hours=12)).timestamp()),
+            "serverTime": utils.get_current_time_as_millis(),
         }
     )

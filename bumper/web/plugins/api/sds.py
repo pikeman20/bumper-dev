@@ -1,4 +1,4 @@
-"""Pim dictionary plugin module."""
+"""Sds plugin module."""
 import logging
 from collections.abc import Iterable
 
@@ -9,13 +9,14 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
-from bumper.web.plugins import WebserverPlugin
 
-_LOGGER = logging.getLogger("web_route_pim_dict")
+from .. import WebserverPlugin
+
+_LOGGER = logging.getLogger("web_route_api_sds")
 
 
-class DictionaryPlugin(WebserverPlugin):
-    """Dictionary plugin."""
+class SdsPlugin(WebserverPlugin):
+    """Sds plugin."""
 
     @property
     def routes(self) -> Iterable[AbstractRouteDef]:
@@ -23,22 +24,15 @@ class DictionaryPlugin(WebserverPlugin):
         return [
             web.route(
                 "*",
-                "/dictionary/getErrDetail",
-                _handle_get_err_detail,
+                "/sds/baidu/audio/getcred",
+                _handle,  # TODO: check how to handle correct
             ),
         ]
 
 
-async def _handle_get_err_detail(_: Request) -> Response:
-    """Get error details."""
+async def _handle(_: Request) -> Response:
     try:
-        return web.json_response(
-            {
-                "code": -1,
-                "data": [],
-                "msg": "This errcode's detail is not exists",
-            }
-        )
+        return web.json_response(None)
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError

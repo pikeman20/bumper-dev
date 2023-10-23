@@ -1,4 +1,4 @@
-from bumper.models import OAuth
+from bumper.web.models import OAuth
 
 
 def test_oauth():
@@ -10,5 +10,5 @@ def test_oauth():
     assert o_auth.expire_at is not None
     assert o_auth.refresh_token is not None
 
-    data = o_auth.toResponse()
+    data = o_auth.to_response()
     assert data is not None

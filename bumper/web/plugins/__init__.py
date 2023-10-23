@@ -12,8 +12,8 @@ from aiohttp import web
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.models import RETURN_API_SUCCESS
-from bumper.util import get_current_time_as_millis
+from bumper.utils import utils
+from bumper.web import models
 
 
 class WebserverPlugin:
@@ -26,9 +26,7 @@ class WebserverPlugin:
         raise NotImplementedError
 
 
-def _add_routes(
-    app: web.Application, module: ModuleType, plugin_module_name: str
-) -> None:
+def _add_routes(app: web.Application, module: ModuleType, plugin_module_name: str) -> None:
     if not module.__name__.startswith(plugin_module_name):
         return
 
@@ -42,8 +40,8 @@ def _add_routes(
         if not issubclass(clazz, WebserverPlugin) or clazz == WebserverPlugin:
             continue
 
-        obj = clazz()
-        sub_app.add_routes(obj.routes)
+        web_obj: WebserverPlugin = clazz()
+        sub_app.add_routes(web_obj.routes)
 
     for _, obj in inspect.getmembers(module, inspect.ismodule):
         _add_routes(sub_app, obj, plugin_module_name)
@@ -59,10 +57,8 @@ def _import_plugins(module: ModuleType) -> None:
     for file in glob(join(dirname(module.__file__), "**/*.py"), recursive=True):
         if not isfile(file) or file == module.__file__:
             continue
-
         name = file.replace("/", ".")
         name = name[name.find(module.__name__) : -3].removesuffix(".__init__")
-
         __import__(name)
 
 
@@ -75,18 +71,16 @@ def add_plugins(app: web.Application) -> None:
     for _, obj in inspect.getmembers(module, inspect.ismodule):
         if not obj.__name__.startswith(plugin_module_name):
             continue
-
         _add_routes(app, obj, plugin_module_name)
 
 
 def get_success_response(data: Any) -> Response:
     """Get success response with provided data."""
     body = {
-        "code": RETURN_API_SUCCESS,
+        "code": models.RETURN_API_SUCCESS,
         "data": data,
         "msg": "操作成功",
         "success": True,
-        "time": get_current_time_as_millis(),
+        "time": utils.get_current_time_as_millis(),
     }
-
     return web.json_response(body)

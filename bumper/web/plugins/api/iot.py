@@ -6,61 +6,17 @@ import string
 from collections.abc import Iterable
 
 from aiohttp import web
-from aiohttp.web_exceptions import HTTPInternalServerError
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-import bumper
-from bumper.db import bot_get
+from bumper.utils import db, utils
+from bumper.utils.settings import config as bumper_isc
+from bumper.web import models
 
 from .. import WebserverPlugin
 
-
-async def _handle_devmanager_bot_command(request: Request) -> Response:
-    try:
-        json_body = json.loads(await request.text())
-
-        randomid = "".join(random.sample(string.ascii_letters, 4))
-        did = ""
-        if "toId" in json_body:  # Its a command
-            did = json_body["toId"]
-
-        if did != "":
-            bot = bot_get(did)
-            if bot and bot["company"] == "eco-ng":
-                retcmd = await bumper.mqtt_helperbot.send_command(json_body, randomid)
-                body = retcmd
-                logging.debug("Send Bot - %s", json_body)
-                logging.debug("Bot Response - %s", body)
-                return web.json_response(body)
-
-            # No response, send error back
-            logging.error("No bots with DID: %s connected to MQTT", json_body["toId"])
-            body = {
-                "id": randomid,
-                "errno": 500,
-                "ret": "fail",
-                "debug": "wait for response timed out",
-            }
-            return web.json_response(body)
-
-        if "td" in json_body:  # Seen when doing initial wifi config
-            if json_body["td"] == "PollSCResult":
-                body = {"ret": "ok"}
-                return web.json_response(body)
-
-            if json_body["td"] == "HasUnreadMsg":  # EcoVacs Home
-                body = {"ret": "ok", "unRead": False}
-                return web.json_response(body)
-
-            if json_body["td"] == "PreWifiConfig":  # EcoVacs Home
-                body = {"ret": "ok"}
-                return web.json_response(body)
-    except Exception:  # pylint: disable=broad-except
-        logging.error("Unexpected exception occurred", exc_info=True)
-
-    raise HTTPInternalServerError
+_LOGGER = logging.getLogger("web_route_api_iot")
 
 
 class IotPlugin(WebserverPlugin):
@@ -71,8 +27,55 @@ class IotPlugin(WebserverPlugin):
         """Plugin routes."""
         return [
             web.route(
-                "*",
+                "POST",
                 "/iot/devmanager.do",
                 _handle_devmanager_bot_command,
             ),
         ]
+
+
+async def _handle_devmanager_bot_command(request: Request) -> Response:
+    """Dev manager bot command."""
+    random_id = "".join(random.sample(string.ascii_letters, 4))
+    try:
+        if bumper_isc.mqtt_helperbot is None:
+            raise Exception("'bumper.mqtt_helperbot' is None")
+
+        json_body = json.loads(await request.text())
+
+        # Its a command
+        did = json_body.get("toId", None)
+
+        if did is not None:
+            bot = db.bot_get(did)
+            if bot is not None and bot.get("company", "") == "eco-ng":
+                body = await bumper_isc.mqtt_helperbot.send_command(json_body, random_id)
+                _LOGGER.debug(f"Send Bot - {json_body}")
+                _LOGGER.debug(f"Bot Response - {body}")
+                return web.json_response(body)
+
+            # No response, send error back
+            _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
+            return web.json_response(
+                {
+                    "id": random_id,
+                    "errno": 500,
+                    "ret": "fail",
+                    "debug": "wait for response timed out",
+                }
+            )
+
+        td = json_body.get("td", None)
+        if td is not None:  # Seen when doing initial wifi config
+            if td == "PollSCResult":
+                return web.json_response({"ret": "ok"})
+
+            if td == "HasUnreadMsg":  # EcoVacs Home
+                return web.json_response({"ret": "ok", "unRead": False})
+
+            if td == "PreWifiConfig":  # EcoVacs Home
+                return web.json_response({"ret": "ok"})
+
+    except Exception as e:
+        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+    return web.json_response({"id": random_id, "errno": models.ERR_COMMON, "ret": "fail"})

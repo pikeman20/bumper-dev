@@ -23,29 +23,90 @@ class UserSettingPlugin(WebserverPlugin):
                 f"{BASE_URL}userSetting/getSuggestionSetting",
                 _handle_get_suggestion_setting,
             ),
+            web.route(
+                "*",
+                f"{BASE_URL}userSetting/getMsgReceiveSetting",
+                _handle_get_msg_receive_setting,
+            ),
+            web.route(
+                "*",
+                f"{BASE_URL}userSetting/saveUserSetting",
+                _handle_save_user_setting,
+            ),
         ]
 
 
 async def _handle_get_suggestion_setting(_: Request) -> Response:
+    activity_sub_title = "Allow to receive notification including membership benefits, product and consumable recommendations."
     return get_success_response(
         {
-            "acceptSuggestion": "Y",
+            "acceptSuggestion": "N",
             "itemList": [
                 {
-                    "name": "Aktionen/Angebote/Ereignisse",
+                    "name": "Notification",
+                    "settingKey": "ACTIVITY",
+                    "subTitle": activity_sub_title,
+                    "val": "Y",
+                },
+                {
+                    "name": "Allow to Receive Recommendation",
+                    "settingKey": "APP_RECOMMEND",
+                    "subTitle": "Receive operation instructions and product recommendations in the advertising wanted.",
+                    "val": "N",
+                },
+                {
+                    "name": "Promotions/Offers/Events",
                     "settingKey": "MARKETING",
-                    "val": "Y",
+                    "subTitle": None,
+                    "val": "N",
                 },
                 {
-                    "name": "Benutzerbefragung",
+                    "name": "User Surveys",
                     "settingKey": "QUESTIONNAIRE",
-                    "val": "Y",
+                    "subTitle": None,
+                    "val": "N",
                 },
                 {
-                    "name": "Produkt-Upgrade/Hilfe für Benutzer",
+                    "name": "Product Upgrade/User Help",
                     "settingKey": "INTRODUCTION",
-                    "val": "Y",
+                    "subTitle": None,
+                    "val": "N",
+                },
+                {
+                    "name": "E-mail",
+                    "settingKey": "EMAIL",
+                    "subTitle": "Receive operation instructions and product recommendations by e-mail",
+                    "val": "N",
                 },
             ],
         }
     )
+
+
+async def _handle_get_msg_receive_setting(_: Request) -> Response:
+    return get_success_response(
+        {
+            "list": [
+                {
+                    "name": "Promotion messages",
+                    "openOrClose": "Y",
+                    "settingType": "ACTIVITY",
+                },
+                {
+                    "name": "Service notifications",
+                    "openOrClose": "Y",
+                    "settingType": "SERVICE_NOTIFICATION",
+                },
+                {
+                    "name": "Customer service messages",
+                    "openOrClose": "Y",
+                    "settingType": "CUSTOMER_SERVICE",
+                },
+            ]
+        }
+    )
+
+
+async def _handle_save_user_setting(_: Request) -> Response:
+    # TODO: check how to implement
+    return get_success_response(None)

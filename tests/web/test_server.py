@@ -6,9 +6,13 @@ from unittest import mock
 import pytest
 
 import bumper
-from bumper import HelperBot, WebServer, WebserverBinding, XMPPServer, db
-from bumper.models import ERR_TOKEN_INVALID, RETURN_API_SUCCESS
-from tests import HOST, MQTT_PORT, WEBSERVER_PORT
+from bumper.mqtt.helper_bot import MQTTHelperBot
+from bumper.utils import db
+from bumper.utils.settings import config as bumper_bus
+from bumper.web.models import ERR_TOKEN_INVALID, RETURN_API_SUCCESS
+from bumper.web.server import WebServer, WebserverBinding
+from bumper.xmpp.xmpp import XMPPServer
+from tests import HOST, WEBSERVER_PORT
 
 
 def create_webserver():
@@ -42,13 +46,13 @@ async def test_base(webserver_client):
 
     # Start XMPP
     xmpp_server = XMPPServer(HOST, 5223)
-    bumper.xmpp_server = xmpp_server
+    bumper_bus.xmpp_server = xmpp_server
     await xmpp_server.start_async_server()
 
     resp = await webserver_client.get("/")
     assert resp.status == 200
 
-    bumper.xmpp_server.disconnect()
+    bumper_bus.xmpp_server.disconnect()
 
 
 @pytest.mark.usefixtures("helper_bot")
@@ -57,7 +61,7 @@ async def test_restartService(webserver_client):
 
     # Start XMPP
     xmpp_server = XMPPServer(HOST, 5223)
-    bumper.xmpp_server = xmpp_server
+    bumper_bus.xmpp_server = xmpp_server
     await xmpp_server.start_async_server()
 
     resp = await webserver_client.get("/restart_Helperbot")
@@ -98,9 +102,7 @@ async def test_login(webserver_client):
     remove_existing_db()
 
     # Test global_e without user
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/user/login"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/user/login")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -158,11 +160,7 @@ async def test_logout(webserver_client):
     db.user_add("testuser")
     db.user_add_device("testuser", "dev_1234")
     db.user_add_token("testuser", "token_1234")
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/user/logout?accessToken={}".format(
-            "token_1234"
-        )
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/logout?accessToken={}".format("token_1234"))
 
     assert resp.status == 200
     text = await resp.text()
@@ -174,11 +172,7 @@ async def test_checkLogin(webserver_client):
     remove_existing_db()
 
     # Test without token
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={}".format(
-            None
-        )
-    )
+    resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={None}")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -190,11 +184,7 @@ async def test_checkLogin(webserver_client):
 
     # Add a user to db and test with existing users
     db.user_add("testuser")
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={}".format(
-            None
-        )
-    )
+    resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={None}")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -206,11 +196,7 @@ async def test_checkLogin(webserver_client):
 
     # Test again using global_e app
     db.user_add("testuser")
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/user/checkLogin?accessToken={}".format(
-            None
-        )
-    )
+    resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/global_e/1/0/0/user/checkLogin?accessToken={None}")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -227,11 +213,7 @@ async def test_checkLogin(webserver_client):
     db.user_add("testuser")
     db.user_add_device("testuser", "dev_1234")
     db.user_add_token("testuser", "token_1234")
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={}".format(
-            "token_1234"
-        )
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={}".format("token_1234"))
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -244,9 +226,7 @@ async def test_checkLogin(webserver_client):
     # Test again using global_e app
     db.user_add("testuser")
     resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/user/checkLogin?accessToken={}".format(
-            "token_1234"
-        )
+        "/v1/private/us/en/dev_1234/global_e/1/0/0/user/checkLogin?accessToken={}".format("token_1234")
     )
     assert resp.status == 200
     text = await resp.text()
@@ -262,20 +242,14 @@ async def test_getAuthCode(webserver_client):
     remove_existing_db()
 
     # Test without user or token
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid={}&accessToken={}".format(
-            None, None
-        )
-    )
+    resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid={None}&accessToken={None}")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
     assert jsonresp["code"] == ERR_TOKEN_INVALID
 
     # Test as global_e
-    resp = await webserver_client.get(
-        "/v1/global/auth/getAuthCode?uid={}&deviceId={}".format(None, "dev_1234")
-    )
+    resp = await webserver_client.get("/v1/global/auth/getAuthCode?uid={}&deviceId={}".format(None, "dev_1234"))
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -286,9 +260,7 @@ async def test_getAuthCode(webserver_client):
     db.user_add_device("testuser", "dev_1234")
     db.user_add_token("testuser", "token_1234")
     resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid={}&accessToken={}".format(
-            "testuser", "token_1234"
-        )
+        "/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid={}&accessToken={}".format("testuser", "token_1234")
     )
     assert resp.status == 200
     text = await resp.text()
@@ -299,9 +271,7 @@ async def test_getAuthCode(webserver_client):
 
     # The above should have added an authcode to token, try again to test with existing authcode
     resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid={}&accessToken={}".format(
-            "testuser", "token_1234"
-        )
+        "/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid={}&accessToken={}".format("testuser", "token_1234")
     )
     assert resp.status == 200
     text = await resp.text()
@@ -314,18 +284,14 @@ async def test_getAuthCode(webserver_client):
 async def test_checkAgreement(webserver_client):
     remove_existing_db()
 
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/user/checkAgreement"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/checkAgreement")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
     assert jsonresp["code"] == RETURN_API_SUCCESS
 
     # Test as global_e
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/user/checkAgreement"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/user/checkAgreement")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -335,9 +301,7 @@ async def test_checkAgreement(webserver_client):
 async def test_homePageAlert(webserver_client):
     remove_existing_db()
 
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/campaign/homePageAlert"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/campaign/homePageAlert")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -347,9 +311,7 @@ async def test_homePageAlert(webserver_client):
 async def test_checkVersion(webserver_client):
     remove_existing_db()
 
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/common/checkVersion"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/common/checkVersion")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -359,9 +321,7 @@ async def test_checkVersion(webserver_client):
 async def test_checkAppVersion(webserver_client):
     remove_existing_db()
 
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/common/checkAPPVersion"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/common/checkAPPVersion")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -370,9 +330,7 @@ async def test_checkAppVersion(webserver_client):
 
 async def test_uploadDeviceInfo(webserver_client):
     remove_existing_db()
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/common/uploadDeviceInfo"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/common/uploadDeviceInfo")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -382,9 +340,7 @@ async def test_uploadDeviceInfo(webserver_client):
 async def test_getAdByPositionType(webserver_client):
     remove_existing_db()
 
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/ad/getAdByPositionType"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/ad/getAdByPositionType")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -394,9 +350,7 @@ async def test_getAdByPositionType(webserver_client):
 async def test_getBootScreen(webserver_client):
     remove_existing_db()
 
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/ad/getBootScreen"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/ad/getBootScreen")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -406,9 +360,7 @@ async def test_getBootScreen(webserver_client):
 async def test_hasUnreadMsg(webserver_client):
     remove_existing_db()
 
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/message/hasUnreadMsg"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/message/hasUnreadMsg")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -418,9 +370,7 @@ async def test_hasUnreadMsg(webserver_client):
 async def test_getMsgList(webserver_client):
     remove_existing_db()
 
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/message/getMsgList"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/message/getMsgList")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -430,9 +380,7 @@ async def test_getMsgList(webserver_client):
 async def test_getSystemReminder(webserver_client):
     remove_existing_db()
 
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/common/getSystemReminder"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/common/getSystemReminder")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -442,9 +390,7 @@ async def test_getSystemReminder(webserver_client):
 async def test_getCnWapShopConfig(webserver_client):
     remove_existing_db()
 
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/shop/getCnWapShopConfig"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/shop/getCnWapShopConfig")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -505,9 +451,7 @@ async def test_getUserAccountInfo(webserver_client):
     db.user_add_bot("testuser", "did_1234")
     db.bot_add("sn_1234", "did_1234", "class_1234", "res_1234", "com_1234")
 
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/user/getUserAccountInfo"
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/user/getUserAccountInfo")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -702,7 +646,7 @@ async def test_appsvr_api(webserver_client):
     assert jsonresp["ret"] == "ok"
 
 
-async def test_lg_logs(webserver_client, helper_bot: HelperBot):
+async def test_lg_logs(webserver_client, helper_bot: MQTTHelperBot):
     remove_existing_db()
     db.bot_add("sn_1234", "did_1234", "ls1ok3", "res_1234", "eco-ng")
     db.bot_set_mqtt("did_1234", True)
@@ -714,9 +658,7 @@ async def test_lg_logs(webserver_client, helper_bot: HelperBot):
         "resp": "<ctl ret='ok' status='idle'/>",
         "ret": "ok",
     }
-    helper_bot.send_command = mock.MagicMock(
-        return_value=async_return(command_getstatus_resp)
-    )
+    helper_bot.send_command = mock.MagicMock(return_value=async_return(command_getstatus_resp))
 
     # Test GetGlobalDeviceList
     postbody = {
@@ -758,7 +700,7 @@ async def test_postLookup(webserver_client):
     assert test_resp["result"] == "ok"
 
 
-async def test_devmgr(webserver_client, helper_bot: HelperBot):
+async def test_devmgr(webserver_client, helper_bot: MQTTHelperBot):
     remove_existing_db()
     confserver = create_webserver()
 
@@ -790,9 +732,7 @@ async def test_devmgr(webserver_client, helper_bot: HelperBot):
         "resp": "<ctl ret='ok' status='idle'/>",
         "ret": "ok",
     }
-    helper_bot.send_command = mock.MagicMock(
-        return_value=async_return(command_getstatus_resp)
-    )
+    helper_bot.send_command = mock.MagicMock(return_value=async_return(command_getstatus_resp))
     resp = await webserver_client.post("/api/iot/devmanager.do", json=postbody)
     assert resp.status == 200
     text = await resp.text()
@@ -801,9 +741,7 @@ async def test_devmgr(webserver_client, helper_bot: HelperBot):
 
     # Test return fail timeout
     command_timeout_resp = {"id": "resp_1234", "errno": "timeout", "ret": "fail"}
-    helper_bot.send_command = mock.MagicMock(
-        return_value=async_return(command_timeout_resp)
-    )
+    helper_bot.send_command = mock.MagicMock(return_value=async_return(command_timeout_resp))
     resp = await webserver_client.post("/api/iot/devmanager.do", json=postbody)
     assert resp.status == 200
     text = await resp.text()
@@ -811,7 +749,7 @@ async def test_devmgr(webserver_client, helper_bot: HelperBot):
     assert test_resp["ret"] == "fail"
 
 
-async def test_dim_devmanager(webserver_client, helper_bot: HelperBot):
+async def test_dim_devmanager(webserver_client, helper_bot: MQTTHelperBot):
     remove_existing_db()
     confserver = create_webserver()
 
@@ -843,9 +781,7 @@ async def test_dim_devmanager(webserver_client, helper_bot: HelperBot):
         "resp": "<ctl ret='ok' status='idle'/>",
         "ret": "ok",
     }
-    helper_bot.send_command = mock.MagicMock(
-        return_value=async_return(command_getstatus_resp)
-    )
+    helper_bot.send_command = mock.MagicMock(return_value=async_return(command_getstatus_resp))
     resp = await webserver_client.post("/api/dim/devmanager.do", json=postbody)
     assert resp.status == 200
     text = await resp.text()
@@ -854,9 +790,7 @@ async def test_dim_devmanager(webserver_client, helper_bot: HelperBot):
 
     # Test return fail timeout
     command_timeout_resp = {"id": "resp_1234", "errno": "timeout", "ret": "fail"}
-    helper_bot.send_command = mock.MagicMock(
-        return_value=async_return(command_timeout_resp)
-    )
+    helper_bot.send_command = mock.MagicMock(return_value=async_return(command_timeout_resp))
     resp = await webserver_client.post("/api/dim/devmanager.do", json=postbody)
     assert resp.status == 200
     text = await resp.text()
@@ -866,9 +800,7 @@ async def test_dim_devmanager(webserver_client, helper_bot: HelperBot):
 
     # Set bot not on mqtt
     db.bot_set_mqtt("did_1234", False)
-    helper_bot.send_command = mock.MagicMock(
-        return_value=async_return(command_getstatus_resp)
-    )
+    helper_bot.send_command = mock.MagicMock(return_value=async_return(command_getstatus_resp))
     resp = await webserver_client.post("/api/dim/devmanager.do", json=postbody)
     assert resp.status == 200
     text = await resp.text()

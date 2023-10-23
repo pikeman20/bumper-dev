@@ -18,6 +18,6 @@ class GlobalAuthPlugin(WebserverPlugin):
             web.route(
                 "*",
                 "/global/auth/getAuthCode",
-                auth_util.get_authcode,
+                auth_util.get_auth_code,
             ),
         ]

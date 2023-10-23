@@ -5,7 +5,8 @@ import pytest
 from testfixtures import LogCapture
 
 import bumper
-from bumper import strtobool
+from bumper.utils.settings import config as bimper_bus
+from bumper.utils.utils import strtobool
 
 
 def test_strtobool():
@@ -21,9 +22,10 @@ async def test_start_stop(debug: bool):
             os.remove("tests/tmp.db")  # Remove existing db
 
         if debug:
-            bumper.bumper_debug = True
+            bimper_bus.bumper_level = "DEBUG"
 
-        asyncio.create_task(bumper.start())
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(bumper.start(loop))
         await asyncio.sleep(0.1)
         l.check_present(("bumper", "INFO", "Starting Bumper"))
         while True:
@@ -37,7 +39,5 @@ async def test_start_stop(debug: bool):
         l.clear()
 
         await bumper.shutdown()
-        l.check_present(
-            ("bumper", "INFO", "Shutting down"), ("bumper", "INFO", "Shutdown complete")
-        )
-        assert bumper.shutting_down is True
+        l.check_present(("bumper", "INFO", "Shutting down"), ("bumper", "INFO", "Shutdown complete"))
+        assert bimper_bus.shutting_down is True

@@ -38,6 +38,17 @@
 !scripts/
 !scripts/**
 
+!tests/
+!tests/test_certs/
+!tests/test_certs/*
+!tests/passwd
+!tests/passwd_bad
+!tests/web/
+!tests/web/**
+!tests/__init__.py
+!tests/conftest.py
+!tests/test*.py
+
 !Dockerfile
 !docker-compose-ngnix.yaml
 !docker-compose-traefik.yaml

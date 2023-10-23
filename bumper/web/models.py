@@ -3,12 +3,12 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Any
 
-import bumper
-from bumper.util import convert_to_millis
+from bumper.utils import utils
+from bumper.utils.settings import config as bumper_isc
 
 
 class VacBotDevice:
-    """Vacuum device."""
+    """Vacuum bot device."""
 
     def __init__(
         self,
@@ -19,6 +19,7 @@ class VacBotDevice:
         nick: str = "",
         company: str = "",
     ):
+        """Vacuum bot device init."""
         self.vac_bot_device_class = vac_bot_device_class
         self.company = company
         self.did = did
@@ -46,6 +47,7 @@ class BumperUser:
     """Bumper user."""
 
     def __init__(self, userid: str = ""):
+        """Bumper user init."""
         self.userid = userid
         self.devices: list[str] = []
         self.bots: list[str] = []
@@ -56,19 +58,20 @@ class BumperUser:
 
 
 class GlobalVacBotDevice(VacBotDevice):
-    """Global vacuum device."""
+    """Global Vacuum Bot Device."""
 
-    UILogicId = ""
-    ota = True
-    updateInfo = {"changeLog": "", "needUpdate": False}
-    icon = ""
-    deviceName = ""
+    UILogicId: str = ""
+    ota: bool = True
+    updateInfo: dict[str, Any] = {"changeLog": "", "needUpdate": False}
+    icon: str = ""
+    deviceName: str = ""
 
 
 class VacBotClient:
     """Vacuum client."""
 
     def __init__(self, userid: str = "", realm: str = "", token: str = ""):
+        """Vacuum client init."""
         self.userid = userid
         self.realm = realm
         self.resource = token
@@ -89,36 +92,33 @@ class VacBotClient:
 class OAuth:
     """Oauth."""
 
-    access_token = ""
-    expire_at = ""
-    refresh_token = ""
-    userId = ""
+    access_token: str = ""
+    expire_at: str = ""
+    refresh_token: str = ""
+    userId: str = ""
 
     def __init__(self, **entries: str):
+        """Oauth init."""
         self.__dict__.update(entries)
 
     @classmethod
-    def create_new(cls, userId: str) -> "OAuth":
+    def create_new(cls, user_id: str) -> "OAuth":
         """Create new."""
         oauth = OAuth()
-        oauth.userId = userId
+        oauth.userId = user_id  # pylint: disable=invalid-name
         oauth.access_token = uuid.uuid4().hex
-        oauth.expire_at = (
-            f"{datetime.utcnow() + timedelta(days=bumper.oauth_validity_days)}"
-        )
+        oauth.expire_at = f"{datetime.utcnow() + timedelta(days=bumper_isc.OAUTH_VALIDITY_DAYS)}"
         oauth.refresh_token = uuid.uuid4().hex
         return oauth
 
-    def toDB(self) -> dict:
+    def to_db(self) -> dict:
         """Convert for db."""
         return self.__dict__
 
-    def toResponse(self) -> dict:
+    def to_response(self) -> dict[str, Any]:
         """Convert to response."""
         data = self.__dict__
-        data["expire_at"] = convert_to_millis(
-            datetime.fromisoformat(self.expire_at).timestamp()
-        )
+        data["expire_at"] = utils.convert_to_millis(datetime.fromisoformat(self.expire_at).timestamp())
         return data
 
 
@@ -141,7 +141,7 @@ ERR_WRONG_COMFIRM_PWD = "10010"
 ERR_WRONG_EMAIL_ADDRESS = "1008"
 ERR_WRONG_PWD_FROMATE = "1009"
 
-API_ERRORS = {
+API_ERRORS: dict[str, str] = {
     RETURN_API_SUCCESS: "0000",
     ERR_ACTIVATE_TOKEN_TIMEOUT: "1006",
     ERR_COMMON: "0001",

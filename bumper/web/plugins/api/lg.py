@@ -3,91 +3,23 @@ import json
 import logging
 import random
 import string
-import xml.etree.ElementTree as ET
 from collections.abc import Iterable
+from typing import Any
+from xml.etree.ElementTree import Element
 
+import defusedxml.ElementTree as ET
 from aiohttp import web
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-import bumper
-from bumper.db import bot_get
-from bumper.models import ERR_COMMON
+from bumper.utils import db, utils
+from bumper.utils.settings import config as bumper_isc
+from bumper.web import models
 
 from .. import WebserverPlugin
 
-
-async def _handle_lg_log(request: Request) -> Response:
-    # EcoVacs Home
-    randomid = "".join(random.sample(string.ascii_letters, 6))
-
-    try:
-        json_body = json.loads(await request.text())
-
-        did = json_body["did"]
-
-        botdetails = bot_get(did)
-        if botdetails:
-            if "cmdName" not in json_body:
-                if "td" in json_body:
-                    json_body["cmdName"] = json_body["td"]
-
-            if "toId" not in json_body:
-                json_body["toId"] = did
-
-            if "toType" not in json_body:
-                json_body["toType"] = botdetails["class"]
-
-            if "toRes" not in json_body:
-                json_body["toRes"] = botdetails["resource"]
-
-            if "payloadType" not in json_body:
-                json_body["payloadType"] = "x"
-
-            if "payload" not in json_body:
-                # json_body["payload"] = ""
-                if json_body["td"] == "GetCleanLogs":
-                    json_body["td"] = "q"
-                    json_body["payload"] = '<ctl count="30"/>'
-
-        if did != "":
-            bot = bot_get(did)
-            if bot and bot["company"] == "eco-ng":
-                retcmd = await bumper.mqtt_helperbot.send_command(json_body, randomid)
-                body = retcmd
-                logging.debug("Send Bot - %s", json_body)
-                logging.debug("Bot Response - %s", body)
-                logs = []
-                logsroot = ET.fromstring(retcmd["resp"])
-                if logsroot.attrib["ret"] == "ok":
-                    for log_line in logsroot:
-                        cleanlog = {
-                            "ts": log_line.attrib["s"],
-                            "area": log_line.attrib["a"],
-                            "last": log_line.attrib["l"],
-                            "cleanType": log_line.attrib["t"],
-                            # imageUrl allows for providing images of cleanings, something to look into later
-                            # "imageUrl": "https://localhost:8007",
-                        }
-                        logs.append(cleanlog)
-                    body = {
-                        "ret": "ok",
-                        "logs": logs,
-                    }
-                else:
-                    body = {"ret": "ok", "logs": []}
-
-                logging.debug("lg logs return: %s", json.dumps(body))
-                return web.json_response(body)
-
-            # No response, send error back
-            logging.error("No bots with DID: %s connected to MQTT", json_body["toId"])
-    except Exception:  # pylint: disable=broad-except
-        logging.error("An unknown exception occurred", exc_info=True)
-
-    body = {"id": randomid, "errno": ERR_COMMON, "ret": "fail"}
-    return web.json_response(body)
+_LOGGER = logging.getLogger("web_route_api_lg")
 
 
 class LgPlugin(WebserverPlugin):
@@ -97,5 +29,73 @@ class LgPlugin(WebserverPlugin):
     def routes(self) -> Iterable[AbstractRouteDef]:
         """Plugin routes."""
         return [
-            web.route("*", "/lg/log.do", _handle_lg_log),
+            web.route(
+                "POST",
+                "/lg/log.do",
+                _handle_lg_log,
+            ),
         ]
+
+
+async def _handle_lg_log(request: Request) -> Response:
+    # EcoVacs Home
+    random_id = "".join(random.sample(string.ascii_letters, 6))
+    try:
+        if bumper_isc.mqtt_helperbot is None:
+            raise Exception("'bumper.mqtt_helperbot' is None")
+
+        json_body: dict[str, Any] = json.loads(await request.text())
+        did: str | None = json_body.get("did", None)
+
+        if did is None:
+            _LOGGER.error("No DID specified :: connected to MQTT")
+        else:
+            bot = db.bot_get(did)
+            if bot is None or bot.get("company", "") != "eco-ng":
+                _LOGGER.error(f"No bots with DID :: {json_body.get('did')} :: connected to MQTT")
+            else:
+                if "cmdName" not in json_body and "td" in json_body:
+                    json_body["cmdName"] = json_body.get("td")
+                if "toId" not in json_body:
+                    json_body["toId"] = did
+                if "toType" not in json_body:
+                    json_body["toType"] = bot.get("class")
+                if "toRes" not in json_body:
+                    json_body["toRes"] = bot.get("resource")
+                if "payloadType" not in json_body:
+                    json_body["payloadType"] = "x"
+                if "payload" not in json_body:
+                    # post_body["payload"] = ""
+                    if json_body["td"] == "GetCleanLogs":
+                        json_body["td"] = "q"
+                        json_body["payload"] = '<ctl count="30"/>'
+
+                body = await bumper_isc.mqtt_helperbot.send_command(json_body, random_id)
+                _LOGGER.debug(f"Send Bot - {json_body}")
+                _LOGGER.debug(f"Bot Response - {body}")
+                try:
+                    logs = []
+                    if body.get("resp", None) is None:
+                        _LOGGER.warning(f"lg logs return non 'resp': {json.dumps(body)}")
+                    else:
+                        logs_root: Element = ET.fromstring(body.get("resp"))
+                        if logs_root.attrib.get("ret", "") == "ok":
+                            for log_line in logs_root:
+                                clean_log = {
+                                    "ts": log_line.attrib.get("s"),
+                                    "area": log_line.attrib.get("a"),
+                                    "last": log_line.attrib.get("l"),
+                                    "cleanType": log_line.attrib.get("t"),
+                                    # imageUrl allows for providing images of cleanings, something to look into later
+                                    # "imageUrl": "https://localhost:8007",
+                                }
+                                logs.append(clean_log)
+
+                    body = {"ret": "ok", "logs": logs}
+                    _LOGGER.debug(f"lg logs return: {json.dumps(body)}")
+                    return web.json_response(body)
+                except Exception as e:
+                    _LOGGER.error(utils.default_exception_str_builder(e, json.dumps(body)), exc_info=True)
+    except Exception as e:
+        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+    return web.json_response({"id": random_id, "errno": models.ERR_COMMON, "ret": "fail"})

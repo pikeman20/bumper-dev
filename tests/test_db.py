@@ -4,28 +4,25 @@ from unittest import mock
 
 from tinydb import TinyDB
 
-from bumper import data_dir, db
+from bumper.utils import db
+from bumper.utils.settings import config as bumper_bus
 
 
 def test_db_path():
     env = os.environ.copy()
     env.pop("DB_FILE")
     with mock.patch.dict(os.environ, env, clear=True):
-        assert db._db_file() == os.path.join(data_dir, "bumper.db")
+        assert db._db_file() == os.path.join(bumper_bus.data_dir, "bumper.db")
 
 
 def test_user_db():
     db.user_add("testuser")  # Add testuser
 
-    assert (
-        db.user_get("testuser")["userid"] == "testuser"
-    )  # Test that testuser was created and returned
+    assert db.user_get("testuser")["userid"] == "testuser"  # Test that testuser was created and returned
 
     db.user_add_device("testuser", "dev_1234")  # Add device to testuser
 
-    assert (
-        db.user_by_device_id("dev_1234")["userid"] == "testuser"
-    )  # Test that testuser was found by deviceid
+    assert db.user_by_device_id("dev_1234")["userid"] == "testuser"  # Test that testuser was found by deviceid
 
     db.user_remove_device("testuser", "dev_1234")  # Remove device from testuser
 
@@ -50,9 +47,7 @@ def test_user_db():
     assert db.user_get_token("testuser", "token_1234")
     # Test that token was returned for testuser
 
-    db.user_add_authcode(
-        "testuser", "token_1234", "auth_1234"
-    )  # Add authcode to token_1234 for testuser
+    db.user_add_authcode("testuser", "token_1234", "auth_1234")  # Add authcode to token_1234 for testuser
     assert db.check_authcode("testuser", "auth_1234")
     # Test that authcode was found for testuser
 
@@ -60,9 +55,7 @@ def test_user_db():
     assert db.check_authcode("testuser", "auth_1234") == False
     # Test that authcode was not found for testuser
     db.user_revoke_token("testuser", "token_1234")  # Remove token from testuser
-    assert (
-        db.check_token("testuser", "token_1234") == False
-    )  # Test that token was not found for testuser
+    assert db.check_token("testuser", "token_1234") == False  # Test that token was not found for testuser
     db.user_add_token("testuser", "token_1234")  # Add token_1234
     db.user_add_token("testuser", "token_4321")  # Add token_4321
     assert len(db.user_get_tokens("testuser")) == 2  # Test 2 tokens are available
@@ -103,19 +96,13 @@ def test_bot_db():
     assert db.bot_get("did_123")  # Test that bot was added to db
 
     db.bot_set_nick("did_123", "nick_123")
-    assert (
-        db.bot_get("did_123")["nick"] == "nick_123"
-    )  # Test that nick was added to bot
+    assert db.bot_get("did_123")["nick"] == "nick_123"  # Test that nick was added to bot
 
     db.bot_set_mqtt("did_123", True)
-    assert db.bot_get("did_123")[
-        "mqtt_connection"
-    ]  # Test that mqtt was set True for bot
+    assert db.bot_get("did_123")["mqtt_connection"]  # Test that mqtt was set True for bot
 
     db.bot_set_xmpp("did_123", True)
-    assert db.bot_get("did_123")[
-        "xmpp_connection"
-    ]  # Test that xmpp was set True for bot
+    assert db.bot_get("did_123")["xmpp_connection"]  # Test that xmpp was set True for bot
 
     db.bot_remove("did_123")
     assert db.bot_get("did_123") == None  # Test that bot is no longer in db
@@ -126,17 +113,11 @@ def test_client_db():
     assert db.client_get("resource_123")  # Test client was added
 
     db.client_set_mqtt("resource_123", True)
-    assert db.client_get("resource_123")[
-        "mqtt_connection"
-    ]  # Test that mqtt was set True for client
+    assert db.client_get("resource_123")["mqtt_connection"]  # Test that mqtt was set True for client
 
     db.client_set_xmpp("resource_123", False)
-    assert (
-        db.client_get("resource_123")["xmpp_connection"] == False
-    )  # Test that xmpp was set False for client
-    assert (
-        len(db.get_disconnected_xmpp_clients()) > 0
-    )  # Test len of connected xmpp clients is 1
+    assert db.client_get("resource_123")["xmpp_connection"] == False  # Test that xmpp was set False for client
+    assert len(db.get_disconnected_xmpp_clients()) > 0  # Test len of connected xmpp clients is 1
 
     db.client_remove("resource_123")
     assert db.client_get("resource_123") == None

@@ -1,5 +1,6 @@
 """Web server middleware module."""
 import json
+import logging
 from typing import Any
 
 from aiohttp import web
@@ -8,9 +9,10 @@ from aiohttp.web_exceptions import HTTPNoContent
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response, StreamResponse
 
-from bumper.util import get_logger
+from bumper.utils import utils
+from bumper.utils.settings import config as bumper_isc
 
-_LOGGER = get_logger("webserver_requests")
+_LOGGER = logging.getLogger("webserver_requests")
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -32,13 +34,31 @@ _EXCLUDE_FROM_LOGGING = [
 
 
 @web.middleware
-async def log_all_requests(  # pylint: disable=too-many-branches
-    request: Request, handler: Handler
-) -> StreamResponse:
+async def log_all_requests(request: Request, handler: Handler) -> StreamResponse:
     """Middleware to log all requests."""
-    if (
-        not request.match_info.route.resource
-    ) or request.match_info.route.resource.canonical in _EXCLUDE_FROM_LOGGING:
+    try:
+        # DEBUG logger by env set to see all requests taken
+        # or to print requests which are not know (lists needs to be manually updated)
+        if (bumper_isc.DEBUG_LOGGING_API_REQUEST is True) or (
+            bumper_isc.DEBUG_LOGGING_API_REQUEST_MISSING is True and utils.check_url_not_used(request.path) is False
+        ):
+            _LOGGER.info(
+                json.dumps(
+                    {
+                        "method": request.method,
+                        "url": str(request.url),
+                        # "host": next((value for key, value in set(request.headers.items()) if key.lower() == "host"), ""),
+                        # "path": request.path,
+                        # "query_string": request.query_string,
+                        "body": await request.text(),
+                    },
+                    cls=CustomEncoder,
+                )
+            )
+    except Exception as e:
+        _LOGGER.error(e, exc_info=True)
+
+    if request.match_info.route.resource is None or request.match_info.route.resource.canonical in _EXCLUDE_FROM_LOGGING:
         return await handler(request)
 
     to_log = {
@@ -59,19 +79,15 @@ async def log_all_requests(  # pylint: disable=too-many-branches
                     to_log["request"]["body"] = await request.json()
                 else:
                     to_log["request"]["body"] = set(await request.post())
-        except Exception:
-            _LOGGER.exception(
-                "An exception occurred during logging the request.", exc_info=True
-            )
+        except Exception as e:
+            _LOGGER.exception(utils.default_exception_str_builder(e, "during logging the request"), exc_info=True)
             raise
 
-        response = await handler(request)
+        response: StreamResponse | None = await handler(request)
 
         try:
             if response is None:
-                _LOGGER.warning(  # type:ignore[unreachable]
-                    "Response was null!"
-                )
+                _LOGGER.warning("Response was null!")
                 _LOGGER.warning(json.dumps(to_log, cls=CustomEncoder))
                 raise HTTPNoContent
 
@@ -88,15 +104,12 @@ async def log_all_requests(  # pylint: disable=too-many-branches
                     to_log["response"]["body"] = response.text
 
             return response
-        except Exception:
-            _LOGGER.exception(
-                "An exception occurred during logging the response", exc_info=True
-            )
+        except Exception as e:
+            _LOGGER.exception(utils.default_exception_str_builder(e, "during logging the response"), exc_info=True)
             raise
 
     except web.HTTPNotFound:
-        _LOGGER.debug("Request path %s not found", request.raw_path)
+        _LOGGER.debug(f"Request path {request.raw_path} not found")
         raise
-
     finally:
         _LOGGER.debug(json.dumps(to_log, cls=CustomEncoder))

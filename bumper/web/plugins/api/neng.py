@@ -9,68 +9,6 @@ from aiohttp.web_routedef import AbstractRouteDef
 from .. import WebserverPlugin
 
 
-async def _handle_neng_has_unread_message(_: Request) -> Response:
-    # EcoVacs Home
-    body = {"code": 0, "data": {"hasUnRead": True}}
-    return web.json_response(body)
-
-
-async def handle_neng_get_share_msgs(_: Request) -> Response:
-    """Return shared messages."""
-    # EcoVacs Home
-    body = {"code": 0, "data": {"hasNext": False, "msgs": []}}
-
-    # share msg response
-    # {
-    #     "code": 0,
-    #     "data": {
-    #         "hasNext": False,
-    #         "msgs": [
-    #         {
-    #             "action": "shareDevice",
-    #             "deviceName": "DEEBOT 900 Series",
-    #             "did": "DID",
-    #             "icon": "https://portal-ww.ecouser.net/api/pim/file/get/5ba4a2cb6c2f120001c32839",
-    #             "id": "0154d03a-294e-4b99-a6df-fc2dbf4146d5",
-    #             "isRead": False,
-    #             "message": "User user@gmail.com sent you the sharing invitation of DEEBOT 900 Series.",
-    #             "mid": "ls1ok3",
-    #             "resource": "grU0",
-    #             "shareStatus": "sharing",
-    #             "ts": 1578206187412
-    #         }
-    #         ]
-    #     }
-    #     }
-
-    return web.json_response(body)
-
-
-async def handle_neng_get_list(_: Request) -> Response:
-    """Get messages."""
-    # EcoVacs Home
-    body = {"code": 0, "data": {"hasNext": False, "msgs": []}}
-
-    # Sample Message
-    #     {
-    # "id": "5da0ac9d636aec5107627ac4",
-    # "ts": 1570811036877,
-    # "did": "bot did",
-    # "cid": "ls1ok3",
-    # "name": "DEEBOT 900 Series",
-    # "icon": "https://portal-ww.ecouser.net/api/pim/file/get/5ba4a2cb6c2f120001c32839",
-    # "eventTypeId": "5aab824bb62ce30001f9a702",
-    # "title": "DEEBOT is off the floor.",
-    # "body": "DEEBOT is off the floor. Please put it back.",
-    # "read": false,
-    # "UILogicId": "D_900",
-    # "type": "web",
-    # "url": "https://portal-ww.ecouser.net/api/pim/eventdetail.html?id=5ba21e44aed83800015b9ca8" # Off the floor instructions
-    # }
-
-    return web.json_response(body)
-
-
 class NengPlugin(WebserverPlugin):
     """Neng plugin."""
 
@@ -81,16 +19,112 @@ class NengPlugin(WebserverPlugin):
             web.route(
                 "*",
                 "/neng/message/hasUnreadMsg",
-                _handle_neng_has_unread_message,
+                _handle_has_unread_message,
             ),
             web.route(
                 "*",
                 "/neng/message/getShareMsgs",
-                handle_neng_get_share_msgs,
+                _handle_get_share_msgs,
             ),
             web.route(
                 "*",
                 "/neng/message/getlist",
-                handle_neng_get_list,
+                _handle_get_list,
+            ),
+            web.route(
+                "*",
+                "/neng/message/read",
+                _handle_read,
+            ),
+            web.route(
+                "*",
+                "/neng/v2/message/push",
+                _handle_message_push,
+            ),
+            web.route(
+                "*",
+                "/neng/v3/message/latest_by_did",
+                _handle_latest_by_did,
+            ),
+            web.route(
+                "*",
+                "/neng/v3/message/list",
+                _handle_message_list,
+            ),
+            web.route(
+                "*",
+                "/neng/v3/product/msg/tabs",
+                _handle_product_msg_tabs,
+            ),
+            web.route(
+                "*",
+                "/neng/v3/shareMsg/hasUnreadMsg",
+                _handle_share_msg_has_unread_msg,
             ),
         ]
+
+
+async def _handle_has_unread_message(_: Request) -> Response:
+    # EcoVacs Home
+    return web.json_response({"code": 0, "data": {"hasUnRead": False, "shareMsgUnRead": False}})
+
+
+async def _handle_get_share_msgs(_: Request) -> Response:
+    # EcoVacs Home
+    return web.json_response({"code": 0, "data": {"hasNext": False, "msgs": []}})
+
+
+async def _handle_get_list(_: Request) -> Response:
+    # EcoVacs Home
+    return web.json_response({"code": 0, "data": {"hasNext": False, "msgs": []}})
+
+
+async def _handle_read(_: Request) -> Response:
+    # EcoVacs Home
+    return web.json_response({"code": 0, "message": "success"})
+
+
+async def _handle_message_push(_: Request) -> Response:
+    # EcoVacs Home
+    return web.json_response({"code": 0, "data": {}})
+
+
+async def _handle_latest_by_did(_: Request) -> Response:
+    # EcoVacs Home
+    return web.json_response({"code": 0, "data": [], "message": "success"})
+
+
+async def _handle_message_list(_: Request) -> Response:
+    # EcoVacs Home
+    return web.json_response({"code": 0, "data": [], "message": "success"})
+
+
+async def _handle_product_msg_tabs(_: Request) -> Response:
+    # EcoVacs Home
+    return web.json_response(
+        {
+            "code": 0,
+            "data": [
+                {
+                    "code": "evt",
+                    "name": "Work messages",
+                },
+                {
+                    "code": "error",
+                    "name": "Malfunction messages",
+                },
+            ],
+            "message": "success",
+        }
+    )
+
+
+async def _handle_share_msg_has_unread_msg(_: Request) -> Response:
+    # EcoVacs Home
+    return web.json_response(
+        {
+            "code": 0,
+            "data": {"count": 0, "unRead": False},
+            "message": "success",
+        }
+    )

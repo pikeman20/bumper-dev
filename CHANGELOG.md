@@ -7,9 +7,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Broken
+
+- `tests` are not full updated and could be wrong
+
 ### Added
 
-- conf files added
+- bumper adds
+  - create new file `settings.py`
+    - holds config variables used over the complete project, which was before included in `__init.py__`
+  - create new file `utils.py`
+    - includes multi function used in the project, as the logger configuration
+  - `web` api `plugins` extended with more api's
+    - tested also with newer app version, see `README.md`
+    - some new one (not all are functional and only base implemented)
+      - **api**
+        - `pim/voice/get`
+        - `appsvr/improve`
+        - `appsvr/ota/firmware`
+        - `appsvr/device/blacklist/check`
+        - `basis/dc/get-by-area`
+        - `ecms/file/get/{id}`
+        - `ecms/app/ad/res/v2`
+        - `ecms/app/element/hint`
+        - `ecms/app/resources`
+        - `homed/home/create`
+        - `homed/home/delete`
+        - `homed/member/list`
+        - `homed/device/move`
+        - `neng/message/read`
+        - `neng/v2/message/push`
+        - `neng/v3/message/latest_by_did`
+        - `neng/v3/message/list`
+        - `neng/v3/product/msg/tabs`
+        - `neng/v3/shareMsg/hasUnreadMsg`
+        - `rapp/sds/user/data/del`
+        - `sds/baidu/audio/getcred`
+      - **v1**
+        - `agreement/getUserAcceptInfo`
+        - `common/getUserConfig`
+        - `common/getBottomNavigateInfoList`
+        - `common/getAboutBriefItem`
+        - `intl/member/basicInfo`
+        - `intl/member/signStatus`
+        - `osmall/getCountryConfig`
+        - `osmall/proxy/my/get-user-center-coupon-list`
+        - `osmall/index/getLayout`
+        - `osmall/proxy/cart/get-count`
+        - `osmall/proxy/v2/web/benefit/get-benefits`
+        - `osmall/proxy/order/list`
+        - `userSetting/getMsgReceiveSetting`
+        - `userSetting/saveUserSetting`
+        - `/user/getMyUserMenuInfo`
+        - `user/getMyUserMenuInfo`
+      - **v2**
+        - `member/getExpByScene`
+        - `message/waterfallFlow`
+        - `message/moduleConfiguration`
+        - `user/checkAgreementBatch`
+      - **v3**
+        - `common/getBottomNavigateInfoList`
+- conf adds
   - add this `CHANGELOG.md`
   - add `pyproject.toml`
   - add `create_cert.sh`
@@ -26,7 +84,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- conf files updates
+- bumper updates
+  - created folder `utils` and moved the files `db.py` and `dns.py`
+  - moved `models.py` into `web` folder
+  - renamed `util.py` as `utils.py` and updated with additional more functions
+  - moved `xmppserver.py` into folder `xmpp` as `xmpp.py`
+  - multiple updates performed for all modules in `mqtt`, `web`, `xmpp` and `utils`
+    - lint and prettier runnings
+    - web `middleware` extended for more logging option, which can activated over env variables
+    - additional strings moved into `settings` as variable
+    - `xmpp` improved in `_handle_result` and `_handle_connect`
+    - multiple small cleanups, adds and improves
+  - `__init__.py` was shrunk and updated
+  - `web` api `plugins` extended with more and updated api's
+    - changed multi routes from `*` to `POST` as they defined to have a body
+    - update some api with extended response
+- conf updates
   - renamed `.prettierrc` to `.prettierrc.yml` and rewrite in yaml
   - renamed `bandit.yaml` to `bandit.yml`
   - renamed `LICENSE.txt` to `LICENSE`
@@ -54,6 +127,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - version updates
     - additional args added
   - updated `CmdLine.md` by add sh to code block
+  - update `Env_Var.md`
   - .github updates
     - update workflow `ci.yml`
       - with new version, comments

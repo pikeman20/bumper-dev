@@ -1,2149 +1,2982 @@
 [
   {
-    "classid": "02uwxm",
+    "classid": "4f0c4e",
     "product": {
-      "UILogicId": "D_OZMO_SLIM10",
-      "_id": "5ae1481e7ccd1a0001e1f69e",
-      "icon": "60810dddd18cbd0008e2fd27",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60810dddd18cbd0008e2fd27",
-      "materialNo": "110-1715-0201",
-      "model": "SLIM10",
-      "name": "DEEBOT OZMO Slim10 Series",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "04z443",
-    "product": {
-      "UILogicId": "DK_781_PLUS",
-      "_id": "5fdc0a375f437d0008e0df9b",
-      "icon": "60a201729fe5580009c6d769",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a201729fe5580009c6d769",
-      "materialNo": "110-2025-0001",
-      "model": "K781",
-      "name": "yeedi vac max",
+      "_id": "5d2c5fcd4d60de0001eaf2a5",
+      "materialNo": "70200000227",
+      "smartType": "MQ_AP",
+      "name": "AT01",
+      "icon": "5d2d996c4d60de0001eaf2b5",
+      "model": "AT01",
+      "UILogicId": "AT_01G",
       "ota": true,
       "supportType": {
-        "alexa": true,
-        "assistant": true,
         "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "09m4bu",
-    "product": {
-      "UILogicId": "K650_G",
-      "_id": "5e9d340b8c92c777ab83557f",
-      "icon": "5ef31b8cee3c1200075b6f67",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ef31b8cee3c1200075b6f67",
-      "materialNo": "130-6225-0605",
-      "model": "K651G",
-      "name": "K650",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "0bdtzz",
-    "product": {
-      "UILogicId": "DT_8G",
-      "_id": "5fa105c6d16a99000667eb54",
-      "icon": "5fa105bbd16a99000667eb52",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5fa105bbd16a99000667eb52",
-      "materialNo": "110-1921-0404",
-      "model": "OT8_PURE",
-      "name": "DEEBOT OZMO T8 PURE",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "0xyhhr",
-    "product": {
-      "UILogicId": "DV_5G",
-      "_id": "5ca4716312851900016858cd",
-      "icon": "5d117d4f0ac6ad00012b792d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d117d4f0ac6ad00012b792d",
-      "materialNo": "110-1825-0201",
-      "model": "DV5G",
-      "name": "DEEBOT OZMO 700",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "115",
-    "product": {
-      "UILogicId": "DR_930G",
-      "_id": "5bbedd2822d57f00018c13b7",
-      "icon": "5cf711aeb0acfc000179ff8a",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cf711aeb0acfc000179ff8a",
-      "materialNo": "110-1602-0101",
-      "model": "DR930",
-      "name": "DEEBOT OZMO/PRO 930 Series",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "123",
-    "product": {
-      "UILogicId": "ECO_INTL_123",
-      "_id": "5cae9b201285190001685977",
-      "icon": "5d2c150dba13eb00013feaae",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c150dba13eb00013feaae",
-      "materialNo": "110-1639-0102",
-      "model": "Slim2",
-      "name": "DEEBOT Slim2 Series",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "125",
-    "product": {
-      "UILogicId": "ECO_INTL_125",
-      "_id": "5cae9703128519000168596a",
-      "icon": "5d2c14414d60de0001eaf1f2",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c14414d60de0001eaf1f2",
-      "materialNo": "110-1638-0102",
-      "model": "M80",
-      "name": "DEEBOT M80 Pro",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "126",
-    "product": {
-      "UILogicId": "ECO_INTL_126",
-      "_id": "5ca32ab212851900016858c7",
-      "icon": "5ca32ab2e9e9270001354b3d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca32ab2e9e9270001354b3d",
-      "materialNo": "702-0000-0136",
-      "model": "N79",
-      "name": "DEEBOT N79",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "129",
-    "product": {
-      "UILogicId": "ECO_INTL_129",
-      "_id": "5ca31df1e9e9270001354b35",
-      "icon": "5ca31df112851900016858c0",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca31df112851900016858c0",
-      "materialNo": "110-1628-0101",
-      "model": "M86",
-      "name": "DEEBOT M86",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2d996c4d60de0001eaf2b5"
     }
   },
   {
     "classid": "12baap",
     "product": {
-      "UILogicId": "U2_HIGH_G",
       "_id": "5ea8d1fe73193e3bef67c551",
-      "icon": "606425981269020008a9627b",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425981269020008a9627b",
       "materialNo": "110-1919-1801",
-      "model": "U2_APAC2",
+      "smartType": "MQ_AP",
       "name": "DEEBOT U2 PRO",
+      "icon": "606425981269020008a9627b",
+      "model": "U2_APAC2",
+      "UILogicId": "U2_HIGH_G",
       "ota": true,
       "supportType": {
-        "alexa": true,
-        "assistant": true,
         "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "130",
-    "product": {
-      "UILogicId": "ECO_INTL_130",
-      "_id": "5cae98d01285190001685974",
-      "icon": "5d4b7640de51dd0001fee131",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7640de51dd0001fee131",
-      "materialNo": "110-1629-0201",
-      "model": "OZMO600",
-      "name": "DEEBOT OZMO 610 Series",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
+        "tmjl": false,
         "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "140",
-    "product": {
-      "UILogicId": "ECO_INTL_140",
-      "_id": "5cd43b4cf542e00001dc2dec",
-      "icon": "5d2c152f4d60de0001eaf1f4",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c152f4d60de0001eaf1f4",
-      "materialNo": "110-1639-0011",
-      "model": "SlimNeo",
-      "name": "DEEBOT Slim Neo",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "141",
-    "product": {
-      "UILogicId": "ECO_INTL_141",
-      "_id": "5cae97c9128519000168596f",
-      "icon": "5d2c2aa64d60de0001eaf1f6",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c2aa64d60de0001eaf1f6",
-      "materialNo": "110-1638-0101",
-      "model": "M81",
-      "name": "DEEBOT M81 Pro",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "142",
-    "product": {
-      "UILogicId": "ECO_INTL_142",
-      "_id": "5ca1ca7a12851900016858bd",
-      "icon": "5ca1ca79e9e9270001354b2d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca1ca79e9e9270001354b2d",
-      "materialNo": "110-1640-0101",
-      "model": "Mini2",
-      "name": "DEEBOT Mini2",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "152",
-    "product": {
-      "UILogicId": "ECO_INTL_152",
-      "_id": "5cbd97b961526a00019799bd",
-      "icon": "5d4b7628de51dd0001fee12f",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7628de51dd0001fee12f",
-      "materialNo": "110-1628-0302",
-      "model": "D600",
-      "name": "DEEBOT",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "155",
-    "product": {
-      "UILogicId": "ECO_INTL_155",
-      "_id": "5cce893813afb7000195d6af",
-      "icon": "5cd4ca505b032200015a455d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cd4ca505b032200015a455d",
-      "materialNo": "702-0000-0164",
-      "model": "DN622",
-      "name": "DEEBOT N79S/SE",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "159",
-    "product": {
-      "UILogicId": "ECO_INTL_159",
-      "_id": "5ca32bc2e9e9270001354b41",
-      "icon": "5d4b7606de51dd0001fee12d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7606de51dd0001fee12d",
-      "materialNo": "110-1629-0203",
-      "model": "159",
-      "name": "DEEBOT OZMO 601",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "165",
-    "product": {
-      "UILogicId": "ECO_INTL_165",
-      "_id": "5ca32a11e9e9270001354b39",
-      "icon": "5ca32a1012851900016858c6",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca32a1012851900016858c6",
-      "materialNo": "702-0000-0189",
-      "model": "N79T",
-      "name": "DEEBOT N79T/W",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "16wdph",
-    "product": {
-      "UILogicId": "D_661",
-      "_id": "5d280ce344af3600013839ab",
-      "icon": "5d280ce3350e7a0001e84c95",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d280ce3350e7a0001e84c95",
-      "materialNo": "702-0000-0171",
-      "model": "D661",
-      "name": "DEEBOT 661",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "1b23du",
-    "product": {
-      "UILogicId": "t10_ww_n_omniwhite",
-      "_id": "619765fbcfdd5e320a1f61f6",
-      "icon": "61c58ddc75bfe17354e4804e",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c58ddc75bfe17354e4804e",
-      "materialNo": "110-2102-0302",
-      "model": "EINSTEIN_WHITE_INT",
-      "name": "DEEBOT X1 OMNI",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "1qdu4z",
-    "product": {
-      "UILogicId": "AT80",
-      "_id": "5de9b7f50136c00001cb1f96",
-      "icon": "5e71c7df298f0d9cabfef86f",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e71c7df298f0d9cabfef86f",
-      "materialNo": "117-1923-0101",
-      "model": "AT80K",
-      "name": "Aaron",
-      "ota": false,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "1vxt52",
-    "product": {
-      "UILogicId": "t10_ww_n_omni",
-      "_id": "6185e29610683da4d6a7a9cd",
-      "icon": "6225bd1c2af2127804f540e5",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6225bd1c2af2127804f540e5",
-      "materialNo": "110-2102-0300",
-      "model": "EINSTEIN_INT",
-      "name": "DEEBOT X1 OMNI",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425981269020008a9627b"
     }
   },
   {
     "classid": "1zqysa",
     "product": {
-      "UILogicId": "U2_HIGH_NOMAG_G",
       "_id": "5ee85c64fdd6a30008da0af4",
-      "icon": "6064258d1269020008a9627a",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064258d1269020008a9627a",
       "materialNo": "110-1919-2201",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2 POWER",
+      "icon": "6064258d1269020008a9627a",
       "model": "U2_HK",
-      "name": "DEEBOT U2 POWER",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "2o4lnm",
-    "product": {
-      "UILogicId": "t10_ww_n_turingacs",
-      "_id": "6185e87035d0b97c64df03d8",
-      "icon": "6225bd3b7604e551a50e46ac",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6225bd3b7604e551a50e46ac",
-      "materialNo": "110-2102-0601",
-      "model": "TURING_ACS_INT",
-      "name": "DEEBOT X1 TURBO",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "2pj946",
-    "product": {
-      "UILogicId": "winbot_g",
-      "_id": "5fd1e362bbf4b30006cd9255",
-      "icon": "6049b3631269020008a95af0",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b3631269020008a95af0",
-      "materialNo": "111-2005-0301",
-      "model": "W920_INT",
-      "name": "WINBOT 920",
-      "ota": true,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "2pv572",
-    "product": {
-      "UILogicId": "D_OZMO_900",
-      "_id": "5d1474630ac6ad00012b7940",
-      "icon": "5d1474632a6bd50001b5b6f3",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d1474632a6bd50001b5b6f3",
-      "materialNo": "110-1810-0107",
-      "model": "OZMO905",
-      "name": "DEEBOT OZMO 905",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "34vhpm",
-    "product": {
-      "UILogicId": "DX_AIG",
-      "_id": "5edd998afdd6a30008da039b",
-      "icon": "605050031269020008a95af9",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605050031269020008a95af9",
-      "materialNo": "110-1913-0501",
-      "model": "DXAIS_TW",
-      "name": "DEEBOT T8 AIVI +",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "36xnxf",
-    "product": {
-      "UILogicId": "N8_PLUS",
-      "_id": "5fbcacf369320300086ffa63",
-      "icon": "60627bd517c95b0008ff20ec",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bd517c95b0008ff20ec",
-      "materialNo": "110-2029-0701",
-      "model": "N8_BLACK\t",
-      "name": "DEEBOT N8",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "3ab24g",
-    "product": {
-      "UILogicId": "K650_RANDOM_G",
-      "_id": "5e9d34418c92c717e9835583",
-      "icon": "5ef31b80f5dcdf000767cf4d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ef31b80f5dcdf000767cf4d",
-      "materialNo": "130-6225-0302",
-      "model": "K652G",
-      "name": "K650",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "3yqsch",
-    "product": {
-      "UILogicId": "t10_ww_n_newton",
-      "_id": "619ee1c2168e51a3b523d0e0",
-      "icon": "61c42246e2567cc9d413d46a",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c42246e2567cc9d413d46a",
-      "materialNo": "110-2115-0002",
-      "model": "NEWTON_INT",
-      "name": "DEEBOT X1",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "4f0c4e",
-    "product": {
-      "UILogicId": "AT_01G",
-      "_id": "5d2c5fcd4d60de0001eaf2a5",
-      "icon": "5d2d996c4d60de0001eaf2b5",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2d996c4d60de0001eaf2b5",
-      "materialNo": "70200000227",
-      "model": "AT01",
-      "name": "AT01",
-      "ota": true,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "4xq430",
-    "product": {
-      "UILogicId": "belugapro_ww_h_beluga",
-      "_id": "619477c33e075f531d6a1a4a",
-      "icon": "619477bc01fb68b814bf290b",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/619477bc01fb68b814bf290b",
-      "materialNo": "111-2112-0101",
-      "model": "BELUGA_PRO_INT",
-      "name": "WINBOT W1 PRO",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "4zfacv",
-    "product": {
-      "UILogicId": "DN_2G",
-      "_id": "5bf2596f23244a00013f2f13",
-      "icon": "5c778731280fda0001770ba0",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c778731280fda0001770ba0",
-      "materialNo": "910",
-      "model": "DN2_INTL",
-      "name": "DEEBOT 910",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "5089oy",
-    "product": {
-      "UILogicId": "DX_AIG",
-      "_id": "60dd6db7d4fc6e0008e4aa92",
-      "icon": "60dd6db3038a38000888bd5b",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60dd6db3038a38000888bd5b",
-      "materialNo": "110-1913-0502",
-      "model": "DXAI_TW",
-      "name": "DEEBOT T8 AIVI",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "55aiho",
-    "product": {
-      "UILogicId": "DT_8G",
-      "_id": "5e698a6306f6de52c264c61b",
-      "icon": "605be27250928b0007c13264",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605be27250928b0007c13264",
-      "materialNo": "110-1921-1101",
-      "model": "T8+",
-      "name": "DEEBOT OZMO T8+",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "659yh8",
-    "product": {
-      "UILogicId": "T9_AF_G",
-      "_id": "60361d6134bf63000719d2e1",
-      "icon": "603f5147c8115100083364bc",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f5147c8115100083364bc",
-      "materialNo": "110-2011-0101",
-      "model": "T9_AIVI_INT",
-      "name": "DEEBOT T9 AIVI",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "7bryc5",
-    "product": {
-      "UILogicId": "N8_PLUS",
-      "_id": "5fa4e248c7260e0008585850",
-      "icon": "5fb474d4d16a99000667edd9",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5fb474d4d16a99000667edd9",
-      "materialNo": "110-2029-0001",
-      "model": "N8_PLUS_WHITE",
-      "name": "DEEBOT N8+",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "7j1tu6",
-    "product": {
-      "UILogicId": "U2_HIGH_G",
-      "_id": "5e993e566a299d449a06d65a",
-      "icon": "6064260545505e0008e5cb49",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064260545505e0008e5cb49",
-      "materialNo": "110-1919-0801",
-      "model": "U2_EH2",
-      "name": "DEEBOT U2 PRO",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "85as7h",
-    "product": {
-      "UILogicId": "DT_8SE_G",
-      "_id": "5fbc7f5069320300086ffa5e",
-      "icon": "5feaeb585f437d0008e0e00c",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5feaeb585f437d0008e0e00c",
-      "materialNo": "110-2008-0902",
-      "model": "N8_PRO_PLUS_BLACK",
-      "name": "DEEBOT N8 PRO+",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "9akc61",
-    "product": {
-      "UILogicId": "D_500",
-      "_id": "5c763f8263023c0001e7f855",
-      "icon": "5c932067280fda0001770d7f",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c932067280fda0001770d7f",
-      "materialNo": "20200115005",
-      "model": "D505",
-      "name": "DEEBOT 505",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "9rft3c",
-    "product": {
-      "UILogicId": "DX_9G",
-      "_id": "5e14196a6e71b80001b60fda",
-      "icon": "6062795ad18cbd0008e2fce8",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6062795ad18cbd0008e2fce8",
-      "materialNo": "191165",
-      "model": "DX9G_T5",
-      "name": "DEEBOT OZMO T5",
-      "ota": true,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "9t30w8",
-    "product": {
-      "UILogicId": "k950l_us_h_k950",
-      "_id": "6180a06b9a411f259e2c41ef",
-      "icon": "61b0497b658e844efac7848d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61b0497b658e844efac7848d",
-      "materialNo": "110-2120-0700",
-      "model": "K950L",
-      "name": "yeedi vac 2",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "aaxesz",
-    "product": {
-      "UILogicId": "k950_ww_h_k950",
-      "_id": "616d08d06bb5142d1c10a9c7",
-      "icon": "61b0498272e305141cc11624",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61b0498272e305141cc11624",
-      "materialNo": "110-2120-0000",
-      "model": "K950_INT",
-      "name": "yeedi vac 2 pro",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "aqdd5p",
-    "product": {
-      "UILogicId": "D_900",
-      "_id": "5cb7cfba179839000114d762",
-      "icon": "5cb7cfbab72c4d00010e5fc7",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cb7cfbab72c4d00010e5fc7",
-      "materialNo": "110-1711-0001",
-      "model": "DE5G",
-      "name": "DEEBOT DE55",
-      "ota": true,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "ar5bjb",
-    "product": {
-      "UILogicId": "D_661",
-      "_id": "5e58a73d36e8f3cab08f031f",
-      "icon": "5e58a2df36e8f39e318f031d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e58a2df36e8f39e318f031d",
-      "materialNo": "130-6211-0610",
-      "model": "D665",
-      "name": "DEEBOT 665",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "b2jqs4",
-    "product": {
-      "UILogicId": "N8_PLUS",
-      "_id": "5fbc7cc69601440008b24469",
-      "icon": "5feaeb27d4cb3a0006679047",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5feaeb27d4cb3a0006679047",
-      "materialNo": "110-2029-0002",
-      "model": "N8_PLUS_BLACK",
-      "name": "DEEBOT N8+",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "b742vd",
-    "product": {
-      "UILogicId": "DT_8G",
-      "_id": "5e699a4106f6de83ea64c620",
-      "icon": "5e8e93a7032edd3f5ec66d4a",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8e93a7032edd3f5ec66d4a",
-      "materialNo": "110-1921-0301",
-      "model": "T8G",
-      "name": "DEEBOT OZMO T8",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "c0lwyn",
-    "product": {
-      "UILogicId": "U2_HIGH_G",
-      "_id": "5e993eef6a299d7e4a06d660",
-      "icon": "606425ab4a84d700082b39f7",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425ab4a84d700082b39f7",
-      "materialNo": "110-1919-1301",
-      "model": "U2_AUH",
-      "name": "DEEBOT U2 PRO",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "c2of2s",
-    "product": {
-      "UILogicId": "DK_850",
-      "_id": "6045c070c8115100083364d7",
-      "icon": "61318dbc1d27796ece1d1baa",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61318dbc1d27796ece1d1baa",
-      "materialNo": "130-6224-1306",
-      "model": "N9_PLUS_TW",
-      "name": "DEEBOT N9+",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "chmi0g",
-    "product": {
       "UILogicId": "U2_HIGH_NOMAG_G",
-      "_id": "5ee85cabfdd6a30008da0af8",
-      "icon": "606425821269020008a96279",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425821269020008a96279",
-      "materialNo": "110-1919-2301",
-      "model": "U2_TW",
-      "name": "DEEBOT U2 POWER",
       "ota": true,
       "supportType": {
-        "alexa": true,
+        "share": true,
+        "tmjl": false,
         "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "d0cnel",
-    "product": {
-      "UILogicId": "D_700",
-      "_id": "5ceba1c6d85b4d0001776986",
-      "icon": "5d157f9f77a3a60001051f69",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d157f9f77a3a60001051f69",
-      "materialNo": "702-0000-0204",
-      "model": "D711S",
-      "name": "DEEBOT 711s",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "d4v1pm",
-    "product": {
-      "UILogicId": "U2_HIGH_G",
-      "_id": "5e9924416a299dddac06d656",
-      "icon": "606426254a84d700082b39f9",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426254a84d700082b39f9",
-      "materialNo": "110-1919-0802",
-      "model": "U2_EH1",
-      "name": "DEEBOT U2 PRO",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "dl8fht",
-    "product": {
-      "UILogicId": "D_600",
-      "_id": "5acb0fa87c295c0001876ecf",
-      "icon": "5acc32067c295c0001876eea",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5acc32067c295c0001876eea",
-      "materialNo": "702-0000-0170",
-      "model": "D600",
-      "name": "DEEBOT 600 Series",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "emzppx",
-    "product": {
-      "UILogicId": "D_500",
-      "_id": "5c763f35280fda0001770b84",
-      "icon": "5c931fef280fda0001770d7e",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c931fef280fda0001770d7e",
-      "materialNo": "702-0000-0169",
-      "model": "D501",
-      "name": "DEEBOT 501",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "eyi9jv",
-    "product": {
-      "UILogicId": "D_700",
-      "_id": "5b7b65f364e1680001a08b54",
-      "icon": "5b7b65f176f7f10001e9a0c2",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b7b65f176f7f10001e9a0c2",
-      "materialNo": "702-0000-0203",
-      "model": "DV3G",
-      "name": "DEEBOT 715",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "f32i67",
-    "product": {
-      "UILogicId": "ATMOBOT_AVA",
-      "_id": "5fc49656d16a99000667f11b",
-      "icon": "6049b32ad18cbd0008e2f812",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b32ad18cbd0008e2f812",
-      "materialNo": "113-1929-0101",
-      "model": "AVA_TW",
-      "name": "AVA",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "fqxoiu",
-    "product": {
-      "UILogicId": "DT_8G",
-      "_id": "5e8e8d8a032edd8457c66bfb",
-      "icon": "605b059217c95b0008ff20d4",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605b059217c95b0008ff20d4",
-      "materialNo": "110-1921-1100",
-      "model": "OT8+",
-      "name": "DEEBOT OZMO T8+",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "gd4uut",
-    "product": {
-      "UILogicId": "DR_935G",
-      "_id": "5bc8189d68142800016a6937",
-      "icon": "5e8da019032edd9008c66bf0",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8da019032edd9008c66bf0",
-      "materialNo": "110-1803-0101",
-      "model": "DG7G",
-      "name": "DEEBOT OZMO 960",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "h041es",
-    "product": {
-      "UILogicId": "DK_781_PLUS",
-      "_id": "609384184a84d700082b3ab4",
-      "icon": "60a201829fe5580009c6d76a",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a201829fe5580009c6d76a",
-      "materialNo": "110-2025-0801",
-      "model": "K760_EU",
-      "name": "yeedi vac hybrid",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "h18jkh",
-    "product": {
-      "UILogicId": "DT_8G",
-      "_id": "5e8e8d2a032edd3c03c66bf7",
-      "icon": "5e8e8d146482551d72530e47",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8e8d146482551d72530e47",
-      "materialNo": "110-1921-0400",
-      "model": "OT8G",
-      "name": "DEEBOT OZMO T8",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "hsgwhi",
-    "product": {
-      "UILogicId": "ATMOBOT_ANDY",
-      "_id": "5de9b6fb787cdf0001ef98ac",
-      "icon": "5e731a4a06f6de700464c69d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e731a4a06f6de700464c69d",
-      "materialNo": "113-1931-0001",
-      "model": "ANDY",
-      "name": "ANDY",
-      "ota": true,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "ifbw08",
-    "product": {
-      "UILogicId": "DT_8SE_G",
-      "_id": "5fbc7e18c7260e0008585c8f",
-      "icon": "61318e07e37c4686071aee67",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61318e07e37c4686071aee67",
-      "materialNo": "110-2008-0901",
-      "model": "N8_PRO_PLUS_WHITE",
-      "name": "DEEBOT N8 PRO+",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "ipohi5",
-    "product": {
-      "UILogicId": "T9_PRO_G",
-      "_id": "608b98c9d18cbd0008e2fd72",
-      "icon": "608b98c51269020008a962db",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/608b98c51269020008a962db",
-      "materialNo": "110-2010-0402",
-      "model": "T9_ECO_INT",
-      "name": "DEEBOT T9",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "ipzjy0",
-    "product": {
-      "UILogicId": "U2_HIGH_G",
-      "_id": "5e9923878c92c7676b835555",
-      "icon": "606426c64a84d700082b39fa",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426c64a84d700082b39fa",
-      "materialNo": "110-1919-0702",
-      "model": "U2_EL1",
-      "name": "DEEBOT U2",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "jffnlf",
-    "product": {
-      "UILogicId": "DU_6G",
-      "_id": "5e53208426be716edf4b55cf",
-      "icon": "5e53207a26be71596c4b55cd",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e53207a26be71596c4b55cd",
-      "materialNo": "130-6311-1702",
-      "model": "DU3G",
-      "name": "DEEBOT N3 MAX",
-      "ota": true,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "jh3ry2",
-    "product": {
-      "UILogicId": "ATMOBOT_AVA",
-      "_id": "5de9b77f0136c00001cb1f8e",
-      "icon": "6049b34d1269020008a95aef",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b34d1269020008a95aef",
-      "materialNo": "113-1931-0003",
-      "model": "AVA",
-      "name": "AVA",
-      "ota": true,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "jjccwk",
-    "product": {
-      "UILogicId": "DV_6G",
-      "_id": "5ce7870cd85b4d0001775db9",
-      "icon": "5d3aa309ba13eb00013feb69",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d3aa309ba13eb00013feb69",
-      "materialNo": "20200115004",
-      "model": "DV6G",
-      "name": "DEEBOT OZMO 750",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "jr3pqa",
-    "product": {
-      "UILogicId": "D_700",
-      "_id": "5b43077b8bc457000140363e",
-      "icon": "5b5ac4cc8d5a56000111e769",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b5ac4cc8d5a56000111e769",
-      "materialNo": "702-0000-0202",
-      "model": "D711",
-      "name": "DEEBOT 711",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "kckkso",
-    "product": {
-      "UILogicId": "AT80",
-      "_id": "5fcda34ae3a1890008c04afc",
-      "icon": "6010c6be4d8cf90006292d1e",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6010c6be4d8cf90006292d1e",
-      "materialNo": "117-1923-0200",
-      "model": "AT80_TW",
-      "name": "Aaron",
-      "ota": true,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "l01kak",
-    "product": {
-      "UILogicId": "ATMOBOT_AVA_IN",
-      "_id": "60d59457c89066000866a441",
-      "icon": "60ece97ed4fc6e0008e4aaa5",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60ece97ed4fc6e0008e4aaa5",
-      "materialNo": "113-1931-0005",
-      "model": "AVA_INA",
-      "name": "AVA",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064258d1269020008a9627a"
     }
   },
   {
     "classid": "lhbd50",
     "product": {
-      "UILogicId": "T9_PRO_G",
       "_id": "5f88195e6cf8de0008ed7c11",
-      "icon": "603f51243b03f50007b6c2ca",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f51243b03f50007b6c2ca",
       "materialNo": "110-2010-1001",
-      "model": "DEEBOT_OZMO_T9PLUS",
+      "smartType": "MQ_AP",
       "name": "DEEBOT T9+",
+      "icon": "603f51243b03f50007b6c2ca",
+      "model": "DEEBOT_OZMO_T9PLUS",
+      "UILogicId": "T9_PRO_G",
       "ota": true,
       "supportType": {
-        "alexa": true,
+        "share": true,
+        "tmjl": false,
         "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f51243b03f50007b6c2ca"
     }
   },
   {
-    "classid": "ls1ok3",
+    "classid": "659yh8",
     "product": {
-      "UILogicId": "D_900",
-      "_id": "5b6561060506b100015c8868",
-      "icon": "5ba4a2cb6c2f120001c32839",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ba4a2cb6c2f120001c32839",
-      "materialNo": "110-1711-0201",
-      "model": "DN5G",
-      "name": "DEEBOT 900 Series",
+      "_id": "60361d6134bf63000719d2e1",
+      "materialNo": "110-2011-0101",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T9 AIVI",
+      "icon": "603f5147c8115100083364bc",
+      "model": "T9_AIVI_INT",
+      "UILogicId": "T9_AF_G",
       "ota": true,
       "supportType": {
-        "alexa": true,
+        "share": true,
+        "tmjl": false,
         "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f5147c8115100083364bc"
     }
   },
   {
-    "classid": "m7lqzi",
+    "classid": "eyi9jv",
     "product": {
-      "UILogicId": "AA_30G",
-      "_id": "5c653edf7b93c700013f12cc",
-      "icon": "5d2c63a5ba13eb00013feab7",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c63a5ba13eb00013feab7",
-      "materialNo": "113-1708-0001",
-      "model": "AA30G",
-      "name": "ATMOBOT Pro",
+      "_id": "5b7b65f364e1680001a08b54",
+      "materialNo": "702-0000-0203",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 715",
+      "icon": "5b7b65f176f7f10001e9a0c2",
+      "model": "DV3G",
+      "UILogicId": "D_700",
       "ota": true,
       "supportType": {
-        "alexa": false,
-        "assistant": false,
         "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "mnx7f4",
-    "product": {
-      "UILogicId": "DK_781_PLUS",
-      "_id": "5fdc0afa5f437d0008e0dfa0",
-      "icon": "606e960b45505e0008e5cb55",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606e960b45505e0008e5cb55",
-      "materialNo": "110-2025-0101",
-      "model": "K781_PLUS",
-      "name": "yeedi vac station",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
+        "tmjl": false,
         "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "n4gstt",
-    "product": {
-      "UILogicId": "t10_ww_n_newtonaes",
-      "_id": "616d2125b0011d60087a18f2",
-      "icon": "61c422316de01220a2adb91d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c422316de01220a2adb91d",
-      "materialNo": "110-2115-0201",
-      "model": "NEWTON_AES_INT",
-      "name": "DEEBOT X1 PLUS",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "n6cwdb",
-    "product": {
-      "UILogicId": "T5_SE_G_DTOF",
-      "_id": "5f729454a541bd000881cc7b",
-      "icon": "60627a92fc527c00087fdb0a",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627a92fc527c00087fdb0a",
-      "materialNo": "110-2009-0900",
-      "model": "N8_LDS_WHITE_N",
-      "name": "DEEBOT N8",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "nq9yhl",
-    "product": {
-      "UILogicId": "U2_HIGH_MODE_G",
-      "_id": "5e8597b0032edd333ac66bbf",
-      "icon": "606426ebb0a931000860fad4",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426ebb0a931000860fad4",
-      "materialNo": "110-1919-0601",
-      "model": "U2_AH",
-      "name": "DEEBOT U2 PRO",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "p5nx9u",
-    "product": {
-      "UILogicId": "DK_750",
-      "_id": "5f0d45404a3cbe00073d17db",
-      "icon": "5f59e774c0f03a0008ee72e0",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5f59e774c0f03a0008ee72e0",
-      "materialNo": "110-2022-0001",
-      "model": "K750",
-      "name": "yeedi 2 hybrid",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "q1v5dn",
-    "product": {
-      "UILogicId": "AT_01G",
-      "_id": "5d312ae18d8d430001817002",
-      "icon": "5d83375f6b6a570001569e26",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d83375f6b6a570001569e26",
-      "materialNo": "70200000228",
-      "model": "AT01",
-      "name": "AT01",
-      "ota": true,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "r5y7re",
-    "product": {
-      "UILogicId": "T5_SE_G_DTOF",
-      "_id": "5fa4b1f8c7260e000858584b",
-      "icon": "60627a9cb0a931000860fac7",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627a9cb0a931000860fac7",
-      "materialNo": "110-2009-0902",
-      "model": "N8_DTOF_TW",
-      "name": "DEEBOT N8",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "r5zxjr",
-    "product": {
-      "UILogicId": "T5_SE_G",
-      "_id": "5fa2441169320300086ff812",
-      "icon": "60627c09b0a931000860facd",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627c09b0a931000860facd",
-      "materialNo": "110-2009-0101",
-      "model": "N7_LDS",
-      "name": "DEEBOT N7",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b7b65f176f7f10001e9a0c2"
     }
   },
   {
     "classid": "r8ead0",
     "product": {
-      "UILogicId": "D_500",
       "_id": "5c763f63280fda0001770b88",
-      "icon": "5c93204b63023c0001e7faa7",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c93204b63023c0001e7faa7",
       "materialNo": "702-0000-0161",
-      "model": "D502",
+      "smartType": "MQ_AP",
       "name": "DEEBOT 502",
+      "icon": "5c93204b63023c0001e7faa7",
+      "model": "D502",
+      "UILogicId": "D_500",
       "ota": false,
       "supportType": {
-        "alexa": true,
-        "assistant": true,
         "share": true,
-        "tmjl": false
-      }
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c93204b63023c0001e7faa7"
     }
   },
   {
-    "classid": "rss8xk",
+    "classid": "2pv572",
     "product": {
-      "UILogicId": "t10_ww_n_curieaesnoyiko",
-      "_id": "61a577a89bc93f5dca07b15f",
-      "icon": "61e90bbbfe80232316d12ea7",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61e90bbbfe80232316d12ea7",
-      "materialNo": "110-2113-0500",
-      "model": "CURIE_AES_INT",
-      "name": "DEEBOT T10 PLUS",
+      "_id": "5d1474630ac6ad00012b7940",
+      "materialNo": "110-1810-0107",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO 905",
+      "icon": "5d1474632a6bd50001b5b6f3",
+      "model": "OZMO905",
+      "UILogicId": "D_OZMO_900",
       "ota": true,
       "supportType": {
-        "alexa": true,
-        "assistant": true,
         "share": true,
-        "tmjl": false
-      }
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d1474632a6bd50001b5b6f3"
     }
   },
   {
-    "classid": "rvo6ev",
+    "classid": "nq9yhl",
     "product": {
+      "_id": "5e8597b0032edd333ac66bbf",
+      "materialNo": "110-1919-0601",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2 PRO",
+      "icon": "606426ebb0a931000860fad4",
+      "model": "U2_AH",
       "UILogicId": "U2_HIGH_MODE_G",
-      "_id": "5e859780648255c8bf530e14",
-      "icon": "606426feb0a931000860fad5",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426feb0a931000860fad5",
-      "materialNo": "110-1919-1001",
-      "model": "U2_AL",
-      "name": "DEEBOT U2",
       "ota": true,
       "supportType": {
-        "alexa": true,
-        "assistant": true,
         "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "snxbvc",
-    "product": {
-      "UILogicId": "DT_8SE_G",
-      "_id": "5fa4e31dd16a99000667eb94",
-      "icon": "60627bbfb0a931000860fac9",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bbfb0a931000860fac9",
-      "materialNo": "110-2008-0102",
-      "model": "N8_PRO_WHITE",
-      "name": "DEEBOT N8 PRO",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
+        "tmjl": false,
         "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426ebb0a931000860fad4"
     }
   },
   {
     "classid": "tpnwyu",
     "product": {
-      "UILogicId": "DX_AIG",
       "_id": "5edd9a4075f2fc000636086c",
-      "icon": "6050503e1269020008a95afa",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6050503e1269020008a95afa",
       "materialNo": "110-1913-0401",
-      "model": "DXAIS_HK",
+      "smartType": "MQ_AP",
       "name": "DEEBOT T8 AIVI +",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "ts2ofl",
-    "product": {
-      "UILogicId": "U2_HIGH_G",
-      "_id": "5e993e8b8c92c753dd83555f",
-      "icon": "606425dfd18cbd0008e2fcf3",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425dfd18cbd0008e2fcf3",
-      "materialNo": "110-1919-0901",
-      "model": "U2_AUL",
-      "name": "DEEBOT U2",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "ty84oi",
-    "product": {
-      "UILogicId": "N8_PLUS",
-      "_id": "5fbcac79c7260e0008585c94",
-      "icon": "60627bcafc527c00087fdb0c",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bcafc527c00087fdb0c",
-      "materialNo": "110-2029-1201",
-      "model": "N8_WHITE",
-      "name": "DEEBOT N8",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "u4h1uk",
-    "product": {
-      "UILogicId": "U2_HIGH_G",
-      "_id": "5e993eba8c92c71489835564",
-      "icon": "606425bed18cbd0008e2fcf2",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425bed18cbd0008e2fcf2",
-      "materialNo": "110-1919-1101",
-      "model": "U2_JP",
-      "name": "DEEBOT U2 PRO",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "u5vcmk",
-    "product": {
-      "UILogicId": "DK_781_PLUS",
-      "_id": "609383dcd18cbd0008e2fd7f",
-      "icon": "60a2017babb8be0008b6ad16",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a2017babb8be0008b6ad16",
-      "materialNo": "110-2025-0701",
-      "model": "K760_US",
-      "name": "yeedi vac",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "u6eqoa",
-    "product": {
-      "UILogicId": "U2_HIGH_G",
-      "_id": "5e993f2f6a299d0bd506d665",
-      "icon": "606425a11269020008a9627d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425a11269020008a9627d",
-      "materialNo": "110-1919-1401",
-      "model": "U2_APAC",
-      "name": "DEEBOT U2 PRO",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "ucn2xe",
-    "product": {
-      "UILogicId": "T9_PRO_G",
-      "_id": "5f8819156cf8de0008ed7c0d",
-      "icon": "603f510e3b03f50007b6c2c9",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f510e3b03f50007b6c2c9",
-      "materialNo": "110-2010-0301",
-      "model": "DEEBOT_OZMO_T9",
-      "name": "DEEBOT T9",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "um2ywg",
-    "product": {
-      "UILogicId": "T9_PRO_G",
-      "_id": "608b9981fc527c00087fddf1",
-      "icon": "608b997e17c95b0008ff221f",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/608b997e17c95b0008ff221f",
-      "materialNo": "110-2010-1102",
-      "model": "T9_PLUS_ECO_INT",
-      "name": "DEEBOT T9+",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "uv242z",
-    "product": {
-      "UILogicId": "D_700",
-      "_id": "5b5149b4ac0b87000148c128",
-      "icon": "5b5ac4e45f21100001882bb9",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b5ac4e45f21100001882bb9",
-      "materialNo": "702-0000-0205",
-      "model": "D700",
-      "name": "DEEBOT 710",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "uzhlnc",
-    "product": {
-      "UILogicId": "AT80",
-      "_id": "6111dae95a2dff000a243361",
-      "icon": "6111dafd5a2dff000a243364",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6111dafd5a2dff000a243364",
-      "materialNo": "117-1923-0004",
-      "model": "AT80_INA",
-      "name": "Aaron",
-      "ota": true,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "vi829v",
-    "product": {
-      "UILogicId": "DX_5G",
-      "_id": "5c19a8f3a1e6ee0001782247",
-      "icon": "606278d3fc527c00087fdb08",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606278d3fc527c00087fdb08",
-      "materialNo": "110-1819-0101",
-      "model": "DX5G",
-      "name": "DEEBOT OZMO 920 Series",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "vsc5ia",
-    "product": {
-      "UILogicId": "D_500",
-      "_id": "5c763eba280fda0001770b81",
-      "icon": "5c874326280fda0001770d2a",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c874326280fda0001770d2a",
-      "materialNo": "702-0000-0163",
-      "model": "D500",
-      "name": "DEEBOT 500",
-      "ota": false,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "vthpeg",
-    "product": {
-      "UILogicId": "DK_850",
-      "_id": "5fe54a90bbf4b30006cd94bf",
-      "icon": "60700a7e1269020008a96293",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60700a7e1269020008a96293",
-      "materialNo": "110-2028-0201",
-      "model": "K850_PLUS",
-      "name": "yeedi mop station",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "w16crm",
-    "product": {
+      "icon": "6050503e1269020008a95afa",
+      "model": "DXAIS_HK",
       "UILogicId": "DX_AIG",
-      "_id": "604083d91da61a00082303c4",
-      "icon": "605053f7d18cbd0008e2f814",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605053f7d18cbd0008e2f814",
-      "materialNo": "110-1913-0701",
-      "model": "DXAIS_US",
-      "name": "DEEBOT OZMO T8 AIVI+",
       "ota": true,
       "supportType": {
-        "alexa": true,
-        "assistant": true,
         "share": true,
-        "tmjl": false
-      }
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6050503e1269020008a95afa"
     }
   },
   {
-    "classid": "wgxm70",
+    "classid": "0bdtzz",
     "product": {
+      "_id": "5fa105c6d16a99000667eb54",
+      "materialNo": "110-1921-0404",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO T8 PURE",
+      "icon": "5fa105bbd16a99000667eb52",
+      "model": "OT8_PURE",
       "UILogicId": "DT_8G",
-      "_id": "5ed5e4d3a719ea460ec3216c",
-      "icon": "5edf2bbedb28cc00062f8bd7",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5edf2bbedb28cc00062f8bd7",
-      "materialNo": "110-1921-0012",
-      "model": "T8GC",
-      "name": "DEEBOT T8",
       "ota": true,
       "supportType": {
-        "alexa": true,
-        "assistant": true,
         "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "wlqdkp",
-    "product": {
-      "UILogicId": "U2_HIGH_G",
-      "_id": "5e9924018c92c7c480835559",
-      "icon": "6064263ad18cbd0008e2fcf4",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064263ad18cbd0008e2fcf4",
-      "materialNo": "110-1919-0701",
-      "model": "U2_EL2",
-      "name": "DEEBOT U2",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
+        "tmjl": false,
         "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "x5d34r",
-    "product": {
-      "UILogicId": "DX_AIG",
-      "_id": "5de0d86ed88546000195239a",
-      "icon": "605053e7fc527c00087fda1e",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605053e7fc527c00087fda1e",
-      "materialNo": "110-1913-0101",
-      "model": "DXAI_INTL",
-      "name": "DEEBOT OZMO T8 AIVI",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "xb83mv",
-    "product": {
-      "UILogicId": "DK_4G",
-      "_id": "5d246180350e7a0001e84bea",
-      "icon": "5d3fe649de51dd0001fee0de",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d3fe649de51dd0001fee0de",
-      "materialNo": "88393939393",
-      "model": "SLIM4_INTL",
-      "name": "DEEBOT U3",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "y2qy3m",
-    "product": {
-      "UILogicId": "U2_HIGH_G",
-      "_id": "5ea8d28922838d15795ed88d",
-      "icon": "606425784a84d700082b39f6",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425784a84d700082b39f6",
-      "materialNo": "110-1919-1701",
-      "model": "U2_APAC3",
-      "name": "DEEBOT U2 PRO",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "y79a7u",
-    "product": {
-      "UILogicId": "D_OZMO_900",
-      "_id": "5b04c0227ccd1a0001e1f6a8",
-      "icon": "5b04c0217ccd1a0001e1f6a7",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b04c0217ccd1a0001e1f6a7",
-      "materialNo": "110-1810-0101",
-      "model": "DN5G",
-      "name": "DEEBOT OZMO 900 Series",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "yna5xi",
-    "product": {
-      "UILogicId": "DX_9G",
-      "_id": "5c19a91ca1e6ee000178224a",
-      "icon": "606278df4a84d700082b39f1",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606278df4a84d700082b39f1",
-      "materialNo": "110-1820-0101",
-      "model": "DX9G",
-      "name": "DEEBOT OZMO 950 Series",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "yu362x",
-    "product": {
-      "UILogicId": "DT_8SE_G",
-      "_id": "5fbc7da39601440008b2446d",
-      "icon": "60627bde50928b0007c13273",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bde50928b0007c13273",
-      "materialNo": "110-2008-0103",
-      "model": "N8_PRO_BLACK",
-      "name": "DEEBOT N8 PRO",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "yu7oqr",
-    "product": {
-      "UILogicId": "winbot_g",
-      "_id": "60fa62b779330100089a7ce2",
-      "icon": "60fa62b079330100089a7ce0",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60fa62b079330100089a7ce0",
-      "materialNo": "111-2005-0202",
-      "model": "W920_INT_GD",
-      "name": "WINBOT 920",
-      "ota": true,
-      "supportType": {
-        "alexa": false,
-        "assistant": false,
-        "share": false,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "z0gd1j",
-    "product": {
-      "UILogicId": "N8_PLUS",
-      "_id": "61a7126ed3028324ec98df93",
-      "icon": "61a712dbd540b3fc0684cdd6",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61a712dbd540b3fc0684cdd6",
-      "materialNo": "110-2029-1002",
-      "model": "N8_NEO",
-      "name": "DEEBOT Neo",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
-    }
-  },
-  {
-    "classid": "zi1uwd",
-    "product": {
-      "UILogicId": "DK_4GLINE",
-      "_id": "5d78f4e878d8b60001e23edc",
-      "icon": "5da834a8d66cd10001f58265",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5da834a8d66cd10001f58265",
-      "materialNo": "3",
-      "model": "DK4G.11",
-      "name": "DEEBOT U3 LINE FRIENDS",
-      "ota": true,
-      "supportType": {
-        "alexa": true,
-        "assistant": true,
-        "share": true,
-        "tmjl": false
-      }
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5fa105bbd16a99000667eb52"
     }
   },
   {
     "classid": "zjna8m",
     "product": {
-      "UILogicId": "U2_HIGH_MODE_G",
       "_id": "5ff6a194ac51bf0008d98390",
-      "icon": "6064256ed18cbd0008e2fcee",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064256ed18cbd0008e2fcee",
       "materialNo": "130-6225-0303",
-      "model": "U2_SE",
+      "smartType": "MQ_AP",
       "name": "DEEBOT U2 SE",
+      "icon": "6064256ed18cbd0008e2fcee",
+      "model": "U2_SE",
+      "UILogicId": "U2_HIGH_MODE_G",
       "ota": true,
       "supportType": {
-        "alexa": true,
-        "assistant": true,
         "share": true,
-        "tmjl": false
-      }
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064256ed18cbd0008e2fcee"
+    }
+  },
+  {
+    "classid": "dl8fht",
+    "product": {
+      "_id": "5acb0fa87c295c0001876ecf",
+      "materialNo": "702-0000-0170",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 600 Series",
+      "icon": "5acc32067c295c0001876eea",
+      "model": "D600",
+      "UILogicId": "D_600",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5acc32067c295c0001876eea"
+    }
+  },
+  {
+    "classid": "yna5xi",
+    "product": {
+      "_id": "5c19a91ca1e6ee000178224a",
+      "materialNo": "110-1820-0101",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO 950 Series",
+      "icon": "606278df4a84d700082b39f1",
+      "model": "DX9G",
+      "UILogicId": "DX_9G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606278df4a84d700082b39f1"
+    }
+  },
+  {
+    "classid": "emzppx",
+    "product": {
+      "_id": "5c763f35280fda0001770b84",
+      "materialNo": "702-0000-0169",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 501",
+      "icon": "5c931fef280fda0001770d7e",
+      "model": "D501",
+      "UILogicId": "D_500",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c931fef280fda0001770d7e"
+    }
+  },
+  {
+    "classid": "141",
+    "product": {
+      "_id": "5cae97c9128519000168596f",
+      "materialNo": "110-1638-0101",
+      "smartType": "SPA",
+      "name": "DEEBOT M81 Pro",
+      "icon": "5d2c2aa64d60de0001eaf1f6",
+      "model": "M81",
+      "UILogicId": "ECO_INTL_141",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c2aa64d60de0001eaf1f6"
+    }
+  },
+  {
+    "classid": "130",
+    "product": {
+      "_id": "5cae98d01285190001685974",
+      "materialNo": "110-1629-0201",
+      "smartType": "SPA",
+      "name": "DEEBOT OZMO 610 Series",
+      "icon": "5d4b7640de51dd0001fee131",
+      "model": "OZMO600",
+      "UILogicId": "ECO_INTL_130",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7640de51dd0001fee131"
+    }
+  },
+  {
+    "classid": "16wdph",
+    "product": {
+      "_id": "5d280ce344af3600013839ab",
+      "materialNo": "702-0000-0171",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 661",
+      "icon": "5d280ce3350e7a0001e84c95",
+      "model": "D661",
+      "UILogicId": "D_661",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d280ce3350e7a0001e84c95"
+    }
+  },
+  {
+    "classid": "y2qy3m",
+    "product": {
+      "_id": "5ea8d28922838d15795ed88d",
+      "materialNo": "110-1919-1701",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2 PRO",
+      "icon": "606425784a84d700082b39f6",
+      "model": "U2_APAC3",
+      "UILogicId": "U2_HIGH_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425784a84d700082b39f6"
+    }
+  },
+  {
+    "classid": "u5vcmk",
+    "product": {
+      "_id": "609383dcd18cbd0008e2fd7f",
+      "materialNo": "110-2025-0701",
+      "smartType": "QRP",
+      "name": "yeedi vac",
+      "icon": "60a2017babb8be0008b6ad16",
+      "model": "K760_US",
+      "UILogicId": "DK_781_PLUS",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a2017babb8be0008b6ad16"
+    }
+  },
+  {
+    "classid": "115",
+    "product": {
+      "_id": "5bbedd2822d57f00018c13b7",
+      "materialNo": "110-1602-0101",
+      "smartType": "HK_AP",
+      "name": "DEEBOT OZMO/PRO 930 Series",
+      "icon": "5cf711aeb0acfc000179ff8a",
+      "model": "DR930",
+      "UILogicId": "DR_930G",
+      "ota": true,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cf711aeb0acfc000179ff8a"
+    }
+  },
+  {
+    "classid": "vi829v",
+    "product": {
+      "_id": "5c19a8f3a1e6ee0001782247",
+      "materialNo": "110-1819-0101",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO 920 Series",
+      "icon": "606278d3fc527c00087fdb08",
+      "model": "DX5G",
+      "UILogicId": "DX_5G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606278d3fc527c00087fdb08"
+    }
+  },
+  {
+    "classid": "d0cnel",
+    "product": {
+      "_id": "5ceba1c6d85b4d0001776986",
+      "materialNo": "702-0000-0204",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 711s",
+      "icon": "5d157f9f77a3a60001051f69",
+      "model": "D711S",
+      "UILogicId": "D_700",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d157f9f77a3a60001051f69"
+    }
+  },
+  {
+    "classid": "d4v1pm",
+    "product": {
+      "_id": "5e9924416a299dddac06d656",
+      "materialNo": "110-1919-0802",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2 PRO",
+      "icon": "606426254a84d700082b39f9",
+      "model": "U2_EH1",
+      "UILogicId": "U2_HIGH_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426254a84d700082b39f9"
+    }
+  },
+  {
+    "classid": "b2jqs4",
+    "product": {
+      "_id": "5fbc7cc69601440008b24469",
+      "materialNo": "110-2029-0002",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8+",
+      "icon": "5feaeb27d4cb3a0006679047",
+      "model": "N8_PLUS_BLACK",
+      "UILogicId": "N8_PLUS",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5feaeb27d4cb3a0006679047"
+    }
+  },
+  {
+    "classid": "4zfacv",
+    "product": {
+      "_id": "5bf2596f23244a00013f2f13",
+      "materialNo": "910",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 910",
+      "icon": "5c778731280fda0001770ba0",
+      "model": "DN2_INTL",
+      "UILogicId": "DN_2G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c778731280fda0001770ba0"
+    }
+  },
+  {
+    "classid": "9akc61",
+    "product": {
+      "_id": "5c763f8263023c0001e7f855",
+      "materialNo": "20200115005",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 505",
+      "icon": "5c932067280fda0001770d7f",
+      "model": "D505",
+      "UILogicId": "D_500",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c932067280fda0001770d7f"
+    }
+  },
+  {
+    "classid": "129",
+    "product": {
+      "_id": "5ca31df1e9e9270001354b35",
+      "materialNo": "110-1628-0101",
+      "smartType": "SPA",
+      "name": "DEEBOT M86",
+      "icon": "5ca31df112851900016858c0",
+      "model": "M86",
+      "UILogicId": "ECO_INTL_129",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca31df112851900016858c0"
+    }
+  },
+  {
+    "classid": "aqdd5p",
+    "product": {
+      "_id": "5cb7cfba179839000114d762",
+      "materialNo": "110-1711-0001",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT DE55",
+      "icon": "5cb7cfbab72c4d00010e5fc7",
+      "model": "DE5G",
+      "UILogicId": "D_900",
+      "ota": true,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cb7cfbab72c4d00010e5fc7"
+    }
+  },
+  {
+    "classid": "ts2ofl",
+    "product": {
+      "_id": "5e993e8b8c92c753dd83555f",
+      "materialNo": "110-1919-0901",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2",
+      "icon": "606425dfd18cbd0008e2fcf3",
+      "model": "U2_AUL",
+      "UILogicId": "U2_HIGH_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425dfd18cbd0008e2fcf3"
+    }
+  },
+  {
+    "classid": "u6eqoa",
+    "product": {
+      "_id": "5e993f2f6a299d0bd506d665",
+      "materialNo": "110-1919-1401",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2 PRO",
+      "icon": "606425a11269020008a9627d",
+      "model": "U2_APAC",
+      "UILogicId": "U2_HIGH_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425a11269020008a9627d"
+    }
+  },
+  {
+    "classid": "3ab24g",
+    "product": {
+      "_id": "5e9d34418c92c717e9835583",
+      "materialNo": "130-6225-0302",
+      "smartType": "MQ_AP",
+      "name": "K650",
+      "icon": "5ef31b80f5dcdf000767cf4d",
+      "model": "K652G",
+      "UILogicId": "K650_RANDOM_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ef31b80f5dcdf000767cf4d"
+    }
+  },
+  {
+    "classid": "chmi0g",
+    "product": {
+      "_id": "5ee85cabfdd6a30008da0af8",
+      "materialNo": "110-1919-2301",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2 POWER",
+      "icon": "606425821269020008a96279",
+      "model": "U2_TW",
+      "UILogicId": "U2_HIGH_NOMAG_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425821269020008a96279"
+    }
+  },
+  {
+    "classid": "l01kak",
+    "product": {
+      "_id": "60d59457c89066000866a441",
+      "materialNo": "113-1931-0005",
+      "smartType": "MQ_AP",
+      "name": "AVA",
+      "icon": "60ece97ed4fc6e0008e4aaa5",
+      "model": "AVA_INA",
+      "UILogicId": "ATMOBOT_AVA_IN",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60ece97ed4fc6e0008e4aaa5"
+    }
+  },
+  {
+    "classid": "jjccwk",
+    "product": {
+      "_id": "5ce7870cd85b4d0001775db9",
+      "materialNo": "20200115004",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO 750",
+      "icon": "5d3aa309ba13eb00013feb69",
+      "model": "DV6G",
+      "UILogicId": "DV_6G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d3aa309ba13eb00013feb69"
+    }
+  },
+  {
+    "classid": "q1v5dn",
+    "product": {
+      "_id": "5d312ae18d8d430001817002",
+      "materialNo": "70200000228",
+      "smartType": "MQ_AP",
+      "name": "AT01",
+      "icon": "5d83375f6b6a570001569e26",
+      "model": "AT01",
+      "UILogicId": "AT_01G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d83375f6b6a570001569e26"
+    }
+  },
+  {
+    "classid": "snxbvc",
+    "product": {
+      "_id": "5fa4e31dd16a99000667eb94",
+      "materialNo": "110-2008-0102",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8 PRO",
+      "icon": "60627bbfb0a931000860fac9",
+      "model": "N8_PRO_WHITE",
+      "UILogicId": "DT_8SE_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bbfb0a931000860fac9"
+    }
+  },
+  {
+    "classid": "85as7h",
+    "product": {
+      "_id": "5fbc7f5069320300086ffa5e",
+      "materialNo": "110-2008-0902",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8 PRO+",
+      "icon": "5feaeb585f437d0008e0e00c",
+      "model": "N8_PRO_PLUS_BLACK",
+      "UILogicId": "DT_8SE_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5feaeb585f437d0008e0e00c"
+    }
+  },
+  {
+    "classid": "m7lqzi",
+    "product": {
+      "_id": "5c653edf7b93c700013f12cc",
+      "materialNo": "113-1708-0001",
+      "smartType": "MQ_AP",
+      "name": "ATMOBOT Pro",
+      "icon": "5d2c63a5ba13eb00013feab7",
+      "model": "AA30G",
+      "UILogicId": "AA_30G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c63a5ba13eb00013feab7"
+    }
+  },
+  {
+    "classid": "126",
+    "product": {
+      "_id": "5ca32ab212851900016858c7",
+      "materialNo": "702-0000-0136",
+      "smartType": "SPA",
+      "name": "DEEBOT N79",
+      "icon": "5ca32ab2e9e9270001354b3d",
+      "model": "N79",
+      "UILogicId": "ECO_INTL_126",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca32ab2e9e9270001354b3d"
+    }
+  },
+  {
+    "classid": "jh3ry2",
+    "product": {
+      "_id": "5de9b77f0136c00001cb1f8e",
+      "materialNo": "113-1931-0003",
+      "smartType": "MQ_AP",
+      "name": "AVA",
+      "icon": "6049b34d1269020008a95aef",
+      "model": "AVA",
+      "UILogicId": "ATMOBOT_AVA",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b34d1269020008a95aef"
+    }
+  },
+  {
+    "classid": "9rft3c",
+    "product": {
+      "_id": "5e14196a6e71b80001b60fda",
+      "materialNo": "191165",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO T5",
+      "icon": "6062795ad18cbd0008e2fce8",
+      "model": "DX9G_T5",
+      "UILogicId": "DX_9G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6062795ad18cbd0008e2fce8"
+    }
+  },
+  {
+    "classid": "jffnlf",
+    "product": {
+      "_id": "5e53208426be716edf4b55cf",
+      "materialNo": "130-6311-1702",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N3 MAX",
+      "icon": "5e53207a26be71596c4b55cd",
+      "model": "DU3G",
+      "UILogicId": "DU_6G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e53207a26be71596c4b55cd"
+    }
+  },
+  {
+    "classid": "09m4bu",
+    "product": {
+      "_id": "5e9d340b8c92c777ab83557f",
+      "materialNo": "130-6225-0605",
+      "smartType": "MQ_AP",
+      "name": "K650",
+      "icon": "5ef31b8cee3c1200075b6f67",
+      "model": "K651G",
+      "UILogicId": "K650_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ef31b8cee3c1200075b6f67"
+    }
+  },
+  {
+    "classid": "ifbw08",
+    "product": {
+      "_id": "5fbc7e18c7260e0008585c8f",
+      "materialNo": "110-2008-0901",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8 PRO+",
+      "icon": "61318e07e37c4686071aee67",
+      "model": "N8_PRO_PLUS_WHITE",
+      "UILogicId": "DT_8SE_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61318e07e37c4686071aee67"
+    }
+  },
+  {
+    "classid": "2pj946",
+    "product": {
+      "_id": "5fd1e362bbf4b30006cd9255",
+      "materialNo": "111-2005-0301",
+      "smartType": "BT",
+      "name": "WINBOT 920",
+      "icon": "6049b3631269020008a95af0",
+      "model": "W920_INT",
+      "UILogicId": "winbot_g",
+      "ota": true,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b3631269020008a95af0"
+    }
+  },
+  {
+    "classid": "04z443",
+    "product": {
+      "_id": "5fdc0a375f437d0008e0df9b",
+      "materialNo": "110-2025-0001",
+      "smartType": "QRP",
+      "name": "yeedi vac max",
+      "icon": "60a201729fe5580009c6d769",
+      "model": "K781",
+      "UILogicId": "DK_781_PLUS",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a201729fe5580009c6d769"
+    }
+  },
+  {
+    "classid": "c2of2s",
+    "product": {
+      "_id": "6045c070c8115100083364d7",
+      "materialNo": "130-6224-1306",
+      "smartType": "QRP",
+      "name": "DEEBOT N9+",
+      "icon": "61318dbc1d27796ece1d1baa",
+      "model": "N9_PLUS_TW",
+      "UILogicId": "DK_850",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61318dbc1d27796ece1d1baa"
+    }
+  },
+  {
+    "classid": "ipohi5",
+    "product": {
+      "_id": "608b98c9d18cbd0008e2fd72",
+      "materialNo": "110-2010-0402",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T9",
+      "icon": "608b98c51269020008a962db",
+      "model": "T9_ECO_INT",
+      "UILogicId": "T9_PRO_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/608b98c51269020008a962db"
+    }
+  },
+  {
+    "classid": "n4h5sz",
+    "product": {
+      "_id": "60d59209abb8be0008b6af31",
+      "materialNo": "113-2033-0100",
+      "smartType": "MQ_AP",
+      "name": "ANDY PRO",
+      "icon": "60d59206abb8be0008b6af2f",
+      "model": "ANDY_PRO_APAC",
+      "UILogicId": "ANDY_PRO_AU",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60d59206abb8be0008b6af2f"
+    }
+  },
+  {
+    "classid": "152",
+    "product": {
+      "_id": "5cbd97b961526a00019799bd",
+      "materialNo": "110-1628-0302",
+      "smartType": "SPA",
+      "name": "DEEBOT",
+      "icon": "5d4b7628de51dd0001fee12f",
+      "model": "D600",
+      "UILogicId": "ECO_INTL_152",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7628de51dd0001fee12f"
+    }
+  },
+  {
+    "classid": "hsgwhi",
+    "product": {
+      "_id": "5de9b6fb787cdf0001ef98ac",
+      "materialNo": "113-1931-0001",
+      "smartType": "MQ_AP",
+      "name": "ANDY",
+      "icon": "5e731a4a06f6de700464c69d",
+      "model": "ANDY",
+      "UILogicId": "ATMOBOT_ANDY",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e731a4a06f6de700464c69d"
+    }
+  },
+  {
+    "classid": "rvo6ev",
+    "product": {
+      "_id": "5e859780648255c8bf530e14",
+      "materialNo": "110-1919-1001",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2",
+      "icon": "606426feb0a931000860fad5",
+      "model": "U2_AL",
+      "UILogicId": "U2_HIGH_MODE_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426feb0a931000860fad5"
+    }
+  },
+  {
+    "classid": "wgxm70",
+    "product": {
+      "_id": "5ed5e4d3a719ea460ec3216c",
+      "materialNo": "110-1921-0012",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T8",
+      "icon": "5edf2bbedb28cc00062f8bd7",
+      "model": "T8GC",
+      "UILogicId": "DT_8G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5edf2bbedb28cc00062f8bd7"
+    }
+  },
+  {
+    "classid": "uv242z",
+    "product": {
+      "_id": "5b5149b4ac0b87000148c128",
+      "materialNo": "702-0000-0205",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 710",
+      "icon": "5b5ac4e45f21100001882bb9",
+      "model": "D700",
+      "UILogicId": "D_700",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b5ac4e45f21100001882bb9"
+    }
+  },
+  {
+    "classid": "gd4uut",
+    "product": {
+      "_id": "5bc8189d68142800016a6937",
+      "materialNo": "110-1803-0101",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO 960",
+      "icon": "5e8da019032edd9008c66bf0",
+      "model": "DG7G",
+      "UILogicId": "DR_935G",
+      "ota": true,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8da019032edd9008c66bf0"
+    }
+  },
+  {
+    "classid": "142",
+    "product": {
+      "_id": "5ca1ca7a12851900016858bd",
+      "materialNo": "110-1640-0101",
+      "smartType": "SPA",
+      "name": "DEEBOT Mini2",
+      "icon": "5ca1ca79e9e9270001354b2d",
+      "model": "Mini2",
+      "UILogicId": "ECO_INTL_142",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca1ca79e9e9270001354b2d"
+    }
+  },
+  {
+    "classid": "0xyhhr",
+    "product": {
+      "_id": "5ca4716312851900016858cd",
+      "materialNo": "110-1825-0201",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO 700",
+      "icon": "5d117d4f0ac6ad00012b792d",
+      "model": "DV5G",
+      "UILogicId": "DV_5G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d117d4f0ac6ad00012b792d"
+    }
+  },
+  {
+    "classid": "140",
+    "product": {
+      "_id": "5cd43b4cf542e00001dc2dec",
+      "materialNo": "110-1639-0011",
+      "smartType": "SPA",
+      "name": "DEEBOT Slim Neo",
+      "icon": "5d2c152f4d60de0001eaf1f4",
+      "model": "SlimNeo",
+      "UILogicId": "ECO_INTL_140",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c152f4d60de0001eaf1f4"
+    }
+  },
+  {
+    "classid": "b742vd",
+    "product": {
+      "_id": "5e699a4106f6de83ea64c620",
+      "materialNo": "110-1921-0301",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO T8",
+      "icon": "5e8e93a7032edd3f5ec66d4a",
+      "model": "T8G",
+      "UILogicId": "DT_8G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8e93a7032edd3f5ec66d4a"
+    }
+  },
+  {
+    "classid": "fqxoiu",
+    "product": {
+      "_id": "5e8e8d8a032edd8457c66bfb",
+      "materialNo": "110-1921-1100",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO T8+",
+      "icon": "605b059217c95b0008ff20d4",
+      "model": "OT8+",
+      "UILogicId": "DT_8G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605b059217c95b0008ff20d4"
+    }
+  },
+  {
+    "classid": "vthpeg",
+    "product": {
+      "_id": "5fe54a90bbf4b30006cd94bf",
+      "materialNo": "110-2028-0201",
+      "smartType": "QRP",
+      "name": "yeedi mop station",
+      "icon": "60700a7e1269020008a96293",
+      "model": "K850_PLUS",
+      "UILogicId": "DK_850",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60700a7e1269020008a96293"
+    }
+  },
+  {
+    "classid": "h041es",
+    "product": {
+      "_id": "609384184a84d700082b3ab4",
+      "materialNo": "110-2025-0801",
+      "smartType": "QRP",
+      "name": "yeedi vac hybrid",
+      "icon": "60a201829fe5580009c6d76a",
+      "model": "K760_EU",
+      "UILogicId": "DK_781_PLUS",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a201829fe5580009c6d76a"
+    }
+  },
+  {
+    "classid": "jr3pqa",
+    "product": {
+      "_id": "5b43077b8bc457000140363e",
+      "materialNo": "702-0000-0202",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 711",
+      "icon": "5b5ac4cc8d5a56000111e769",
+      "model": "D711",
+      "UILogicId": "D_700",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b5ac4cc8d5a56000111e769"
+    }
+  },
+  {
+    "classid": "155",
+    "product": {
+      "_id": "5cce893813afb7000195d6af",
+      "materialNo": "702-0000-0164",
+      "smartType": "SPA",
+      "name": "DEEBOT N79S/SE",
+      "icon": "5cd4ca505b032200015a455d",
+      "model": "DN622",
+      "UILogicId": "ECO_INTL_155",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cd4ca505b032200015a455d"
+    }
+  },
+  {
+    "classid": "u4h1uk",
+    "product": {
+      "_id": "5e993eba8c92c71489835564",
+      "materialNo": "110-1919-1101",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2 PRO",
+      "icon": "606425bed18cbd0008e2fcf2",
+      "model": "U2_JP",
+      "UILogicId": "U2_HIGH_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425bed18cbd0008e2fcf2"
+    }
+  },
+  {
+    "classid": "7bryc5",
+    "product": {
+      "_id": "5fa4e248c7260e0008585850",
+      "materialNo": "110-2029-0001",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8+",
+      "icon": "5fb474d4d16a99000667edd9",
+      "model": "N8_PLUS_WHITE",
+      "UILogicId": "N8_PLUS",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5fb474d4d16a99000667edd9"
+    }
+  },
+  {
+    "classid": "ucn2xe",
+    "product": {
+      "_id": "5f8819156cf8de0008ed7c0d",
+      "materialNo": "110-2010-0301",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T9",
+      "icon": "603f510e3b03f50007b6c2c9",
+      "model": "DEEBOT_OZMO_T9",
+      "UILogicId": "T9_PRO_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f510e3b03f50007b6c2c9"
+    }
+  },
+  {
+    "classid": "ty84oi",
+    "product": {
+      "_id": "5fbcac79c7260e0008585c94",
+      "materialNo": "110-2029-1201",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8",
+      "icon": "60627bcafc527c00087fdb0c",
+      "model": "N8_WHITE",
+      "UILogicId": "N8_PLUS",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bcafc527c00087fdb0c"
+    }
+  },
+  {
+    "classid": "vsc5ia",
+    "product": {
+      "_id": "5c763eba280fda0001770b81",
+      "materialNo": "702-0000-0163",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 500",
+      "icon": "5c874326280fda0001770d2a",
+      "model": "D500",
+      "UILogicId": "D_500",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c874326280fda0001770d2a"
+    }
+  },
+  {
+    "classid": "165",
+    "product": {
+      "_id": "5ca32a11e9e9270001354b39",
+      "materialNo": "702-0000-0189",
+      "smartType": "SPA",
+      "name": "DEEBOT N79T/W",
+      "icon": "5ca32a1012851900016858c6",
+      "model": "N79T",
+      "UILogicId": "ECO_INTL_165",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca32a1012851900016858c6"
+    }
+  },
+  {
+    "classid": "x5d34r",
+    "product": {
+      "_id": "5de0d86ed88546000195239a",
+      "materialNo": "110-1913-0101",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO T8 AIVI",
+      "icon": "605053e7fc527c00087fda1e",
+      "model": "DXAI_INTL",
+      "UILogicId": "DX_AIG",
+      "ota": true,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605053e7fc527c00087fda1e"
+    }
+  },
+  {
+    "classid": "55aiho",
+    "product": {
+      "_id": "5e698a6306f6de52c264c61b",
+      "materialNo": "110-1921-1101",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO T8+",
+      "icon": "605be27250928b0007c13264",
+      "model": "T8+",
+      "UILogicId": "DT_8G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605be27250928b0007c13264"
+    }
+  },
+  {
+    "classid": "wlqdkp",
+    "product": {
+      "_id": "5e9924018c92c7c480835559",
+      "materialNo": "110-1919-0701",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2",
+      "icon": "6064263ad18cbd0008e2fcf4",
+      "model": "U2_EL2",
+      "UILogicId": "U2_HIGH_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064263ad18cbd0008e2fcf4"
+    }
+  },
+  {
+    "classid": "f32i67",
+    "product": {
+      "_id": "5fc49656d16a99000667f11b",
+      "materialNo": "113-1929-0101",
+      "smartType": "MQ_AP",
+      "name": "AVA",
+      "icon": "6049b32ad18cbd0008e2f812",
+      "model": "AVA_TW",
+      "UILogicId": "ATMOBOT_AVA",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b32ad18cbd0008e2f812"
+    }
+  },
+  {
+    "classid": "02uwxm",
+    "product": {
+      "_id": "5ae1481e7ccd1a0001e1f69e",
+      "materialNo": "110-1715-0201",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO Slim10 Series",
+      "icon": "60810dddd18cbd0008e2fd27",
+      "model": "SLIM10",
+      "UILogicId": "D_OZMO_SLIM10",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60810dddd18cbd0008e2fd27"
+    }
+  },
+  {
+    "classid": "159",
+    "product": {
+      "_id": "5ca32bc2e9e9270001354b41",
+      "materialNo": "110-1629-0203",
+      "smartType": "SPA",
+      "name": "DEEBOT OZMO 601",
+      "icon": "5d4b7606de51dd0001fee12d",
+      "model": "159",
+      "UILogicId": "ECO_INTL_159",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7606de51dd0001fee12d"
+    }
+  },
+  {
+    "classid": "125",
+    "product": {
+      "_id": "5cae9703128519000168596a",
+      "materialNo": "110-1638-0102",
+      "smartType": "SPA",
+      "name": "DEEBOT M80 Pro",
+      "icon": "5d2c14414d60de0001eaf1f2",
+      "model": "M80",
+      "UILogicId": "ECO_INTL_125",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c14414d60de0001eaf1f2"
+    }
+  },
+  {
+    "classid": "xb83mv",
+    "product": {
+      "_id": "5d246180350e7a0001e84bea",
+      "materialNo": "88393939393",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U3",
+      "icon": "5d3fe649de51dd0001fee0de",
+      "model": "SLIM4_INTL",
+      "UILogicId": "DK_4G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d3fe649de51dd0001fee0de"
+    }
+  },
+  {
+    "classid": "ar5bjb",
+    "product": {
+      "_id": "5e58a73d36e8f3cab08f031f",
+      "materialNo": "130-6211-0610",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 665",
+      "icon": "5e58a2df36e8f39e318f031d",
+      "model": "D665",
+      "UILogicId": "D_661",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e58a2df36e8f39e318f031d"
+    }
+  },
+  {
+    "classid": "n6cwdb",
+    "product": {
+      "_id": "5f729454a541bd000881cc7b",
+      "materialNo": "110-2009-0900",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8",
+      "icon": "60627a92fc527c00087fdb0a",
+      "model": "N8_LDS_WHITE_N",
+      "UILogicId": "T5_SE_G_DTOF",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627a92fc527c00087fdb0a"
+    }
+  },
+  {
+    "classid": "mnx7f4",
+    "product": {
+      "_id": "5fdc0afa5f437d0008e0dfa0",
+      "materialNo": "110-2025-0101",
+      "smartType": "QRP",
+      "name": "yeedi vac station",
+      "icon": "606e960b45505e0008e5cb55",
+      "model": "K781_PLUS",
+      "UILogicId": "DK_781_PLUS",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606e960b45505e0008e5cb55"
+    }
+  },
+  {
+    "classid": "um2ywg",
+    "product": {
+      "_id": "608b9981fc527c00087fddf1",
+      "materialNo": "110-2010-1102",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T9+",
+      "icon": "608b997e17c95b0008ff221f",
+      "model": "T9_PLUS_ECO_INT",
+      "UILogicId": "T9_PRO_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/608b997e17c95b0008ff221f"
+    }
+  },
+  {
+    "classid": "y79a7u",
+    "product": {
+      "_id": "5b04c0227ccd1a0001e1f6a8",
+      "materialNo": "110-1810-0101",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO 900 Series",
+      "icon": "5b04c0217ccd1a0001e1f6a7",
+      "model": "DN5G",
+      "UILogicId": "D_OZMO_900",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b04c0217ccd1a0001e1f6a7"
+    }
+  },
+  {
+    "classid": "zi1uwd",
+    "product": {
+      "_id": "5d78f4e878d8b60001e23edc",
+      "materialNo": "3",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U3 LINE FRIENDS",
+      "icon": "5da834a8d66cd10001f58265",
+      "model": "DK4G.11",
+      "UILogicId": "DK_4GLINE",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5da834a8d66cd10001f58265"
+    }
+  },
+  {
+    "classid": "h18jkh",
+    "product": {
+      "_id": "5e8e8d2a032edd3c03c66bf7",
+      "materialNo": "110-1921-0400",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO T8",
+      "icon": "5e8e8d146482551d72530e47",
+      "model": "OT8G",
+      "UILogicId": "DT_8G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8e8d146482551d72530e47"
+    }
+  },
+  {
+    "classid": "7j1tu6",
+    "product": {
+      "_id": "5e993e566a299d449a06d65a",
+      "materialNo": "110-1919-0801",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2 PRO",
+      "icon": "6064260545505e0008e5cb49",
+      "model": "U2_EH2",
+      "UILogicId": "U2_HIGH_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064260545505e0008e5cb49"
+    }
+  },
+  {
+    "classid": "c0lwyn",
+    "product": {
+      "_id": "5e993eef6a299d7e4a06d660",
+      "materialNo": "110-1919-1301",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2 PRO",
+      "icon": "606425ab4a84d700082b39f7",
+      "model": "U2_AUH",
+      "UILogicId": "U2_HIGH_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425ab4a84d700082b39f7"
+    }
+  },
+  {
+    "classid": "r5zxjr",
+    "product": {
+      "_id": "5fa2441169320300086ff812",
+      "materialNo": "110-2009-0101",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N7",
+      "icon": "60627c09b0a931000860facd",
+      "model": "N7_LDS",
+      "UILogicId": "T5_SE_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627c09b0a931000860facd"
+    }
+  },
+  {
+    "classid": "yu362x",
+    "product": {
+      "_id": "5fbc7da39601440008b2446d",
+      "materialNo": "110-2008-0103",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8 PRO",
+      "icon": "60627bde50928b0007c13273",
+      "model": "N8_PRO_BLACK",
+      "UILogicId": "DT_8SE_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bde50928b0007c13273"
+    }
+  },
+  {
+    "classid": "w16crm",
+    "product": {
+      "_id": "604083d91da61a00082303c4",
+      "materialNo": "110-1913-0701",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT OZMO T8 AIVI+",
+      "icon": "605053f7d18cbd0008e2f814",
+      "model": "DXAIS_US",
+      "UILogicId": "DX_AIG",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605053f7d18cbd0008e2f814"
+    }
+  },
+  {
+    "classid": "ls1ok3",
+    "product": {
+      "_id": "5b6561060506b100015c8868",
+      "materialNo": "110-1711-0201",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT 900 Series",
+      "icon": "5ba4a2cb6c2f120001c32839",
+      "model": "DN5G",
+      "UILogicId": "D_900",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ba4a2cb6c2f120001c32839"
+    }
+  },
+  {
+    "classid": "123",
+    "product": {
+      "_id": "5cae9b201285190001685977",
+      "materialNo": "110-1639-0102",
+      "smartType": "SPA",
+      "name": "DEEBOT Slim2 Series",
+      "icon": "5d2c150dba13eb00013feaae",
+      "model": "Slim2",
+      "UILogicId": "ECO_INTL_123",
+      "ota": false,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c150dba13eb00013feaae"
+    }
+  },
+  {
+    "classid": "ipzjy0",
+    "product": {
+      "_id": "5e9923878c92c7676b835555",
+      "materialNo": "110-1919-0702",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT U2",
+      "icon": "606426c64a84d700082b39fa",
+      "model": "U2_EL1",
+      "UILogicId": "U2_HIGH_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426c64a84d700082b39fa"
+    }
+  },
+  {
+    "classid": "p5nx9u",
+    "product": {
+      "_id": "5f0d45404a3cbe00073d17db",
+      "materialNo": "110-2022-0001",
+      "smartType": "QRP",
+      "name": "yeedi 2 hybrid",
+      "icon": "5f59e774c0f03a0008ee72e0",
+      "model": "K750",
+      "UILogicId": "DK_750",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5f59e774c0f03a0008ee72e0"
+    }
+  },
+  {
+    "classid": "r5y7re",
+    "product": {
+      "_id": "5fa4b1f8c7260e000858584b",
+      "materialNo": "110-2009-0902",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8",
+      "icon": "60627a9cb0a931000860fac7",
+      "model": "N8_DTOF_TW",
+      "UILogicId": "T5_SE_G_DTOF",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627a9cb0a931000860fac7"
+    }
+  },
+  {
+    "classid": "36xnxf",
+    "product": {
+      "_id": "5fbcacf369320300086ffa63",
+      "materialNo": "110-2029-0701",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8",
+      "icon": "60627bd517c95b0008ff20ec",
+      "model": "N8_BLACK\t",
+      "UILogicId": "N8_PLUS",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bd517c95b0008ff20ec"
+    }
+  },
+  {
+    "classid": "1qdu4z",
+    "product": {
+      "_id": "5de9b7f50136c00001cb1f96",
+      "materialNo": "117-1923-0101",
+      "smartType": "MQ_AP",
+      "name": "Aaron",
+      "icon": "5e71c7df298f0d9cabfef86f",
+      "model": "AT80K",
+      "UILogicId": "AT80",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e71c7df298f0d9cabfef86f"
+    }
+  },
+  {
+    "classid": "34vhpm",
+    "product": {
+      "_id": "5edd998afdd6a30008da039b",
+      "materialNo": "110-1913-0501",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T8 AIVI +",
+      "icon": "605050031269020008a95af9",
+      "model": "DXAIS_TW",
+      "UILogicId": "DX_AIG",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605050031269020008a95af9"
+    }
+  },
+  {
+    "classid": "kckkso",
+    "product": {
+      "_id": "5fcda34ae3a1890008c04afc",
+      "materialNo": "117-1923-0200",
+      "smartType": "MQ_AP",
+      "name": "Aaron",
+      "icon": "6010c6be4d8cf90006292d1e",
+      "model": "AT80_TW",
+      "UILogicId": "AT80",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6010c6be4d8cf90006292d1e"
+    }
+  },
+  {
+    "classid": "5089oy",
+    "product": {
+      "_id": "60dd6db7d4fc6e0008e4aa92",
+      "materialNo": "110-1913-0502",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T8 AIVI",
+      "icon": "60dd6db3038a38000888bd5b",
+      "model": "DXAI_TW",
+      "UILogicId": "DX_AIG",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60dd6db3038a38000888bd5b"
+    }
+  },
+  {
+    "classid": "npggh4",
+    "product": {
+      "_id": "60e55d84170bd600085cb75a",
+      "materialNo": "117-1923-0003",
+      "smartType": "MQ_AP",
+      "name": "Aaron",
+      "icon": "60e55da5b343a50008f79f15",
+      "model": "AT80_AUS",
+      "UILogicId": "AT80",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60e55da5b343a50008f79f15"
+    }
+  },
+  {
+    "classid": "yu7oqr",
+    "product": {
+      "_id": "60fa62b779330100089a7ce2",
+      "materialNo": "111-2005-0202",
+      "smartType": "BT",
+      "name": "WINBOT 920",
+      "icon": "60fa62b079330100089a7ce0",
+      "model": "W920_INT_GD",
+      "UILogicId": "winbot_g",
+      "ota": true,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60fa62b079330100089a7ce0"
+    }
+  },
+  {
+    "classid": "uzhlnc",
+    "product": {
+      "_id": "6111dae95a2dff000a243361",
+      "materialNo": "117-1923-0004",
+      "smartType": "MQ_AP",
+      "name": "Aaron",
+      "icon": "6111dafd5a2dff000a243364",
+      "model": "AT80_INA",
+      "UILogicId": "AT80",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6111dafd5a2dff000a243364"
     }
   },
   {
     "classid": "zwvyi2",
     "product": {
-      "UILogicId": "k850_ww_h_k850",
       "_id": "616cc8326bb5143b3610a9c2",
-      "icon": "61cd6ea0258755faa61c832d",
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61cd6ea0258755faa61c832d",
       "materialNo": "110-2030-0101",
-      "model": "K850_PLUS_NEW_INT",
+      "smartType": "QRP",
       "name": "yeedi mop station pro",
+      "icon": "61cd6ea0258755faa61c832d",
+      "model": "K850_PLUS_NEW_INT",
+      "UILogicId": "k850_ww_h_k850",
       "ota": true,
       "supportType": {
-        "alexa": true,
-        "assistant": true,
         "share": true,
-        "tmjl": false
-      }
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61cd6ea0258755faa61c832d"
+    }
+  },
+  {
+    "classid": "aaxesz",
+    "product": {
+      "_id": "616d08d06bb5142d1c10a9c7",
+      "materialNo": "110-2120-0000",
+      "smartType": "QRP",
+      "name": "yeedi vac 2 pro",
+      "icon": "61b0498272e305141cc11624",
+      "model": "K950_INT",
+      "UILogicId": "k950_ww_h_k950",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61b0498272e305141cc11624"
+    }
+  },
+  {
+    "classid": "n4gstt",
+    "product": {
+      "_id": "616d2125b0011d60087a18f2",
+      "materialNo": "110-2115-0201",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT X1 PLUS",
+      "icon": "61c422316de01220a2adb91d",
+      "model": "NEWTON_AES_INT",
+      "UILogicId": "t10_ww_n_newtonaes",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c422316de01220a2adb91d"
+    }
+  },
+  {
+    "classid": "9t30w8",
+    "product": {
+      "_id": "6180a06b9a411f259e2c41ef",
+      "materialNo": "110-2120-0700",
+      "smartType": "QRP",
+      "name": "yeedi vac 2",
+      "icon": "61b0497b658e844efac7848d",
+      "model": "K950L",
+      "UILogicId": "k950l_us_h_k950",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61b0497b658e844efac7848d"
+    }
+  },
+  {
+    "classid": "1vxt52",
+    "product": {
+      "_id": "6185e29610683da4d6a7a9cd",
+      "materialNo": "110-2102-0300",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT X1 OMNI",
+      "icon": "6225bd1c2af2127804f540e5",
+      "model": "EINSTEIN_INT",
+      "UILogicId": "t10_ww_n_omni",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6225bd1c2af2127804f540e5"
+    }
+  },
+  {
+    "classid": "2o4lnm",
+    "product": {
+      "_id": "6185e87035d0b97c64df03d8",
+      "materialNo": "110-2102-0601",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT X1 TURBO",
+      "icon": "6225bd3b7604e551a50e46ac",
+      "model": "TURING_ACS_INT",
+      "UILogicId": "t10_ww_n_turingacs",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6225bd3b7604e551a50e46ac"
+    }
+  },
+  {
+    "classid": "4xq430",
+    "product": {
+      "_id": "619477c33e075f531d6a1a4a",
+      "materialNo": "111-2112-0101",
+      "smartType": "BT",
+      "name": "WINBOT W1 PRO",
+      "icon": "619477bc01fb68b814bf290b",
+      "model": "BELUGA_PRO_INT",
+      "UILogicId": "belugapro_ww_h_beluga",
+      "ota": true,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/619477bc01fb68b814bf290b"
+    }
+  },
+  {
+    "classid": "1b23du",
+    "product": {
+      "_id": "619765fbcfdd5e320a1f61f6",
+      "materialNo": "110-2102-0302",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT X1 OMNI",
+      "icon": "61c58ddc75bfe17354e4804e",
+      "model": "EINSTEIN_WHITE_INT",
+      "UILogicId": "t10_ww_n_omniwhite",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c58ddc75bfe17354e4804e"
+    }
+  },
+  {
+    "classid": "3yqsch",
+    "product": {
+      "_id": "619ee1c2168e51a3b523d0e0",
+      "materialNo": "110-2115-0002",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT X1",
+      "icon": "61c42246e2567cc9d413d46a",
+      "model": "NEWTON_INT",
+      "UILogicId": "t10_ww_n_newton",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c42246e2567cc9d413d46a"
+    }
+  },
+  {
+    "classid": "jtmf04",
+    "product": {
+      "_id": "61a575dca53e2bc2d649320b",
+      "materialNo": "110-2113-0100",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T10",
+      "icon": "61e90bd1fd39e47adc132e1b",
+      "model": "CURIE_INT",
+      "UILogicId": "t10_ww_n_curie",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61e90bd1fd39e47adc132e1b"
+    }
+  },
+  {
+    "classid": "9s1s80",
+    "product": {
+      "_id": "61a576a972e3053033c11602",
+      "materialNo": "110-2116-0100",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T10 TURBO",
+      "icon": "630711c6c87b95033a7817f9",
+      "model": "CURIE_ACS_INT",
+      "UILogicId": "t10_ww_n_curieacs",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/630711c6c87b95033a7817f9"
+    }
+  },
+  {
+    "classid": "rss8xk",
+    "product": {
+      "_id": "61a577a89bc93f5dca07b15f",
+      "materialNo": "110-2113-0500",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T10 PLUS",
+      "icon": "61e90bbbfe80232316d12ea7",
+      "model": "CURIE_AES_INT",
+      "UILogicId": "t10_ww_n_curieaesnoyiko",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61e90bbbfe80232316d12ea7"
+    }
+  },
+  {
+    "classid": "z0gd1j",
+    "product": {
+      "_id": "61a7126ed3028324ec98df93",
+      "materialNo": "110-2029-1002",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT Neo",
+      "icon": "61a712dbd540b3fc0684cdd6",
+      "model": "N8_NEO",
+      "UILogicId": "N8_PLUS",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61a712dbd540b3fc0684cdd6"
+    }
+  },
+  {
+    "classid": "s1f8g7",
+    "product": {
+      "_id": "61d569799ee4d3373d02cd67",
+      "materialNo": "110-2008-0802",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8 PRO CARE",
+      "icon": "61d569d0843b5a6dbdb74e32",
+      "model": "N8_PRO_CARE",
+      "UILogicId": "DT_8SE_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61d569d0843b5a6dbdb74e32"
+    }
+  },
+  {
+    "classid": "p95mgv",
+    "product": {
+      "_id": "61f0ba67fe80231f5dd12ec9",
+      "materialNo": "110-2113-0301",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T10 PLUS",
+      "icon": "61f0ba7970c881c6bf65ec3d",
+      "model": "CURIE_AES_INT_OK",
+      "UILogicId": "t10_ww_n_curieaes",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61f0ba7970c881c6bf65ec3d"
+    }
+  },
+  {
+    "classid": "5xu9h3",
+    "product": {
+      "_id": "621c1e5457e71a48e6bf3dd6",
+      "materialNo": "116-2201-0001",
+      "smartType": "BLAP",
+      "name": "GOAT",
+      "icon": "63913d74df25d049785c3bd7",
+      "model": "GOAT",
+      "UILogicId": "goat_ww_h_goat",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63913d74df25d049785c3bd7"
+    }
+  },
+  {
+    "classid": "7zya6u",
+    "product": {
+      "_id": "6243b189f93ca07835720661",
+      "materialNo": "110-2029-1203",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N8 BLACK",
+      "icon": "6243b185784d1652c082ef31",
+      "model": "N8_BLACK_EMEA",
+      "UILogicId": "N8_PLUS",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6243b185784d1652c082ef31"
+    }
+  },
+  {
+    "classid": "sdp1y1",
+    "product": {
+      "_id": "624d4e75b6aef4ab20b385ad",
+      "materialNo": "113-2109-0200",
+      "smartType": "QRP",
+      "name": "AIRBOT Z1",
+      "icon": "624d4e73031bdd7c7b531af9",
+      "model": "BRUCE_INT",
+      "UILogicId": "bruce_ww_n_bruce",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/624d4e73031bdd7c7b531af9"
+    }
+  },
+  {
+    "classid": "u3bsxq",
+    "product": {
+      "_id": "6253e222b6aef4f0f0b385b8",
+      "materialNo": "110-2122-0100",
+      "smartType": "MQ_AP",
+      "name": "yeedi Floor 3",
+      "icon": "6253e2ccf93ca0b88a72067a",
+      "model": "K960_INT",
+      "UILogicId": "k960_ww_h_k960",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6253e2ccf93ca0b88a72067a"
+    }
+  },
+  {
+    "classid": "20anby",
+    "product": {
+      "_id": "6268a4c2dd7802415057ff24",
+      "materialNo": "117-2111-0002",
+      "smartType": "MQ_AP",
+      "name": "Z1 Air Quality Monitor",
+      "icon": "637ada094b606f5d29b84250",
+      "model": "AT90_INT",
+      "UILogicId": "at90_ww_h_at90",
+      "ota": true,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/637ada094b606f5d29b84250"
+    }
+  },
+  {
+    "classid": "lx3j7m",
+    "product": {
+      "_id": "6296c5722e4895ec1606694a",
+      "materialNo": "110-2209-0101",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T10 OMNI",
+      "icon": "6296c56ad3980b9a63026b08",
+      "model": "CURIE_OMNI_INT",
+      "UILogicId": "t10_ww_n_curieomni",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6296c56ad3980b9a63026b08"
+    }
+  },
+  {
+    "classid": "sa4tf7",
+    "product": {
+      "_id": "62ac2a908dce9b3b3cb39ad4",
+      "materialNo": "110-2008-1002",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N-α",
+      "icon": "62ac2a8ad5e94f3b732102d0",
+      "model": "N_ALPHA",
+      "UILogicId": "DT_8SE_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/62ac2a8ad5e94f3b732102d0"
+    }
+  },
+  {
+    "classid": "rwp09o",
+    "product": {
+      "_id": "62b408dbaa60da1c49e4466e",
+      "materialNo": "110-2122-0206",
+      "smartType": "MQ_AP",
+      "name": "yeedi Floor 3+",
+      "icon": "62ce310962e15734ec63da96",
+      "model": "K960_AES_INT",
+      "UILogicId": "k960_ww_h_k960",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/62ce310962e15734ec63da96"
+    }
+  },
+  {
+    "classid": "bro5wu",
+    "product": {
+      "_id": "62f323efb21471013d4ed6b4",
+      "materialNo": "110-2209-0005",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT X1e OMNI",
+      "icon": "62f323edb2147111664ed6b2",
+      "model": "CURIE_OMNI_INT_E",
+      "UILogicId": "t10_ww_n_curieomni",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/62f323edb2147111664ed6b2"
+    }
+  },
+  {
+    "classid": "t5e5o6",
+    "product": {
+      "_id": "6305b6e6e9dc8c331c36ea67",
+      "materialNo": "110-2122-0211",
+      "smartType": "MQ_AP",
+      "name": "yeedi Floor 3 Station",
+      "icon": "630ecb3e2a71f93c2cea5c0f",
+      "model": "K960_ACS_INT",
+      "UILogicId": "k960_ww_h_k960",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/630ecb3e2a71f93c2cea5c0f"
+    }
+  },
+  {
+    "classid": "kd0una",
+    "product": {
+      "_id": "631b04f0c87b955c0b781a21",
+      "materialNo": "110-2122-0402",
+      "smartType": "MQ_AP",
+      "name": "yeedi Floor 3 Station",
+      "icon": "631b04eec87b9559c2781a1f",
+      "model": "K960_ACS_TW",
+      "UILogicId": "k960_ww_h_k960",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/631b04eec87b9559c2781a1f"
+    }
+  },
+  {
+    "classid": "uh38qp",
+    "product": {
+      "_id": "6324106d2a71f94b2dea5c5b",
+      "materialNo": "111-2112-0103",
+      "smartType": "BT",
+      "name": "GLASSBOT W1 PRO",
+      "icon": "63bd303edf25d05eba5c3bf2",
+      "model": "BELUGA_TW",
+      "UILogicId": "belugapro_ww_h_beluga",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63bd303edf25d05eba5c3bf2"
+    }
+  },
+  {
+    "classid": "uxul72",
+    "product": {
+      "_id": "6332a90308f47c6698e36ebc",
+      "materialNo": "110-2236-0101",
+      "smartType": "MQ_AP",
+      "name": "V831",
+      "icon": "6364a23e37c2e709d6d48003",
+      "model": "V831",
+      "UILogicId": "v831_ww_n_newtonaes",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6364a23e37c2e709d6d48003"
+    }
+  },
+  {
+    "classid": "djxe34",
+    "product": {
+      "_id": "6332a8dd2a71f9e72aea5fb0",
+      "materialNo": "110-2236-0002",
+      "smartType": "MQ_AP",
+      "name": "V830",
+      "icon": "6364a0eb37c2e740f6d48002",
+      "model": "V830",
+      "UILogicId": "v830_ww_n_omni",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6364a0eb37c2e740f6d48002"
+    }
+  },
+  {
+    "classid": "lf3bn4",
+    "product": {
+      "_id": "634e4c1408f47c801ae3706e",
+      "materialNo": "110-2228-0203",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X2",
+      "icon": "64dec730215d4f35d90f069a",
+      "model": "X2_OMNI_INT",
+      "UILogicId": "x2_ww_h_x2omnih5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64dec730215d4f35d90f069a"
+    }
+  },
+  {
+    "classid": "m1wkuw",
+    "product": {
+      "_id": "635b46fc7fe5cb6124de84da",
+      "materialNo": "110-2241-0201",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N10",
+      "icon": "63e1e022d775e750ca44246b",
+      "model": "NOBEL_INT",
+      "UILogicId": "t8_ww_n_nobel",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63e1e022d775e750ca44246b"
+    }
+  },
+  {
+    "classid": "umwv6z",
+    "product": {
+      "_id": "635b473d4b606f606cb8417a",
+      "materialNo": "110-2241-0205",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N10 PLUS",
+      "icon": "63e1e031d775e7e16544246d",
+      "model": "NOBEL_PLUS_INT",
+      "UILogicId": "t8_ww_n_nobelplus",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63e1e031d775e7e16544246d"
+    }
+  },
+  {
+    "classid": "626v6g",
+    "product": {
+      "_id": "636083207fe5cb0215de8577",
+      "materialNo": "110-2010-2202",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT TEO+",
+      "icon": "6363621b7fe5cbdcc1de8582",
+      "model": "T9_PLUS_COSTCO",
+      "UILogicId": "T9_PRO_G",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": true,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6363621b7fe5cbdcc1de8582"
+    }
+  },
+  {
+    "classid": "99fqkn",
+    "product": {
+      "_id": "637ad9a07fe5cbb09ade85ad",
+      "materialNo": "201-2109-1300",
+      "smartType": "MQ_AP",
+      "name": "Z1 Air Quality Monitor",
+      "icon": "63887a3237c2e75595d48120",
+      "model": "AT90_INT_NEW",
+      "UILogicId": "at90_ww_h_at91",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63887a3237c2e75595d48120"
+    }
+  },
+  {
+    "classid": "62uooe",
+    "product": {
+      "_id": "6384181d4b606fb67db84283",
+      "materialNo": "111-2112-0501",
+      "smartType": "BT",
+      "name": "WINBOT W1 PRO",
+      "icon": "63bd2ff5df25d04e415c3bf0",
+      "model": "BELUGA_PRO_US",
+      "UILogicId": "belugapro_ww_h_beluga",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63bd2ff5df25d04e415c3bf0"
+    }
+  },
+  {
+    "classid": "gcmyi7",
+    "product": {
+      "_id": "638418574b606f8c59b84288",
+      "materialNo": "111-2112-0105",
+      "smartType": "BT",
+      "name": "WINBOT W1 PRO",
+      "icon": "63bd2febdf25d06f775c3bee",
+      "model": "BELUGA_PRO_KR",
+      "UILogicId": "belugapro_ww_h_beluga",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63bd2febdf25d06f775c3bee"
+    }
+  },
+  {
+    "classid": "zjavof",
+    "product": {
+      "_id": "6388715237c2e7ee6bd4811d",
+      "materialNo": "110-2241-0302",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT  NEO+",
+      "icon": "63e1e03cdf25d0b5715c3c0b",
+      "model": "NOBEL_PLUS_INT_COSTCO",
+      "UILogicId": "t8_ww_n_nobelpluscostco",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63e1e03cdf25d0b5715c3c0b"
+    }
+  },
+  {
+    "classid": "t6kipw",
+    "product": {
+      "_id": "6389be612d7c982815cd2a44",
+      "materialNo": "110-2122-0601",
+      "smartType": "MQ_AP",
+      "name": "yeedi Floor 3",
+      "icon": "6389be59df25d07dec5c3bcd",
+      "model": "K960_TW",
+      "UILogicId": "k960_ww_h_k960",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6389be59df25d07dec5c3bcd"
+    }
+  },
+  {
+    "classid": "p1jij8",
+    "product": {
+      "_id": "63b6a1792d7c984708cd2a60",
+      "materialNo": "110-2230-0001",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T20 OMNI",
+      "icon": "6411873116d2f22991fc1bbc",
+      "model": "DARWIN_OMNI",
+      "UILogicId": "t10_ww_n_darwin",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6411873116d2f22991fc1bbc"
+    }
+  },
+  {
+    "classid": "6r6dbt",
+    "product": {
+      "_id": "63e1f8aae3285949a3b62100",
+      "materialNo": "110-2237-0400",
+      "smartType": "BL_QRP",
+      "name": "yeedi cube",
+      "icon": "64c213889f69200af52cb92d",
+      "model": "CC",
+      "UILogicId": "cc_ww_h_cc",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64c213889f69200af52cb92d"
+    }
+  },
+  {
+    "classid": "clojes",
+    "product": {
+      "_id": "63e3427ddf25d014ea5c3c1a",
+      "materialNo": "110-2241-0305",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N10 MAX+",
+      "icon": "63f2ddc22fd60963ea2f64f7",
+      "model": "NOBEL_PLUS_INT_COSTCO_BLACK",
+      "UILogicId": "t8_ww_n_nobelpluscostcoblack",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63f2ddc22fd60963ea2f64f7"
+    }
+  },
+  {
+    "classid": "85nbtp",
+    "product": {
+      "_id": "63e9d5622d7c989499cd2a96",
+      "materialNo": "110-2230-0103",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT TEO OMNI",
+      "icon": "6411872416d2f20076fc1bba",
+      "model": "Darwin_OMNI_TEO_INT",
+      "UILogicId": "t10_ww_n_darwinteo",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6411872416d2f20076fc1bba"
+    }
+  },
+  {
+    "classid": "4c8j78",
+    "product": {
+      "_id": "645a185b16d2f2a03efc1c25",
+      "materialNo": "11111111",
+      "smartType": "MQ_AP",
+      "name": "Z2检测仪",
+      "icon": "64e57126ae02c4811a994d24",
+      "model": "AT90_Z2KR",
+      "UILogicId": "at90_ww_h_at92",
+      "ota": true,
+      "supportType": {
+        "share": false,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64e57126ae02c4811a994d24"
+    }
+  },
+  {
+    "classid": "e6ofmn",
+    "product": {
+      "_id": "649a9374cad12cdf554544cb",
+      "materialNo": "110-2228-0408",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X2",
+      "icon": "64dec744215d4f42f80f069c",
+      "model": "X2_OMNI_INT_WH",
+      "UILogicId": "x2white_ww_h_x2omnih5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64dec744215d4f42f80f069c"
+    }
+  },
+  {
+    "classid": "delg6a",
+    "product": {
+      "_id": "649eb4103b5906301b6ab01d",
+      "materialNo": "110-2237-0801",
+      "smartType": "BL_QRP",
+      "name": "yeedi cube (black)",
+      "icon": "64c2137fd312a2e54b777217",
+      "model": "CC_BLACK_INT",
+      "UILogicId": "cc_ww_h_cc",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64c2137fd312a2e54b777217"
     }
   }
 ]

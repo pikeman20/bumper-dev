@@ -5,16 +5,19 @@ import pytest
 from gmqtt import Client
 from gmqtt.mqtt.constants import MQTTv311
 
-import bumper
-from bumper import HelperBot, MQTTServer, WebserverBinding
+from bumper.mqtt.helper_bot import MQTTHelperBot
+from bumper.mqtt.server import MQTTBinding, MQTTServer
+from bumper.utils.settings import config as bumper_bus
+from bumper.web.server import WebServer, WebserverBinding
 from tests import HOST, MQTT_PORT, WEBSERVER_PORT
 
 
 @pytest.fixture
 async def mqtt_server():
-    mqtt_server = MQTTServer(HOST, MQTT_PORT, password_file="tests/passwd")
+    mqtt_server = MQTTServer(MQTTBinding(HOST, MQTT_PORT, True), password_file="tests/passwd")
+
     await mqtt_server.start()
-    bumper.mqtt_server = mqtt_server
+    bumper_bus.mqtt_server = mqtt_server
     while not mqtt_server.state == "started":
         await asyncio.sleep(0.1)
 
@@ -42,8 +45,8 @@ async def mqtt_client(mqtt_server: MQTTServer):
 async def helper_bot(mqtt_server: MQTTServer):
     assert mqtt_server.state == "started"
 
-    helper_bot = HelperBot(HOST, MQTT_PORT, 0.1)
-    bumper.mqtt_helperbot = helper_bot
+    helper_bot = MQTTHelperBot(HOST, MQTT_PORT, True, 0.1)
+    bumper_bus.mqtt_helperbot = helper_bot
     await helper_bot.start()
     assert helper_bot.is_connected
 
@@ -54,9 +57,7 @@ async def helper_bot(mqtt_server: MQTTServer):
 
 @pytest.fixture
 async def webserver_client(aiohttp_client):
-    webserver = bumper.WebServer(
-        WebserverBinding(HOST, WEBSERVER_PORT, False), False, True
-    )
+    webserver = WebServer(WebserverBinding(HOST, WEBSERVER_PORT, False), False)
     client = await aiohttp_client(webserver._app)
 
     yield client
