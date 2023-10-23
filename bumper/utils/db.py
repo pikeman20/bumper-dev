@@ -15,7 +15,7 @@ _LOGGER = logging.getLogger("db")
 
 def logging_message_none_or_not_document(value: Document | list[Document] | None, value_name: str) -> str:
     """Log Helper for generic not a Document info."""
-    return f"'{value_name}' is None or is not a 'Document' => {type(value)}"
+    return f"'{value_name}' is not a 'Document' => {type(value)}"
 
 
 def _db_file() -> str:
@@ -282,8 +282,7 @@ def user_add_oauth(userid: str) -> models.OAuth | None:
             _LOGGER.debug(f"Adding oauth {oauth.access_token} for userid {userid}")
             table.insert(oauth.to_db())
             return oauth
-        if entry is not None:
-            _LOGGER.warning(logging_message_none_or_not_document(entry, "entry"))
+        _LOGGER.warning(logging_message_none_or_not_document(entry, "entry"))
     return None
 
 
@@ -388,10 +387,8 @@ def bot_remove(did: str) -> None:
     """Remove bot."""
     bots = _db_get().table(TABLE_BOTS)
     t_bot = bot_get(did)
-    if isinstance(t_bot, Document):
-        bots.remove(doc_ids=[t_bot.doc_id])
     if t_bot is not None:
-        _LOGGER.warning(logging_message_none_or_not_document(t_bot, "t_bot"))
+        bots.remove(doc_ids=[t_bot.doc_id])
 
 
 def bot_get(did: str) -> Document | None:
@@ -454,10 +451,8 @@ def client_remove(resource: str) -> None:
     """Remove client."""
     clients = _db_get().table(TABLE_CLIENTS)
     t_client = client_get(resource)
-    if isinstance(t_client, Document):
-        clients.remove(doc_ids=[t_client.doc_id])
     if t_client is not None:
-        _LOGGER.warning(logging_message_none_or_not_document(t_client, "t_client"))
+        clients.remove(doc_ids=[t_client.doc_id])
 
 
 def client_get(resource: str) -> Document | None:

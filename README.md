@@ -1,6 +1,8 @@
 # Bumper
 
 ![License GPLv3](https://img.shields.io/github/license/bmartin5692/bumper.svg?color=brightgreen)
+[![Python code quality, tests and docker deploy](https://github.com/MVladislav/bumper/actions/workflows/ci.yml/badge.svg)](https://github.com/MVladislav/bumper/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/MVladislav/bumper/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MVladislav/bumper/actions/workflows/codeql-analysis.yml)
 
 ---
 
@@ -9,7 +11,6 @@
   - [Why?](#why)
   - [Compatibility](#compatibility)
   - [Documentation and Getting Started](#documentation-and-getting-started)
-  - [Thanks](#thanks)
   - [Pre setup](#pre-setup)
   - [Basic configs for docker](#basic-configs-for-docker)
     - [Create `.env` file](#create-env-file)
@@ -18,6 +19,11 @@
     - [Local run](#local-run)
     - [Code quality check](#code-quality-check)
   - [References](#references)
+  - [Thanks](#thanks)
+
+---
+
+**Forked from [edenhaus](https://github.com/edenhaus/bumper) -> [bmartin5692](https://github.com/bmartin5692/bumper)**
 
 ---
 
@@ -30,13 +36,6 @@ without the robots or app talking to the Ecovacs servers and transmitting data o
 **Note:** The current master branch is unstable, and in active development.
 
 ## Build Status
-
-| Master Branch    | Status                                                                                                                                                             |
-| :--------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AppVeyor (Win32) | [![AppVeyor branch](https://img.shields.io/appveyor/ci/bmartin5692/bumper/master?logo=appveyor)](https://ci.appveyor.com/project/bmartin5692/bumper/branch/master) |
-| TravisCI (Linux) | [![Travis (.org) branch](https://img.shields.io/travis/bmartin5692/bumper/master?logo=travis)](https://travis-ci.com/bmartin5692/bumper/branch/master)             |
-| Docker Hub       | [![Docker Build](https://img.shields.io/docker/cloud/build/bmartin5692/bumper?logo=docker)](https://hub.docker.com/r/bmartin5692/bumper/branch/master)             |
-| CodeCov Coverage | [![Codecov branch](https://img.shields.io/codecov/c/github/bmartin5692/bumper/master?logo=codecov)](https://codecov.io/gh/bmartin5692/bumper/branch/master)        |
 
 **Community:**
 A Gitter community has been created for Bumper so users can chat and dig into issues outside of Github, join us here:
@@ -91,14 +90,6 @@ See the documentation on [Read the Docs](https://bumper.readthedocs.io)
 
 ---
 
-## Thanks
-
-A big thanks to the original project creator @torbjornaxelsson, without his work this project would have taken much longer to build.
-
-Bumper wouldn't exist without [Sucks](https://github.com/wpietri/sucks), an open source client for Ecovacs robots. Thanks to @wpietri and contributors!
-
----
-
 ## Pre setup
 
 To run this application certificate is needed, which will not auto generated.
@@ -137,7 +128,7 @@ RESOURCES_RESERVATIONS_MEMORY=32m
 
 # APPLICATION version for easy update
 # ______________________________________________________________________________
-VERSION_BUMPER=latest
+VERSION_BUMPER=develop
 VERSION_NGNIX=1.25.2-alpine3.18-slim
 
 # APPLICATION general variable to adjust the apps
@@ -200,3 +191,11 @@ $pre-commit run --all-files
 - <https://github.com/bmartin5692/bumper>
 - <https://github.com/edenhaus/bumper>
 - <https://github.com/Yakifo/amqtt>
+
+---
+
+## Thanks
+
+A big thanks to the original project creator @torbjornaxelsson, without his work this project would have taken much longer to build.
+
+Bumper wouldn't exist without [Sucks](https://github.com/wpietri/sucks), an open source client for Ecovacs robots. Thanks to @wpietri and contributors!
