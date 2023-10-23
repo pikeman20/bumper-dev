@@ -2,5 +2,6 @@
 branch = True
 source = bumper
 
+[report]
 omit =
     tests/*

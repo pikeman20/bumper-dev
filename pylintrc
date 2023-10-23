@@ -29,7 +29,7 @@ extension-pkg-whitelist=ciso8601,
 
 
 [BASIC]
-good-names=i,j,k,ex,_,T,x,y,id
+good-names=i,j,k,ex,_,T,x,y,id,tg
 
 [MESSAGES CONTROL]
 # Reasons disabled:
@@ -41,14 +41,25 @@ good-names=i,j,k,ex,_,T,x,y,id
 # inconsistent-return-statements - doesn't handle raise
 # wrong-import-order - isort guards this
 disable=
+  #cyclic-import,
+  #inconsistent-return-statements,
+  #wrong-import-order,
   format,
   abstract-method,
-  cyclic-import,
   duplicate-code,
-  inconsistent-return-statements,
+  too-few-public-methods,
+  logging-fstring-interpolation,
+  singleton-comparison,
+  global-statement,
+  global-variable-not-assigned,
+  too-many-arguments,
+  too-many-branches,
   too-many-instance-attributes,
-  wrong-import-order,
-  too-few-public-methods
+  too-many-locals,
+  too-many-nested-blocks,
+  too-many-statements,
+  broad-exception-caught,
+  broad-exception-raised
 
 # enable useless-suppression temporarily every now and then to clean them up
 enable=
@@ -76,8 +87,9 @@ expected-line-ending-format=LF
 
 # Exceptions that will emit a warning when being caught. Defaults to
 # "BaseException, Exception".
-overgeneral-exceptions=BaseException,
-                       Exception
+overgeneral-exceptions=builtins.BaseException,
+                       builtins.Exception
 
 [DESIGN]
-max-parents=8
+max-parents=10
+max-args=6

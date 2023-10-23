@@ -1,0 +1,150 @@
+version: "3.8"
+
+################################################################################
+################################################################################
+################################################################################
+x-basic-deploy: &basic-deploy
+  mode: replicated
+  replicas: 1
+  placement:
+    max_replicas_per_node: 1
+    constraints:
+      - "node.role==${NODE_ROLE:-manager}"
+      - node.platform.os == linux
+  restart_policy:
+    condition: on-failure
+  resources:
+    limits:
+      cpus: ${RESOURCES_LIMITS_CPUS:-0.25}
+      memory: ${RESOURCES_LIMITS_MEMORY:-250m}
+    reservations:
+      cpus: ${RESOURCES_RESERVATIONS_CPUS:-0.001}
+      memory: ${RESOURCES_RESERVATIONS_MEMORY:-32m}
+
+x-basic: &basic
+  env_file: .env
+  cap_add:
+    - DAC_READ_SEARCH
+    - SETGID
+    - SETUID
+  cap_drop: ["ALL"]
+  security_opt:
+    - no-new-privileges:true
+  ulimits:
+    memlock:
+      soft: -1
+      hard: -1
+    nofile:
+      soft: 65535
+      hard: 65535
+    fsize: -1
+    as: -1
+  networks:
+    default: {}
+  healthcheck:
+    disable: true
+  restart: always
+
+################################################################################
+################################################################################
+################################################################################
+services:
+  ##############################################################################
+  ##############################################################################
+  ##############################################################################
+  bumper:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        PY_VERSION: ${PY_VERSION:-3.11.6-alpine3.18}
+        ALPINE_VERSION: ${ALPINE_VERSION:-3.18.4}
+    image: bumper:${VERSION_BUMPER:-latest}
+    <<: *basic
+    deploy:
+      <<: *basic-deploy
+    configs:
+      - source: ca_config
+        target: /bumper/certs/ca.crt
+        mode: 0444
+      - source: server_crt_config
+        target: /bumper/certs/bumper.crt
+        mode: 0444
+      - source: server_key_config
+        target: /bumper/certs/bumper.key
+        mode: 0444
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-Europe/Berlin}
+      BUMPER_ANNOUNCE_IP: ${BUMPER_ANNOUNCE_IP}
+      BUMPER_LISTEN: ${BUMPER_LISTEN:-0.0.0.0}
+      BUMPER_DEBUG_LEVEL: ${BUMPER_DEBUG_LEVEL:-INFO}
+      BUMPER_DEBUG_VERBOSE: ${BUMPER_DEBUG_VERBOSE:-1}
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - config:/bumper/data
+      - certs:/bumper/certs
+
+  ##############################################################################
+  ##############################################################################
+  ##############################################################################
+  nginx:
+    # https://hub.docker.com/_/nginx
+    image: nginx:${VERSION_NGNIX:-1.25.2-alpine3.18-slim}
+    <<: *basic
+    deploy:
+      <<: *basic-deploy
+    ports:
+      # MQTT HTTPS
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+      # MQTT HTTP
+      - target: 8007
+        published: 8007
+        protocol: tcp
+        mode: host
+      # MQTT Server
+      - target: 8883
+        published: 8883
+        protocol: tcp
+        mode: host
+      # XMPP Server
+      - target: 5223
+        published: 5223
+        protocol: tcp
+        mode: host
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
+        mode: 0444
+
+################################################################################
+################################################################################
+################################################################################
+networks:
+  default:
+    driver: ${NETWORK_MODE:-bridge}
+    attachable: true
+    driver_opts:
+      encrypted: "true"
+
+volumes:
+  config: {}
+  certs: {}
+
+configs:
+  ca_config:
+    file: $PWD/certs/ca.crt
+  server_crt_config:
+    file: $PWD/certs/bumper.crt
+  server_key_config:
+    file: $PWD/certs/bumper.key
+  nginx_config:
+    file: $PWD/configs/nginx/nginx.conf

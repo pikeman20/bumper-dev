@@ -1,0 +1,12 @@
+[tool.black]
+target-version = ['py311']
+safe = true
+line-length = 130
+
+[tool.flake8]
+max-line-length = 130
+
+[tool.isort]
+py_version = 311
+line_length = 130
+profile = "black"

@@ -1,3 +1,10 @@
+yaml-files:
+  - "*.yaml"
+  - "*.yml"
+  - ".yamllint"
+
+ignore-from-file: .gitignore
+
 rules:
   braces:
     level: error
@@ -23,7 +30,7 @@ rules:
   comments:
     level: error
     require-starting-space: true
-    min-spaces-from-content: 1
+    min-spaces-from-content: 2
   comments-indentation:
     level: error
   document-end:
@@ -55,5 +62,4 @@ rules:
     type: unix
   trailing-spaces:
     level: error
-  truthy:
-    disable
+  truthy: disable

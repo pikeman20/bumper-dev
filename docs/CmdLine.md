@@ -2,7 +2,7 @@
 
 Bumper has a number of available command-line arguments that can be viewed by adding the `-h` flag.
 
-```
+```sh
 usage: bumper [-h] [--listen LISTEN] [--announce ANNOUNCE] [--debug]
 
 optional arguments:
