@@ -34,7 +34,7 @@ async def mqtt_client(mqtt_server: MQTTServer):
     ssl_ctx = ssl.create_default_context()
     ssl_ctx.check_hostname = False
     ssl_ctx.verify_mode = ssl.CERT_NONE
-    await client.connect(HOST, MQTT_PORT, ssl=ssl_ctx, version=MQTTv311)
+    await client.connect(HOST, MQTT_PORT, ssl=ssl_ctx, version=MQTTv311)  # type: ignore
 
     yield client
 
