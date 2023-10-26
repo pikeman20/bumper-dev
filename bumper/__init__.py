@@ -8,6 +8,7 @@ import sys
 from bumper.mqtt import helper_bot
 from bumper.mqtt import server as server_mqtt
 from bumper.utils import db, utils
+from bumper.utils.log_helper import logHelper
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import server as server_web
 from bumper.xmpp import xmpp as server_xmpp
@@ -17,8 +18,8 @@ _LOGGER = logging.getLogger("bumper")
 
 async def start() -> None:
     """Start bumper."""
-    # Setup logger
-    utils.LogHelper(logging_verbose=bumper_isc.bumper_verbose, logging_level=bumper_isc.bumper_level)
+    # Update logger (current only because for tests)
+    logHelper.update()
 
     if bumper_isc.bumper_level == "DEBUG":
         # Set asyncio loop to debug
@@ -147,14 +148,14 @@ def read_args(argv: list[str] | None) -> None:
     if args.announce:
         bumper_isc.bumper_announce_ip = args.announce
 
+    # Update logger logger
+    logHelper.update()
+
 
 def main(argv: list[str] | None = None) -> None:
     """Start everything."""
     loop: asyncio.AbstractEventLoop | None = None
     try:
-        # Setup logger
-        utils.LogHelper(logging_verbose=bumper_isc.bumper_verbose, logging_level=bumper_isc.bumper_level)
-
         # Check for password file?
         if not os.path.exists(os.path.join(bumper_isc.data_dir, "passwd")):
             with open(os.path.join(bumper_isc.data_dir, "passwd"), "w", encoding="utf-8"):
