@@ -1,4 +1,4 @@
-name: Python code quality, tests and docker deploy
+name: Python code quality and tests
 
 on:
   push:
