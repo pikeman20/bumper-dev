@@ -177,8 +177,7 @@ class WebServer:
 
     async def _restart_mqtt_server(self) -> None:
         if bumper_isc.mqtt_server is not None:
-            if bumper_isc.mqtt_server.state not in ["stopped", "stopping", "not_started"]:
-                await bumper_isc.mqtt_server.shutdown()
+            await bumper_isc.mqtt_server.shutdown()
             asyncio.create_task(bumper_isc.mqtt_server.start())
 
     async def _handle_restart_service(self, request: Request) -> Response:

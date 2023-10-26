@@ -54,9 +54,11 @@ async def _handle_user(request: Request) -> Response:
                 srv_ip = bumper_isc.bumper_announce_ip
                 srv_port = bumper_isc.XMPP_LISTEN_PORT_TLS
                 _LOGGER.info(f"Announcing EcoMsgNew Server to bot as: {srv_ip}:{srv_port}")
-                body = json.dumps({"ip": srv_ip, "port": srv_port, "result": "ok"})
-                # NOTE: bot seems to be very picky about having no spaces, only way was with text
-                body = body.replace(" ", "")
+                body = {"ip": srv_ip, "port": srv_port, "result": "ok"}
+                # TODO: check if below before was needed?!
+                # body = json.dumps({"ip": srv_ip, "port": srv_port, "result": "ok"})
+                # # NOTE: bot seems to be very picky about having no spaces, only way was with text
+                # body = body.replace(" ", "")
 
             elif service == "EcoUpdate":
                 srv_ip = bumper_isc.ECOVACS_UPDATE_SERVER

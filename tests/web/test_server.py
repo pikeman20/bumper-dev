@@ -5,10 +5,9 @@ from unittest import mock
 
 import pytest
 
-import bumper
 from bumper.mqtt.helper_bot import MQTTHelperBot
 from bumper.utils import db
-from bumper.utils.settings import config as bumper_bus
+from bumper.utils.settings import config as bumper_isc
 from bumper.web.models import ERR_TOKEN_INVALID, RETURN_API_SUCCESS
 from bumper.web.server import WebServer, WebserverBinding
 from bumper.xmpp.xmpp import XMPPServer
@@ -46,13 +45,13 @@ async def test_base(webserver_client):
 
     # Start XMPP
     xmpp_server = XMPPServer(HOST, 5223)
-    bumper_bus.xmpp_server = xmpp_server
+    bumper_isc.xmpp_server = xmpp_server
     await xmpp_server.start_async_server()
 
     resp = await webserver_client.get("/")
     assert resp.status == 200
 
-    bumper_bus.xmpp_server.disconnect()
+    bumper_isc.xmpp_server.disconnect()
 
 
 @pytest.mark.usefixtures("helper_bot")
@@ -61,7 +60,7 @@ async def test_restartService(webserver_client):
 
     # Start XMPP
     xmpp_server = XMPPServer(HOST, 5223)
-    bumper_bus.xmpp_server = xmpp_server
+    bumper_isc.xmpp_server = xmpp_server
     await xmpp_server.start_async_server()
 
     resp = await webserver_client.get("/restart_Helperbot")
@@ -435,7 +434,7 @@ async def test_pim_file(webserver_client):
 async def test_getUsersAPI(webserver_client):
     remove_existing_db()
 
-    resp = await webserver_client.get("/api/users/user.do")
+    resp = await webserver_client.post("/api/users/user.do", json={})
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -650,7 +649,7 @@ async def test_lg_logs(webserver_client, helper_bot: MQTTHelperBot):
     remove_existing_db()
     db.bot_add("sn_1234", "did_1234", "ls1ok3", "res_1234", "eco-ng")
     db.bot_set_mqtt("did_1234", True)
-    confserver = create_webserver()
+    _ = create_webserver()
 
     # Test return get status
     command_getstatus_resp = {
@@ -702,7 +701,7 @@ async def test_postLookup(webserver_client):
 
 async def test_devmgr(webserver_client, helper_bot: MQTTHelperBot):
     remove_existing_db()
-    confserver = create_webserver()
+    _ = create_webserver()
 
     # Test PollSCResult
     postbody = {"td": "PollSCResult"}
@@ -719,7 +718,7 @@ async def test_devmgr(webserver_client, helper_bot: MQTTHelperBot):
     text = await resp.text()
     test_resp = json.loads(text)
     assert test_resp["ret"] == "ok"
-    assert test_resp["unRead"] == False
+    assert test_resp["unRead"] is False
 
     # Test BotCommand
     db.bot_add("sn_1234", "did_1234", "dev_1234", "res_1234", "eco-ng")
@@ -751,7 +750,7 @@ async def test_devmgr(webserver_client, helper_bot: MQTTHelperBot):
 
 async def test_dim_devmanager(webserver_client, helper_bot: MQTTHelperBot):
     remove_existing_db()
-    confserver = create_webserver()
+    _ = create_webserver()
 
     # Test PollSCResult
     postbody = {"td": "PollSCResult"}
@@ -768,7 +767,7 @@ async def test_dim_devmanager(webserver_client, helper_bot: MQTTHelperBot):
     text = await resp.text()
     test_resp = json.loads(text)
     assert test_resp["ret"] == "ok"
-    assert test_resp["unRead"] == False
+    assert test_resp["unRead"] is False
 
     # Test BotCommand
     db.bot_add("sn_1234", "did_1234", "dev_1234", "res_1234", "eco-ng")

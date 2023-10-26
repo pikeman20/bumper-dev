@@ -38,7 +38,7 @@ class MQTTBinding:
 class MQTTServer:
     """Mqtt server."""
 
-    def __init__(self, bindings: list[MQTTBinding] | MQTTBinding, **kwargs: dict[str, Any]) -> None:
+    def __init__(self, bindings: list[MQTTBinding] | MQTTBinding, **kwargs: Any) -> None:
         """MQTT server init."""
         try:
             if isinstance(bindings, MQTTBinding):
@@ -50,25 +50,27 @@ class MQTTServer:
             passwd_file = kwargs.get("password_file", os.path.join(os.path.join(bumper_isc.data_dir, "passwd")))
             allow_anon = kwargs.get("allow_anonymous", False)
 
+            # Load entry points from the specified distribution name
+            distribution_name = "amqtt.broker.plugins"
+            entry_point_name = "bumper = bumper.mqtt.server:BumperMQTTServerPlugin"
+
             # The below adds a plugin to the amqtt.broker.plugins without having to futz with setup.py
-            distribution = pkg_resources.Distribution("amqtt.broker.plugins")
-            bumper_plugin = pkg_resources.EntryPoint.parse(
-                "bumper = bumper.mqtt.server:BumperMQTTServerPlugin",
-                dist=distribution,
-            )
-            distribution._ep_map = {"amqtt.broker.plugins": {"bumper": bumper_plugin}}  # type: ignore[attr-defined]
+            distribution = pkg_resources.Distribution(distribution_name)
+            bumper_plugin = pkg_resources.EntryPoint.parse(entry_point_name, dist=distribution)
+            distribution._ep_map = {distribution_name: {"bumper": bumper_plugin}}  # type: ignore[attr-defined]
             pkg_resources.working_set.add(distribution)
 
             config_bind = {"default": {"type": "tcp"}}
+            listener_prefix = "mqtt"
             for index, binding in enumerate(self._bindings):
-                config_bind[f"bind{index}"] = {
+                config_bind[f"{listener_prefix}{index}"] = {
                     "bind": f"{binding.host}:{binding.port}",
                     "ssl": "on" if binding.use_ssl is True else "off",
                 }
                 if binding.use_ssl is True:
-                    config_bind[f"bind{index}"]["cafile"] = bumper_isc.ca_cert
-                    config_bind[f"bind{index}"]["certfile"] = bumper_isc.server_cert
-                    config_bind[f"bind{index}"]["keyfile"] = bumper_isc.server_key
+                    config_bind[f"{listener_prefix}{index}"]["cafile"] = bumper_isc.ca_cert
+                    config_bind[f"{listener_prefix}{index}"]["certfile"] = bumper_isc.server_cert
+                    config_bind[f"{listener_prefix}{index}"]["keyfile"] = bumper_isc.server_key
 
             # Initialize bot server
             config = {
@@ -79,10 +81,7 @@ class MQTTServer:
                     "password-file": passwd_file,
                     "plugins": ["bumper"],  # Bumper plugin provides auth and handling of bots/clients connecting
                 },
-                "topic-check": {
-                    "enabled": True,  # Workaround until https://github.com/Yakifo/amqtt/pull/93 is merged
-                    "plugins": [],
-                },
+                "topic-check": {"enabled": False},
             }
 
             self._broker = Broker(config=config)
@@ -109,20 +108,26 @@ class MQTTServer:
 
     async def start(self) -> None:
         """Start MQTT server."""
-        for binding in self._bindings:
-            _LOGGER.info(f"Starting MQTT Server at {binding.host}:{binding.port}")
         try:
-            await self._broker.start()
+            if self.state not in ["stopping", "starting"]:
+                for binding in self._bindings:
+                    _LOGGER.info(f"Starting MQTT Server at {binding.host}:{binding.port}")
+                await self._broker.start()
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "during startup"), exc_info=True)
             raise
 
     async def shutdown(self) -> None:
         """Shutdown server."""
-        # stop session handler manually otherwise connection will not be closed correctly
-        for handler in self.handlers:
-            await handler.stop()
-        await self._broker.shutdown()
+        try:
+            if self.state not in ["stopped", "stopping", "not_started", "starting"]:
+                # stop session handler manually otherwise connection will not be closed correctly
+                for handler in self.handlers:
+                    await handler.stop()
+                await self._broker.shutdown()
+        except Exception as e:
+            _LOGGER.exception(utils.default_exception_str_builder(e, "during shutdown"), exc_info=True)
+            raise
 
 
 class BumperMQTTServerPlugin:
@@ -199,19 +204,19 @@ class BumperMQTTServerPlugin:
             if username is not None and password is not None:
                 # If there is a username and it isn't already authenticated
                 password_hash = self._users.get(username, None)
-                message_suffix = f"- Username: {username} - ClientID: {client_id}"
+                message_suffix = f"Username: {username} - ClientID: {client_id}"
                 if password_hash:  # If there is a matching entry in passwd, check hash
                     if pwd_context.verify(password, password_hash):
                         _LOGGER.info(
-                            f"File Authentication Success :: Username: {message_suffix}",
+                            f"File Authentication Success :: {message_suffix}",
                         )
                         return True
                     _LOGGER.info(
-                        f"File Authentication Failed :: Username: {message_suffix}",
+                        f"File Authentication Failed :: {message_suffix}",
                     )
                 else:
                     _LOGGER.info(
-                        f"File Authentication Failed :: No Entry for Username: {message_suffix}",
+                        f"File Authentication Failed :: No Entry for :: {message_suffix}",
                     )
 
         except Exception as e:

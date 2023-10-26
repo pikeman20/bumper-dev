@@ -261,12 +261,14 @@ class XMPPAsyncClient:
         """Schedule ping."""
         if self.state == 5:  # disconnected
             return
-        pingstring = (
-            f"<iq from='{XMPPServer.server_id}' to='{self.bumper_jid}' id='s2c1' type='get'>" "<ping xmlns='urn:xmpp:ping'/></iq>"
+        self.send(
+            (
+                f"<iq from='{XMPPServer.server_id}' to='{self.bumper_jid}' id='s2c1' type='get'>"
+                "<ping xmlns='urn:xmpp:ping'/></iq>"
+            )
         )
-        self.send(pingstring)
         await asyncio.sleep(time)
-        asyncio.Task(self.schedule_ping(time), name="xmpp_ping_scheduler")
+        asyncio.ensure_future(self.schedule_ping(time))
 
     def _handle_result(self, xml: Element, data: str) -> None:
         try:
@@ -333,7 +335,7 @@ class XMPPAsyncClient:
                 # Remove all namespaces for "ns0:"
                 rxmlstring = re.sub(r"ns0:", "", rxmlstring)
                 # Inside "iq" element, remove the attribute "xmlns"
-                rxmlstring = re.sub(r'<iq (.*?)xmlns=["|\'](.*?)["|\']', r"<iq \1", rxmlstring)
+                rxmlstring = re.sub(r'<iq (.*?)xmlns=["|\']com:ctl["|\']', r"<iq\1", rxmlstring)
                 # Inside "query" element, add 'xmlns="com:ctl"'
                 rxmlstring = re.sub(r"<query(.*?)>", r'<query\1 xmlns="com:ctl">', rxmlstring)
 
@@ -428,7 +430,7 @@ class XMPPAsyncClient:
         except Exception as e:
             _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e, None), exc_info=True)
 
-    async def _handle_starttls(self, _: str) -> None:
+    async def _handle_starttls(self) -> None:
         try:
             if self.tls_upgraded is True:
                 return
@@ -545,10 +547,9 @@ class XMPPAsyncClient:
             _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e, None), exc_info=True)
 
     def _handle_session(self, xml: Element) -> None:
-        res = f'<iq type="result" id="{xml.get("id")}" />'
         self.set_state("READY")
-        self.send(res)
-        asyncio.Task(self.schedule_ping(30), name="xmpp_ping_scheduler")
+        self.send(f'<iq type="result" id="{xml.get("id")}" />')
+        asyncio.ensure_future(self.schedule_ping(30))
 
     def _handle_presence(self, xml: Element) -> None:
         if len(xml) and xml[0].tag == "status":
@@ -603,9 +604,9 @@ class XMPPAsyncClient:
             newdata = f"<root>{xml_str}</root>"
 
         # try fixing stream when it is not well closed
-        if "</stream:stream>" not in newdata:
+        if "stream:stream" in newdata and "</stream:stream>" not in newdata:
             # Regular expression pattern to find <stream:stream ... > elements
-            matches = re.findall(r"<stream:stream\s[^>]+?[^\\]>", newdata)
+            matches = re.findall(r"<stream:stream(?:(?!\/>)[^>]|\s)*?>", newdata)
             for match in matches:
                 # Replace the element with a properly closed version
                 newdata = newdata.replace(match, match[:-1] + "/>")
@@ -645,7 +646,7 @@ class XMPPAsyncClient:
                     item.clear()
 
                 elif "starttls" == item_tag and self.tls_upgraded is False:
-                    asyncio.Task(self._handle_starttls(newdata), name="xmpp_tls_start_handler")
+                    asyncio.ensure_future(self._handle_starttls())
                     item.clear()
 
                 elif "presence" == item_tag:

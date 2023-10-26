@@ -17,6 +17,13 @@ _LOGGER = logging.getLogger("bumper")
 
 async def start() -> None:
     """Start bumper."""
+    # Setup logger
+    utils.LogHelper(logging_verbose=bumper_isc.bumper_verbose, logging_level=bumper_isc.bumper_level)
+
+    if bumper_isc.bumper_level == "DEBUG":
+        # Set asyncio loop to debug
+        asyncio.get_event_loop().set_debug(True)
+
     if bumper_isc.bumper_listen is None:
         _LOGGER.fatal("No listen address configured")
         return
@@ -40,7 +47,7 @@ async def start() -> None:
     )
     bumper_isc.mqtt_helperbot = helper_bot.MQTTHelperBot(bumper_isc.bumper_listen, bumper_isc.MQTT_LISTEN_PORT_TLS, True)
     # bumper_isc.mqtt_helperbot = helper_bot.MQTTHelperBot(bumper_isc.bumper_listen, bumper_isc.MQTT_LISTEN_PORT, False)
-    web_server = server_web.WebServer(
+    bumper_isc.web_server = server_web.WebServer(
         [
             server_web.WebserverBinding(bumper_isc.bumper_listen, int(bumper_isc.WEB_SERVER_TLS_LISTEN_PORT), True),
             # server_web.WebserverBinding(bumper_isc.bumper_listen, int(bumper_isc.WEB_SERVER_LISTEN_PORT), False),
@@ -66,12 +73,12 @@ async def start() -> None:
         await asyncio.sleep(0.1)
 
     # Start web servers
-    await web_server.start()
+    await bumper_isc.web_server.start()
 
     _LOGGER.info("Bumper started successfully")
 
     # Start maintenance
-    asyncio.create_task(maintenance())
+    await asyncio.create_task(maintenance())
 
 
 async def maintenance() -> None:
@@ -148,11 +155,6 @@ def main(argv: list[str] | None = None) -> None:
         # Setup logger
         utils.LogHelper(logging_verbose=bumper_isc.bumper_verbose, logging_level=bumper_isc.bumper_level)
 
-        loop = asyncio.get_event_loop()
-        if bumper_isc.bumper_level == "DEBUG":
-            # Set asyncio loop to debug
-            loop.set_debug(True)
-
         # Check for password file?
         if not os.path.exists(os.path.join(bumper_isc.data_dir, "passwd")):
             with open(os.path.join(bumper_isc.data_dir, "passwd"), "w", encoding="utf-8"):
@@ -166,8 +168,8 @@ def main(argv: list[str] | None = None) -> None:
             return
 
         # Start the service
+        loop = asyncio.get_event_loop()
         loop.run_until_complete(start())
-        loop.run_forever()
     except KeyboardInterrupt:
         _LOGGER.info("Keyboard Interrupt!")
     except Exception as e:

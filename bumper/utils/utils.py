@@ -1,16 +1,16 @@
 """LogHelper module."""
 import logging
 import re
+import sys
 from datetime import datetime
 
 import coloredlogs
-import verboselogs
 
 
 class LogHelper:
     """LogHelper."""
 
-    def __init__(self, logging_verbose: int = 2, logging_level: str = "INFO") -> None:
+    def __init__(self, logging_verbose: int = 1, logging_level: str = "INFO") -> None:
         """Log Helper init."""
         # configure logger for requested verbosity
         log_format: str = "%(message)s"
@@ -31,9 +31,6 @@ class LogHelper:
         elif logging_verbose == 1:
             log_format = "[%(asctime)s] - %(message)s"
 
-        # create a log object from verboselogs
-        verboselogs.install()
-
         for logger_name in [logging.getLogger()] + [logging.getLogger(name) for name in logging.getLogger().manager.loggerDict]:
             for handler in logger_name.handlers:
                 logger_name.removeHandler(handler)
@@ -44,9 +41,8 @@ class LogHelper:
                 level=logging.getLevelName(logging_level),
                 fmt=log_format,
                 logger=logger_name,
+                stream=sys.stdout,
             )
-
-            # logger_name.addHandler(logging.StreamHandler(sys.stdout))
 
             if logging_level == "INFO" and logger_name.name.startswith("aiohttp.access"):
                 logger_name.setLevel(logging.DEBUG)

@@ -14,7 +14,7 @@ from tests import HOST, MQTT_PORT
 
 
 async def test_helperbot_message(mqtt_client: Client):
-    with LogCapture() as l:
+    with LogCapture() as log:
         # Test broadcast message
         mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
         await mqtt_helperbot.start()
@@ -25,14 +25,14 @@ async def test_helperbot_message(mqtt_client: Client):
 
         await asyncio.sleep(0.1)
 
-        l.check_present(
+        log.check_present(
             (
                 "mqtt_messages",
                 "DEBUG",
-                "Received Broadcast - Topic: iot/atr/DustCaseST/bot_serial/ls1ok3/wC3g/x - Message: <ctl ts='1547822804960' td='DustCaseST' st='0'/>",
+                "Received Broadcast :: Topic: iot/atr/DustCaseST/bot_serial/ls1ok3/wC3g/x :: Message: <ctl ts='1547822804960' td='DustCaseST' st='0'/>",
             )
         )  # Check broadcast message was logged
-        l.clear()
+        log.clear()
         await mqtt_helperbot.disconnect()
 
         # Send command to bot
@@ -45,14 +45,14 @@ async def test_helperbot_message(mqtt_client: Client):
 
         await asyncio.sleep(0.1)
 
-        l.check_present(
+        log.check_present(
             (
                 "mqtt_messages",
                 "DEBUG",
-                "Send Command - Topic: iot/p2p/GetWKVer/helperbot/bumper/helperbot/bot_serial/ls1ok3/wC3g/q/iCmuqp/j - Message: {}",
+                "Send Command :: Topic: iot/p2p/GetWKVer/helperbot/bumper/helperbot/bot_serial/ls1ok3/wC3g/q/iCmuqp/j :: Message: {}",
             )
         )  # Check send command message was logged
-        l.clear()
+        log.clear()
         await mqtt_helperbot.disconnect()
 
         # Received response to command
@@ -65,14 +65,14 @@ async def test_helperbot_message(mqtt_client: Client):
 
         await asyncio.sleep(0.1)
 
-        l.check_present(
+        log.check_present(
             (
                 "mqtt_messages",
                 "DEBUG",
-                'Received Response - Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/iCmuqp/j - Message: {"ret":"ok","ver":"0.13.5"}',
+                'Received Response :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/iCmuqp/j :: Message: {"ret":"ok","ver":"0.13.5"}',
             )
         )  # Check received response message was logged
-        l.clear()
+        log.clear()
         await mqtt_helperbot.disconnect()
 
         # Received unknown message
@@ -85,14 +85,14 @@ async def test_helperbot_message(mqtt_client: Client):
 
         await asyncio.sleep(0.2)
 
-        l.check_present(
+        log.check_present(
             (
                 "mqtt_messages",
                 "DEBUG",
-                "Received Message - Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/TESTBAD/bumper/helperbot/p/iCmuqp/j - Message: test",
+                "Received Message :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/TESTBAD/bumper/helperbot/p/iCmuqp/j :: Message: test",
             )
         )  # Check received message was logged
-        l.clear()
+        log.clear()
         await mqtt_helperbot.disconnect()
 
         # Received error message
@@ -105,14 +105,14 @@ async def test_helperbot_message(mqtt_client: Client):
 
         await asyncio.sleep(0.1)
 
-        l.check_present(
+        log.check_present(
             (
                 "mqtt_messages",
                 "DEBUG",
-                "Received Broadcast - Topic: iot/atr/errors/bot_serial/ls1ok3/wC3g/x - Message: <ctl ts='1560904925396' td='errors' old='' new='110'/>",
+                "Received Broadcast :: Topic: iot/atr/errors/bot_serial/ls1ok3/wC3g/x :: Message: <ctl ts='1560904925396' td='errors' old='' new='110'/>",
             )
         )  # Check received message was logged
-        l.clear()
+        log.clear()
         await mqtt_helperbot.disconnect()
 
 
@@ -138,7 +138,7 @@ async def test_helperbot_expire_message(mqtt_client: Client, helper_bot: MQTTHel
 
     await asyncio.sleep(0.1 * 2)
 
-    assert helper_bot._commands.get(request_id, None) == None
+    assert helper_bot._commands.get(request_id, None) is None
 
 
 async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelperBot):
@@ -269,7 +269,7 @@ async def test_mqttserver():
     if os.path.exists("tests/tmp.db"):
         os.remove("tests/tmp.db")  # Remove existing db
 
-    mqtt_server = MQTTServer(HOST, MQTT_PORT, password_file="tests/passwd", allow_anonymous=True)
+    mqtt_server = MQTTServer(MQTTBinding(HOST, MQTT_PORT, True), password_file="tests/passwd", allow_anonymous=True)
 
     await mqtt_server.start()
 
@@ -308,31 +308,31 @@ async def test_mqttserver():
         assert not client.is_connected
 
         # bad password
-        with LogCapture() as l:
+        with LogCapture() as log:
             client.set_auth_credentials("test-client", "notvalid!")
             await client.connect(HOST, MQTT_PORT, ssl=ssl_ctx, version=MQTTv311)
             await client.disconnect()
 
-            l.check_present(
+            log.check_present(
                 (
                     "mqtt_server",
                     "INFO",
-                    "File Authentication Failed - Username: test-client - ClientID: test-file-auth",
+                    "File Authentication Failed :: Username: test-client - ClientID: test-file-auth",
                 ),
                 order_matters=False,
             )
-            l.clear()
+            log.clear()
 
             # no username in file
             client.set_auth_credentials("test-client-noexist", "notvalid!")
             await client.connect(HOST, MQTT_PORT, ssl=ssl_ctx, version=MQTTv311)
             await client.disconnect()
 
-            l.check_present(
+            log.check_present(
                 (
                     "mqtt_server",
                     "INFO",
-                    "File Authentication Failed - No Entry - Username: test-client-noexist - ClientID: test-file-auth",
+                    "File Authentication Failed :: No Entry for :: Username: test-client-noexist - ClientID: test-file-auth",
                 ),
                 order_matters=False,
             )
@@ -341,11 +341,11 @@ async def test_mqttserver():
 
 
 async def test_nofileauth_mqttserver():
-    with LogCapture() as l:
+    with LogCapture() as log:
         mqtt_server = MQTTServer(MQTTBinding(HOST, MQTT_PORT, True), password_file="tests/passwd-notfound")
         await mqtt_server.start()
         try:
-            l.check_present(
+            log.check_present(
                 (
                     "amqtt.broker.plugins.bumper",
                     "WARNING",

@@ -3,8 +3,6 @@ from unittest import mock
 
 from testfixtures import LogCapture
 
-import bumper
-from bumper.utils.settings import config as bumper_bus
 from bumper.xmpp.xmpp import XMPPAsyncClient, XMPPServer
 
 
@@ -20,10 +18,10 @@ async def test_xmpp_server():
     xmpp_server = XMPPServer("127.0.0.1", 5223)
     await xmpp_server.start_async_server()
 
-    with LogCapture("xmppserver") as l:
+    with LogCapture("xmppserver") as _:
         reader, writer = await asyncio.open_connection("127.0.0.1", 5223)
 
-        writer.write(b"<stream:stream />")  # Start stream
+        writer.write(b"<stream:stream xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' />")  # Start stream
         await writer.drain()
 
         await asyncio.sleep(0.1)
@@ -40,7 +38,7 @@ async def test_xmpp_server():
 
         reader, writer = await asyncio.open_connection("127.0.0.1", 5223)
 
-        writer.write(b"<stream:stream />")  # Start stream
+        writer.write(b"<stream:stream xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' />")  # Start stream
         await writer.drain()
 
         await asyncio.sleep(0.1)
@@ -65,21 +63,24 @@ async def test_client_connect_no_starttls():
     # Expect 2 calls to send
     assert mock_send.call_count == 2
     # Server opens stream
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<stream:stream xmlns:stream="http://etherx.jabber.org/streams" xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<stream:stream xmlns:stream="http://etherx.jabber.org/streams"'
+        ' xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
     )
     # Server tells client available features
-    assert (
-        mock_send.mock_calls[1][1][0]
-        == '<stream:features><starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"><required/></starttls><mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl"><mechanism>PLAIN</mechanism></mechanisms></stream:features>'
+    assert mock_send.mock_calls[1][1][0] == (
+        '<stream:features><starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"><required/></starttls>'
+        '<mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl"><mechanism>PLAIN</mechanism></mechanisms></stream:features>'
     )
 
     # Reset mock calls
     mock_send.reset_mock()
 
     # Client sendss auth - Ignoring the starttls, we don't force this with bumper
-    test_data = b'<auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="PLAIN">AGZ1aWRfdG1wdXNlcgAwL0lPU0Y1M0QwN0JBL3VzXzg5ODgwMmZkYmM0NDQxYjBiYzgxNWIxZDFjNjgzMDJl</auth>'
+    test_data = (
+        b'<auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="PLAIN">'
+        b"AGZ1aWRfdG1wdXNlcgAwL0lPU0Y1M0QwN0JBL3VzXzg5ODgwMmZkYmM0NDQxYjBiYzgxNWIxZDFjNjgzMDJl</auth>"
+    )
     xmppclient.parse_data(test_data)
 
     assert (
@@ -137,14 +138,14 @@ async def test_client_connect_starttls_called():
     # Expect 2 calls to send
     assert mock_send.call_count == 2
     # Server opens stream
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<stream:stream xmlns:stream="http://etherx.jabber.org/streams" xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<stream:stream xmlns:stream="http://etherx.jabber.org/streams"'
+        ' xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
     )
     # Server tells client available features
-    assert (
-        mock_send.mock_calls[1][1][0]
-        == '<stream:features><starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"><required/></starttls><mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl"><mechanism>PLAIN</mechanism></mechanisms></stream:features>'
+    assert mock_send.mock_calls[1][1][0] == (
+        '<stream:features><starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"><required/></starttls>'
+        '<mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl"><mechanism>PLAIN</mechanism></mechanisms></stream:features>'
     )
 
     # Reset mock calls
@@ -158,7 +159,7 @@ async def test_client_connect_starttls_called():
 
     # After upgrading connection, server tells client to proceed with auth again
     assert mock_tls.called
-    xmppclient.TLSUpgraded = True
+    xmppclient.tls_upgraded = True
 
     # After TLS is upgraded, Client establishes session again and will auth this time
     # Send connect stream from "client"
@@ -170,20 +171,23 @@ async def test_client_connect_starttls_called():
     # Expect 2 calls to send
     assert mock_send.call_count == 2
     # Server opens stream
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<stream:stream xmlns:stream="http://etherx.jabber.org/streams" xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<stream:stream xmlns:stream="http://etherx.jabber.org/streams"'
+        ' xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
     )
     # Server tells client available features (without STARTTLS)
-    assert (
-        mock_send.mock_calls[1][1][0]
-        == '<stream:features><mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl"><mechanism>PLAIN</mechanism></mechanisms></stream:features>'
+    assert mock_send.mock_calls[1][1][0] == (
+        '<stream:features><mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">'
+        "<mechanism>PLAIN</mechanism></mechanisms></stream:features>"
     )
     # Reset mock calls
     mock_send.reset_mock()
 
     # Client sends auth
-    test_data = b'<auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="PLAIN">AGZ1aWRfdG1wdXNlcgAwL0lPU0Y1M0QwN0JBL3VzXzg5ODgwMmZkYmM0NDQxYjBiYzgxNWIxZDFjNjgzMDJl</auth>'
+    test_data = (
+        b'<auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="PLAIN">'
+        b"AGZ1aWRfdG1wdXNlcgAwL0lPU0Y1M0QwN0JBL3VzXzg5ODgwMmZkYmM0NDQxYjBiYzgxNWIxZDFjNjgzMDJl</auth>"
+    )
     xmppclient.parse_data(test_data)
 
     assert (
@@ -199,7 +203,7 @@ async def test_client_init():
     xmppclient = XMPPAsyncClient(test_transport)
     xmppclient.state = xmppclient.INIT  # Set client state to INIT
     xmppclient.uid = "fuid_tmpuser"
-    xmppclient.resource = "IOSF53D07BA"
+    xmppclient.clientresource = "IOSF53D07BA"
     xmppclient.bumper_jid = "fuid_tmpuser@ecouser.net/IOSF53D07BA"
     xmppclient.type = xmppclient.CONTROLLER
     mock_send = xmppclient.send = mock.Mock(side_effect=return_send_data)
@@ -213,26 +217,29 @@ async def test_client_init():
     # Expect 2 calls to send
     assert mock_send.call_count == 2
     # Server opens stream
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<stream:stream xmlns:stream="http://etherx.jabber.org/streams" xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<stream:stream xmlns:stream="http://etherx.jabber.org/streams"'
+        ' xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
     )
     # Server tells client binds
-    assert (
-        mock_send.mock_calls[1][1][0]
-        == '<stream:features><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"/><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></stream:features>'
+    assert mock_send.mock_calls[1][1][0] == (
+        '<stream:features><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"/>'
+        '<session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></stream:features>'
     )
 
     # Reset mock calls
     mock_send.reset_mock()
 
     # Send bind from "client"
-    test_data = b'<iq type="set" id="5E9872D5-547E-49AF-AE51-9EFAA282F952"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>IOSF53D07BA</resource></bind></iq>'
+    test_data = (
+        b'<iq type="set" id="5E9872D5-547E-49AF-AE51-9EFAA282F952">'
+        b'<bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>IOSF53D07BA</resource></bind></iq>'
+    )
     xmppclient.parse_data(test_data)
 
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<iq type="result" id="5E9872D5-547E-49AF-AE51-9EFAA282F952"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><jid>fuid_tmpuser@ecouser.net/IOSF53D07BA</jid></bind></iq>'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<iq type="result" id="5E9872D5-547E-49AF-AE51-9EFAA282F952">'
+        '<bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><jid>fuid_tmpuser@ecouser.net/IOSF53D07BA</jid></bind></iq>'
     )  # client successfully binded
     assert xmppclient.state == xmppclient.BIND  # client moved to BIND state
 
@@ -269,27 +276,33 @@ async def test_bot_connect():
     mock_send = xmppclient.send = mock.Mock(side_effect=return_send_data)
 
     # Send connect stream from "bot"
-    test_data = b"<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='159.ecorobot.net' version='1.0'>"
+    test_data = (
+        b"<stream:stream xmlns:stream='http://etherx.jabber.org/streams'"
+        b" xmlns='jabber:client' to='159.ecorobot.net' version='1.0'>"
+    )
     xmppclient.parse_data(test_data)
 
     # Expect 2 calls to send
     assert mock_send.call_count == 2
     # Server opens stream
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<stream:stream xmlns:stream="http://etherx.jabber.org/streams" xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<stream:stream xmlns:stream="http://etherx.jabber.org/streams"'
+        ' xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
     )
     # Server tells client available features
-    assert (
-        mock_send.mock_calls[1][1][0]
-        == '<stream:features><starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"><required/></starttls><mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl"><mechanism>PLAIN</mechanism></mechanisms></stream:features>'
+    assert mock_send.mock_calls[1][1][0] == (
+        '<stream:features><starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"><required/></starttls>'
+        '<mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl"><mechanism>PLAIN</mechanism></mechanisms></stream:features>'
     )
 
     # Reset mock calls
     mock_send.reset_mock()
 
     # Send auth from "bot"
-    test_data = b"<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='PLAIN'>AEUwMDAwMDAwMDAwMDAwMDAxMjM0AGVuY3J5cHRlZF9wYXNz</auth>"
+    test_data = (
+        b"<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='PLAIN'>"
+        b"AEUwMDAwMDAwMDAwMDAwMDAxMjM0AGVuY3J5cHRlZF9wYXNz</auth>"
+    )
     xmppclient.parse_data(test_data)
 
     assert (
@@ -311,20 +324,23 @@ async def test_bot_init():
     mock_send = xmppclient.send = mock.Mock(side_effect=return_send_data)
 
     # Send connect stream from "bot"
-    test_data = b"<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='159.ecorobot.net' version='1.0'>"
+    test_data = (
+        b"<stream:stream xmlns:stream='http://etherx.jabber.org/streams'"
+        b" xmlns='jabber:client' to='159.ecorobot.net' version='1.0'>"
+    )
     xmppclient.parse_data(test_data)
 
     # Expect 2 calls to send
     assert mock_send.call_count == 2
     # Server opens stream
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<stream:stream xmlns:stream="http://etherx.jabber.org/streams" xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<stream:stream xmlns:stream="http://etherx.jabber.org/streams"'
+        ' xmlns="jabber:client" version="1.0" id="1" from="ecouser.net">'
     )
     # Server tells client binds
-    assert (
-        mock_send.mock_calls[1][1][0]
-        == '<stream:features><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"/><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></stream:features>'
+    assert mock_send.mock_calls[1][1][0] == (
+        '<stream:features><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"/>'
+        '<session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></stream:features>'
     )
 
     # Reset mock calls
@@ -334,9 +350,9 @@ async def test_bot_init():
     test_data = b"<iq type='set' id='2521'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><resource>atom</resource></bind></iq>"
     xmppclient.parse_data(test_data)
 
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<iq type="result" id="2521"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><jid>E0000000000000001234@159.ecorobot.net/atom</jid></bind></iq>'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<iq type="result" id="2521"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">'
+        "<jid>E0000000000000001234@159.ecorobot.net/atom</jid></bind></iq>"
     )  # Bot successfully binded
     assert xmppclient.state == xmppclient.BIND  # Bot moved to BIND state
 
@@ -354,7 +370,10 @@ async def test_bot_init():
     mock_send.reset_mock()
 
     # Send presence from bot
-    test_data = b"<presence><status>hello world</status></presence><iq type='result' from='E0000000000000001234@159.ecorobot.net/atom' to='ecouser.net' id='s2c1'/>"
+    test_data = (
+        b"<presence><status>hello world</status></presence><iq type='result'"
+        b" from='E0000000000000001234@159.ecorobot.net/atom' to='ecouser.net' id='s2c1'/>"
+    )
     xmppclient.parse_data(test_data)
 
     assert (
@@ -373,7 +392,10 @@ async def test_ping_server():
     mock_send = xmppclient.send = mock.Mock(side_effect=return_send_data)
 
     # Ping from bot
-    test_data = b'<iq xmlns:ns0="urn:xmpp:ping" from="E000BVTNX18700260382@159.ecorobot.net/atom" id="2542" to="159.ecorobot.net" type="get"><ping /></iq>'
+    test_data = (
+        b'<iq xmlns:ns0="urn:xmpp:ping" from="E000BVTNX18700260382@159.ecorobot.net/atom"'
+        b' id="2542" to="159.ecorobot.net" type="get"><ping /></iq>'
+    )
     xmppclient.parse_data(test_data)
 
     assert mock_send.mock_calls[0][1][0] == '<iq type="result" id="2542" from="159.ecorobot.net" />'  # ping response
@@ -393,29 +415,29 @@ async def test_ping_client_to_client():
     xmppclient2 = XMPPAsyncClient(test_transport)
     xmppclient2.state = xmppclient.READY  # Set client state to READY
     xmppclient2.uid = "fuid_tmpuser"
-    xmppclient2.resource = "IOSF53D07BA"
+    xmppclient2.clientresource = "IOSF53D07BA"
     xmppclient2.bumper_jid = "fuid_tmpuser@ecouser.net/IOSF53D07BA"
     mock_send2 = xmppclient2.send = mock.Mock(side_effect=return_send_data)
 
-    bumper_bus.xmpp_server.XMPPServer.clients.append(xmppclient)
-    bumper_bus.xmpp_server.XMPPServer.clients.append(xmppclient2)
+    XMPPServer.clients.append(xmppclient)
+    XMPPServer.clients.append(xmppclient2)
 
     # Ping from user to bot
     test_data = b'<iq id="104934615" to="fuid_tmpuser@ecouser.net/IOSF53D07BA" type="get"><ping xmlns="urn:xmpp:ping" /></iq>'
     xmppclient.parse_data(test_data)
 
-    assert (
-        mock_send2.mock_calls[0][1][0]
-        == '<iq id="104934615" to="fuid_tmpuser@ecouser.net/IOSF53D07BA" type="get" from="E0000000000000001234@159.ecorobot.net/atom"><ping xmlns="urn:xmpp:ping" /></iq>'
+    assert mock_send2.mock_calls[0][1][0] == (
+        '<iq id="104934615" to="fuid_tmpuser@ecouser.net/IOSF53D07BA" type="get"'
+        ' from="E0000000000000001234@159.ecorobot.net/atom"><ping xmlns="urn:xmpp:ping" /></iq>'
     )  # ping response
 
     # Ping response from bot to user
     test_data = b"<iq type='result' to='E0000000000000001234@159.ecorobot.net/atom' id='104934615'/>"
     xmppclient2.parse_data(test_data)
 
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<iq type="result" to="E0000000000000001234@159.ecorobot.net/atom" id="104934615" from="fuid_tmpuser@ecouser.net/IOSF53D07BA" />'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<iq type="result" to="E0000000000000001234@159.ecorobot.net/atom"'
+        ' id="104934615" from="fuid_tmpuser@ecouser.net/IOSF53D07BA" />'
     )  # ping response
 
 
@@ -426,11 +448,11 @@ async def test_client_send_iq():
     xmppclient = XMPPAsyncClient(test_transport)
     xmppclient.state = xmppclient.READY  # Set client state to READY
     xmppclient.uid = "fuid_tmpuser"
-    xmppclient.resource = "IOSF53D07BA"
+    xmppclient.clientresource = "IOSF53D07BA"
     xmppclient.bumper_jid = "fuid_tmpuser@ecouser.net/IOSF53D07BA"
-    xmppclient.type - xmppclient.CONTROLLER
+    xmppclient.type = xmppclient.CONTROLLER
     mock_send = xmppclient.send = mock.Mock(side_effect=return_send_data)
-    bumper_bus.xmpp_server.XMPPServer.clients.append(xmppclient)
+    XMPPServer.clients.append(xmppclient)
 
     xmppclient2 = XMPPAsyncClient(test_transport)
     xmppclient2.state = xmppclient.READY  # Set client state to READY
@@ -440,39 +462,45 @@ async def test_client_send_iq():
     xmppclient2.type = xmppclient2.BOT
     mock_send2 = xmppclient2.send = mock.Mock(side_effect=return_send_data)
 
-    bumper_bus.xmpp_server.XMPPServer.clients.append(xmppclient2)
+    XMPPServer.clients.append(xmppclient2)
 
     # Roster IQ - Only seen from Android app so far
     test_data = b'<iq id="EE0XQ-2" type="get"><query xmlns="jabber:iq:roster" ></query></iq>'
     xmppclient.parse_data(test_data)
 
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<iq type="error" id="EE0XQ-2"><error type="cancel" code="501"><feature-not-implemented xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/></error></iq>'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<iq type="error" id="EE0XQ-2"><error type="cancel" code="501"><feature-not-implemented'
+        ' xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/></error></iq>'
     )  # feature not implemented response
 
     # Reset mock calls
     mock_send.reset_mock()
 
     # Bot Command
-    test_data = b'<iq id="7" to="E0000000000000001234@159.ecorobot.net/atom" type="set"><query xmlns="com:ctl"><ctl id="72107787" td="GetCleanState" /></query></iq>'
+    test_data = (
+        b'<iq id="7" to="E0000000000000001234@159.ecorobot.net/atom" type="set">'
+        b'<query xmlns="com:ctl"><ctl id="72107787" td="GetCleanState" /></query></iq>'
+    )
     xmppclient.parse_data(test_data)
 
-    assert (
-        mock_send2.mock_calls[0][1][0]
-        == '<iq id="7" to="E0000000000000001234@159.ecorobot.net/atom" type="set" from="fuid_tmpuser@ecouser.net/IOSF53D07BA"><query xmlns="com:ctl"><ctl id="72107787" td="GetCleanState" /></query></iq>'
+    assert mock_send2.mock_calls[0][1][0] == (
+        '<iq id="7" to="E0000000000000001234@159.ecorobot.net/atom" type="set" from="fuid_tmpuser@ecouser.net/IOSF53D07BA">'
+        '<query xmlns="com:ctl"><ctl id="72107787" td="GetCleanState" /></query></iq>'
     )  # command was sent to bot
 
     # Reset mock calls
     mock_send.reset_mock()
 
     # Bot response to query
-    test_data = b'<iq xmlns:ns0="com:ctl" id="2679" to="fuid_tmpuser@ecouser.net/IOSF53D07BA" type="set"><query><ctl td="ChargeState"><charge h="0" r="a" type="Going" /></ctl></query></iq>'
+    test_data = (
+        b'<iq xmlns:ns0="com:ctl" id="2679" to="fuid_tmpuser@ecouser.net/IOSF53D07BA" type="set">'
+        b'<query><ctl td="ChargeState"><charge h="0" r="a" type="Going" /></ctl></query></iq>'
+    )
     xmppclient2.parse_data(test_data)
 
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<iq id="2679" to="fuid_tmpuser@ecouser.net/IOSF53D07BA" type="set" from="E0000000000000001234@159.ecorobot.net/atom"><query xmlns="com:ctl"><ctl td="ChargeState"><charge h="0" r="a" type="Going" /></ctl></query></iq>'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<iq id="2679" to="fuid_tmpuser@ecouser.net/IOSF53D07BA" type="set" from="E0000000000000001234@159.ecorobot.net/atom">'
+        '<query xmlns="com:ctl"><ctl td="ChargeState"><charge h="0" r="a" type="Going" /></ctl></query></iq>'
     )  # result sent to client
 
     # Reset mock calls
@@ -482,43 +510,53 @@ async def test_client_send_iq():
     test_data = b"<iq type='result' from='E0000000000000001234@159.ecorobot.net/atom' to='ecouser.net' id='s2c1'/>"
     xmppclient2.parse_data(test_data)
 
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<iq type="result" from="E0000000000000001234@159.ecorobot.net/atom" to="ecouser.net" id="s2c1" />'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<iq type="result" from="E0000000000000001234@159.ecorobot.net/atom" to="ecouser.net" id="s2c1" />'
     )  # result sent to ecouser.net
 
     # Reset mock calls
     mock_send.reset_mock()
 
     # Bot iq set
-    test_data = b"<iq to='fuid_tmpuser@ecouser.net/IOSF53D07BA' type='set' id='2700'><query xmlns='com:ctl'><ctl td='BatteryInfo'><battery power='100'/></ctl></query></iq>"
+    test_data = (
+        b"<iq to='fuid_tmpuser@ecouser.net/IOSF53D07BA' type='set' id='2700'><query xmlns='com:ctl'>"
+        b"<ctl td='BatteryInfo'><battery power='100'/></ctl></query></iq>"
+    )
     xmppclient2.parse_data(test_data)
 
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<iq to="fuid_tmpuser@ecouser.net/IOSF53D07BA" type="set" id="2700" from="E0000000000000001234@159.ecorobot.net/atom"><query xmlns="com:ctl"><ctl td="BatteryInfo"><battery power="100" /></ctl></query></iq>'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<iq to="fuid_tmpuser@ecouser.net/IOSF53D07BA" type="set" id="2700" from="E0000000000000001234@159.ecorobot.net/atom">'
+        '<query xmlns="com:ctl"><ctl td="BatteryInfo"><battery power="100" /></ctl></query></iq>'
     )  # result sent to ecouser.net
 
     # Reset mock calls
     mock_send.reset_mock()
 
     # Bot error report
-    test_data = b"<iq to='fuid_tmpuser@ecouser.net/IOSF53D07BA' type='set' id='631'><query xmlns='com:ctl'><ctl td='error' errs='102'/></query></iq>"
+    test_data = (
+        b"<iq to='fuid_tmpuser@ecouser.net/IOSF53D07BA' type='set' id='631'>"
+        b"<query xmlns='com:ctl'><ctl td='error' errs='102'/></query></iq>"
+    )
     xmppclient2.parse_data(test_data)
 
-    assert (
-        mock_send.mock_calls[0][1][0]
-        == '<iq to="fuid_tmpuser@ecouser.net/IOSF53D07BA" type="set" id="631" from="E0000000000000001234@159.ecorobot.net/atom"><query xmlns="com:ctl"><ctl td="error" errs="102" /></query></iq>'
+    assert mock_send.mock_calls[0][1][0] == (
+        '<iq to="fuid_tmpuser@ecouser.net/IOSF53D07BA" type="set" id="631" from="E0000000000000001234@159.ecorobot.net/atom">'
+        '<query xmlns="com:ctl"><ctl td="error" errs="102" /></query></iq>'
     )  # result sent to ecouser.net
 
     # Reset mock calls
     mock_send.reset_mock()
 
     # Bot "DorpError" to all
-    test_data = b"<iq to='rl.ecorobot.net' type='set' id='1234'><query xmlns='com:sf'><sf td='pub' t='log' ts='1559893796000' tp='p' k='DeviceAlert' v='DorpError' f='E0000000000000001234@159.ecorobot.net' g='fuid_tmpuser@ecouser.net'/></query></iq>"
+    test_data = (
+        b"<iq to='rl.ecorobot.net' type='set' id='1234'><query xmlns='com:sf'><sf td='pub' t='log' ts='1559893796000' tp='p'"
+        b" k='DeviceAlert' v='DorpError' f='E0000000000000001234@159.ecorobot.net' g='fuid_tmpuser@ecouser.net'/></query></iq>"
+    )
     xmppclient2.parse_data(test_data)
     assert mock_send.mock_calls[0][1][0] == (
-        '<iq xmlns="com:sf" to="rl.ecorobot.net" type="set" id="1234" from="E0000000000000001234@159.ecorobot.net/atom"><query xmlns="com:ctl"><sf td="pub" t="log" ts="1559893796000" tp="p" k="DeviceAlert" v="DorpError" f="E0000000000000001234@159.ecorobot.net" g="fuid_tmpuser@ecouser.net" /></query></iq>'
+        '<iq xmlns="com:sf" to="rl.ecorobot.net" type="set" id="1234" from="E0000000000000001234@159.ecorobot.net/atom">'
+        '<query xmlns="com:ctl"><sf td="pub" t="log" ts="1559893796000" tp="p" k="DeviceAlert" v="DorpError"'
+        ' f="E0000000000000001234@159.ecorobot.net" g="fuid_tmpuser@ecouser.net" /></query></iq>'
     )  # result sent to ecouser.net
 
     # Reset mock calls
