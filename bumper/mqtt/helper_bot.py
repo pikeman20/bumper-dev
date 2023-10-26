@@ -108,9 +108,9 @@ class MQTTHelperBot:
                 "resp": await asyncio.wait_for(command_dto.wait_for_response(), timeout=self._timeout),
             }
         except TimeoutError:
-            _LOGGER.warning("wait_for_resp timeout reached")
+            _LOGGER.debug("wait_for_resp timeout reached")
         except asyncio.CancelledError:
-            _LOGGER.warning("wait_for_resp cancelled by asyncio", exc_info=True)
+            _LOGGER.debug("wait_for_resp cancelled by asyncio", exc_info=True)
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "during wait for response"), exc_info=True)
         return {

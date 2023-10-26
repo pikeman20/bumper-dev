@@ -18,13 +18,12 @@ _LOGGER = logging.getLogger("bumper")
 
 async def start() -> None:
     """Start bumper."""
-
     _LOGGER.info("Starting Bumpers...")
     start_configuration()
     await start_service()
     _LOGGER.info("Bumper started successfully")
 
-    # Start maintenance
+    # Start maintenance + endless loop
     await asyncio.create_task(maintenance())
 
 
@@ -39,7 +38,7 @@ def start_configuration() -> None:
 
     if bumper_isc.bumper_listen is None:
         _LOGGER.fatal("No listen address configured")
-        exit(1)
+        sys.exit(1)
 
     # Reset xmpp/mqtt to false in database for bots and clients
     db.bot_reset_connection_status()

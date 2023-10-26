@@ -13,7 +13,7 @@ from bumper.utils import db
 from tests import HOST, MQTT_PORT
 
 # TODO: current not understand how this works with he logger defined in utils,
-#       LogCapture not checks the stdout logs, thats why check_present is commented
+#       LogCapture not checks the stdout logs, that's why check_present is commented
 
 
 async def test_helperbot_message(mqtt_client: Client):

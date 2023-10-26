@@ -213,12 +213,8 @@ class XMPPAsyncClient:
                     ctl_to = xml.get("to")
                     if "from" not in xml.attrib:
                         xml.attrib["from"] = self.bumper_jid
-                    rxmlstring = ET.tostring(xml).decode("utf-8")
                     # clean up string to remove namespaces added by ET
-                    rxmlstring = rxmlstring.replace("xmlns:ns0=", "xmlns=")
-                    rxmlstring = rxmlstring.replace("ns0:", "")
-                    rxmlstring = rxmlstring.replace('iq xmlns="com:ctl"', "iq")
-                    rxmlstring = rxmlstring.replace("<query", '<query xmlns="com:ctl"')
+                    rxmlstring = self._xml_replacer(xml, "query", "com:ctl")
 
                     if client.type == self.BOT and ctl_to is not None:
                         if client.uid.lower() in ctl_to.lower():
@@ -244,12 +240,8 @@ class XMPPAsyncClient:
                 pingfrom = self.bumper_jid
                 if "from" not in xml.attrib:
                     xml.attrib["from"] = pingfrom
-                pingstring = ET.tostring(xml).decode("utf-8")
                 # clean up string to remove namespaces added by ET
-                pingstring = pingstring.replace("xmlns:ns0=", "xmlns=")
-                pingstring = pingstring.replace("ns0:", "")
-                pingstring = pingstring.replace('iq xmlns="urn:xmpp:ping"', "iq")
-                pingstring = pingstring.replace("<ping", '<ping xmlns="urn:xmpp:ping"')
+                pingstring = self._xml_replacer(xml, "ping", "urn:xmpp:ping")
 
                 for client in XMPPServer.clients:
                     if pingto is not None and client.bumper_jid != self.bumper_jid and client.state == client.READY:
@@ -327,17 +319,7 @@ class XMPPAsyncClient:
                         )
 
             else:
-                # clean up string to remove namespaces added by ET
-                rxmlstring = ET.tostring(xml).decode("utf-8")
-                # Replace "xmlns:ns0" with "xmlns"
-                rxmlstring = re.sub(r"xmlns:ns0=", "xmlns=", rxmlstring)
-                # Remove all namespaces for "ns0:"
-                rxmlstring = re.sub(r"ns0:", "", rxmlstring)
-                # Inside "iq" element, remove the attribute "xmlns"
-                rxmlstring = re.sub(r'<iq (.*?)xmlns=["|\']com:ctl["|\']', r"<iq\1", rxmlstring)
-                # Inside "query" element, add 'xmlns="com:ctl"'
-                rxmlstring = re.sub(r"<query(.*?)>", r'<query\1 xmlns="com:ctl">', rxmlstring)
-
+                rxmlstring = self._xml_replacer(xml, "query", "com:ctl")
                 if self.type == self.BOT:
                     if ctl_to == "de.ecorobot.net":  # Send to all clients
                         _LOGGER_CLIENT.debug(f"Sending to all clients because of de: {rxmlstring}")
@@ -605,10 +587,10 @@ class XMPPAsyncClient:
         # try fixing stream when it is not well closed
         if "stream:stream" in newdata and "</stream:stream>" not in newdata:
             # Regular expression pattern to find <stream:stream ... > elements
-            matches = re.findall(r"<stream:stream(?:(?!\/>)[^>]|\s)*?>", newdata)
+            matches = re.findall(r"<stream:stream(?![^>]*\/>)[^>]*>", newdata)
             for match in matches:
                 # Replace the element with a properly closed version
-                newdata = newdata.replace(match, match[:-1] + "/>")
+                newdata = newdata.replace(match, f"{match[:-1]}/>")
         # some messages have only a close stream
         elif "<stream:stream>" not in newdata and "</stream:stream>" in newdata:
             newdata = None
@@ -696,3 +678,15 @@ class XMPPAsyncClient:
                     self._handle_result(xml, data)
                 else:
                     self._handle_result(xml, data)
+
+    def _xml_replacer(self, xml: Element, tag: str, xmlns: str) -> str:
+        # clean up string to remove namespaces added by ET
+        rxmlstring = ET.tostring(xml).decode("utf-8")
+        # Replace "xmlns:ns0" with "xmlns"
+        rxmlstring = re.sub(r"xmlns:ns0=", "xmlns=", rxmlstring)
+        # Remove all namespaces for "ns0:"
+        rxmlstring = re.sub(r"ns0:", "", rxmlstring)
+        # Inside "iq" element, remove the attribute "xmlns" with {xmlns}
+        rxmlstring = re.sub(rf'<iq([^>]*) xmlns=["\']{xmlns}["\']([^>]*)>', r"<iq\1\2>", rxmlstring)
+        # Inside "{tag}" element, add 'xmlns="{xmlns}"'
+        return re.sub(rf"<{tag}(?! xmlns)([^>]*)>", rf'<{tag} xmlns="{xmlns}"\1>', rxmlstring)
