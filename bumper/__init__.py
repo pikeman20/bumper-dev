@@ -60,7 +60,7 @@ def start_configuration() -> None:
     bumper_isc.web_server = server_web.WebServer(
         [
             server_web.WebserverBinding(bumper_isc.bumper_listen, int(bumper_isc.WEB_SERVER_TLS_LISTEN_PORT), True),
-            # server_web.WebserverBinding(bumper_isc.bumper_listen, int(bumper_isc.WEB_SERVER_LISTEN_PORT), False),
+            server_web.WebserverBinding(bumper_isc.bumper_listen, int(bumper_isc.WEB_SERVER_LISTEN_PORT), False),
         ],
         proxy_mode=bumper_isc.BUMPER_PROXY_WEB,
     )
