@@ -13,125 +13,125 @@ from bumper.utils import db
 from tests import HOST, MQTT_PORT
 
 # TODO: current not understand how this works with he logger defined in utils,
-#       LogCapture not checks the stdout logs
+#       LogCapture not checks the stdout logs, thats why check_present is commented
 
 
-# async def test_helperbot_message(mqtt_client: Client):
-#     with LogCapture() as log:
-#         # Test broadcast message
-#         mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
-#         await mqtt_helperbot.start()
-#         assert mqtt_helperbot.is_connected
-#         msg_payload = "<ctl ts='1547822804960' td='DustCaseST' st='0'/>"
-#         msg_topic_name = "iot/atr/DustCaseST/bot_serial/ls1ok3/wC3g/x"
-#         mqtt_client.publish(msg_topic_name, msg_payload.encode())
+async def test_helperbot_message(mqtt_client: Client):
+    with LogCapture() as log:
+        # Test broadcast message
+        mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
+        await mqtt_helperbot.start()
+        assert mqtt_helperbot.is_connected
+        msg_payload = "<ctl ts='1547822804960' td='DustCaseST' st='0'/>"
+        msg_topic_name = "iot/atr/DustCaseST/bot_serial/ls1ok3/wC3g/x"
+        mqtt_client.publish(msg_topic_name, msg_payload.encode())
 
-#         await asyncio.sleep(0.1)
+        await asyncio.sleep(0.1)
 
-#         log.check_present(
-#             (
-#                 "mqtt_messages",
-#                 "DEBUG",
-#                 (
-#                     "Received Broadcast :: Topic: iot/atr/DustCaseST/bot_serial/ls1ok3/wC3g/x"
-#                     " :: Message: <ctl ts='1547822804960' td='DustCaseST' st='0'/>"
-#                 ),
-#             )
-#         )  # Check broadcast message was logged
-#         log.clear()
-#         await mqtt_helperbot.disconnect()
+        # log.check_present(
+        #     (
+        #         "mqtt_messages",
+        #         "DEBUG",
+        #         (
+        #             "Received Broadcast :: Topic: iot/atr/DustCaseST/bot_serial/ls1ok3/wC3g/x"
+        #             " :: Message: <ctl ts='1547822804960' td='DustCaseST' st='0'/>"
+        #         ),
+        #     )
+        # )  # Check broadcast message was logged
+        log.clear()
+        await mqtt_helperbot.disconnect()
 
-#         # Send command to bot
-#         mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
-#         await mqtt_helperbot.start()
-#         assert mqtt_helperbot.is_connected
-#         msg_payload = "{}"
-#         msg_topic_name = "iot/p2p/GetWKVer/helperbot/bumper/helperbot/bot_serial/ls1ok3/wC3g/q/iCmuqp/j"
-#         mqtt_client.publish(msg_topic_name, msg_payload.encode())
+        # Send command to bot
+        mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
+        await mqtt_helperbot.start()
+        assert mqtt_helperbot.is_connected
+        msg_payload = "{}"
+        msg_topic_name = "iot/p2p/GetWKVer/helperbot/bumper/helperbot/bot_serial/ls1ok3/wC3g/q/iCmuqp/j"
+        mqtt_client.publish(msg_topic_name, msg_payload.encode())
 
-#         await asyncio.sleep(0.1)
+        await asyncio.sleep(0.1)
 
-#         log.check_present(
-#             (
-#                 "mqtt_messages",
-#                 "DEBUG",
-#                 (
-#                     "Send Command :: Topic: iot/p2p/GetWKVer/helperbot/bumper/helperbot/bot_serial/ls1ok3/wC3g/q/iCmuqp/j"
-#                     " :: Message: {}"
-#                 ),
-#             )
-#         )  # Check send command message was logged
-#         log.clear()
-#         await mqtt_helperbot.disconnect()
+        # log.check_present(
+        #     (
+        #         "mqtt_messages",
+        #         "DEBUG",
+        #         (
+        #             "Send Command :: Topic: iot/p2p/GetWKVer/helperbot/bumper/helperbot/bot_serial/ls1ok3/wC3g/q/iCmuqp/j"
+        #             " :: Message: {}"
+        #         ),
+        #     )
+        # )  # Check send command message was logged
+        log.clear()
+        await mqtt_helperbot.disconnect()
 
-#         # Received response to command
-#         mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
-#         await mqtt_helperbot.start()
-#         assert mqtt_helperbot.is_connected
-#         msg_payload = '{"ret":"ok","ver":"0.13.5"}'
-#         msg_topic_name = "iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/iCmuqp/j"
-#         mqtt_client.publish(msg_topic_name, msg_payload.encode())
+        # Received response to command
+        mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
+        await mqtt_helperbot.start()
+        assert mqtt_helperbot.is_connected
+        msg_payload = '{"ret":"ok","ver":"0.13.5"}'
+        msg_topic_name = "iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/iCmuqp/j"
+        mqtt_client.publish(msg_topic_name, msg_payload.encode())
 
-#         await asyncio.sleep(0.1)
+        await asyncio.sleep(0.1)
 
-#         log.check_present(
-#             (
-#                 "mqtt_messages",
-#                 "DEBUG",
-#                 (
-#                     "Received Response :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/iCmuqp/j"
-#                     ' :: Message: {"ret":"ok","ver":"0.13.5"}'
-#                 ),
-#             )
-#         )  # Check received response message was logged
-#         log.clear()
-#         await mqtt_helperbot.disconnect()
+        # log.check_present(
+        #     (
+        #         "mqtt_messages",
+        #         "DEBUG",
+        #         (
+        #             "Received Response :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/iCmuqp/j"
+        #             ' :: Message: {"ret":"ok","ver":"0.13.5"}'
+        #         ),
+        #     )
+        # )  # Check received response message was logged
+        log.clear()
+        await mqtt_helperbot.disconnect()
 
-#         # Received unknown message
-#         mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
-#         await mqtt_helperbot.start()
-#         assert mqtt_helperbot.is_connected
-#         msg_payload = "test"
-#         msg_topic_name = "iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/TESTBAD/bumper/helperbot/p/iCmuqp/j"
-#         mqtt_client.publish(msg_topic_name, msg_payload.encode())
+        # Received unknown message
+        mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
+        await mqtt_helperbot.start()
+        assert mqtt_helperbot.is_connected
+        msg_payload = "test"
+        msg_topic_name = "iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/TESTBAD/bumper/helperbot/p/iCmuqp/j"
+        mqtt_client.publish(msg_topic_name, msg_payload.encode())
 
-#         await asyncio.sleep(0.2)
+        await asyncio.sleep(0.2)
 
-#         log.check_present(
-#             (
-#                 "mqtt_messages",
-#                 "DEBUG",
-#                 (
-#                     "Received Message :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/TESTBAD/bumper/helperbot/p/iCmuqp/j"
-#                     " :: Message: test"
-#                 ),
-#             )
-#         )  # Check received message was logged
-#         log.clear()
-#         await mqtt_helperbot.disconnect()
+        # log.check_present(
+        #     (
+        #         "mqtt_messages",
+        #         "DEBUG",
+        #         (
+        #             "Received Message :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/TESTBAD/bumper/helperbot/p/iCmuqp/j"
+        #             " :: Message: test"
+        #         ),
+        #     )
+        # )  # Check received message was logged
+        log.clear()
+        await mqtt_helperbot.disconnect()
 
-#         # Received error message
-#         mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
-#         await mqtt_helperbot.start()
-#         assert mqtt_helperbot.is_connected
-#         msg_payload = "<ctl ts='1560904925396' td='errors' old='' new='110'/>"
-#         msg_topic_name = "iot/atr/errors/bot_serial/ls1ok3/wC3g/x"
-#         mqtt_client.publish(msg_topic_name, msg_payload.encode())
+        # Received error message
+        mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
+        await mqtt_helperbot.start()
+        assert mqtt_helperbot.is_connected
+        msg_payload = "<ctl ts='1560904925396' td='errors' old='' new='110'/>"
+        msg_topic_name = "iot/atr/errors/bot_serial/ls1ok3/wC3g/x"
+        mqtt_client.publish(msg_topic_name, msg_payload.encode())
 
-#         await asyncio.sleep(0.1)
+        await asyncio.sleep(0.1)
 
-#         log.check_present(
-#             (
-#                 "mqtt_messages",
-#                 "DEBUG",
-#                 (
-#                     "Received Broadcast :: Topic: iot/atr/errors/bot_serial/ls1ok3/wC3g/x"
-#                     " :: Message: <ctl ts='1560904925396' td='errors' old='' new='110'/>"
-#                 ),
-#             )
-#         )  # Check received message was logged
-#         log.clear()
-#         await mqtt_helperbot.disconnect()
+        # log.check_present(
+        #     (
+        #         "mqtt_messages",
+        #         "DEBUG",
+        #         (
+        #             "Received Broadcast :: Topic: iot/atr/errors/bot_serial/ls1ok3/wC3g/x"
+        #             " :: Message: <ctl ts='1560904925396' td='errors' old='' new='110'/>"
+        #         ),
+        #     )
+        # )  # Check received message was logged
+        log.clear()
+        await mqtt_helperbot.disconnect()
 
 
 async def test_helperbot_expire_message(mqtt_client: Client, helper_bot: MQTTHelperBot):

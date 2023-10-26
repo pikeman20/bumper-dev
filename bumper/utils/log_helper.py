@@ -12,10 +12,11 @@ class LogHelper:
     """LogHelper."""
 
     def __init__(self, logging_verbose: int = bumper_isc.bumper_verbose, logging_level: str = bumper_isc.bumper_level) -> None:
+        """Log Helper init."""
         self.update(logging_verbose=logging_verbose, logging_level=logging_level)
 
     def update(self, logging_verbose: int = bumper_isc.bumper_verbose, logging_level: str = bumper_isc.bumper_level) -> None:
-        """Log Helper init."""
+        """Log Helper updater."""
         # configure logger for requested verbosity
         log_format: str = "%(message)s"
         if logging_verbose >= 5:

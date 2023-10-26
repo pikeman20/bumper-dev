@@ -19,7 +19,7 @@ async def test_xmpp_server():
     await xmpp_server.start_async_server()
 
     with LogCapture("xmppserver") as _:
-        reader, writer = await asyncio.open_connection("127.0.0.1", 5223)
+        _, writer = await asyncio.open_connection("127.0.0.1", 5223)
 
         writer.write(b"<stream:stream xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' />")  # Start stream
         await writer.drain()
@@ -36,7 +36,7 @@ async def test_xmpp_server():
 
         assert len(xmpp_server.clients) == 0  # Client count decreased
 
-        reader, writer = await asyncio.open_connection("127.0.0.1", 5223)
+        _, writer = await asyncio.open_connection("127.0.0.1", 5223)
 
         writer.write(b"<stream:stream xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' />")  # Start stream
         await writer.drain()

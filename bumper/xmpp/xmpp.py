@@ -40,7 +40,7 @@ class XMPPServer:
             _LOGGER.info(f"Starting XMPP Server at {self._host}:{self._port}")
             loop = asyncio.get_running_loop()
             self.server = await loop.create_server(self.xmpp_protocol, host=self._host, port=self._port)
-            self.server_coro = loop.create_task(self.server.serve_forever())
+            # self.server_coro = loop.create_task(self.server.serve_forever())
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
             raise e
@@ -52,6 +52,8 @@ class XMPPServer:
             client.disconnect()
 
         self.exit_flag = True
+        if self.server is not None and self.server.is_serving():
+            self.server.close()
         _LOGGER.debug("shutting down")
         if self.server_coro is not None:
             self.server_coro.cancel()
@@ -262,13 +264,10 @@ class XMPPAsyncClient:
         if self.state == 5:  # disconnected
             return
         self.send(
-            (
-                f"<iq from='{XMPPServer.server_id}' to='{self.bumper_jid}' id='s2c1' type='get'>"
-                "<ping xmlns='urn:xmpp:ping'/></iq>"
-            )
+            f"<iq from='{XMPPServer.server_id}' to='{self.bumper_jid}' id='s2c1' type='get'>" "<ping xmlns='urn:xmpp:ping'/></iq>"
         )
         await asyncio.sleep(time)
-        asyncio.ensure_future(self.schedule_ping(time))
+        asyncio.create_task(self.schedule_ping(time))
 
     def _handle_result(self, xml: Element, data: str) -> None:
         try:
@@ -549,7 +548,7 @@ class XMPPAsyncClient:
     def _handle_session(self, xml: Element) -> None:
         self.set_state("READY")
         self.send(f'<iq type="result" id="{xml.get("id")}" />')
-        asyncio.ensure_future(self.schedule_ping(30))
+        asyncio.create_task(self.schedule_ping(30))
 
     def _handle_presence(self, xml: Element) -> None:
         if len(xml) and xml[0].tag == "status":
@@ -646,7 +645,7 @@ class XMPPAsyncClient:
                     item.clear()
 
                 elif "starttls" == item_tag and self.tls_upgraded is False:
-                    asyncio.ensure_future(self._handle_starttls())
+                    asyncio.create_task(self._handle_starttls())
                     item.clear()
 
                 elif "presence" == item_tag:

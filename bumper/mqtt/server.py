@@ -87,7 +87,7 @@ class MQTTServer:
             self._broker = Broker(config=config)
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "during initialize"), exc_info=True)
-            raise
+            raise e
 
     @property
     def state(self) -> str:
@@ -115,7 +115,7 @@ class MQTTServer:
                 await self._broker.start()
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "during startup"), exc_info=True)
-            raise
+            raise e
 
     async def shutdown(self) -> None:
         """Shutdown server."""
@@ -127,7 +127,7 @@ class MQTTServer:
                 await self._broker.shutdown()
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "during shutdown"), exc_info=True)
-            raise
+            raise e
 
 
 class BumperMQTTServerPlugin:
@@ -148,7 +148,7 @@ class BumperMQTTServerPlugin:
                 self.context.logger.warning("'bumper' section not found in context configuration")
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "during plugin initialization"), exc_info=True)
-            raise
+            raise e
 
     async def authenticate(self, session: Session, **kwargs: dict[str, Any]) -> bool:
         """Authenticate session."""

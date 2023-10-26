@@ -47,9 +47,9 @@ class ProxyClient:
         """Connect."""
         try:
             await self._client.connect(f"mqtts://{username}:{password}@{self._host}:{self._port}")
-        except Exception:
+        except Exception as e:
             _LOGGER.exception("An exception occurred during startup", exc_info=True)
-            raise
+            raise e
 
         asyncio.create_task(self._handle_messages())
 
@@ -82,7 +82,7 @@ class ProxyClient:
 
                 _LOGGER.info(f"Proxy Forward Message to Robot - Topic: {topic} - Message: {data}")
 
-                bumper_isc.mqtt_helperbot.publish(topic, message.data)
+                bumper_isc.mqtt_helperbot.publish(topic, data)
             except Exception:
                 _LOGGER.error("An error occurred during handling a message", exc_info=True)
 

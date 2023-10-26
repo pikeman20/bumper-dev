@@ -81,7 +81,7 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
                     to_log["request"]["body"] = set(await request.post())
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "during logging the request"), exc_info=True)
-            raise
+            raise e
 
         response: StreamResponse | None = await handler(request)
 
@@ -106,10 +106,10 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
             return response
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "during logging the response"), exc_info=True)
-            raise
+            raise e
 
-    except web.HTTPNotFound:
+    except web.HTTPNotFound as h:
         _LOGGER.debug(f"Request path {request.raw_path} not found")
-        raise
+        raise h
     finally:
         _LOGGER.debug(json.dumps(to_log, cls=CustomEncoder))

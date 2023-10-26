@@ -18,6 +18,18 @@ _LOGGER = logging.getLogger("bumper")
 
 async def start() -> None:
     """Start bumper."""
+
+    _LOGGER.info("Starting Bumpers...")
+    start_configuration()
+    await start_service()
+    _LOGGER.info("Bumper started successfully")
+
+    # Start maintenance
+    await asyncio.create_task(maintenance())
+
+
+def start_configuration() -> None:
+    """Start bumper configuration."""
     # Update logger (current only because for tests)
     logHelper.update()
 
@@ -27,13 +39,11 @@ async def start() -> None:
 
     if bumper_isc.bumper_listen is None:
         _LOGGER.fatal("No listen address configured")
-        return
+        exit(1)
 
     # Reset xmpp/mqtt to false in database for bots and clients
     db.bot_reset_connection_status()
     db.client_reset_connection_status()
-
-    _LOGGER.info("Starting Bumpers...")
 
     if bumper_isc.BUMPER_PROXY_MQTT is True:
         _LOGGER.info("Proxy MQTT Enabled")
@@ -57,29 +67,30 @@ async def start() -> None:
     )
     bumper_isc.xmpp_server = server_xmpp.XMPPServer(bumper_isc.bumper_listen, bumper_isc.XMPP_LISTEN_PORT_TLS)
 
+
+async def start_service() -> None:
+    """Start bumper services."""
     # Start XMPP Server
-    asyncio.create_task(bumper_isc.xmpp_server.start_async_server())
+    if bumper_isc.xmpp_server is not None:
+        asyncio.create_task(bumper_isc.xmpp_server.start_async_server())
 
     # Start MQTT Server
-    # await start otherwise we get an error connecting the helper bot
-    await asyncio.create_task(bumper_isc.mqtt_server.start())
-    while bumper_isc.mqtt_server.state != "started":
-        await asyncio.sleep(0.1)
+    if bumper_isc.mqtt_server is not None:
+        asyncio.create_task(bumper_isc.mqtt_server.start())
+        while bumper_isc.mqtt_server.state != "started":
+            _LOGGER.info("Waiting until MQTT server started...")
+            await asyncio.sleep(0.1)
 
-    # Start MQTT Helperbot
-    asyncio.create_task(bumper_isc.mqtt_helperbot.start())
-    # Wait for helperbot to connect first
-    while bumper_isc.mqtt_helperbot.is_connected is False:
-        _LOGGER.info("Waiting HelperBot connects...")
-        await asyncio.sleep(0.1)
+        # Start MQTT Helperbot
+        if bumper_isc.mqtt_helperbot is not None:
+            asyncio.create_task(bumper_isc.mqtt_helperbot.start())
+            # while bumper_isc.mqtt_helperbot.is_connected is False:
+            #     _LOGGER.info("Waiting HelperBot connects...")
+            #     await asyncio.sleep(0.1)
 
     # Start web servers
-    await bumper_isc.web_server.start()
-
-    _LOGGER.info("Bumper started successfully")
-
-    # Start maintenance
-    await asyncio.create_task(maintenance())
+    if bumper_isc.web_server is not None:
+        asyncio.create_task(bumper_isc.web_server.start())
 
 
 async def maintenance() -> None:

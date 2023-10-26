@@ -67,9 +67,9 @@ class Config:
 
     # Servers
     mqtt_server: Optional["MQTTServer"] = None
-    mqtt_helperbot: Optional["MQTTHelperBot"] | None = None
-    web_server: Optional["WebServer"] | None = None
-    xmpp_server: Optional["XMPPServer"] | None = None
+    mqtt_helperbot: Optional["MQTTHelperBot"] = None
+    web_server: Optional["WebServer"] = None
+    xmpp_server: Optional["XMPPServer"] = None
 
     # Used for maintenance loop stop
     shutting_down: bool = False

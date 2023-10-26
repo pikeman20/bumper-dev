@@ -116,7 +116,7 @@ class WebServer:
                 await site.start()
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
-            raise
+            raise e
 
     async def shutdown(self) -> None:
         """Shutdown server."""
@@ -128,7 +128,7 @@ class WebServer:
             await self._app.shutdown()
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
-            raise
+            raise e
 
     async def _handle_base(self, request: Request) -> Response:
         try:
@@ -347,9 +347,9 @@ class WebServer:
                         f"HTTP Proxy Response from EcoVacs (URL: {request.url}) :: (Status: {resp.status}) :: {response}"
                     )
                     return web.Response(text=response)
-        except asyncio.CancelledError:
+        except asyncio.CancelledError as c:
             _LOGGER_PROXY.exception(f"Request cancelled or timeout :: {request.url}", exc_info=True)
-            raise
+            raise c
         except Exception as e:
             _LOGGER_PROXY.exception(utils.default_exception_str_builder(e, "during proxy the request"), exc_info=True)
         raise HTTPInternalServerError
