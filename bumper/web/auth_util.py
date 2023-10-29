@@ -54,7 +54,7 @@ async def login(request: Request) -> Response:
                         {
                             "code": models.API_ERRORS[models.RETURN_API_SUCCESS],
                             "data": _get_login_details(app_type, country_code, user, _generate_token(user["userid"])),
-                            "msg": "操作成功",
+                            "msg": "The operation was successful",
                             "time": utils.get_current_time_as_millis(),
                         }
                     )
@@ -63,7 +63,7 @@ async def login(request: Request) -> Response:
                 {
                     "code": models.ERR_USER_NOT_ACTIVATED,
                     "data": None,
-                    "msg": "当前密码错误",
+                    "msg": "Current password is incorrect",
                     "time": utils.get_current_time_as_millis(),
                 }
             )
@@ -108,7 +108,7 @@ async def get_auth_code(request: Request) -> Response:
         body = {
             "code": models.ERR_TOKEN_INVALID,
             "data": None,
-            "msg": "当前密码错误",
+            "msg": "Current password is incorrect",
             "time": utils.get_current_time_as_millis(),
         }
 
@@ -128,7 +128,7 @@ async def get_auth_code2(request: Request) -> dict[str, Any]:
         body = {
             "code": models.ERR_TOKEN_INVALID,
             "data": None,
-            "msg": "当前密码错误",
+            "msg": "Current password is incorrect",
             "time": utils.get_current_time_as_millis(),
         }
 
@@ -138,6 +138,9 @@ async def get_auth_code2(request: Request) -> dict[str, Any]:
                 _LOGGER.warning(f"No user found for {user_id}")
             else:
                 token = db.user_get_token(user_id, access_token)
+                if token is None:
+                    db.user_add_token(user_id, access_token)
+                    token = db.user_get_token(user_id, access_token)
                 if token is not None:
                     auth_code = None
                     if "authcode" in token:
@@ -168,7 +171,7 @@ def _check_token(apptype: str, country_code: str, user: dict[str, Any], token: s
             {
                 "code": models.RETURN_API_SUCCESS,
                 "data": _get_login_details(apptype, country_code, user, token),
-                "msg": "操作成功",
+                "msg": "The operation was successful",
                 "time": utils.get_current_time_as_millis(),
             },
         )
@@ -178,7 +181,7 @@ def _check_token(apptype: str, country_code: str, user: dict[str, Any], token: s
         {
             "code": models.ERR_TOKEN_INVALID,
             "data": None,
-            "msg": "当前密码错误",
+            "msg": "Current password is incorrect",
             "time": utils.get_current_time_as_millis(),
         },
     )
@@ -216,7 +219,7 @@ def _auth_any(devid: str, apptype: str, country: str, request: Request) -> dict[
     return {
         "code": models.RETURN_API_SUCCESS,
         "data": _get_login_details(apptype, country_code, user, token),
-        "msg": "操作成功",
+        "msg": "The operation was successful",
         "time": utils.get_current_time_as_millis(),
     }
 

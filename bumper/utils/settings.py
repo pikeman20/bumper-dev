@@ -47,6 +47,7 @@ class Config:
     DEBUG_LOGGING_XMPP_REQUEST_REFACTOR: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST_REFACTOR")) or False
     DEBUG_LOGGING_XMPP_RESPONSE: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_XMPP_RESPONSE")) or False
     DEBUG_LOGGING_API_ROUTE: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_API_ROUTE")) or False
+    DEBUG_LOGGING_SA_RESULT: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_SA_RESULT")) or False
 
     # Other
     USE_AUTH: bool = False

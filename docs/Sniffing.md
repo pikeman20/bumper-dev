@@ -82,6 +82,14 @@ Run Start_Sniff.sh to begin. Ensure the bot and apps connect via the Wifi networ
 
 This documentation won't go into the details of reviewing the logs/traffic. The reader will need to identify how to use WireShark etc for this.
 
+## API - mitmproxy example
+
+in the folder `$PWD/certs`, create a cert named `ca.pem` with structure defined in [**using-a-custom-certificate-authority**](https://docs.mitmproxy.org/stable/concepts-certificates/#using-a-custom-certificate-authority)
+
+```sh
+$docker run --rm -it -p 8081:8081 -p 1080:1080 -v $PWD/certs:/tmp/certs mitmproxy/mitmproxy mitmweb --web-host 0.0.0.0 --certs *=/tmp/certs/ca.pem --mode socks5 --showhost --rawtcp --ssl-insecure
+```
+
 ## XMPPPeek - MITM XMPP traffic between the Android or iOS App and the Ecovacs server
 
 ###### _Stolen from the [Sucks Documentation](https://github.com/wpietri/sucks/blob/master/developing.md#mitm-xmpp-traffic-between-the-android-or-ios-app-and-the-ecovacs-server)_
@@ -91,7 +99,9 @@ XMPPPeek can also be used to man in the middle the traffic between the Android/i
 1. Download [xmpppeek](https://www.beneaththewaves.net/Software/XMPPPeek.html)
 1. Create a self-signed certificate with the following command
 
-`openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes`
+```sh
+$openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+```
 
 1. Edit xmpppeek.py and change port to 5223
 
@@ -103,4 +113,6 @@ XMPPPeek can also be used to man in the middle the traffic between the Android/i
 
 1. Run xmppeek as follows.
 
-`python ./xmpppeek.py <ECOVACS XMPP SERVER IP> cert.pem key.pem`
+```sh
+$python ./xmpppeek.py <ECOVACS XMPP SERVER IP> cert.pem key.pem
+```

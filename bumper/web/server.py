@@ -1,6 +1,8 @@
 """Web server module."""
 import asyncio
+import base64
 import dataclasses
+import gzip
 import json
 import logging
 import os
@@ -275,20 +277,20 @@ class WebServer:
         raise HTTPInternalServerError
 
     async def _handle_sa(self, request: Request) -> Response:
-        # TODO: check what's needed to be implemented
         try:
-            if request.content_type == "application/x-www-form-urlencoded":
-                post_body = await request.post()
-            else:
-                post_body = json.loads(await request.text())
-            _LOGGER.debug(post_body)
-            return web.json_response(
-                {
-                    "authCode": post_body.get("data_list"),
-                    "result": "ok",
-                    "todo": "result",
-                }
-            )
+            if bumper_isc.DEBUG_LOGGING_SA_RESULT is True:
+                if request.content_type == "application/x-www-form-urlencoded":
+                    post_body = await request.post()
+                else:
+                    post_body = json.loads(await request.text())
+
+                post_body_gzip = str(post_body.get("gzip", 0))
+                data_list = post_body.get("data_list")
+                if post_body_gzip == "1" and isinstance(data_list, str):
+                    decoded_data = base64.b64decode(data_list)
+                    decompressed_data = gzip.decompress(decoded_data).decode("utf-8")
+                    _LOGGER.info(decompressed_data)
+            return web.json_response(None)
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
         raise HTTPInternalServerError

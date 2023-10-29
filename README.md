@@ -11,6 +11,7 @@
   - [Build Status](#build-status)
   - [Why?](#why)
   - [Compatibility](#compatibility)
+    - [Ecovacs Home `>= 2.4.4`](#ecovacs-home--244)
   - [Documentation and Getting Started](#documentation-and-getting-started)
   - [Pre setup](#pre-setup)
   - [Basic configs for docker](#basic-configs-for-docker)
@@ -78,12 +79,18 @@ or the Ecovacs Home Android/iOS app, but has only been reported to work on the b
 
 Tested with:
 
-| Service                        | Version | Bot         |
-| :----------------------------- | :------ | :---------- |
-| Ecovacs Home                   | 2.4.1   | 930/950/T10 |
-| Ecovacs Home                   | 2.4.3   | 930/950/T10 |
-| Deebot 4 Home Assistant        | 2.1.2   | 950/T10     |
-| EcovacsBumper (Home Assistant) | 1.5.3   | 930         |
+| Service                        | Version  | Bot         | Works | Info                                                                                                   |
+| :----------------------------- | :------- | :---------- | :---- | :----------------------------------------------------------------------------------------------------- |
+| Ecovacs Home                   | 2.4.1    | 930/950/T10 | Y     |                                                                                                        |
+| Ecovacs Home                   | 2.4.3    | 930/950/T10 | Y     |                                                                                                        |
+| Ecovacs Home                   | >= 2.4.4 |             | N     | [Will possible not work](https://docs.mitmproxy.org/stable/concepts-certificates/#certificate-pinning) |
+| Deebot 4 Home Assistant        | 2.1.2    | 950/T10     | Y     |                                                                                                        |
+| EcovacsBumper (Home Assistant) | 1.5.3    | 930         | Y     |                                                                                                        |
+
+### Ecovacs Home `>= 2.4.4`
+
+Possible not work for url's `jmq-ngiot-eu.dc.robotww.ecouser.net` and `a2JaaxoKXLq.iot-as-mqtt.cn-shanghai.aliyuncs.com`
+as it seams they are [certificate-pinned](https://docs.mitmproxy.org/stable/concepts-certificates/#certificate-pinning).
 
 ## Documentation and Getting Started
 

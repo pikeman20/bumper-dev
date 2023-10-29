@@ -81,7 +81,10 @@ class MQTTServer:
                     "password-file": passwd_file,
                     "plugins": ["bumper"],  # Bumper plugin provides auth and handling of bots/clients connecting
                 },
-                "topic-check": {"enabled": False},
+                "topic-check": {
+                    "enabled": True,  # Workaround until https://github.com/Yakifo/amqtt/pull/93 is merged
+                    "plugins": [],
+                },
             }
 
             self._broker = Broker(config=config)

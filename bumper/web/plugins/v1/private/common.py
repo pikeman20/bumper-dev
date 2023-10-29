@@ -1,4 +1,5 @@
 """Common plugin module."""
+import base64
 import json
 import logging
 import os
@@ -11,7 +12,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
@@ -153,18 +154,16 @@ async def _handle_get_config(request: Request) -> Response:
                 with open(bumper_isc.server_cert, "rb") as cert_file:
                     cert_data = cert_file.read()
                 cert = x509.load_pem_x509_certificate(cert_data, default_backend())
-                public_key_bytes = cert.public_key().public_bytes(
-                    encoding=serialization.Encoding.PEM,
-                    format=serialization.PublicFormat.SubjectPublicKeyInfo,
-                )
-                public_key = "".join(public_key_bytes.decode("utf-8").strip().split("\n")[1:-1])
-                data.append({"key": key, "value": f'{{"publicKey":"{public_key}"}}'})
+                public_key = cert.public_key().public_bytes(encoding=Encoding.DER, format=PublicFormat.SubjectPublicKeyInfo)
+                base64_encoded_public_key = base64.b64encode(public_key).decode("utf-8")
+                data.append({"key": key, "value": json.dumps({"publicKey": base64_encoded_public_key})})
 
             elif key == "EMAIL.REGISTER.CONFIG":
                 data.append({"key": key, "value": '{"needVerify":"N"}'})
 
             elif key == "OPEN.APP.CERTIFICATE.CONFIG":
-                data.append({"key": key, "value": '{"ISO27001":"ENABLED","TUV":"ENABLED"}'})
+                # data.append({"key": key, "value": '{"ISO27001":"ENABLED","TUV":"ENABLED"}'})
+                data.append({"key": key, "value": '{"ISO27001":"DISABLED","TUV":"DISABLED"}'})
 
             elif key == "USER.DATA.COLLECTION":
                 data.append({"key": key, "value": "Y"})
