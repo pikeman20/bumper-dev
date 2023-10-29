@@ -17,7 +17,7 @@ from bumper.utils.settings import config as bumper_isc
 from .. import WebserverPlugin
 from .pim import get_product_iot_map
 
-_LOGGER = logging.getLogger("web_route_api_appsvr")
+_LOGGER = logging.getLogger(__name__)
 
 
 class AppsvrPlugin(WebserverPlugin):
@@ -187,12 +187,16 @@ async def _handle_app_do(request: Request) -> Response:
 async def _handle_app_config(request: Request) -> Response:
     """App config."""
     code = request.query.get("code", "")
-    data = []
+    data: list[dict[str, Any]] | None = None
 
     if code == "app_lang_enum":
         data = [
             {
                 "code": "app_lang_enum",
+                "description": "",
+                "name": "APP 语言枚举列表",
+                "resId": "622ee4977404d4518fd575fb",
+                "type": "json",
                 "content": {
                     "ar": "العربية",
                     "cs": "český",
@@ -233,14 +237,13 @@ async def _handle_app_config(request: Request) -> Response:
                     "zh-hant": "繁體中文",
                     "zh_cn": "简体中文",
                 },
-                "description": "",
-                "name": "APP 语言枚举列表",
-                "resId": "622ee4977404d4518fd575fb",
-                "type": "json",
             }
         ]
 
     elif code == "codepush_config":
+        sub_domain_suffix_1 = ""  # .cn
+        sub_domain_suffix_2 = ""  # .dc-cn
+
         data = [
             {
                 "code": "codepush_config",
@@ -282,7 +285,7 @@ async def _handle_app_config(request: Request) -> Response:
                         "version": "1.0.0",
                     },
                     "at92": {
-                        "backupurl": "codepush-base.dc-cn.cn.ecouser.net",
+                        "backupurl": f"codepush-base{sub_domain_suffix_2}{sub_domain_suffix_1}.ecouser.net",
                         "deploymentKey": {
                             "current": "production",
                             "production": "gkhxiPWw5-v7UPEj0ImuPLMBME57DqrNmMHdtt",
@@ -299,7 +302,7 @@ async def _handle_app_config(request: Request) -> Response:
                         "version": "1.0.0",
                     },
                     "beluga": {
-                        "backupurl": "codepush-base.dc-cn.cn.ecouser.net",
+                        "backupurl": f"codepush-base{sub_domain_suffix_2}{sub_domain_suffix_1}.ecouser.net",
                         "deploymentKey": {
                             "production": "vhaH5f2nNpKiXPFDhVq6yf4gr6xFGAOKoMGTFT",
                             "staging": "RT1aLYD7YwQms9vs539Qn5GjRlExVWeMTOHeF",
@@ -307,7 +310,7 @@ async def _handle_app_config(request: Request) -> Response:
                         "version": "1.0.0",
                     },
                     "bluetooth_detect": {
-                        "backupurl": "codepush-base.dc-cn.cn.ecouser.net",
+                        "backupurl": f"codepush-base{sub_domain_suffix_2}{sub_domain_suffix_1}.ecouser.net",
                         "deploymentKey": {
                             "current": "production",
                             "production": "ZZ4sMVW8D4aLSFq5-2sBop1cEdAGDgTzcC5WDU",
@@ -332,7 +335,7 @@ async def _handle_app_config(request: Request) -> Response:
                         "version": "2.1.4",
                     },
                     "bruceMore": {
-                        "backupurl": "codepush-base.dc-cn.cn.ecouser.net",
+                        "backupurl": f"codepush-base{sub_domain_suffix_2}{sub_domain_suffix_1}.ecouser.net",
                         "deploymentKey": {
                             "current": "production",
                             "production": "P5sN80W6TdO5nQ63CJWvtTgnu-BKYqxQmf8IEi",
@@ -477,7 +480,7 @@ async def _handle_app_config(request: Request) -> Response:
                         "version": "1.0.0",
                     },
                     "w2": {
-                        "backupurl": "codepush-base.dc-cn.cn.ecouser.net",
+                        "backupurl": f"codepush-base{sub_domain_suffix_2}{sub_domain_suffix_1}.ecouser.net",
                         "deploymentKey": {
                             "current": "production",
                             "production": "bjPgGQImxLfkkwaGfJSdiOQJjqY8zePT0Zn3EE",
@@ -486,7 +489,7 @@ async def _handle_app_config(request: Request) -> Response:
                         "version": "1.0.0",
                     },
                     "winbot": {
-                        "backupurl": "codepush-base.dc-cn.cn.ecouser.net",
+                        "backupurl": f"codepush-base{sub_domain_suffix_2}{sub_domain_suffix_1}.ecouser.net",
                         "deploymentKey": {
                             "current": "production",
                             "production": "QEdpHlrNp1ANHhYFbEJ63dYo1bcsZCShQ9H938",
@@ -503,7 +506,7 @@ async def _handle_app_config(request: Request) -> Response:
                         "version": "1.0.0",
                     },
                     "x2omnih5": {
-                        "backupurl": "codepush-base.dc-cn.cn.ecouser.net",
+                        "backupurl": f"codepush-base{sub_domain_suffix_2}{sub_domain_suffix_1}.ecouser.net",
                         "deploymentKey": {
                             "current": "production",
                             "production": "aDSKvlow04p5n8c-E3VyqMFu4uUqtGHPl9QPdW",
@@ -520,7 +523,7 @@ async def _handle_app_config(request: Request) -> Response:
                         "version": "1.0.0",
                     },
                     "z2h5": {
-                        "backupurl": "codepush-base.dc-cn.cn.ecouser.net",
+                        "backupurl": f"codepush-base{sub_domain_suffix_2}{sub_domain_suffix_1}.ecouser.net",
                         "deploymentKey": {
                             "current": "production",
                             "production": "PYBJrRsobI0I0daHnkZ-NQ5Y0p8CdmXEBeFlgJ",
@@ -532,60 +535,60 @@ async def _handle_app_config(request: Request) -> Response:
             }
         ]
 
-    return web.json_response({"code": 0, "data": data, "message": "success"})
+    elif code == "base_station_guide":
+        domain = "https://adv-app.dc-cn.cn.ecouser.net"
+        data = [
+            {
+                "code": "base_station_guide",
+                "content": f"{domain}/pim/base_station_guide_newton_curi.html?lang=en&defaultLang=en",
+                "description": "",
+                "name": "Introduction to AES base stations",
+                "resId": "61cd0abe312d7cfc89acf608",
+                "type": "text",
+            }
+        ]
 
+    elif code == "time_zone_list":
+        zone_name_01 = "Egypt, Estonia, Bulgaria, Finland, Latvia, Lithuania, Romania, Moldova, Cyprus, Ukraine, Greece, Israel"
+        zone_name_02 = (
+            "Albania, Ireland, Andorra, Austria,Belgium, Bosnia Hercegovina, Poland, Denmark,"
+            " Germany, France, Vatican City State, Netherlands, Czech Republic, Croatia, Luxembourg,"
+            " Malta, Macedonia, Monaco,Norway, Sweden, Switzerland, Serbia, San Marino, Slovakia, Slovenia, Spain, Hungary,Italy"
+        )
+        data = [
+            {
+                "code": "time_zone_list",
+                "content": [
+                    {"name": "New Zealand", "zone": "+12:00"},
+                    {"name": "Australia", "zone": "+10:00"},
+                    {"name": "South Korea, Japan", "zone": "+09:00"},
+                    {"name": "China Mainland, Hong Kong, Macao, Taiwan, Singapore, Philippines, Malaysia", "zone": "+08:00"},
+                    {"name": "Thailand, Indonesia, Vietnam", "zone": "+07:00"},
+                    {"name": "Kazakhstan, Kyrgyzstan", "zone": "+06:00"},
+                    {"name": "Tajikistan, Turkmenistan, Republic of Uzbekistan, India", "zone": "+05:00"},
+                    {"name": "United Arab Emirates, Oman, Azerbaijan, Armenia", "zone": "+04:00"},
+                    {"name": "Iran", "zone": "+03:30"},
+                    {"name": "Belarus,Russian Federation, Kuwait, Saudi Arabia, Turkey", "zone": "+03:00"},
+                    {"name": zone_name_01, "zone": "+02:00"},
+                    {"name": zone_name_02, "zone": "+01:00"},
+                    {"name": "Iceland, Portugal, United Kingdom", "zone": "00:00"},
+                    {"name": "Argentina, Uruguay", "zone": "-03:00"},
+                    {"name": "Dominican Republic", "zone": "-04:00"},
+                    {"name": "United States, Brazil, Colombia, Peru", "zone": "-05:00"},
+                    {"name": "Mexico", "zone": "-06:00"},
+                    {"name": "Mountain Time (US and Canada)", "zone": "-07:00"},
+                    {"name": "Canada", "zone": "-08:00"},
+                ],
+                "description": "",
+                "resId": "61a055be6533d2e6d9d8f0f1",
+                "type": "json",
+            }
+        ]
 
-def _include_product_iot_map_info(bot: dict[str, Any]) -> dict[str, Any]:
-    if bumper_isc.mqtt_server is None:
-        raise Exception("'bumper.mqtt_server' is None")
-
-    result = copy.deepcopy(bot)
-
-    for botprod in get_product_iot_map()[0]:
-        if botprod["classid"] == result["class"]:
-            result["UILogicId"] = botprod["product"]["UILogicId"]
-            result["ota"] = botprod["product"]["ota"]
-            result["icon"] = botprod["product"]["iconUrl"]
-            result["model"] = botprod["product"]["model"]
-            result["pid"] = botprod["product"]["_id"]
-            result["deviceName"] = botprod["product"]["name"]
-            result["materialNo"] = botprod["product"]["materialNo"]
-            result["product_category"] = "DEEBOT" if botprod["product"]["name"].startswith("DEEBOT") else "UNKNOWN"
-
-            result["status"] = 1 if bot["mqtt_connection"] or bot["xmpp_connection"] else 0
-
-            # TODO: improve as non static
-            result["homeId"] = "781a0733923f2240cf304757"
-            result["homeSort"] = 1
-            result["otaUpgrade"] = {}
-            result["shareable"] = bool(bot["mqtt_connection"])
-            result["sharedDevice"] = False
-            result["updateInfo"] = {"changeLog": "", "needUpdate": False}
-
-            if bot["mqtt_connection"]:
-                # result["bindTs"] =
-                result["offmap"] = True
-                result["scode"] = {
-                    "battery": True,
-                    "charge": True,
-                    "chargestate": True,
-                    "clean": True,
-                    "tmallstand": False,
-                    "video": False,
-                }
-                result["service"] = {
-                    "jmq": "jmq-ngiot-eu.dc.ww.ecouser.net",
-                    "mqs": "api-ngiot.dc-as.ww.ecouser.net",
-                }
-
-            # mqtt_connection is not always set correctly, therefore workaround until fixed properly
-            for session in bumper_isc.mqtt_server.sessions:
-                if session.client_id is not None:
-                    did = session.client_id.split("@")[0]
-                    if did == bot["did"] and session.transitions.state == "connected":
-                        result["status"] = 1
-            break
-    return result
+    if data is not None:
+        return web.json_response({"code": 0, "data": data, "message": "success"})
+    _LOGGER.error(f"code is not know :: {code}")
+    return web.json_response({"result": "fail", "todo": "result"})
 
 
 async def _handle_service_list(request: Request) -> Response:
@@ -648,9 +651,39 @@ async def _handle_oauth_callback(request: Request) -> Response:
     raise HTTPInternalServerError
 
 
-async def _handle_improve(_: Request) -> Response:
+async def _handle_improve(request: Request) -> Response:
     """Improve."""
-    return web.json_response({"code": 0, "data": {"remark": "", "show": False}})
+    query_did = request.query.get("did", "")
+    query_mid = request.query.get("mid", "")
+    query_uid = request.query.get("uid", "")
+    query_lang = request.query.get("lang", "").lower()
+    query_a = request.query.get("a", "")
+    query_c = request.query.get("c", "")
+    query_v = request.query.get("v", "")
+    query_p = request.query.get("p", "")
+    query_show_remark = request.query.get("show_remark", "")
+    query_token = ""
+    query_token_tmp: dict[str, Any] | str = request.query.get("auth", {})
+    if isinstance(query_token_tmp, dict):
+        query_token = query_token_tmp.get("token", "")
+
+    # https://adv-app.dc-eu.ww.ecouser.net
+    content = (
+        f"https://adv-app.ecouser.net/pim/productImprovePlan_ww.html?initSync=false&did={query_did}"
+        f"&mid={query_mid}&uid={query_uid}&lang={query_lang}&a={query_a}&c={query_c}&v={query_v}&"
+        f"p={query_p}&id=628dcf819dbd613d9ebb4fe4&ver=11.16&showRemark={query_show_remark}&remark=&token={query_token}"
+    )
+
+    return web.json_response(
+        {
+            "code": 0,
+            "data": {
+                "content": content,
+                "remark": "",
+                "show": False,
+            },
+        }
+    )
 
 
 async def _handle_improve_accept(_: Request) -> Response:
@@ -665,9 +698,67 @@ async def _handle_notice_home(_: Request) -> Response:
 
 async def _handle_ota_firmware(_: Request) -> Response:
     """OTA firmware."""
-    return web.json_response({"code": -1, "message": "暂无升级"})
+    return web.json_response({"code": -1, "message": "No upgrades at this time"})
 
 
 async def _handle_device_blacklist_check(_: Request) -> Response:
     """Device blacklist check."""
     return web.json_response({"code": 0, "data": [], "message": "success"})
+
+
+def _include_product_iot_map_info(bot: dict[str, Any]) -> dict[str, Any]:
+    if bumper_isc.mqtt_server is None:
+        raise Exception("'bumper.mqtt_server' is None")
+
+    result = copy.deepcopy(bot)
+
+    for botprod in get_product_iot_map()[0]:
+        if botprod["classid"] == result["class"]:
+            result["UILogicId"] = botprod["product"]["UILogicId"]
+            result["ota"] = botprod["product"]["ota"]
+            result["icon"] = botprod["product"]["iconUrl"]
+            result["model"] = botprod["product"]["model"]
+            result["pid"] = botprod["product"]["_id"]
+            result["deviceName"] = botprod["product"]["name"]
+            result["materialNo"] = botprod["product"]["materialNo"]
+            result["product_category"] = "DEEBOT" if botprod["product"]["name"].startswith("DEEBOT") else "UNKNOWN"
+
+            result["status"] = 1 if bot["mqtt_connection"] or bot["xmpp_connection"] else 0
+
+            # TODO: improve as non static
+            result["homeId"] = bumper_isc.HOME_ID
+            result["homeSort"] = 1
+            result["otaUpgrade"] = {}
+            result["shareable"] = bool(bot["mqtt_connection"])
+            result["sharedDevice"] = False
+            result["updateInfo"] = {"changeLog": "", "needUpdate": False}
+
+            if bot["mqtt_connection"]:
+                # result["bindTs"] =
+                result["offmap"] = True
+                result["scode"] = {
+                    "battery": True,
+                    "charge": True,
+                    "chargestate": True,
+                    "clean": True,
+                    "tmallstand": False,
+                    "video": False,
+                }
+
+                sub_domain_suffix_2 = ""  # .dc-as
+                sub_domain_suffix_4 = ""  # .dc
+                sub_domain_suffix_ww = ""  # .ww
+
+                result["service"] = {
+                    "jmq": f"jmq-ngiot-eu{sub_domain_suffix_4}{sub_domain_suffix_ww}.ecouser.net",
+                    "mqs": f"api-ngiot{sub_domain_suffix_2}{sub_domain_suffix_ww}.ecouser.net",
+                }
+
+            # mqtt_connection is not always set correctly, therefore workaround until fixed properly
+            for session in bumper_isc.mqtt_server.sessions:
+                if session.client_id is not None:
+                    did = session.client_id.split("@")[0]
+                    if did == bot["did"] and session.transitions.state == "connected":
+                        result["status"] = 1
+            break
+    return result

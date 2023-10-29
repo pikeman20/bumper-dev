@@ -14,7 +14,7 @@ from bumper.utils import utils
 
 from .. import WebserverPlugin
 
-_LOGGER = logging.getLogger("web_route_api_basis")
+_LOGGER = logging.getLogger(__name__)
 
 
 class BasisPlugin(WebserverPlugin):
@@ -40,10 +40,10 @@ async def _handle_get_by_area(request: Request) -> Response:
         data_str = "data"
         data: dict[str, Any] | str = {"dc": utils.get_dc_code(area_code)}
 
-        if area_code not in utils.area_code_mapping:
+        if area_code not in utils.get_area_code_map():
             code = 4000
             data_str = "msg"
-            msg_list = '", "'.join(utils.area_code_mapping.keys())
+            msg_list = '", "'.join(utils.get_area_code_map().keys())
             data = f'area: area must be one of the following: "{msg_list}"'
 
         return web.json_response({"code": code, f"{data_str}": data})

@@ -39,27 +39,32 @@ class NengPlugin(WebserverPlugin):
             web.route(
                 "*",
                 "/neng/v2/message/push",
-                _handle_message_push,
+                _handle_v2_message_push,
+            ),
+            web.route(
+                "*",
+                "/neng/v3/message/pushStatus",
+                _handle_v3_message_push_status,
             ),
             web.route(
                 "*",
                 "/neng/v3/message/latest_by_did",
-                _handle_latest_by_did,
+                _handle_v3_latest_by_did,
             ),
             web.route(
                 "*",
                 "/neng/v3/message/list",
-                _handle_message_list,
+                _handle_v3_message_list,
             ),
             web.route(
                 "*",
                 "/neng/v3/product/msg/tabs",
-                _handle_product_msg_tabs,
+                _handle_v3_product_msg_tabs,
             ),
             web.route(
                 "*",
                 "/neng/v3/shareMsg/hasUnreadMsg",
-                _handle_share_msg_has_unread_msg,
+                _handle_v3_share_msg_has_unread_msg,
             ),
         ]
 
@@ -84,22 +89,41 @@ async def _handle_read(_: Request) -> Response:
     return web.json_response({"code": 0, "message": "success"})
 
 
-async def _handle_message_push(_: Request) -> Response:
+async def _handle_v2_message_push(_: Request) -> Response:
     # EcoVacs Home
-    return web.json_response({"code": 0, "data": {}})
+    # TODO: check what's needed to be implemented
+    return web.json_response({"code": 0, "data": "success", "message": ""})
 
 
-async def _handle_latest_by_did(_: Request) -> Response:
+async def _handle_v3_message_push_status(_: Request) -> Response:
+    # EcoVacs Home
+    # TODO: check what's needed to be implemented
+    # NOTE: devices has a list with dict of did,msgPushStatus,nickName
+    # NOTE: uid is as userid in header. not implemented
+    return web.json_response(
+        {
+            "code": 0,
+            "data": {
+                "devices": [],
+                "msgPushStatus": {"DEVICE": True, "SHARE": True},
+                "uid": "",
+            },
+            "message": "success",
+        }
+    )
+
+
+async def _handle_v3_latest_by_did(_: Request) -> Response:
     # EcoVacs Home
     return web.json_response({"code": 0, "data": [], "message": "success"})
 
 
-async def _handle_message_list(_: Request) -> Response:
+async def _handle_v3_message_list(_: Request) -> Response:
     # EcoVacs Home
     return web.json_response({"code": 0, "data": [], "message": "success"})
 
 
-async def _handle_product_msg_tabs(_: Request) -> Response:
+async def _handle_v3_product_msg_tabs(_: Request) -> Response:
     # EcoVacs Home
     return web.json_response(
         {
@@ -119,7 +143,7 @@ async def _handle_product_msg_tabs(_: Request) -> Response:
     )
 
 
-async def _handle_share_msg_has_unread_msg(_: Request) -> Response:
+async def _handle_v3_share_msg_has_unread_msg(_: Request) -> Response:
     # EcoVacs Home
     return web.json_response(
         {

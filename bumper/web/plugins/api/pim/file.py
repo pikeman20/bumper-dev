@@ -20,4 +20,9 @@ class FilePlugin(WebserverPlugin):
                 "/file/get/{id}",
                 get_bot_image,
             ),
+            web.route(
+                "*",
+                "/api/pim/file/get/{id}",
+                get_bot_image,
+            ),
         ]

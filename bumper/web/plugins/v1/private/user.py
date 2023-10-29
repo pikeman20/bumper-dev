@@ -14,7 +14,7 @@ from bumper.web import auth_util
 from ... import WebserverPlugin, get_success_response
 from . import BASE_URL
 
-_LOGGER = logging.getLogger("web_route_v1_priv_user")
+_LOGGER = logging.getLogger(__name__)
 
 
 class UserPlugin(WebserverPlugin):
@@ -93,15 +93,17 @@ class UserPlugin(WebserverPlugin):
 
 
 async def _logout(request: Request) -> Response:
+    """Logout."""
     try:
         user_device_id = request.match_info.get("devid", None)
         if user_device_id:
             user = db.user_by_device_id(user_device_id)
-            if user:
+            if user is None:
+                _LOGGER.warning(f"No user found for {user_device_id}")
+            else:
                 if db.check_token(user["userid"], request.query["accessToken"]):
                     # Deactivate old tokens and authcodes
                     db.user_revoke_token(user["userid"], request.query["accessToken"])
-
         return get_success_response(None)
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, None), exc_info=True)
@@ -109,11 +111,12 @@ async def _logout(request: Request) -> Response:
 
 
 async def _handle_get_user_account_info(request: Request) -> Response:
+    """Get user account info."""
     try:
-        user_devid = request.match_info.get("devid", "")
-        user = db.user_by_device_id(user_devid)
+        user_device_id = request.match_info.get("devid", "")
+        user = db.user_by_device_id(user_device_id)
         if user is None:
-            _LOGGER.warning(f"No user found for {user_devid}")
+            _LOGGER.warning(f"No user found for {user_device_id}")
         else:
             username = f"fusername_{user['userid']}"
 
@@ -164,24 +167,24 @@ async def _handle_get_user_account_info(request: Request) -> Response:
 
 
 async def _handle_check_agreement(request: Request) -> Response:
+    """Check agreement."""
     app_type = request.match_info.get("apptype", "")
     data = []
-    url_u = "https://gl-us-wap.ecovacs.com/content/agreement?id=20180804040641_7d746faf18b8cb22a50d145598fe4c90&language=EN"
-    url_p = "https://gl-us-wap.ecovacs.com/content/agreement?id=20180804040245_4e7c56dfb7ebd3b81b1f2747d0859fac&language=EN"
+    domain = "https://gl-us-wap.ecovacs.com/content/agreement"
     if "global_" in app_type:
         data = [
             {
                 "force": "N",
                 "id": "20180804040641_7d746faf18b8cb22a50d145598fe4c90",
                 "type": "USER",
-                "url": url_u,
+                "url": f"{domain}?id=20180804040641_7d746faf18b8cb22a50d145598fe4c90&language=EN",
                 "version": "1.01",
             },
             {
                 "force": "N",
                 "id": "20180804040245_4e7c56dfb7ebd3b81b1f2747d0859fac",
                 "type": "PRIVACY",
-                "url": url_p,
+                "url": f"{domain}?id=20180804040245_4e7c56dfb7ebd3b81b1f2747d0859fac&language=EN",
                 "version": "1.01",
             },
         ]
@@ -189,6 +192,7 @@ async def _handle_check_agreement(request: Request) -> Response:
 
 
 async def _handle_check_agreement_batch(_: Request) -> Response:
+    """Check agreement batch."""
     return get_success_response(
         {
             "agreementList": [],
@@ -218,10 +222,8 @@ async def _handle_check_agreement_batch(_: Request) -> Response:
 
 
 async def _handle_get_user_menu_info(_: Request) -> Response:
-    url_hf = "https://gl-us-pub.ecovacs.com/upload/global/2019/12/16/2019121603180741b73907046e742b80e8fe4a90fe2498.png"
-    url_sr = "https://gl-us-pub.ecovacs.com/upload/global/2019/12/16/2019121603284185e632ec6c5da10bd82119d7047a1f9e.png"
-    url_s = "https://gl-us-pub.ecovacs.com/upload/global/2019/12/16/201912160325324068da4e4a09b8c3973db162e84784d5.png"
-    url_bs = "https://gl-us-pub.ecovacs.com/upload/global/2019/12/16/201912160325324068da4e4a09b8c3973db162e84784d5.png"
+    """Get user menu info."""
+    domain = "https://gl-us-pub.ecovacs.com/upload/global"
     return get_success_response(
         [
             {
@@ -229,7 +231,7 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
                     {
                         "clickAction": 1,
                         "clickUri": "https://ecovacs.zendesk.com/hc/en-us",
-                        "menuIconUrl": url_hf,
+                        "menuIconUrl": f"{domain}/2019/12/16/2019121603180741b73907046e742b80e8fe4a90fe2498.png",
                         "menuId": "20191216031849_4d744630f7ad2f5208a4b8051be61d10",
                         "menuName": "Help & Feedback",
                         "paramsJson": "",
@@ -242,7 +244,7 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
                     {
                         "clickAction": 3,
                         "clickUri": "robotShare",
-                        "menuIconUrl": url_sr,
+                        "menuIconUrl": f"{domain}/2019/12/16/2019121603284185e632ec6c5da10bd82119d7047a1f9e.png",
                         "menuId": "20191216032853_5fac4cc9cbd0e166dfa951485d1d8cc4",
                         "menuName": "Share Robot",
                         "paramsJson": "",
@@ -255,7 +257,7 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
                     {
                         "clickAction": 3,
                         "clickUri": "config",
-                        "menuIconUrl": url_s,
+                        "menuIconUrl": f"{domain}/2019/12/16/201912160325324068da4e4a09b8c3973db162e84784d5.png",
                         "menuId": "20191216032545_ebea0fbb4cb02d9c2fec5bdf3371bc2d",
                         "menuName": "Settings",
                         "paramsJson": "",
@@ -268,7 +270,7 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
                     {
                         "clickAction": 1,
                         "clickUri": "https://bumper.ecovacs.com/",
-                        "menuIconUrl": url_bs,
+                        "menuIconUrl": f"{domain}/2019/12/16/201912160325324068da4e4a09b8c3973db162e84784d5.png",
                         "menuId": "20191216032545_ebea0fbb4cb02d9c2fec5bdf3371bc2c",
                         "menuName": "Bumper Status",
                         "paramsJson": "",
@@ -281,11 +283,8 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
 
 
 async def _handle_get_my_user_menu_info(_: Request) -> Response:
-    icon_1 = "https://gl-us-pub.ecovacs.com/upload/global/2022/06/24/20220624060121_de0a8cbd8f8bb7941082679a23f70645.png"
-    icon_2 = "https://gl-us-pub.ecovacs.com/upload/global/2022/12/14/20221214014704_9cc451e9c63a70a4bd6ada2089535267.png"
-    icon_3 = "https://gl-us-pub.ecovacs.com/upload/global/2022/06/24/20220624060535_035aa1d9faf295f87f4193bcc94d7950.png"
-    icon_4 = "https://gl-us-pub.ecovacs.com/upload/global/2022/06/24/20220624060711_db29f8c651a5682597eeed76e480b281.png"
-
+    """Get my user menu info."""
+    domain = "https://gl-us-pub.ecovacs.com/upload/global"
     return get_success_response(
         {
             "menuList": [
@@ -294,8 +293,8 @@ async def _handle_get_my_user_menu_info(_: Request) -> Response:
                         {
                             "clickAction": 3,
                             "clickUri": "glOrlderList",
-                            "menuIconUrl": icon_1,
-                            "menuId": "20220624060155_6729cbc2485200128c6ed986721d410e",
+                            "menuIconUrl": f"{domain}/2022/10/10/20221010104231_68dd6755a706e47113b110a6d5ec931a.png",
+                            "menuId": "20221010104238_3f41cf9ecc1c44ebd39fc6e77a975067",
                             "menuName": "My Orders",
                             "menuSubName": "",
                             "paramsJson": "",
@@ -304,8 +303,8 @@ async def _handle_get_my_user_menu_info(_: Request) -> Response:
                         {
                             "clickAction": 1,
                             "clickUri": "https://adv-app.dc-na.ww.ecouser.net/pim/third_party_voice_control.html",
-                            "menuIconUrl": icon_2,
-                            "menuId": "20221214014708_e105611ab873e21fca03995074a9b987",
+                            "menuIconUrl": f"{domain}/2022/12/14/20221214024053_10124672980fdcd4828fd5cbdf5c87ef.png",
+                            "menuId": "20221214024100_207b336dcbcd6b96fb6b2c57fc14f095",
                             "menuName": "Third-party Voice Control",
                             "menuSubName": None,
                             "paramsJson": "",
@@ -314,8 +313,8 @@ async def _handle_get_my_user_menu_info(_: Request) -> Response:
                         {
                             "clickAction": 3,
                             "clickUri": "helpfbView",
-                            "menuIconUrl": icon_3,
-                            "menuId": "20220624060539_97ef192bb44d90e074353543a65f0f3a",
+                            "menuIconUrl": f"{domain}/2022/05/10/20220510035541_93dd3bd6a9e4ee67eb4950d710f62ee1.png",
+                            "menuId": "20220510035545_505adfaba38be91cd4426a5870173479",
                             "menuName": "Help & Feedback",
                             "menuSubName": None,
                             "paramsJson": "",
@@ -324,8 +323,8 @@ async def _handle_get_my_user_menu_info(_: Request) -> Response:
                         {
                             "clickAction": 3,
                             "clickUri": "config",
-                            "menuIconUrl": icon_4,
-                            "menuId": "20220624060714_b204f767cee480135ebdefd6e0a49195",
+                            "menuIconUrl": f"{domain}/2022/05/10/20220510035629_ac83db12a8ff972f1f611e8a549c18ab.png",
+                            "menuId": "20220510035647_d2c7960a95f47b85158a0128ef562020",
                             "menuName": "Settings",
                             "menuSubName": None,
                             "paramsJson": "",
@@ -340,8 +339,10 @@ async def _handle_get_my_user_menu_info(_: Request) -> Response:
 
 
 async def _handle_change_area(_: Request) -> Response:
+    """Change area."""
     return get_success_response({"isNeedReLogin": "N"})
 
 
 async def _handle_accept_agreement_batch(_: Request) -> Response:
+    """Accept agreement batch."""
     return get_success_response(None)

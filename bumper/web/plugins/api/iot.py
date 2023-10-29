@@ -16,7 +16,7 @@ from bumper.web import models
 
 from .. import WebserverPlugin
 
-_LOGGER = logging.getLogger("web_route_api_iot")
+_LOGGER = logging.getLogger(__name__)
 
 
 class IotPlugin(WebserverPlugin):
@@ -45,7 +45,6 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
 
         # Its a command
         did = json_body.get("toId", None)
-
         if did is not None:
             bot = db.bot_get(did)
             if bot is not None and bot.get("company", "") == "eco-ng":
@@ -66,8 +65,8 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
             )
 
         td = json_body.get("td", None)
-        if td is not None:  # Seen when doing initial wifi config
-            if td == "PollSCResult":
+        if td is not None:
+            if td == "PollSCResult":  # Seen when doing initial wifi config
                 return web.json_response({"ret": "ok"})
 
             if td == "HasUnreadMsg":  # EcoVacs Home
@@ -75,6 +74,8 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
 
             if td == "PreWifiConfig":  # EcoVacs Home
                 return web.json_response({"ret": "ok"})
+
+            _LOGGER.error(f"TD is not know :: {td} :: connected to MQTT")
 
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)

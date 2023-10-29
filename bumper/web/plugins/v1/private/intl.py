@@ -13,7 +13,7 @@ from bumper.utils import db, utils
 from ... import WebserverPlugin, get_success_response
 from . import BASE_URL
 
-_LOGGER = logging.getLogger("web_route_v1_priv_intl")
+_LOGGER = logging.getLogger(__name__)
 
 
 class IntlPlugin(WebserverPlugin):
@@ -37,11 +37,12 @@ class IntlPlugin(WebserverPlugin):
 
 
 async def _handle_basic_info(request: Request) -> Response:
+    """Get basic info."""
     try:
-        user_devid = request.match_info.get("devid", "")
-        user = db.user_by_device_id(user_devid)
+        user_dev_id = request.match_info.get("devid", "")
+        user = db.user_by_device_id(user_dev_id)
         if user is None:
-            _LOGGER.warning(f"No user found for {user_devid}")
+            _LOGGER.warning(f"No user found for {user_dev_id}")
         else:
             username = f"fusername_{user['userid']}"
             frozen_integral_desc = "The points will be credited to your member account 20 days after the payment of the order."
@@ -86,4 +87,5 @@ async def _handle_basic_info(request: Request) -> Response:
 
 
 async def _handle_sign_status(_: Request) -> Response:
+    """Sign. status."""
     return get_success_response({"signStatus": "SIGN"})

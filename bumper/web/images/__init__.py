@@ -8,7 +8,7 @@ from aiohttp.web_request import Request
 
 from bumper.utils import utils
 
-_LOGGER = logging.getLogger("web_bot_img")
+_LOGGER = logging.getLogger(__name__)
 
 
 async def get_bot_image(_: Request) -> FileResponse:

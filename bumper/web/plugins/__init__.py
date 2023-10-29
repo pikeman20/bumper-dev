@@ -79,7 +79,7 @@ def get_success_response(data: Any) -> Response:
     body = {
         "code": models.RETURN_API_SUCCESS,
         "data": data,
-        "msg": "操作成功",
+        "msg": "The operation was successful",
         "success": True,
         "time": utils.get_current_time_as_millis(),
     }

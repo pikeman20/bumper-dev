@@ -1,4 +1,5 @@
 """Auth util module."""
+import json
 import logging
 import uuid
 from typing import Any
@@ -12,35 +13,37 @@ from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import models, plugins
 
-_LOGGER = logging.getLogger("web_auth_util")
+_LOGGER = logging.getLogger(__name__)
 
 
-def _generate_token(user: dict[str, Any]) -> str:
+def _generate_token(user_id: str) -> str:
     """Generate token."""
     token = uuid.uuid4().hex
-    db.user_add_token(user["userid"], token)
+    db.user_add_token(user_id, token)
     return token
 
 
-def _generate_auth_code(user: dict[str, Any], country_code: str, token: str) -> str:
+def _generate_auth_code(user_id: str, country_code: str, token: str) -> str:
     """Generate auth token."""
     tmp_auth_code = f"{country_code}_{uuid.uuid4().hex}"
-    db.user_add_authcode(user["userid"], token, tmp_auth_code)
+    db.user_add_authcode(user_id, token, tmp_auth_code)
     return tmp_auth_code
 
 
 async def login(request: Request) -> Response:
     """Perform login."""
     try:
-        user_devid = request.match_info.get("devid", "")
+        user_dev_id = request.match_info.get("devid", "")
         country_code = request.match_info.get("country", "us")
         app_type = request.match_info.get("apptype", "")
-        _LOGGER.info(f"Client with devid {user_devid} attempting login")
+        _LOGGER.info(f"Client with devid {user_dev_id} attempting login")
         if bumper_isc.USE_AUTH:
-            if user_devid != "":
+            if user_dev_id != "":
                 # Performing basic "auth" using devid, super insecure
-                user = db.user_by_device_id(user_devid)
-                if user:
+                user = db.user_by_device_id(user_dev_id)
+                if user is None:
+                    _LOGGER.warning(f"No user found for {user_dev_id}")
+                else:
                     if "checkLogin" in request.path:
                         return web.json_response(_check_token(app_type, country_code, user, request.query["accessToken"])[1])
 
@@ -50,7 +53,7 @@ async def login(request: Request) -> Response:
                     return web.json_response(
                         {
                             "code": models.API_ERRORS[models.RETURN_API_SUCCESS],
-                            "data": _get_login_details(app_type, country_code, user, _generate_token(user)),
+                            "data": _get_login_details(app_type, country_code, user, _generate_token(user["userid"])),
                             "msg": "操作成功",
                             "time": utils.get_current_time_as_millis(),
                         }
@@ -65,7 +68,7 @@ async def login(request: Request) -> Response:
                 }
             )
 
-        return web.json_response(_auth_any(user_devid, app_type, country_code, request))
+        return web.json_response(_auth_any(user_dev_id, app_type, country_code, request))
     except Exception as e:
         _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
     raise HTTPInternalServerError
@@ -73,32 +76,34 @@ async def login(request: Request) -> Response:
 
 async def get_auth_code(request: Request) -> Response:
     """Get auth code."""
-    try:  # pylint: disable=too-many-nested-blocks
-        user_devid = request.match_info.get("devid", None)  # Ecovacs
-        if not user_devid:
-            user_devid = request.query["deviceId"]  # Ecovacs Home
+    try:
+        user_dev_id = request.match_info.get("devid", None)  # Ecovacs
+        if not user_dev_id:
+            user_dev_id = request.query.get("deviceId", None)  # Ecovacs Home
+        access_token = request.query.get("accessToken")
 
-        if user_devid:
-            user = db.user_by_device_id(user_devid)
-            if user:
-                if "accessToken" in request.query:
-                    token = db.user_get_token(user["userid"], request.query["accessToken"])
-                    if token:
-                        if "authcode" in token:
-                            auth_code = token["authcode"]
-                        else:
-                            auth_code = _generate_auth_code(
-                                user,
-                                request.match_info.get("country", "us"),
-                                request.query["accessToken"],
-                            )
-
-                        return plugins.get_success_response(
-                            {
-                                "authCode": auth_code,
-                                "ecovacsUid": request.query["uid"],
-                            }
+        if user_dev_id is not None and access_token is not None:
+            user = db.user_by_device_id(user_dev_id)
+            if user is None:
+                _LOGGER.warning(f"No user found for {user_dev_id}")
+            else:
+                token = db.user_get_token(user["userid"], access_token)
+                if token is not None:
+                    if "authcode" in token:
+                        auth_code = token.get("authcode")
+                    else:
+                        auth_code = _generate_auth_code(
+                            user["userid"],
+                            request.match_info.get("country", "us"),
+                            access_token,
                         )
+
+                    return plugins.get_success_response(
+                        {
+                            "authCode": auth_code,
+                            "ecovacsUid": request.query.get("uid"),
+                        }
+                    )
 
         body = {
             "code": models.ERR_TOKEN_INVALID,
@@ -108,6 +113,49 @@ async def get_auth_code(request: Request) -> Response:
         }
 
         return web.json_response(body)
+    except Exception as e:
+        _LOGGER.error(utils.default_exception_str_builder(e, None), exc_info=True)
+    raise HTTPInternalServerError
+
+
+async def get_auth_code2(request: Request) -> dict[str, Any]:
+    """Get auth code2."""
+    try:
+        post_body = json.loads(await request.text())
+        user_id = post_body.get("auth", {}).get("userid")
+        access_token = post_body.get("auth", {}).get("token")
+
+        body = {
+            "code": models.ERR_TOKEN_INVALID,
+            "data": None,
+            "msg": "当前密码错误",
+            "time": utils.get_current_time_as_millis(),
+        }
+
+        if user_id is not None and access_token is not None:
+            user = db.user_get(user_id)
+            if user is None:
+                _LOGGER.warning(f"No user found for {user_id}")
+            else:
+                token = db.user_get_token(user_id, access_token)
+                if token is not None:
+                    auth_code = None
+                    if "authcode" in token:
+                        auth_code = token.get("authcode")
+                    else:
+                        auth_code = _generate_auth_code(
+                            user["userid"],
+                            request.match_info.get("country", "us"),
+                            access_token,
+                        )
+
+                    body = {
+                        "code": auth_code,
+                        "result": "ok",
+                        "todo": "result",
+                    }
+
+        return body
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, None), exc_info=True)
     raise HTTPInternalServerError
@@ -137,19 +185,19 @@ def _check_token(apptype: str, country_code: str, user: dict[str, Any], token: s
 
 
 def _auth_any(devid: str, apptype: str, country: str, request: Request) -> dict[str, Any]:
-    user_devid = devid
+    user_dev_id = devid
     country_code = country
-    user = db.user_by_device_id(user_devid)
+    user = db.user_by_device_id(user_dev_id)
     bots = db.bot_get_all()
 
-    if not user:
+    if user is None:
         db.user_add("tmpuser")  # Add a new user
         tmp = db.user_get("tmpuser")
         assert tmp
         user = tmp
 
-    token = _generate_token(user)
-    db.user_add_device(user["userid"], user_devid)
+    token = _generate_token(user["userid"])
+    db.user_add_device(user["userid"], user_dev_id)
 
     for bot in bots:  # Add all bots to the user
         if "did" in bot:

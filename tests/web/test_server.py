@@ -249,7 +249,7 @@ async def test_getAuthCode(webserver_client):
     assert jsonresp["code"] == ERR_TOKEN_INVALID
 
     # Test as global_e
-    resp = await webserver_client.get("/v1/global/auth/getAuthCode?uid={}&deviceId={}".format(None, "dev_1234"))
+    resp = await webserver_client.get(f"/v1/global/auth/getAuthCode?uid={None}&deviceId=dev_1234")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -259,9 +259,7 @@ async def test_getAuthCode(webserver_client):
     db.user_add("testuser")
     db.user_add_device("testuser", "dev_1234")
     db.user_add_token("testuser", "token_1234")
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid={}&accessToken={}".format("testuser", "token_1234")
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid=testuser&accessToken=token_1234")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -270,9 +268,7 @@ async def test_getAuthCode(webserver_client):
     assert "ecovacsUid" in jsonresp["data"]
 
     # The above should have added an authcode to token, try again to test with existing authcode
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid={}&accessToken={}".format("testuser", "token_1234")
-    )
+    resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid=testuser&accessToken=token_1234")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -456,7 +452,7 @@ async def test_getUserAccountInfo(webserver_client):
     text = await resp.text()
     jsonresp = json.loads(text)
     assert jsonresp["code"] == "0000"
-    assert jsonresp["msg"] == "操作成功"
+    assert jsonresp["msg"] == "The operation was successful"
     assert jsonresp["data"]["userName"] == "fusername_testuser"
 
 

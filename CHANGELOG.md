@@ -18,11 +18,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - holds config variables used over the complete project, which was before included in `__init.py__`
   - create new file `utils.py`
     - includes multi function used in the project, as the logger configuration
+  - add half function to work with home id
+    - home id is more or less static current
   - `web` api `plugins` extended with more api's
     - tested also with newer app version, see `README.md`
     - some new one (not all are functional and only base implemented)
+      - **app**
+        - `dln/api/log/clean_result/list`
       - **api**
         - `pim/voice/get`
+        - `voice/getLanuages`
         - `appsvr/improve`
         - `appsvr/ota/firmware`
         - `appsvr/device/blacklist/check`
@@ -30,41 +35,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         - `ecms/file/get/{id}`
         - `ecms/app/ad/res/v2`
         - `ecms/app/element/hint`
+        - `ecms/app/push/event`
         - `ecms/app/resources`
         - `homed/home/create`
         - `homed/home/delete`
+        - `homed/home/list`
+        - `homed/home/update`
         - `homed/member/list`
         - `homed/device/move`
         - `neng/message/read`
         - `neng/v2/message/push`
         - `neng/v3/message/latest_by_did`
         - `neng/v3/message/list`
+        - `neng/v3/message/pushStatus`
         - `neng/v3/product/msg/tabs`
         - `neng/v3/shareMsg/hasUnreadMsg`
         - `rapp/sds/user/data/del`
+        - `pim/api/pim/file/get`
         - `sds/baidu/audio/getcred`
       - **v1**
         - `agreement/getUserAcceptInfo`
         - `common/getUserConfig`
         - `common/getBottomNavigateInfoList`
+        - `common/getCurrentAreaSupportServiceInfo`
         - `common/getAboutBriefItem`
         - `intl/member/basicInfo`
         - `intl/member/signStatus`
         - `osmall/getCountryConfig`
-        - `osmall/proxy/my/get-user-center-coupon-list`
+        - `osmall/index/getBannerList`
+        - `osmall/index/getGoodsCategory`
         - `osmall/index/getLayout`
+        - `osmall/index/getRecommendGoods`
+        - `osmall/proxy/my/get-user-center-coupon-list`
         - `osmall/proxy/cart/get-count`
         - `osmall/proxy/v2/web/benefit/get-benefits`
         - `osmall/proxy/order/list`
+        - `osmall/proxy/product/material-accessory-list`
+        - `osmall/proxy/v2/web/payment-icon/index`
         - `userSetting/getMsgReceiveSetting`
         - `userSetting/saveUserSetting`
         - `/user/getMyUserMenuInfo`
         - `user/getMyUserMenuInfo`
+        - `help/getHelpIndex`
+        - `help/getProductHelpIndex`
       - **v2**
         - `member/getExpByScene`
         - `message/waterfallFlow`
         - `message/moduleConfiguration`
         - `user/checkAgreementBatch`
+        - `userSetting/getMsgReceiveSetting`
       - **v3**
         - `common/getBottomNavigateInfoList`
 - conf adds

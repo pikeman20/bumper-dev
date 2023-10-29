@@ -275,7 +275,7 @@ class WebServer:
         raise HTTPInternalServerError
 
     async def _handle_sa(self, request: Request) -> Response:
-        # TODO: not know process for now, check how/what to implement
+        # TODO: check what's needed to be implemented
         try:
             if request.content_type == "application/x-www-form-urlencoded":
                 post_body = await request.post()
@@ -294,7 +294,7 @@ class WebServer:
         raise HTTPInternalServerError
 
     async def _handle_config_android_conf(self, _: Request) -> Response:
-        # TODO: not know process for now, check how/what to implement
+        # TODO: check what's needed to be implemented
         try:
             return web.json_response(
                 {

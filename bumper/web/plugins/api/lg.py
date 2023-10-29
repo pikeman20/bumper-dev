@@ -19,7 +19,7 @@ from bumper.web import models
 
 from .. import WebserverPlugin
 
-_LOGGER = logging.getLogger("web_route_api_lg")
+_LOGGER = logging.getLogger(__name__)
 
 
 class LgPlugin(WebserverPlugin):
@@ -52,7 +52,7 @@ async def _handle_lg_log(request: Request) -> Response:
         else:
             bot = db.bot_get(did)
             if bot is None or bot.get("company", "") != "eco-ng":
-                _LOGGER.error(f"No bots with DID :: {json_body.get('did')} :: connected to MQTT")
+                _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
             else:
                 if "cmdName" not in json_body and "td" in json_body:
                     json_body["cmdName"] = json_body.get("td")
@@ -65,7 +65,7 @@ async def _handle_lg_log(request: Request) -> Response:
                 if "payloadType" not in json_body:
                     json_body["payloadType"] = "x"
                 if "payload" not in json_body:
-                    # post_body["payload"] = ""
+                    # json_body["payload"] = ""
                     if json_body["td"] == "GetCleanLogs":
                         json_body["td"] = "q"
                         json_body["payload"] = '<ctl count="30"/>'

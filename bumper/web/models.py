@@ -48,13 +48,14 @@ class BumperUser:
 
     def __init__(self, userid: str = ""):
         """Bumper user init."""
-        self.userid = userid
+        self.userid: str = userid
+        self.homeids: list[str] = []
         self.devices: list[str] = []
         self.bots: list[str] = []
 
     def asdict(self) -> dict[str, Any]:
         """Convert to dict."""
-        return {"userid": self.userid, "devices": self.devices, "bots": self.bots}
+        return {"userid": self.userid, "homeids": self.homeids, "devices": self.devices, "bots": self.bots}
 
 
 class GlobalVacBotDevice(VacBotDevice):

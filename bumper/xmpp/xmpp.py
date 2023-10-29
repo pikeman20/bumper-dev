@@ -126,6 +126,8 @@ class XMPPAsyncClient:
             if self.log_sent_message:
                 _LOGGER_CLIENT.debug(f"send to ({self.address[0]}:{self.address[1]} | {self.bumper_jid}) - {command}")
             if isinstance(self.transport, transports.WriteTransport):
+                if bumper_isc.DEBUG_LOGGING_XMPP_RESPONSE is True:
+                    _LOGGER_CLIENT.info(f"SENDING  :: {command}")
                 self.transport.write(command.encode())
         except Exception as e:
             _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e, None), exc_info=True)
@@ -573,7 +575,7 @@ class XMPPAsyncClient:
         xml_str: str = data.decode("utf-8")
 
         if bumper_isc.DEBUG_LOGGING_XMPP_REQUEST is True:
-            _LOGGER_CLIENT.info(xml_str)
+            _LOGGER_CLIENT.info(f"ORIGINAL :: {xml_str}")
 
         newdata: str | None = None
         if xml_str.startswith("<?xml"):
@@ -599,6 +601,9 @@ class XMPPAsyncClient:
             self.send("</stream:stream>")
             self.set_state("DISCONNECT")
             return
+
+        if bumper_isc.DEBUG_LOGGING_XMPP_REQUEST_REFACTOR is True:
+            _LOGGER_CLIENT.info(f"REFACTOR :: {newdata}")
 
         try:
             root = ET.fromstring(newdata)

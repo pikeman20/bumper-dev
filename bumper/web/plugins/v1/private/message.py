@@ -31,8 +31,10 @@ class MessagePlugin(WebserverPlugin):
 
 
 async def _handle_has_unread_message(_: Request) -> Response:
+    """Has unread message."""
     return get_success_response("N")
 
 
 async def _handle_get_msg_list(_: Request) -> Response:
+    """Get msg list."""
     return get_success_response({"hasNextPage": 0, "items": []})

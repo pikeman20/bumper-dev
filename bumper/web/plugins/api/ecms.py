@@ -1,5 +1,6 @@
 """Ecms plugin module."""
 
+import logging
 from collections.abc import Iterable
 from typing import Any
 
@@ -11,6 +12,8 @@ from aiohttp.web_routedef import AbstractRouteDef
 from bumper.web.images import get_bot_image
 
 from .. import WebserverPlugin
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class EcmsPlugin(WebserverPlugin):
@@ -46,20 +49,84 @@ class EcmsPlugin(WebserverPlugin):
                 "/ecms/app/resources",
                 _handle_resources,
             ),
+            web.route(
+                "*",
+                "/ecms/app/push/event",
+                _handle_push_event,
+            ),
         ]
 
 
 async def _handle_ad_res(_: Request) -> Response:
     """Ad res."""
+    # REQUEST EXAMPLES
+    # => V1
+    # {
+    #     "appVer": "2.4.1",
+    #     "channel": "google_play",
+    #     "country": "DE",
+    #     "lang": "EN",
+    #     "notReceive": ["INTRODUCTION", "MARKETING", "QUESTIONNAIRE"],
+    #     "platform": "android",
+    #     "record": [],
+    #     "scode": "robotui_config",
+    #     "tags": [],
+    #     "timeZone": "GMT+8",
+    #     "uid": "REPLACED_UID",
+    #     "ver": "2.4.1",
+    #
+    #     # opt 1:
+    #     "location": ["robot_device_list_first"],
+    #     # opt 2:
+    #     "location": ["robot_home_winbot", "robot_home_deebot", "robot_home_airbot"]
+    # }
+    #
+    # => v2
+    # {
+    #     "notReceive": ["MARKETING", "QUESTIONNAIRE", "INTRODUCTION"],
+    #     "uid": "ckiqxr4cfb062946",
+    #
+    #     opt 1:
+    #     "tags": [],
+    #     "location": ["ad_launch"],
+    #     "timeZone": "GMT+2",
+    #
+    #     opt 2:
+    #     "tags": [],
+    #     "location": ["ad_main_pop"],
+    #     "timeZone": "GMT+2",
+    #
+    #     opt 3:
+    #     "tags": ["yna5xi"],
+    #     "location": ["ad_controler_pop"],
+    #     "timeZone": "GMT+2",
+    #
+    #     opt 3 (two different opt for loc):
+    #     "location": [
+    #       "robot_control_index_func_ops",
+    #       "robot_contorl_main_promotion",
+    #       "robot_contorl_main_promotion_pop",
+    #       "robot_contorl_silver_ion",
+    #       "robot_control_aes_buy",
+    #       "ad_card_control_pop"
+    #     ],
+    #     "location": ["ad_main_bottom_control_popover"],
+    #     "tags": ["mid:p95mgv", "sn:E09C15674D1FP7DF0304"],
+    #     "auth": {},
+    #     "channel": "google_play",
+    #     "timeZone": 60
+    # }
+
     return web.json_response({"code": 0, "data": [], "message": "success", "success": True})
 
 
 async def _handle_hint(request: Request) -> Response:
     """Hint."""
+    # TODO: check what's needed to be implemented
     codes = request.query.get("codes", "").split(",")
     data = {}
     for code in codes:
-        data[code] = False
+        data[code] = True  # DEBUG: default saw only False
     return web.json_response({"code": 0, "data": data, "message": "success", "success": True})
 
 
@@ -67,7 +134,7 @@ async def _handle_resources(request: Request) -> Response:
     """Resources."""
     locations = request.query.get("locations", "")
     lang = request.query.get("lang", "en").lower()
-    data: list[dict[str, Any]] = []
+    data: list[dict[str, Any]] | None = None
 
     if locations == "home_manage_intro":
         data = []
@@ -99,5 +166,14 @@ async def _handle_resources(request: Request) -> Response:
                 "type": "svga",
             }
         ]
+    if data is not None:
+        return web.json_response({"code": 0, "data": data, "message": "success", "success": True})
+    _LOGGER.error(f"locations is not know :: {locations}")
+    return web.json_response({"result": "fail", "todo": "result"})
 
-    return web.json_response({"code": 0, "data": data, "message": "success", "success": True})
+
+async def _handle_push_event(_: Request) -> Response:
+    """Ad res."""
+    # dataCategory = request.query.get("dataCategory", "Discover-Hint")
+    # resourceId = request.query.get("resourceId", "Robot")
+    return web.json_response({"code": 0, "data": "ok", "message": "success", "success": True})

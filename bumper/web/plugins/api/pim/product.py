@@ -16,7 +16,7 @@ from bumper.web.plugins import WebserverPlugin
 
 from . import get_product_iot_map
 
-_LOGGER = logging.getLogger("web_route_api_pim_product")
+_LOGGER = logging.getLogger(__name__)
 
 
 class ProductPlugin(WebserverPlugin):

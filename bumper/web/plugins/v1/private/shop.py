@@ -26,6 +26,7 @@ class ShopPlugin(WebserverPlugin):
 
 
 async def _handle_get_cn_wap_shop_config(_: Request) -> Response:
+    """Get cn wap shop config."""
     return get_success_response(
         {
             "myShopShowFlag": "N",

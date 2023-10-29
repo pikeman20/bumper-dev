@@ -27,10 +27,7 @@ class AgreementPlugin(WebserverPlugin):
 
 async def _handle_get_user_accept_info(_: Request) -> Response:
     """Get user accept info."""
-    url_1 = "https://gl-de-wap.ecovacs.com/content/agreement?id=20230403095818_78798528690d2307bd692c0b624909f9&language=EN"
-    url_2 = "https://gl-de-wap.ecovacs.com/content/agreement?id=20230322085808_ff1bcf0d24ece3a37e3dac81b7e91733&language=EN"
-    url_3 = "https://gl-de-wap.ecovacs.com/content/agreement?id=20230403095818_78798528690d2307bd692c0b624909f9&language=EN"
-    url_4 = "https://gl-de-wap.ecovacs.com/content/agreement?id=20230322085808_ff1bcf0d24ece3a37e3dac81b7e91733&language=EN"
+    domain = "https://gl-de-wap.ecovacs.com/content/agreement"
     return get_success_response(
         {
             "acceptList": [
@@ -40,7 +37,7 @@ async def _handle_get_user_accept_info(_: Request) -> Response:
                     "id": "20230403095818_78798528690d2307bd692c0b624909f9",
                     "type": "USER",
                     "updateDesc": None,
-                    "url": url_1,
+                    "url": f"{domain}?id=20230403095818_78798528690d2307bd692c0b624909f9&language=EN",
                     "version": "1.03",
                 },
                 {
@@ -49,7 +46,7 @@ async def _handle_get_user_accept_info(_: Request) -> Response:
                     "id": "20230322085808_ff1bcf0d24ece3a37e3dac81b7e91733",
                     "type": "PRIVACY",
                     "updateDesc": None,
-                    "url": url_2,
+                    "url": f"{domain}?id=20230322085808_ff1bcf0d24ece3a37e3dac81b7e91733&language=EN",
                     "version": "1.07",
                 },
             ],
@@ -60,7 +57,7 @@ async def _handle_get_user_accept_info(_: Request) -> Response:
                     "id": "20230403095818_78798528690d2307bd692c0b624909f9",
                     "type": "USER",
                     "updateDesc": None,
-                    "url": url_3,
+                    "url": f"{domain}?id=20230403095818_78798528690d2307bd692c0b624909f9&language=EN",
                     "version": "1.03",
                 },
                 {
@@ -69,7 +66,7 @@ async def _handle_get_user_accept_info(_: Request) -> Response:
                     "id": "20230322085808_ff1bcf0d24ece3a37e3dac81b7e91733",
                     "type": "PRIVACY",
                     "updateDesc": None,
-                    "url": url_4,
+                    "url": f"{domain}?id=20230322085808_ff1bcf0d24ece3a37e3dac81b7e91733&language=EN",
                     "version": "1.07",
                 },
             ],

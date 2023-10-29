@@ -44,6 +44,8 @@ class Config:
     DEBUG_LOGGING_API_REQUEST: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_API_REQUEST")) or False
     DEBUG_LOGGING_API_REQUEST_MISSING: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_API_REQUEST_MISSING")) or False
     DEBUG_LOGGING_XMPP_REQUEST: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST")) or False
+    DEBUG_LOGGING_XMPP_REQUEST_REFACTOR: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST_REFACTOR")) or False
+    DEBUG_LOGGING_XMPP_RESPONSE: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_XMPP_RESPONSE")) or False
     DEBUG_LOGGING_API_ROUTE: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_API_ROUTE")) or False
 
     # Other
@@ -73,6 +75,8 @@ class Config:
 
     # Used for maintenance loop stop
     shutting_down: bool = False
+
+    HOME_ID: str = "781a0733923f2240cf304757"
 
 
 config: Config = Config()

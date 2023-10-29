@@ -12,10 +12,11 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
+from bumper.web import auth_util
 
 from .. import WebserverPlugin
 
-_LOGGER = logging.getLogger("web_route_api_users")
+_LOGGER = logging.getLogger(__name__)
 
 
 class UsersPlugin(WebserverPlugin):
@@ -35,11 +36,8 @@ class UsersPlugin(WebserverPlugin):
 
 async def _handle_user(request: Request) -> Response:
     """User do."""
-    # if request.method == "GET":  # Skip GET for now
-    #     return web.json_response({"result": "fail", "todo": "result"})
-
     try:
-        body: dict[str, Any] | str = {"result": "fail", "todo": "result"}
+        body: dict[str, Any] = {"result": "fail", "todo": "result"}
         post_body: Mapping[str, Any]
         if request.content_type == "application/x-www-form-urlencoded":
             post_body = await request.post()
@@ -89,17 +87,7 @@ async def _handle_user(request: Request) -> Response:
 
         elif todo == "GetAuthCode":
             # TODO: check how provide token
-            user_id = post_body.get("auth", {}).get("userid")
-            token = post_body.get("auth", {}).get("token")
-            if user_id is not None and token is not None:
-                token = db.user_get_token(user_id, token)
-                if token and "authcode" in token:
-                    auth_code = token["authcode"]
-                    body = {
-                        "code": auth_code,
-                        "result": "ok",
-                        "todo": "result",
-                    }
+            body = await auth_util.get_auth_code2(request)
 
         elif todo == "GetDeviceList":
             body = {"devices": db.bot_get_all(), "result": "ok", "todo": "result"}
@@ -116,6 +104,8 @@ async def _handle_user(request: Request) -> Response:
             db.bot_remove(post_body["did"])
             body = {"result": "ok", "todo": "result"}
 
+        if body.get("result", "") == "fail":
+            _LOGGER.error(f"todo is not know :: {todo}")
         return web.json_response(body)
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)

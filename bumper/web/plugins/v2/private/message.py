@@ -47,14 +47,12 @@ async def _handle_waterfall_flow(_: Request) -> Response:
 
 async def _handle_module_configuration(_: Request) -> Response:
     """Message module configuration."""
-    icon_1 = "https://gl-us-pub.ecovacs.com/upload/global/2021/11/24/20211124063251_b87eda89effe37115d1812af65aef03c.png"
-    icon_2 = "https://gl-us-pub.ecovacs.com/upload/global/2021/11/24/20211124063334_59849310e3a426ae9b8f190f1210c6d5.png"
-    icon_3 = "https://gl-us-pub.ecovacs.com/upload/global/2021/11/24/20211124063217_b8e8aca3588d70304b97708b88e7e415.png"
+    domain = "https://gl-us-pub.ecovacs.com/upload/global"
     return get_success_response(
         {
             "list": [
                 {
-                    "icon": icon_1,
+                    "icon": f"{domain}/2021/11/24/20211124063251_b87eda89effe37115d1812af65aef03c.png",
                     "id": "20211124153947_8e4efefa3eb46b424a6fab894239679b",
                     "lastUnReadMsgType": None,
                     "moduleName": "Promotion messages",
@@ -64,7 +62,7 @@ async def _handle_module_configuration(_: Request) -> Response:
                     "tip": None,
                 },
                 {
-                    "icon": icon_2,
+                    "icon": f"{domain}/2021/11/24/20211124063334_59849310e3a426ae9b8f190f1210c6d5.png",
                     "id": "20211124153947_94355558fb85f05d182fb73f91222a3b",
                     "lastUnReadMsgType": None,
                     "moduleName": "Service notifications",
@@ -74,7 +72,7 @@ async def _handle_module_configuration(_: Request) -> Response:
                     "tip": None,
                 },
                 {
-                    "icon": icon_3,
+                    "icon": f"{domain}/2021/11/24/20211124063217_b8e8aca3588d70304b97708b88e7e415.png",
                     "id": "20211124153947_c9d40a1be9cbefb15c67a91ab4bc52d9",
                     "lastUnReadMsgType": None,
                     "moduleName": "Sharing Message",

@@ -37,6 +37,7 @@ class UserSettingPlugin(WebserverPlugin):
 
 
 async def _handle_get_suggestion_setting(_: Request) -> Response:
+    """Get suggestion setting."""
     activity_sub_title = "Allow to receive notification including membership benefits, product and consumable recommendations."
     return get_success_response(
         {
@@ -84,6 +85,7 @@ async def _handle_get_suggestion_setting(_: Request) -> Response:
 
 
 async def _handle_get_msg_receive_setting(_: Request) -> Response:
+    """Get msg receive setting."""
     return get_success_response(
         {
             "list": [
@@ -108,5 +110,6 @@ async def _handle_get_msg_receive_setting(_: Request) -> Response:
 
 
 async def _handle_save_user_setting(_: Request) -> Response:
-    # TODO: check how to implement
+    """Save user setting."""
+    # TODO: check what's needed to be implemented
     return get_success_response(None)

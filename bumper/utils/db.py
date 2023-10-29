@@ -30,7 +30,7 @@ TABLE_USERS = "users"
 TABLE_CLIENTS = "clients"
 TABLE_BOTS = "bots"
 TABLE_TOKENS = "tokens"
-TABLE_OAUTH = "oath"
+TABLE_OAUTH = "oauth"
 
 
 def _db_get() -> TinyDB:
@@ -56,6 +56,7 @@ def user_add(userid: str) -> None:
     if user is None:
         _LOGGER.info(f"Adding new user with userid: {newuser.userid}")
         _user_full_upsert(newuser.asdict())
+        user_add_home_id(userid, bumper_isc.HOME_ID)
 
 
 def user_get(userid: str) -> Document | None:
@@ -69,14 +70,36 @@ def user_get(userid: str) -> Document | None:
     return None
 
 
-def user_by_device_id(deviceid: str) -> Document | None:
+def user_by_device_id(device_id: str) -> Document | None:
     """Get user by device id."""
     users = _db_get().table(TABLE_USERS)
-    t_user = users.get(Query().devices.any([deviceid]))
+    t_user = users.get(Query().devices.any([device_id]))
     if isinstance(t_user, Document):
         return t_user
     if t_user is not None:
         _LOGGER.warning(logging_message_none_or_not_document(t_user, "t_user"))
+    return None
+
+
+def user_by_home_id(home_id: str) -> Document | None:
+    """Get user by home id."""
+    users = _db_get().table(TABLE_USERS)
+    t_user = users.get(Query().homeids.any([home_id]))
+    if isinstance(t_user, Document):
+        return t_user
+    if t_user is not None:
+        _LOGGER.warning(logging_message_none_or_not_document(t_user, "t_user"))
+    return None
+
+
+def user_id_by_token(token: str) -> str | None:
+    """Get user by home id."""
+    oauth = _db_get().table(TABLE_OAUTH)
+    t_oauth = oauth.get(Query().access_token == token)
+    if isinstance(t_oauth, Document):
+        return t_oauth.get("userId")
+    if t_oauth is not None:
+        _LOGGER.warning(logging_message_none_or_not_document(t_oauth, "t_oauth"))
     return None
 
 
@@ -87,32 +110,62 @@ def _user_full_upsert(user: dict[str, Any]) -> None:
         users.upsert(user, Query().did == user["userid"])
 
 
-def user_add_device(userid: str, devid: str) -> None:
-    """Add device to user."""
+def user_add_home_id(user_id: str, home_id: str) -> None:
+    """Add home id to user."""
     opendb = _db_get()
     with opendb:
         users = opendb.table(TABLE_USERS)
-        t_user = users.get(Query().userid == userid)
+        t_user = users.get(Query().userid == user_id)
         if isinstance(t_user, Document):
-            userdevices = list(t_user["devices"])
-            if devid not in userdevices:
-                userdevices.append(devid)
-            users.upsert({"devices": userdevices}, Query().userid == userid)
+            user_home_ids = list(t_user["homeids"])
+            if home_id not in user_home_ids:
+                user_home_ids.append(home_id)
+            users.upsert({"homeids": user_home_ids}, Query().userid == user_id)
         elif t_user is not None:
             _LOGGER.warning(logging_message_none_or_not_document(t_user, "t_user"))
 
 
-def user_remove_device(userid: str, devid: str) -> None:
-    """Remove device from user."""
+def user_remove_home_id(userid: str, home_id: str) -> None:
+    """Remove home id from user."""
     opendb = _db_get()
     with opendb:
         users = opendb.table(TABLE_USERS)
         t_user = users.get(Query().userid == userid)
         if isinstance(t_user, Document):
-            userdevices = list(t_user["devices"])
-            if devid in userdevices:
-                userdevices.remove(devid)
-            users.upsert({"devices": userdevices}, Query().userid == userid)
+            user_home_ids = list(t_user["homeids"])
+            if home_id in user_home_ids:
+                user_home_ids.remove(home_id)
+            users.upsert({"homeids": user_home_ids}, Query().userid == userid)
+        elif t_user is not None:
+            _LOGGER.warning(logging_message_none_or_not_document(t_user, "t_user"))
+
+
+def user_add_device(user_id: str, dev_id: str) -> None:
+    """Add device to user."""
+    opendb = _db_get()
+    with opendb:
+        users = opendb.table(TABLE_USERS)
+        t_user = users.get(Query().userid == user_id)
+        if isinstance(t_user, Document):
+            user_devices = list(t_user["devices"])
+            if dev_id not in user_devices:
+                user_devices.append(dev_id)
+            users.upsert({"devices": user_devices}, Query().userid == user_id)
+        elif t_user is not None:
+            _LOGGER.warning(logging_message_none_or_not_document(t_user, "t_user"))
+
+
+def user_remove_device(user_id: str, dev_id: str) -> None:
+    """Remove device from user."""
+    opendb = _db_get()
+    with opendb:
+        users = opendb.table(TABLE_USERS)
+        t_user = users.get(Query().userid == user_id)
+        if isinstance(t_user, Document):
+            user_devices = list(t_user["devices"])
+            if dev_id in user_devices:
+                user_devices.remove(dev_id)
+            users.upsert({"devices": user_devices}, Query().userid == user_id)
         elif t_user is not None:
             _LOGGER.warning(logging_message_none_or_not_document(t_user, "t_user"))
 
@@ -165,7 +218,7 @@ def user_get_token(userid: str, token: str) -> Document | None:
 
 
 def user_add_token(userid: str, token: str) -> None:
-    """Ass token for given user."""
+    """Add token for given user."""
     opendb = _db_get()
     with opendb:
         tokens = opendb.table(TABLE_TOKENS)
@@ -228,16 +281,16 @@ def user_add_authcode(userid: str, token: str, authcode: str) -> None:
             )
 
 
-def user_revoke_authcode(userid: str, token: str) -> None:
+def user_revoke_authcode(user_id: str, token: str) -> None:
     """Revoke user authcode."""
     opendb = _db_get()
     with opendb:
         tokens = opendb.table(TABLE_TOKENS)
-        t_token = tokens.get((Query().userid == userid) & (Query().token == token))
+        t_token = tokens.get((Query().userid == user_id) & (Query().token == token))
         if t_token:
             tokens.upsert(
                 {"authcode": ""},
-                ((Query().userid == userid) & (Query().token == token)),
+                ((Query().userid == user_id) & (Query().token == token)),
             )
 
 
@@ -255,12 +308,12 @@ def revoke_expired_oauths() -> None:
                 table.remove(doc_ids=[i.doc_id])
 
 
-def user_revoke_expired_oauths(userid: str) -> None:
+def user_revoke_expired_oauths(user_id: str) -> None:
     """Revoke expired oauths by user."""
     opendb = _db_get()
     with opendb:
         table = opendb.table(TABLE_OAUTH)
-        search = table.search(Query().userid == userid)
+        search = table.search(Query().userid == user_id)
         for i in search:
             oauth = models.OAuth(**i)
             if datetime.now() >= datetime.fromisoformat(oauth.expire_at):
@@ -268,18 +321,18 @@ def user_revoke_expired_oauths(userid: str) -> None:
                 table.remove(doc_ids=[i.doc_id])
 
 
-def user_add_oauth(userid: str) -> models.OAuth | None:
+def user_add_oauth(user_id: str) -> models.OAuth | None:
     """Add oauth for user."""
-    user_revoke_expired_oauths(userid)
+    user_revoke_expired_oauths(user_id)
     opendb = _db_get()
     with opendb:
         table = opendb.table(TABLE_OAUTH)
-        entry = table.get(Query().userid == userid)
+        entry = table.get(Query().userid == user_id)
         if isinstance(entry, Document):
             return models.OAuth(**entry)
         if entry is None:
-            oauth = models.OAuth.create_new(userid)
-            _LOGGER.debug(f"Adding oauth {oauth.access_token} for userid {userid}")
+            oauth = models.OAuth.create_new(user_id)
+            _LOGGER.debug(f"Adding oauth {oauth.access_token} for userid {user_id}")
             table.insert(oauth.to_db())
             return oauth
         _LOGGER.warning(logging_message_none_or_not_document(entry, "entry"))

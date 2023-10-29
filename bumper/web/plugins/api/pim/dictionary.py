@@ -11,7 +11,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 from bumper.utils import utils
 from bumper.web.plugins import WebserverPlugin
 
-_LOGGER = logging.getLogger("web_route_pim_dict")
+_LOGGER = logging.getLogger(__name__)
 
 
 class DictionaryPlugin(WebserverPlugin):
