@@ -1,5 +1,6 @@
 """User setting plugin module."""
 
+import logging
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -7,8 +8,12 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from ... import WebserverPlugin, get_success_response
+from bumper.web.response_utils import get_success_response
+
+from ... import WebserverPlugin
 from . import BASE_URL
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class UserSettingPlugin(WebserverPlugin):
@@ -112,4 +117,5 @@ async def _handle_get_msg_receive_setting(_: Request) -> Response:
 async def _handle_save_user_setting(_: Request) -> Response:
     """Save user setting."""
     # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_save_user_setting !!!")
     return get_success_response(None)

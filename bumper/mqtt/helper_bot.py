@@ -20,7 +20,7 @@ HELPER_BOT_CLIENT_ID = "helperbot@bumper/helperbot"
 class MQTTHelperBot:
     """Helper bot, which converts commands from the rest api to mqtt ones."""
 
-    def __init__(self, host: str, port: int, use_ssl: bool, timeout: int = 60) -> None:
+    def __init__(self, host: str, port: int, use_ssl: bool, timeout: float = 60) -> None:
         """MQTT helper bot init."""
         self._host = host
         self._port = port

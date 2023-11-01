@@ -7,8 +7,9 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.web import auth_util
+from bumper.web.response_utils import get_success_response
 
-from ... import WebserverPlugin, get_success_response
+from ... import WebserverPlugin
 from . import BASE_URL
 
 

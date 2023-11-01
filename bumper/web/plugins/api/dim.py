@@ -44,7 +44,7 @@ async def _handle_dev_manager(request: Request) -> Response:
         json_body = json.loads(await request.text())
 
         # Its a command
-        did = json_body.get("toId", None)
+        did = json_body.get("toId")
         if did is not None:
             bot = db.bot_get(did)
             if bot is not None and bot.get("company", "") == "eco-ng" and bot["mqtt_connection"]:
@@ -57,7 +57,7 @@ async def _handle_dev_manager(request: Request) -> Response:
             _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
             return web.json_response({"id": random_id, "errno": 500, "ret": "fail", "debug": "wait for response timed out"})
 
-        td = json_body.get("td", None)
+        td = json_body.get("td")
         if td is not None:
             if td == "PollSCResult":  # Seen when doing initial wifi config
                 return web.json_response({"ret": "ok"})

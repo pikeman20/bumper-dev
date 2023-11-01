@@ -6,7 +6,9 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from ... import WebserverPlugin, get_success_response
+from bumper.web.response_utils import get_success_response
+
+from ... import WebserverPlugin
 from . import BASE_URL
 
 
@@ -36,6 +38,11 @@ class OsMallPlugin(WebserverPlugin):
                 "*",
                 f"{BASE_URL}osmall/index/getGoodsCategory",
                 _handle_get_goods_category,
+            ),
+            web.route(
+                "*",
+                f"{BASE_URL}osmall/index/getConfNetRobotPartsGoods",
+                _handle_get_conf_net_robot_parts_goods,
             ),
             web.route(
                 "*",
@@ -204,6 +211,11 @@ async def _handle_get_goods_category(_: Request) -> Response:
             ]
         }
     )
+
+
+async def _handle_get_conf_net_robot_parts_goods(_: Request) -> Response:
+    """Get conf net robot pars goods."""
+    return get_success_response({})
 
 
 async def _handle_get_recommend_goods(_: Request) -> Response:

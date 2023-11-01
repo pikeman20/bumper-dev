@@ -8,7 +8,7 @@ import sys
 from bumper.mqtt import helper_bot
 from bumper.mqtt import server as server_mqtt
 from bumper.utils import db, utils
-from bumper.utils.log_helper import logHelper
+from bumper.utils.log_helper import LogHelper
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import server as server_web
 from bumper.xmpp import xmpp as server_xmpp
@@ -30,7 +30,7 @@ async def start() -> None:
 def start_configuration() -> None:
     """Start bumper configuration."""
     # Update logger (current only because for tests)
-    logHelper.update()
+    LogHelper()
 
     if bumper_isc.bumper_level == "DEBUG":
         # Set asyncio loop to debug
@@ -132,7 +132,7 @@ async def shutdown() -> None:
     except asyncio.CancelledError:
         _LOGGER.info("Coroutine canceled!")
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, None), exc_info=True)
+        _LOGGER.error(utils.default_exception_str_builder(e), exc_info=True)
     finally:
         _LOGGER.info("Shutdown complete!")
 
@@ -159,7 +159,7 @@ def read_args(argv: list[str] | None) -> None:
         bumper_isc.bumper_announce_ip = args.announce
 
     # Update logger logger
-    logHelper.update()
+    LogHelper()
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -184,7 +184,7 @@ def main(argv: list[str] | None = None) -> None:
     except KeyboardInterrupt:
         _LOGGER.info("Keyboard Interrupt!")
     except Exception as e:
-        _LOGGER.critical(utils.default_exception_str_builder(e, None), exc_info=True)
+        _LOGGER.critical(utils.default_exception_str_builder(e), exc_info=True)
     finally:
         if loop is not None:
             loop.run_until_complete(shutdown())

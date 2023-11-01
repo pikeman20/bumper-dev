@@ -9,8 +9,9 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import db, utils
+from bumper.web.response_utils import get_success_response
 
-from ... import WebserverPlugin, get_success_response
+from ... import WebserverPlugin
 from . import BASE_URL
 
 _LOGGER = logging.getLogger(__name__)
@@ -44,7 +45,6 @@ async def _handle_basic_info(request: Request) -> Response:
         if user is None:
             _LOGGER.warning(f"No user found for {user_dev_id}")
         else:
-            username = f"fusername_{user['userid']}"
             frozen_integral_desc = "The points will be credited to your member account 20 days after the payment of the order."
 
             return get_success_response(
@@ -78,7 +78,7 @@ async def _handle_basic_info(request: Request) -> Response:
                     "shoppingGetIntegraltimesUpShowDesc": None,
                     "signStatus": "SIGN",
                     "userHeadImg": None,
-                    "userShowName": username,
+                    "userShowName": user.username,
                 }
             )
     except Exception as e:

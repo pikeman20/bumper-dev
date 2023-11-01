@@ -1,4 +1,4 @@
-"""Sds plugin module."""
+"""Microservice recommend plugin module."""
 import logging
 from collections.abc import Iterable
 
@@ -16,8 +16,8 @@ from .. import WebserverPlugin
 _LOGGER = logging.getLogger(__name__)
 
 
-class SdsPlugin(WebserverPlugin):
-    """Sds plugin."""
+class MicroserviceRecomendPlugin(WebserverPlugin):
+    """Microservice recommend plugin."""
 
     @property
     def routes(self) -> Iterable[AbstractRouteDef]:
@@ -25,13 +25,15 @@ class SdsPlugin(WebserverPlugin):
         return [
             web.route(
                 "*",
-                "/sds/baidu/audio/getcred",
-                _handle,  # TODO: check how to handle correct
+                "/microservice-recomend/userReminderResult",
+                _handle_user_reminder_result,
             ),
         ]
 
 
-async def _handle(_: Request) -> Response:
+async def _handle_user_reminder_result(_: Request) -> Response:
+    # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_user_reminder_result !!!")
     try:
         return get_success_response_v3(None)
     except Exception as e:

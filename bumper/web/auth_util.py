@@ -1,4 +1,5 @@
 """Auth util module."""
+import hashlib
 import json
 import logging
 import uuid
@@ -11,229 +12,203 @@ from aiohttp.web_response import Response
 
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
-from bumper.web import models, plugins
+from bumper.web import models
+from bumper.web.response_utils import get_error_response, get_error_response_v2, get_success_response, get_success_response_v2
 
 _LOGGER = logging.getLogger(__name__)
 
+DEFAULT_COUNTRY = "eu"
 
-def _generate_token(user_id: str) -> str:
-    """Generate token."""
-    token = uuid.uuid4().hex
-    db.user_add_token(user_id, token)
-    return token
-
-
-def _generate_auth_code(user_id: str, country_code: str, token: str) -> str:
-    """Generate auth token."""
-    tmp_auth_code = f"{country_code}_{uuid.uuid4().hex}"
-    db.user_add_authcode(user_id, token, tmp_auth_code)
-    return tmp_auth_code
+# ******************************************************************************
+#
+# AUTH UTILS
+#
+# ******************************************************************************
 
 
 async def login(request: Request) -> Response:
     """Perform login."""
     try:
-        user_dev_id = request.match_info.get("devid", "")
-        country_code = request.match_info.get("country", "us")
-        app_type = request.match_info.get("apptype", "")
-        _LOGGER.info(f"Client with devid {user_dev_id} attempting login")
+        uid: str | None = None
+        access_token: str | None = None
+        check = False
+        if "checkLogin" in request.path:
+            uid = request.query.get("uid")
+            access_token = request.query.get("accessToken")
+            check = True
+        else:
+            account = request.query.get("account")
+            if account is not None:
+                uid = _generate_uid(account)
+            # encryptPwd = request.query.get("encryptPwd")
+
+        device_id = request.match_info.get("devid")
+        country_code = request.match_info.get("country", DEFAULT_COUNTRY)
+        app_type = request.match_info.get("apptype")
+
         if bumper_isc.USE_AUTH:
-            if user_dev_id != "":
+            _LOGGER.info(f"Client with devid {device_id} attempting login")
+            if device_id is not None and app_type is not None:
                 # Performing basic "auth" using devid, super insecure
-                user = db.user_by_device_id(user_dev_id)
+                user = db.user_by_device_id(device_id)
                 if user is None:
-                    _LOGGER.warning(f"No user found for {user_dev_id}")
+                    _LOGGER.warning(f"No user found for {device_id}")
                 else:
                     if "checkLogin" in request.path:
-                        return web.json_response(_check_token(app_type, country_code, user, request.query["accessToken"])[1])
-
+                        return _check_token(app_type, country_code, user, request.query["accessToken"])[1]
                     # Deactivate old tokens and authcodes
-                    db.user_revoke_expired_tokens(user["userid"])
+                    db.user_revoke_expired_tokens(user.userid)
+                    return get_success_response(_get_login_details(app_type, country_code, user, _generate_token(user.userid)))
+            return get_error_response("Current password is incorrect", models.ERR_USER_NOT_ACTIVATED)
 
-                    return web.json_response(
-                        {
-                            "code": models.API_ERRORS[models.RETURN_API_SUCCESS],
-                            "data": _get_login_details(app_type, country_code, user, _generate_token(user["userid"])),
-                            "msg": "The operation was successful",
-                            "time": utils.get_current_time_as_millis(),
-                        }
-                    )
-
-            return web.json_response(
-                {
-                    "code": models.ERR_USER_NOT_ACTIVATED,
-                    "data": None,
-                    "msg": "Current password is incorrect",
-                    "time": utils.get_current_time_as_millis(),
-                }
-            )
-
-        return web.json_response(_auth_any(user_dev_id, app_type, country_code, request))
+        if device_id is not None and app_type is not None:
+            return _auth_any(uid, access_token, device_id, app_type, country_code, check)
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during login"), exc_info=True)
     raise HTTPInternalServerError
 
 
 async def get_auth_code(request: Request) -> Response:
     """Get auth code."""
     try:
-        user_dev_id = request.match_info.get("devid", None)  # Ecovacs
-        if not user_dev_id:
-            user_dev_id = request.query.get("deviceId", None)  # Ecovacs Home
+        device_id = request.match_info.get("devid")  # Ecovacs
+        if not device_id:
+            device_id = request.query.get("deviceId")  # Ecovacs Home
         access_token = request.query.get("accessToken")
 
-        if user_dev_id is not None and access_token is not None:
-            user = db.user_by_device_id(user_dev_id)
+        if device_id is not None and access_token is not None:
+            user = db.user_by_device_id(device_id)
             if user is None:
-                _LOGGER.warning(f"No user found for {user_dev_id}")
+                _LOGGER.warning(f"No user found for {device_id}")
             else:
-                token = db.user_get_token(user["userid"], access_token)
-                if token is not None:
-                    if "authcode" in token:
-                        auth_code = token.get("authcode")
-                    else:
-                        auth_code = _generate_auth_code(
-                            user["userid"],
-                            request.match_info.get("country", "us"),
-                            access_token,
-                        )
-
-                    return plugins.get_success_response(
+                auth_code = _get_auth_code(user.userid, access_token, request.match_info.get("country", DEFAULT_COUNTRY))
+                if auth_code is not None:
+                    return get_success_response(
                         {
                             "authCode": auth_code,
-                            "ecovacsUid": request.query.get("uid"),
+                            "ecovacsUid": user.userid,
                         }
                     )
-
-        body = {
-            "code": models.ERR_TOKEN_INVALID,
-            "data": None,
-            "msg": "Current password is incorrect",
-            "time": utils.get_current_time_as_millis(),
-        }
-
-        return web.json_response(body)
+        return get_error_response("Current password is incorrect")
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, None), exc_info=True)
+        _LOGGER.error(utils.default_exception_str_builder(e, "during get auth code"), exc_info=True)
     raise HTTPInternalServerError
 
 
-async def get_auth_code2(request: Request) -> dict[str, Any]:
-    """Get auth code2."""
+async def get_auth_code_v2(request: Request) -> Response:
+    """Get auth code v2."""
     try:
         post_body = json.loads(await request.text())
         user_id = post_body.get("auth", {}).get("userid")
         access_token = post_body.get("auth", {}).get("token")
 
-        body = {
-            "code": models.ERR_TOKEN_INVALID,
-            "data": None,
-            "msg": "Current password is incorrect",
-            "time": utils.get_current_time_as_millis(),
-        }
-
         if user_id is not None and access_token is not None:
-            user = db.user_get(user_id)
+            user = db.user_by_user_id(user_id)
             if user is None:
                 _LOGGER.warning(f"No user found for {user_id}")
             else:
-                token = db.user_get_token(user_id, access_token)
-                if token is None:
-                    db.user_add_token(user_id, access_token)
-                    token = db.user_get_token(user_id, access_token)
-                if token is not None:
-                    auth_code = None
-                    if "authcode" in token:
-                        auth_code = token.get("authcode")
-                    else:
-                        auth_code = _generate_auth_code(
-                            user["userid"],
-                            request.match_info.get("country", "us"),
-                            access_token,
-                        )
+                auth_code = _get_auth_code(user.userid, access_token, request.match_info.get("country", DEFAULT_COUNTRY), 2)
+                if auth_code is not None:
+                    return web.json_response(
+                        {
+                            "code": auth_code,
+                            "result": "ok",
+                            "todo": "result",
+                        }
+                    )
 
-                    body = {
-                        "code": auth_code,
-                        "result": "ok",
-                        "todo": "result",
-                    }
-
-        return body
+        return get_error_response_v2()
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, None), exc_info=True)
+        _LOGGER.error(utils.default_exception_str_builder(e, "during get auth code v2"), exc_info=True)
     raise HTTPInternalServerError
 
 
-def _check_token(apptype: str, country_code: str, user: dict[str, Any], token: str) -> tuple[bool, dict[str, Any]]:
-    if db.check_token(user["userid"], token):
-        return (
-            True,
-            {
-                "code": models.RETURN_API_SUCCESS,
-                "data": _get_login_details(apptype, country_code, user, token),
-                "msg": "The operation was successful",
-                "time": utils.get_current_time_as_millis(),
-            },
-        )
+def _get_auth_code(user_id: str, access_token: str, country: str = DEFAULT_COUNTRY, version: int = 1) -> str | None:
+    """Get auth code."""
+    try:
+        auth_code = None
 
-    return (
-        False,
-        {
-            "code": models.ERR_TOKEN_INVALID,
-            "data": None,
-            "msg": "Current password is incorrect",
-            "time": utils.get_current_time_as_millis(),
-        },
-    )
+        # version 2 ignore the access_token, because current it was the easiest workaround ^^
+        if version == 2:
+            token = db.user_get_token_v2(user_id)
+            if token is not None:
+                auth_code = token.get("authcode")
+                if auth_code is None:
+                    auth_code = _generate_auth_code(user_id, country, access_token, 2)
+            return auth_code
+
+        token = db.user_get_token(user_id, access_token)
+        if token is not None:
+            auth_code = token.get("authcode")
+            if auth_code is None:
+                auth_code = _generate_auth_code(user_id, country, access_token)
+        return auth_code
+    except Exception as e:
+        _LOGGER.error(utils.default_exception_str_builder(e), exc_info=True)
+    raise HTTPInternalServerError
 
 
-def _auth_any(devid: str, apptype: str, country: str, request: Request) -> dict[str, Any]:
-    user_dev_id = devid
-    country_code = country
-    user = db.user_by_device_id(user_dev_id)
-    bots = db.bot_get_all()
+def _check_token(apptype: str, country_code: str, user: models.BumperUser, token: str) -> tuple[bool, Response]:
+    if db.check_token(user.userid, token):
+        return (True, get_success_response(_get_login_details(apptype, country_code, user, token)))
+    return (False, get_error_response("Current password is incorrect"))
 
+
+def _auth_any(
+    uid: str | None, access_token: str | None, device_id: str, apptype: str, country_code: str, check: bool
+) -> Response:
+    if uid is None:
+        uid = _generate_uid("tmpuser")
+
+    body = get_error_response()
+    user = db.user_by_user_id(uid)
+
+    # anyway if it is a login or only checklogin
+    # we will create a user if not exists and generated always a token, to be always authenticated
     if user is None:
-        db.user_add("tmpuser")  # Add a new user
-        tmp = db.user_get("tmpuser")
-        assert tmp
-        user = tmp
+        # Add a new user
+        db.user_add(uid)
+        user = db.user_by_user_id(uid)
+    if user is not None:
+        _auth_any_clean(user, device_id)
+        token = _generate_token(user.userid)
+        body = get_success_response(_get_login_details(apptype, country_code, user, token))
 
-    token = _generate_token(user["userid"])
-    db.user_add_device(user["userid"], user_dev_id)
+        # If request was to check a token
+        if check is True and access_token is not None:
+            # NOTE: half used, if false the response will be true from above login
+            (success, result) = _check_token(apptype, country_code, user, access_token)
+            if success is True:
+                body = result
 
-    for bot in bots:  # Add all bots to the user
+    return body
+
+
+def _auth_any_clean(user: models.BumperUser, device_id: str) -> None:
+    # Add current used device to user
+    db.user_add_device(user.userid, device_id)
+    # Add all known bots to the user
+    bots = db.bot_get_all()
+    for bot in bots:
         if "did" in bot:
-            db.user_add_bot(user["userid"], bot["did"])
+            db.user_add_bot(user.userid, bot["did"])
         else:
             _LOGGER.error(f"No DID for bot :: {bot}")
 
-    if "checkLogin" in request.path:  # If request was to check a token do so
-        (success, body) = _check_token(apptype, country_code, user, request.query["accessToken"])
-        if success:
-            return body
-
     # Deactivate old tokens and authcodes
-    db.user_revoke_expired_tokens(user["userid"])
-
-    return {
-        "code": models.RETURN_API_SUCCESS,
-        "data": _get_login_details(apptype, country_code, user, token),
-        "msg": "The operation was successful",
-        "time": utils.get_current_time_as_millis(),
-    }
+    db.user_revoke_expired_tokens(user.userid)
 
 
-def _get_login_details(apptype: str, country_code: str, user: dict[str, Any], token: str) -> dict[str, Any]:
+def _get_login_details(apptype: str, country_code: str, user: models.BumperUser, token: str) -> dict[str, Any]:
     details: dict[str, Any] = {
         "accessToken": token,
         "email": "null@null.com",
         "isNew": None,
-        "loginName": f"fuid_{user['userid']}",
+        "loginName": user.userid,
         "mobile": None,
-        "ucUid": f"fuid_{user['userid']}",
-        "uid": f"fuid_{user['userid']}",
-        "username": f"fusername_{user['userid']}",
+        "ucUid": user.userid,
+        "uid": user.userid,
+        "username": user.username,
         "country": country_code,
     }
 
@@ -241,3 +216,118 @@ def _get_login_details(apptype: str, country_code: str, user: dict[str, Any], to
         details.update({"ucUid": details["uid"], "loginName": details["username"], "mobile": None})
 
     return details
+
+
+# ******************************************************************************
+#
+# OAUTH UTILS
+#
+# ******************************************************************************
+
+
+def oauth_callback(request: Request) -> Response:
+    """Oauth callback."""
+    try:
+        auth_code = request.query.get("code")
+        if auth_code is None:
+            return get_error_response_v2()
+
+        token = db.token_by_auth_code(auth_code)
+        if token is None:
+            return get_error_response_v2()
+
+        user = token.get("userid")
+        if user is None:
+            return get_error_response_v2()
+
+        oauth = db.user_add_oauth(user)
+        if oauth is None:
+            return get_error_response_v2()
+
+        return get_success_response_v2(oauth.to_response())
+    except Exception as e:
+        _LOGGER.error(utils.default_exception_str_builder(e, "during handling oauth callback"), exc_info=True)
+    raise HTTPInternalServerError
+
+
+# ******************************************************************************
+#
+# HELPER UTILS
+#
+# ******************************************************************************
+
+
+def _generate_uid(email: str) -> str:
+    """Generate an uid from a given E-Mail."""
+    hash_object = hashlib.sha256()
+    hash_object.update(email.encode("utf-8"))
+    return hash_object.hexdigest()[:20]
+
+
+def _generate_token(user_id: str) -> str:
+    """Generate new token and add to DB."""
+    token = uuid.uuid4().hex
+    db.user_add_token(user_id, token)
+    return token
+
+
+def _generate_auth_code(user_id: str, country_code: str, token: str, version: int = 1) -> str:
+    """Generate new auth token and add to DB."""
+    tmp_auth_code = f"{country_code}_{uuid.uuid4().hex}"
+    if version == 1:
+        db.user_add_auth_code(user_id, token, tmp_auth_code)
+    elif version == 2:
+        db.user_add_auth_code_v2(user_id, tmp_auth_code)
+    return tmp_auth_code
+
+
+async def get_auth_info(request: Request) -> tuple[tuple | None, tuple | None]:
+    """Get auth info from requests."""
+    try:
+        auth_keys = ["accessToken", "token", "user_token"]
+        user_keys = ["uid", "userid"]
+
+        token: tuple | None = None
+        user: tuple | None = None
+
+        # Search in headers or query for credentials
+        for key in auth_keys:
+            auth_value = request.headers.get(key) or request.query.get(key)
+            if auth_value:
+                token = (key, auth_value)
+
+        # Search in headers or query for user info
+        for key in user_keys:
+            user_value = request.headers.get(key) or request.query.get(key)
+            if user_value:
+                user = (key, user_value)
+
+        # Search in JSON body
+        try:
+            if token is None and user is None:
+                token = _find_keys_in_json(await request.json(), auth_keys)
+                user = _find_keys_in_json(await request.json(), user_keys)
+        except Exception:
+            pass  # Handle JSON decoding error if necessary
+
+        return (user, token)
+    except Exception as e:
+        _LOGGER.warning(utils.default_exception_str_builder(e, "during auth info gather"))
+    return (None, None)
+
+
+def _find_keys_in_json(data: dict | list | None, keys_to_find: list[str]) -> tuple | None:
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if key in keys_to_find:
+                return (key, value)
+            if isinstance(value, (dict, list)):
+                result = _find_keys_in_json(value, keys_to_find)
+                if result:
+                    return result
+    elif isinstance(data, list):
+        for item in data:
+            result = _find_keys_in_json(item, keys_to_find)
+            if result:
+                return result
+    return None

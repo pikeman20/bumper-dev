@@ -23,26 +23,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `web` api `plugins` extended with more api's
     - tested also with newer app version, see `README.md`
     - some new one (not all are functional and only base implemented)
+      - **/**
+        - `data_collect/upload/generalData`
+        - `sa`
       - **app**
         - `dln/api/log/clean_result/list`
       - **api**
-        - `pim/voice/get`
-        - `voice/getLanuages`
+        - `appsvr/device/blacklist/check`
         - `appsvr/improve`
         - `appsvr/ota/firmware`
-        - `appsvr/device/blacklist/check`
         - `basis/dc/get-by-area`
-        - `ecms/file/get/{id}`
         - `ecms/app/ad/res/v2`
         - `ecms/app/element/hint`
         - `ecms/app/push/event`
         - `ecms/app/resources`
+        - `ecms/file/get/{id}`
+        - `homed/device/move`
         - `homed/home/create`
         - `homed/home/delete`
         - `homed/home/list`
         - `homed/home/update`
         - `homed/member/list`
-        - `homed/device/move`
+        - `microservice-recomend/userReminderResult`
         - `neng/message/read`
         - `neng/v2/message/push`
         - `neng/v3/message/latest_by_did`
@@ -50,38 +52,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         - `neng/v3/message/pushStatus`
         - `neng/v3/product/msg/tabs`
         - `neng/v3/shareMsg/hasUnreadMsg`
-        - `rapp/sds/user/data/del`
+        - `ota/products/wukong/class/(.*?)/firmware/latest.json`
         - `pim/api/pim/file/get`
+        - `pim/voice/get`
+        - `pim/voice/getLanuages`
+        - `rapp/sds/user/data/del`
         - `sds/baidu/audio/getcred`
+        - `dln/api/log/clean_result/list`
       - **v1**
+        - `/user/getMyUserMenuInfo`
         - `agreement/getUserAcceptInfo`
-        - `common/getUserConfig`
+        - `common/getAboutBriefItem`
         - `common/getBottomNavigateInfoList`
         - `common/getCurrentAreaSupportServiceInfo`
-        - `common/getAboutBriefItem`
+        - `common/getUserConfig`
+        - `help/getHelpIndex`
+        - `help/getProductHelpIndex`
         - `intl/member/basicInfo`
         - `intl/member/signStatus`
         - `osmall/getCountryConfig`
         - `osmall/index/getBannerList`
+        - `osmall/index/getConfNetRobotPartsGoods`
         - `osmall/index/getGoodsCategory`
         - `osmall/index/getLayout`
         - `osmall/index/getRecommendGoods`
-        - `osmall/proxy/my/get-user-center-coupon-list`
         - `osmall/proxy/cart/get-count`
-        - `osmall/proxy/v2/web/benefit/get-benefits`
+        - `osmall/proxy/my/get-user-center-coupon-list`
         - `osmall/proxy/order/list`
         - `osmall/proxy/product/material-accessory-list`
+        - `osmall/proxy/v2/web/benefit/get-benefits`
         - `osmall/proxy/v2/web/payment-icon/index`
+        - `user/getMyUserMenuInfo`
         - `userSetting/getMsgReceiveSetting`
         - `userSetting/saveUserSetting`
-        - `/user/getMyUserMenuInfo`
-        - `user/getMyUserMenuInfo`
-        - `help/getHelpIndex`
-        - `help/getProductHelpIndex`
       - **v2**
         - `member/getExpByScene`
-        - `message/waterfallFlow`
         - `message/moduleConfiguration`
+        - `message/waterfallFlow`
         - `user/checkAgreementBatch`
         - `userSetting/getMsgReceiveSetting`
       - **v3**

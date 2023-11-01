@@ -13,6 +13,8 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
+from bumper.web import auth_util
+from bumper.web.response_utils import get_error_response_v2, get_success_response_v2
 
 from .. import WebserverPlugin
 from .pim import get_product_iot_map
@@ -78,10 +80,6 @@ class AppsvrPlugin(WebserverPlugin):
 async def _handle_app_do(request: Request) -> Response:
     """App do."""
     try:
-        # Skip GET for now
-        if request.method == "GET":
-            return web.json_response({"result": "fail", "todo": "result"})
-
         post_body: Mapping[str, Any]
         if request.content_type == "application/x-www-form-urlencoded":
             post_body = await request.post()
@@ -109,21 +107,17 @@ async def _handle_app_do(request: Request) -> Response:
             )
 
         if todo == "GetCodepush":
-            return web.json_response(
+            return get_success_response_v2(
                 {
-                    "code": 0,
-                    "data": {
-                        "extend": {},
-                        "type": "microsoft",
-                        "url": "",
-                    },
-                    "ret": "ok",
-                    "todo": "result",
+                    "extend": {},
+                    "type": "microsoft",
+                    "url": "",
                 }
             )
 
         if todo == "RobotControl":
-            # TODO: implement
+            # TODO: check what's needed to be implemented
+            _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_app_do/RobotControl !!!")
             # EXAMPLE request:
             #     {
             #         "app": {
@@ -169,7 +163,7 @@ async def _handle_app_do(request: Request) -> Response:
             #         "ret": "ok",
             #         "todo": "result"
             #     }
-            return web.json_response({"code": 0, "data": {}, "ret": "ok", "todo": "result"})
+            return get_success_response_v2({})
 
         if todo == "GetAppVideoUrl":
             keys = post_body.get("keys", [])
@@ -177,7 +171,7 @@ async def _handle_app_do(request: Request) -> Response:
             for key in keys:
                 if key == "t9_promotional_video":
                     data[key] = "https://globalapp-eu.oss-eu-central-1.aliyuncs.com/public/t9_promotional_video.mp4"
-            return web.json_response({"code": 0, "data": data, "ret": "ok", "todo": "result"})
+            return get_success_response_v2(data)
 
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
@@ -588,7 +582,7 @@ async def _handle_app_config(request: Request) -> Response:
     if data is not None:
         return web.json_response({"code": 0, "data": data, "message": "success"})
     _LOGGER.error(f"code is not know :: {code}")
-    return web.json_response({"result": "fail", "todo": "result"})
+    return get_error_response_v2()
 
 
 async def _handle_service_list(request: Request) -> Response:
@@ -633,22 +627,7 @@ async def _handle_service_list(request: Request) -> Response:
 
 async def _handle_oauth_callback(request: Request) -> Response:
     """Oauth callback."""
-    try:
-        token = db.token_by_authcode(request.query.get("code", ""))
-        if token is not None and token.get("userid", None) is not None:
-            oauth = db.user_add_oauth(token.get("userid", ""))
-            if oauth is not None:
-                return web.json_response(
-                    {
-                        "code": 0,
-                        "data": oauth.to_response(),
-                        "ret": "ok",
-                        "todo": "result",
-                    }
-                )
-    except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
-    raise HTTPInternalServerError
+    return auth_util.oauth_callback(request)
 
 
 async def _handle_improve(request: Request) -> Response:
@@ -693,7 +672,7 @@ async def _handle_improve_accept(_: Request) -> Response:
 
 async def _handle_notice_home(_: Request) -> Response:
     """Notice home."""
-    return web.json_response({"code": 0, "data": {}, "ret": "ok", "todo": "result"})
+    return get_success_response_v2({})
 
 
 async def _handle_ota_firmware(_: Request) -> Response:

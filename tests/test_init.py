@@ -5,7 +5,6 @@ import pytest
 from testfixtures import LogCapture
 
 import bumper
-from bumper.utils.log_helper import logHelper
 from bumper.utils.settings import config as bumper_isc
 from bumper.utils.utils import strtobool
 
@@ -22,11 +21,10 @@ def test_strtobool():
 
 @pytest.mark.parametrize("debug", [False, True])
 async def test_start_stop(debug: bool):
-    with LogCapture("bumper") as log:
+    with LogCapture() as log:
         bumper_isc.bumper_verbose = 2
         if debug:
             bumper_isc.bumper_level = "DEBUG"
-        logHelper.update()
 
         if os.path.exists("tests/tmp.db"):
             os.remove("tests/tmp.db")  # Remove existing db
@@ -35,6 +33,7 @@ async def test_start_stop(debug: bool):
         await asyncio.sleep(0.1)
 
         # log.check_present(("INFO", "bumper", "Starting Bumpers..."))
+
         while True:
             try:
                 # log.check_present(("INFO", "bumper", "Bumper started successfully"))

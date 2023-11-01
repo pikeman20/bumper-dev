@@ -42,6 +42,19 @@ class VacBotDevice:
             "xmpp_connection": self.xmpp_connection,
         }
 
+    @classmethod
+    def from_dict(cls, data: dict) -> "VacBotDevice":
+        """Create a VacBotDevice instance from a dictionary."""
+        bot = cls(did=data.get("did", ""))
+        bot.vac_bot_device_class = data.get("vac_bot_device_class", "")
+        bot.company = data.get("company", "")
+        bot.name = data.get("name", "")
+        bot.nick = data.get("nick", "")
+        bot.resource = data.get("resource", "")
+        bot.mqtt_connection = data.get("mqtt_connection", False)
+        bot.xmpp_connection = data.get("xmpp_connection", False)
+        return bot
+
 
 class BumperUser:
     """Bumper user."""
@@ -49,13 +62,30 @@ class BumperUser:
     def __init__(self, userid: str = ""):
         """Bumper user init."""
         self.userid: str = userid
+        self.username: str = "bumper"
         self.homeids: list[str] = []
         self.devices: list[str] = []
         self.bots: list[str] = []
 
     def asdict(self) -> dict[str, Any]:
         """Convert to dict."""
-        return {"userid": self.userid, "homeids": self.homeids, "devices": self.devices, "bots": self.bots}
+        return {
+            "userid": self.userid,
+            "username": self.username,
+            "homeids": self.homeids,
+            "devices": self.devices,
+            "bots": self.bots,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "BumperUser":
+        """Create a BumperUser instance from a dictionary."""
+        user = cls(userid=data.get("userid", ""))
+        user.username = data.get("username", "bumper")
+        user.homeids = data.get("homeids", [])
+        user.devices = data.get("devices", [])
+        user.bots = data.get("bots", [])
+        return user
 
 
 class GlobalVacBotDevice(VacBotDevice):
@@ -88,6 +118,14 @@ class VacBotClient:
             "mqtt_connection": self.mqtt_connection,
             "xmpp_connection": self.xmpp_connection,
         }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "VacBotClient":
+        """Create a VacBotClient instance from a dictionary."""
+        bot = cls(userid=data.get("userid", ""), realm=data.get("realm", ""), token=data.get("token", ""))
+        bot.mqtt_connection = data.get("mqtt_connection", False)
+        bot.xmpp_connection = data.get("xmpp_connection", False)
+        return bot
 
 
 class OAuth:

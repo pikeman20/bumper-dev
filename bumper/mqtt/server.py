@@ -50,15 +50,7 @@ class MQTTServer:
             passwd_file = kwargs.get("password_file", os.path.join(os.path.join(bumper_isc.data_dir, "passwd")))
             allow_anon = kwargs.get("allow_anonymous", False)
 
-            # Load entry points from the specified distribution name
-            distribution_name = "amqtt.broker.plugins"
-            entry_point_name = "bumper = bumper.mqtt.server:BumperMQTTServerPlugin"
-
-            # The below adds a plugin to the amqtt.broker.plugins without having to futz with setup.py
-            distribution = pkg_resources.Distribution(distribution_name)
-            bumper_plugin = pkg_resources.EntryPoint.parse(entry_point_name, dist=distribution)
-            distribution._ep_map = {distribution_name: {"bumper": bumper_plugin}}  # type: ignore[attr-defined]
-            pkg_resources.working_set.add(distribution)
+            self._add_entry_point()
 
             config_bind = {"default": {"type": "tcp"}}
             listener_prefix = "mqtt"
@@ -91,6 +83,37 @@ class MQTTServer:
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "during initialize"), exc_info=True)
             raise e
+
+    def _add_entry_point(self) -> None:
+        # The below adds a plugin to the amqtt.broker.plugins without having to futz with setup.py
+        distribution = pkg_resources.Distribution("amqtt.broker.plugins")
+        bumper_plugin = pkg_resources.EntryPoint.parse(
+            "bumper = bumper.mqtt.server:BumperMQTTServerPlugin",
+            dist=distribution,
+        )
+        # pylint: disable=protected-access
+        distribution._ep_map = {"amqtt.broker.plugins": {"bumper": bumper_plugin}}  # type: ignore
+        pkg_resources.working_set.add(distribution)
+
+        # The below adds a plugin to the amqtt.broker.plugins without having to futz with setup.py
+        # print("*************************************************************************************************************")
+        # [
+        #     print(f"{x.group} :: {x.name} :: {x.value}")
+        #     for x in importlib.metadata.entry_points().select(group="amqtt.broker.plugins")
+        # ]
+        # # distribution = importlib.metadata.distribution("amqtt")
+        # entry_points = importlib.metadata.distribution("amqtt").entry_points
+        # # entry = importlib.metadata.entry_points().select(group="amqtt.broker.plugins")
+        # entry_point = importlib.metadata.EntryPoint(
+        #     name="bumper",
+        #     value="bumper.mqtt.server:BumperMQTTServerPlugin",
+        #     group="amqtt.broker.plugins",
+        # )
+        # entry_points.append(entry_point)
+        # print("*************************************************************************************************************")
+        # [print(f"{x.group} :: {x.name} :: {x.value}") for x in entry_points]
+        # print("*************************************************************************************************************")
+        # [print(x) for x in pkg_resources.iter_entry_points("amqtt.broker.plugins")]
 
     @property
     def state(self) -> str:
@@ -194,7 +217,7 @@ class BumperMQTTServerPlugin:
                         await proxy.connect(username, password)
                     return True
 
-                if password is not None and db.check_authcode(tmp_did, password) or not bumper_isc.USE_AUTH:
+                if password is not None and db.check_auth_code(tmp_did, password) or not bumper_isc.USE_AUTH:
                     db.client_add(
                         tmp_did,
                         tmp_dev_class,
@@ -206,7 +229,7 @@ class BumperMQTTServerPlugin:
             # Check for File Auth
             if username is not None and password is not None:
                 # If there is a username and it isn't already authenticated
-                password_hash = self._users.get(username, None)
+                password_hash = self._users.get(username)
                 message_suffix = f"Username: {username} - ClientID: {client_id}"
                 if password_hash:  # If there is a matching entry in passwd, check hash
                     if pwd_context.verify(password, password_hash):
@@ -236,7 +259,7 @@ class BumperMQTTServerPlugin:
         return False
 
     def _read_password_file(self) -> dict[str, str]:
-        password_file = self.auth_config.get("password-file", None)
+        password_file = self.auth_config.get("password-file")
         users: dict[str, str] = {}
         if password_file:
             try:
@@ -278,7 +301,7 @@ class BumperMQTTServerPlugin:
 
         bot = db.bot_get(didsplit[0])
         if bot is not None:
-            db.bot_set_mqtt(bot["did"], connected)
+            db.bot_set_mqtt(bot.get("did"), connected)
             return
 
         clientresource = didsplit[1].split("/")[1]

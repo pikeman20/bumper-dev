@@ -44,7 +44,7 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
         json_body = json.loads(await request.text())
 
         # Its a command
-        did = json_body.get("toId", None)
+        did = json_body.get("toId")
         if did is not None:
             bot = db.bot_get(did)
             if bot is not None and bot.get("company", "") == "eco-ng":
@@ -64,7 +64,7 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
                 }
             )
 
-        td = json_body.get("td", None)
+        td = json_body.get("td")
         if td is not None:
             if td == "PollSCResult":  # Seen when doing initial wifi config
                 return web.json_response({"ret": "ok"})

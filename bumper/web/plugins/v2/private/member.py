@@ -1,4 +1,5 @@
 """Member plugin module."""
+import logging
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -6,8 +7,12 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from ... import WebserverPlugin, get_success_response
+from bumper.web.response_utils import get_success_response
+
+from ... import WebserverPlugin
 from . import BASE_URL
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class MemberPlugin(WebserverPlugin):
@@ -28,6 +33,7 @@ class MemberPlugin(WebserverPlugin):
 async def _handle_get_exp_by_scene(request: Request) -> Response:
     """Get exp by scene."""
     # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_get_exp_by_scene !!!")
     scene = request.query.get("scene")
     mid = request.query.get("mid", "")
     did = request.query.get("did", "")

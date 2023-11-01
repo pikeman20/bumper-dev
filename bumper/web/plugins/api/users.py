@@ -13,6 +13,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import auth_util
+from bumper.web.response_utils import get_error_response_v2
 
 from .. import WebserverPlugin
 
@@ -37,7 +38,7 @@ class UsersPlugin(WebserverPlugin):
 async def _handle_user(request: Request) -> Response:
     """User do."""
     try:
-        body: dict[str, Any] = {"result": "fail", "todo": "result"}
+        body = None
         post_body: Mapping[str, Any]
         if request.content_type == "application/x-www-form-urlencoded":
             post_body = await request.post()
@@ -52,7 +53,7 @@ async def _handle_user(request: Request) -> Response:
                 srv_ip = bumper_isc.bumper_announce_ip
                 srv_port = bumper_isc.XMPP_LISTEN_PORT_TLS
                 _LOGGER.info(f"Announcing EcoMsgNew Server to bot as: {srv_ip}:{srv_port}")
-                body = {"ip": srv_ip, "port": srv_port, "result": "ok"}
+                body = web.json_response({"ip": srv_ip, "port": srv_port, "result": "ok"})
                 # TODO: check if below before was needed?!
                 # body = json.dumps({"ip": srv_ip, "port": srv_port, "result": "ok"})
                 # # NOTE: bot seems to be very picky about having no spaces, only way was with text
@@ -62,51 +63,57 @@ async def _handle_user(request: Request) -> Response:
                 srv_ip = bumper_isc.ECOVACS_UPDATE_SERVER
                 srv_port = bumper_isc.ECOVACS_UPDATE_SERVER_PORT
                 _LOGGER.info(f"Announcing EcoMsgNew Server to bot as: {srv_ip}:{srv_port}")
-                body = {"ip": srv_ip, "port": srv_port, "result": "ok"}
+                body = web.json_response({"ip": srv_ip, "port": srv_port, "result": "ok"})
 
-        elif todo == "loginByItToken":
+        if todo == "loginByItToken":
             if "userId" in post_body:
-                if db.check_authcode(post_body["userId"], post_body["token"]):
-                    body = {
-                        "resource": post_body["resource"],
-                        "result": "ok",
-                        "todo": "result",
-                        "token": post_body["token"],
-                        "userId": post_body["userId"],
-                    }
+                if db.check_auth_code(post_body["userId"], post_body["token"]):
+                    body = web.json_response(
+                        {
+                            "resource": post_body["resource"],
+                            "result": "ok",
+                            "todo": "result",
+                            "token": post_body["token"],
+                            "userId": post_body["userId"],
+                        }
+                    )
             else:  # EcoVacs Home LoginByITToken
                 login_token = db.login_by_it_token(post_body["token"])
                 if login_token:
-                    body = {
-                        "resource": post_body["resource"],
-                        "result": "ok",
-                        "todo": "result",
-                        "token": login_token["token"],
-                        "userId": login_token["userid"],
-                    }
+                    body = web.json_response(
+                        {
+                            "resource": post_body["resource"],
+                            "result": "ok",
+                            "todo": "result",
+                            "token": login_token["token"],
+                            "userId": login_token["userid"],
+                        }
+                    )
 
-        elif todo == "GetAuthCode":
-            # TODO: check how provide token
-            body = await auth_util.get_auth_code2(request)
+        if todo == "GetAuthCode":
+            # TODO: check what's needed to be implemented, which token is really needed and how to get correct
+            _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_user/GetAuthCode !!!")
+            body = await auth_util.get_auth_code_v2(request)
 
-        elif todo == "GetDeviceList":
-            body = {"devices": db.bot_get_all(), "result": "ok", "todo": "result"}
+        if todo == "GetDeviceList":
+            body = web.json_response({"devices": db.bot_get_all(), "result": "ok", "todo": "result"})
 
-        elif todo == "SetDeviceNick":
-            db.bot_set_nick(post_body["did"], post_body["nick"])
-            body = {"result": "ok", "todo": "result"}
+        if todo == "SetDeviceNick":
+            db.bot_set_nick(post_body.get("did"), post_body.get("nick"))
+            body = web.json_response({"result": "ok", "todo": "result"})
 
-        elif todo == "AddOneDevice":
-            db.bot_set_nick(post_body["did"], post_body["nick"])
-            body = {"result": "ok", "todo": "result"}
+        if todo == "AddOneDevice":
+            db.bot_set_nick(post_body.get("did"), post_body.get("nick"))
+            body = web.json_response({"result": "ok", "todo": "result"})
 
-        elif todo == "DeleteOneDevice":
+        if todo == "DeleteOneDevice":
             db.bot_remove(post_body["did"])
-            body = {"result": "ok", "todo": "result"}
+            body = web.json_response({"result": "ok", "todo": "result"})
 
-        if body.get("result", "") == "fail":
+        if body is None:
             _LOGGER.error(f"todo is not know :: {todo}")
-        return web.json_response(body)
+            body = get_error_response_v2()
+        return body
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError

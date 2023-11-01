@@ -8,10 +8,13 @@ import pytest
 from bumper.mqtt.helper_bot import MQTTHelperBot
 from bumper.utils import db
 from bumper.utils.settings import config as bumper_isc
-from bumper.web.models import ERR_TOKEN_INVALID, RETURN_API_SUCCESS
+from bumper.web.auth_util import _generate_uid
+from bumper.web.models import ERR_TOKEN_INVALID, RETURN_API_SUCCESS, VacBotDevice
 from bumper.web.server import WebServer, WebserverBinding
 from bumper.xmpp.xmpp import XMPPServer
 from tests import HOST, WEBSERVER_PORT
+
+USER_ID = _generate_uid("tmpuser")
 
 
 def create_webserver():
@@ -112,7 +115,7 @@ async def test_login(webserver_client):
     assert "username" in jsonresp["data"]
 
     # Add a user to db and test with existing users
-    db.user_add("testuser")
+    db.user_add(USER_ID)
     resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/login")
     assert resp.status == 200
     text = await resp.text()
@@ -141,7 +144,7 @@ async def test_login(webserver_client):
         "name": "sn_1234",
         "resource": "res_1234",
     }
-    db.bot_full_upsert(newbot)
+    db.bot_full_upsert(VacBotDevice.from_dict(newbot))
 
     resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/login")
     assert resp.status == 200
@@ -157,10 +160,10 @@ async def test_logout(webserver_client):
     remove_existing_db()
 
     # Add a token to user and test
-    db.user_add("testuser")
-    db.user_add_device("testuser", "dev_1234")
-    db.user_add_token("testuser", "token_1234")
-    resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/logout?accessToken={}".format("token_1234"))
+    db.user_add(USER_ID)
+    db.user_add_device(USER_ID, "dev_1234")
+    db.user_add_token(USER_ID, "token_1234")
+    resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/ios/1/0/0/user/logout?accessToken={'token_1234'}")
 
     assert resp.status == 200
     text = await resp.text()
@@ -183,7 +186,7 @@ async def test_checkLogin(webserver_client):
     assert "username" in jsonresp["data"]
 
     # Add a user to db and test with existing users
-    db.user_add("testuser")
+    db.user_add(USER_ID)
     resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={None}")
     assert resp.status == 200
     text = await resp.text()
@@ -195,7 +198,7 @@ async def test_checkLogin(webserver_client):
     assert "username" in jsonresp["data"]
 
     # Test again using global_e app
-    db.user_add("testuser")
+    db.user_add(USER_ID)
     resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/global_e/1/0/0/user/checkLogin?accessToken={None}")
     assert resp.status == 200
     text = await resp.text()
@@ -207,13 +210,13 @@ async def test_checkLogin(webserver_client):
     assert "username" in jsonresp["data"]
 
     # Remove dev from tmpuser
-    db.user_remove_device("tmpuser", "dev_1234")
+    db.user_remove_device(USER_ID, "dev_1234")
 
     # Add a token to user and test
-    db.user_add("testuser")
-    db.user_add_device("testuser", "dev_1234")
-    db.user_add_token("testuser", "token_1234")
-    resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={}".format("token_1234"))
+    db.user_add(USER_ID)
+    db.user_add_device(USER_ID, "dev_1234")
+    db.user_add_token(USER_ID, "token_1234")
+    resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={'token_1234'}")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -224,10 +227,8 @@ async def test_checkLogin(webserver_client):
     assert "username" in jsonresp["data"]
 
     # Test again using global_e app
-    db.user_add("testuser")
-    resp = await webserver_client.get(
-        "/v1/private/us/en/dev_1234/global_e/1/0/0/user/checkLogin?accessToken={}".format("token_1234")
-    )
+    db.user_add(USER_ID)
+    resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/global_e/1/0/0/user/checkLogin?accessToken={'token_1234'}")
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
@@ -256,9 +257,9 @@ async def test_getAuthCode(webserver_client):
     assert jsonresp["code"] == ERR_TOKEN_INVALID
 
     # Add a token to user and test
-    db.user_add("testuser")
-    db.user_add_device("testuser", "dev_1234")
-    db.user_add_token("testuser", "token_1234")
+    db.user_add(USER_ID)
+    db.user_add_device(USER_ID, "dev_1234")
+    db.user_add_token(USER_ID, "token_1234")
     resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid=testuser&accessToken=token_1234")
     assert resp.status == 200
     text = await resp.text()
@@ -440,11 +441,11 @@ async def test_getUsersAPI(webserver_client):
 
 async def test_getUserAccountInfo(webserver_client):
     remove_existing_db()
-    db.user_add("testuser")
-    db.user_add_device("testuser", "dev_1234")
-    db.user_add_token("testuser", "token_1234")
-    db.user_add_authcode("testuser", "token_1234", "auth_1234")
-    db.user_add_bot("testuser", "did_1234")
+    db.user_add(USER_ID)
+    db.user_add_device(USER_ID, "dev_1234")
+    db.user_add_token(USER_ID, "token_1234")
+    db.user_add_auth_code(USER_ID, "token_1234", "auth_1234")
+    db.user_add_bot(USER_ID, "did_1234")
     db.bot_add("sn_1234", "did_1234", "class_1234", "res_1234", "com_1234")
 
     resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/user/getUserAccountInfo")
@@ -453,7 +454,7 @@ async def test_getUserAccountInfo(webserver_client):
     jsonresp = json.loads(text)
     assert jsonresp["code"] == "0000"
     assert jsonresp["msg"] == "The operation was successful"
-    assert jsonresp["data"]["userName"] == "fusername_testuser"
+    assert jsonresp["data"]["uid"] == USER_ID
 
 
 async def test_postUsersAPI(webserver_client):
@@ -476,11 +477,11 @@ async def test_postUsersAPI(webserver_client):
     assert jsonresp["result"] == "ok"
 
     # Test loginByItToken - Uses the authcode
-    db.user_add("testuser")
-    db.user_add_device("testuser", "dev_1234")
-    db.user_add_token("testuser", "token_1234")
-    db.user_add_authcode("testuser", "token_1234", "auth_1234")
-    db.user_add_bot("testuser", "did_1234")
+    db.user_add(USER_ID)
+    db.user_add_device(USER_ID, "dev_1234")
+    db.user_add_token(USER_ID, "token_1234")
+    db.user_add_auth_code(USER_ID, "token_1234", "auth_1234")
+    db.user_add_bot(USER_ID, "did_1234")
     db.bot_add("sn_1234", "did_1234", "class_1234", "res_1234", "com_1234")
     # Test
     postbody = {
@@ -490,7 +491,7 @@ async def test_postUsersAPI(webserver_client):
         "resource": "dev_1234",
         "todo": "loginByItToken",
         "token": "auth_1234",
-        "userId": "testuser",
+        "userId": USER_ID,
     }
     resp = await webserver_client.post("/api/users/user.do", json=postbody)
     assert resp.status == 200
@@ -536,11 +537,11 @@ async def test_postUsersAPI(webserver_client):
             "realm": "ecouser.net",
             "resource": "dev_1234",
             "token": "token_1234",
-            "userid": "testuser",
+            "userid": USER_ID,
             "with": "users",
         },
         "todo": "GetDeviceList",
-        "userid": "testuser",
+        "userid": USER_ID,
     }
     resp = await webserver_client.post("/api/users/user.do", json=postbody)
     assert resp.status == 200
@@ -554,7 +555,7 @@ async def test_postUsersAPI(webserver_client):
             "realm": "ecouser.net",
             "resource": "dev_1234",
             "token": "token_1234",
-            "userid": "testuser",
+            "userid": USER_ID,
             "with": "users",
         },
         "todo": "SetDeviceNick",
@@ -573,7 +574,7 @@ async def test_postUsersAPI(webserver_client):
             "realm": "ecouser.net",
             "resource": "dev_1234",
             "token": "token_1234",
-            "userid": "testuser",
+            "userid": USER_ID,
             "with": "users",
         },
         "todo": "AddOneDevice",
@@ -592,7 +593,7 @@ async def test_postUsersAPI(webserver_client):
             "realm": "ecouser.net",
             "resource": "dev_1234",
             "token": "token_1234",
-            "userid": "testuser",
+            "userid": USER_ID,
             "with": "users",
         },
         "todo": "DeleteOneDevice",
@@ -616,7 +617,7 @@ async def test_appsvr_api(webserver_client):
             "realm": "ecouser.net",
             "resource": "ECOGLOBLEac5ae987",
             "token": "token_1234",
-            "userid": "testuser",
+            "userid": USER_ID,
             "with": "users",
         },
         "channel": "google_play",
@@ -624,7 +625,7 @@ async def test_appsvr_api(webserver_client):
         "lang": "en",
         "platform": "Android",
         "todo": "GetGlobalDeviceList",
-        "userid": "testuser",
+        "userid": USER_ID,
     }
     resp = await webserver_client.post("/api/appsvr/app.do", json=postbody)
     assert resp.status == 200
@@ -662,7 +663,7 @@ async def test_lg_logs(webserver_client, helper_bot: MQTTHelperBot):
             "realm": "ecouser.net",
             "resource": "ECOGLOBLEac5ae987",
             "token": "token_1234",
-            "userid": "testuser",
+            "userid": USER_ID,
             "with": "users",
         },
         "did": "did_1234",

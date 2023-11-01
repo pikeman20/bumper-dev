@@ -33,6 +33,7 @@ class DlnPlugin(WebserverPlugin):
 async def _handle_clean_result_list(request: Request) -> Response:
     """Clean result list."""
     # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_clean_result_list !!!")
     try:
         did = request.query.get("did")
         log_type = request.query.get("logType")

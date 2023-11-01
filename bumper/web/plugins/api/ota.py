@@ -1,4 +1,4 @@
-"""Sds plugin module."""
+"""Ota plugin module."""
 import logging
 from collections.abc import Iterable
 
@@ -16,8 +16,8 @@ from .. import WebserverPlugin
 _LOGGER = logging.getLogger(__name__)
 
 
-class SdsPlugin(WebserverPlugin):
-    """Sds plugin."""
+class OtaPlugin(WebserverPlugin):
+    """Ota plugin."""
 
     @property
     def routes(self) -> Iterable[AbstractRouteDef]:
@@ -25,14 +25,18 @@ class SdsPlugin(WebserverPlugin):
         return [
             web.route(
                 "*",
-                "/sds/baidu/audio/getcred",
-                _handle,  # TODO: check how to handle correct
+                "/ota/products/wukong/class/{class}/firmware/latest.json",
+                _handle_products_firmware_latest,
             ),
         ]
 
 
-async def _handle(_: Request) -> Response:
+async def _handle_products_firmware_latest(_: Request) -> Response:
+    # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_products_firmware_latest !!!")
     try:
+        # device_class = request.match_info.get("class")
+        # did = request.query.get("did")
         return get_success_response_v3(None)
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)

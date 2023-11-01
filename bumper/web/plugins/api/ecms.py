@@ -10,6 +10,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.web.images import get_bot_image
+from bumper.web.response_utils import get_error_response_v2, get_success_response_v3
 
 from .. import WebserverPlugin
 
@@ -117,17 +118,18 @@ async def _handle_ad_res(_: Request) -> Response:
     #     "timeZone": 60
     # }
 
-    return web.json_response({"code": 0, "data": [], "message": "success", "success": True})
+    return get_success_response_v3([])
 
 
 async def _handle_hint(request: Request) -> Response:
     """Hint."""
     # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_hint !!!")
     codes = request.query.get("codes", "").split(",")
     data = {}
     for code in codes:
         data[code] = True  # DEBUG: default saw only False
-    return web.json_response({"code": 0, "data": data, "message": "success", "success": True})
+    return get_success_response_v3(data)
 
 
 async def _handle_resources(request: Request) -> Response:
@@ -167,13 +169,13 @@ async def _handle_resources(request: Request) -> Response:
             }
         ]
     if data is not None:
-        return web.json_response({"code": 0, "data": data, "message": "success", "success": True})
+        return get_success_response_v3(data)
     _LOGGER.error(f"locations is not know :: {locations}")
-    return web.json_response({"result": "fail", "todo": "result"})
+    return get_error_response_v2()
 
 
 async def _handle_push_event(_: Request) -> Response:
     """Ad res."""
     # dataCategory = request.query.get("dataCategory", "Discover-Hint")
     # resourceId = request.query.get("resourceId", "Robot")
-    return web.json_response({"code": 0, "data": "ok", "message": "success", "success": True})
+    return get_success_response_v3("ok")

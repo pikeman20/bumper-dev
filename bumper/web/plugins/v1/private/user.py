@@ -10,8 +10,9 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import db, utils
 from bumper.web import auth_util
+from bumper.web.response_utils import get_success_response
 
-from ... import WebserverPlugin, get_success_response
+from ... import WebserverPlugin
 from . import BASE_URL
 
 _LOGGER = logging.getLogger(__name__)
@@ -95,18 +96,19 @@ class UserPlugin(WebserverPlugin):
 async def _logout(request: Request) -> Response:
     """Logout."""
     try:
-        user_device_id = request.match_info.get("devid", None)
-        if user_device_id:
-            user = db.user_by_device_id(user_device_id)
+        device_id = request.match_info.get("devid")
+        access_token = request.query.get("accessToken")
+        if device_id is not None and access_token is not None:
+            user = db.user_by_device_id(device_id)
             if user is None:
-                _LOGGER.warning(f"No user found for {user_device_id}")
+                _LOGGER.warning(f"No user found for {device_id}")
             else:
-                if db.check_token(user["userid"], request.query["accessToken"]):
+                if db.check_token(user.userid, access_token):
                     # Deactivate old tokens and authcodes
-                    db.user_revoke_token(user["userid"], request.query["accessToken"])
+                    db.user_revoke_token(user.userid, access_token)
         return get_success_response(None)
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, None), exc_info=True)
+        _LOGGER.error(utils.default_exception_str_builder(e), exc_info=True)
     raise HTTPInternalServerError
 
 
@@ -118,8 +120,6 @@ async def _handle_get_user_account_info(request: Request) -> Response:
         if user is None:
             _LOGGER.warning(f"No user found for {user_device_id}")
         else:
-            username = f"fusername_{user['userid']}"
-
             intl_member_info = {
                 "availableGeneralIntegral": 0,
                 "availableLimitedIntegral": 0,
@@ -150,15 +150,15 @@ async def _handle_get_user_account_info(request: Request) -> Response:
                     "hasPassword": "Y",
                     "headIco": "",
                     "intlMemberInfo": intl_member_info,
-                    "loginName": username,
+                    "loginName": user.username,
                     "mobile": None,
                     "mobileAreaNo": None,
                     "nickname": "",
                     "obfuscatedMobile": None,
                     "thirdLoginInfoList": [{"accountType": "WeChat", "hasBind": "N"}],
-                    "uid": f"fuid_{user['userid']}",
-                    "userName": username,
-                    "userShowName": username,
+                    "uid": user.userid,
+                    "userName": user.username,
+                    "userShowName": user.username,
                 }
             )
     except Exception as e:

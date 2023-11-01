@@ -18,25 +18,25 @@ def test_db_path():
 def test_user_db():
     db.user_add("testuser")  # Add testuser
 
-    assert db.user_get("testuser").get("userid") == "testuser"  # Test that testuser was created and returned
+    assert db.user_by_user_id("testuser").userid == "testuser"  # Test that testuser was created and returned
 
     db.user_add_device("testuser", "dev_1234")  # Add device to testuser
 
-    assert db.user_by_device_id("dev_1234").get("userid") == "testuser"  # Test that testuser was found by deviceid
+    assert db.user_by_device_id("dev_1234").userid == "testuser"  # Test that testuser was found by deviceid
 
     db.user_remove_device("testuser", "dev_1234")  # Remove device from testuser
 
-    assert "dev_1234" not in db.user_get("testuser").get("devices")
+    assert "dev_1234" not in db.user_by_user_id("testuser").devices
     # Test that dev_1234 was not found in testuser devices
 
     db.user_add_bot("testuser", "bot_1234")  # Add bot did to testuser
 
-    assert "bot_1234" in db.user_get("testuser").get("bots")
+    assert "bot_1234" in db.user_by_user_id("testuser").bots
     # Test that bot was found in testuser's bot list
 
     db.user_remove_bot("testuser", "bot_1234")  # Remove bot did from testuser
 
-    assert "bot_1234" not in db.user_get("testuser").get("bots")
+    assert "bot_1234" not in db.user_by_user_id("testuser").bots
     # Test that bot was not found in testuser's bot list
 
     db.user_add_token("testuser", "token_1234")  # Add token to testuser
@@ -47,12 +47,12 @@ def test_user_db():
     assert db.user_get_token("testuser", "token_1234")
     # Test that token was returned for testuser
 
-    db.user_add_authcode("testuser", "token_1234", "auth_1234")  # Add authcode to token_1234 for testuser
-    assert db.check_authcode("testuser", "auth_1234")
+    db.user_add_auth_code("testuser", "token_1234", "auth_1234")  # Add authcode to token_1234 for testuser
+    assert db.check_auth_code("testuser", "auth_1234")
     # Test that authcode was found for testuser
 
-    db.user_revoke_authcode("testuser", "token_1234")  # Remove authcode from testuser
-    assert db.check_authcode("testuser", "auth_1234") is False
+    db.user_revoke_auth_code("testuser", "token_1234")  # Remove authcode from testuser
+    assert db.check_auth_code("testuser", "auth_1234") is False
     # Test that authcode was not found for testuser
     db.user_revoke_token("testuser", "token_1234")  # Remove token from testuser
     assert db.check_token("testuser", "token_1234") is False  # Test that token was not found for testuser

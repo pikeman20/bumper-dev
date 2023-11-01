@@ -65,14 +65,14 @@ async def _handle_home_list(request: Request) -> Response:
         user_id = request.query.get("userid")
         data = []
         if user_id is not None:
-            user = db.user_get(user_id)
+            user = db.user_by_user_id(user_id)
             if user is not None:
-                for index, home_id in enumerate(user.get("homeids", [bumper_isc.HOME_ID])):
+                for index, home_id in enumerate(user.homeids):
                     data.append(
                         {
                             "createTime": utils.get_current_time_as_millis(),
-                            "createUser": f"fuid_{user['userid']}",
-                            "createUserName": f"fusername_{user['userid']}",
+                            "createUser": user.userid,
+                            "createUserName": user.username,
                             "firstCreate": False,
                             "homeId": home_id,
                             "name": f"My Home ({index})",
@@ -88,13 +88,14 @@ async def _handle_home_list(request: Request) -> Response:
 async def _handle_home_create(request: Request) -> Response:
     """Home create."""
     # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_home_create !!!")
     json_body: dict[str, Any] = json.loads(await request.text())
     token = request.headers.get("authorization")
     name = json_body.get("name")
     if token is not None:
         user_id = db.user_id_by_token(token.split(" ")[1])
         if user_id is not None:
-            db.user_add_home_id(user_id, uuid.uuid4().hex)
+            db.user_add_home(user_id, uuid.uuid4().hex)
             _LOGGER.debug(f"Create :: {name}")
     return web.json_response({"code": 0, "message": "success"})
 
@@ -102,6 +103,7 @@ async def _handle_home_create(request: Request) -> Response:
 async def _handle_home_update(request: Request) -> Response:
     """Home update."""
     # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_home_update !!!")
     json_body = json.loads(await request.text())
     homeId = json_body.get("homeId")  # pylint: disable=invalid-name
     name = json_body.get("name")
@@ -112,11 +114,12 @@ async def _handle_home_update(request: Request) -> Response:
 async def _handle_home_delete(request: Request) -> Response:
     """Home delete."""
     # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_home_delete !!!")
     json_body = json.loads(await request.text())
     home_id = json_body.get("homeId")
     user = db.user_by_home_id(home_id)
     if user is not None:
-        db.user_remove_home_id(user.get("userid", ""), home_id)
+        db.user_remove_home(user.userid, home_id)
     _LOGGER.debug(f"Delete :: {home_id}")
     return web.json_response({"code": 0, "message": "success"})
 
@@ -124,6 +127,7 @@ async def _handle_home_delete(request: Request) -> Response:
 async def _handle_member_list(request: Request) -> Response:
     """Member list."""
     # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_member_list !!!")
     try:
         home_id = request.query.get("homeId", bumper_isc.HOME_ID)
         user = db.user_by_home_id(home_id)
@@ -136,13 +140,13 @@ async def _handle_member_list(request: Request) -> Response:
                     "data": [
                         {
                             "createTime": utils.get_current_time_as_millis(),
-                            "id": f"fuid_{user['userid']}",
+                            "id": user.userid,
                             "isAdmin": 2,
                             "name": "null@null.com",
                             "roleId": "",
                             "roleName": "",
                             "status": 1,
-                            "uid": f"fuid_{user['userid']}",
+                            "uid": user.userid,
                         }
                     ],
                     "message": "success",
@@ -156,6 +160,7 @@ async def _handle_member_list(request: Request) -> Response:
 async def _handle_device_move(request: Request) -> Response:
     """Device move."""
     # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_device_move !!!")
     post_body = json.loads(await request.text())
     did = post_body.get("did")
     mid = post_body.get("mid")

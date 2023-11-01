@@ -13,10 +13,6 @@ class LogHelper:
 
     def __init__(self, logging_verbose: int = bumper_isc.bumper_verbose, logging_level: str = bumper_isc.bumper_level) -> None:
         """Log Helper init."""
-        self.update(logging_verbose=logging_verbose, logging_level=logging_level)
-
-    def update(self, logging_verbose: int = bumper_isc.bumper_verbose, logging_level: str = bumper_isc.bumper_level) -> None:
-        """Log Helper updater."""
         # configure logger for requested verbosity
         log_format: str = "%(message)s"
         if logging_verbose >= 5:
@@ -36,24 +32,29 @@ class LogHelper:
         elif logging_verbose == 1:
             log_format = "[%(asctime)s] - %(message)s"
 
-        # streamHandler = logging.StreamHandler(sys.stdout)
-        # streamHandler.setFormatter(logging.Formatter(log_format))
+        self._clean_logs(logging_level)
+        root_logger = logging.getLogger("root")
 
+        root_handler = logging.StreamHandler()
+        root_handler.setFormatter(logging.Formatter(log_format))
+
+        # root_logger.addHandler(root_handler)
+        # root_logger.setLevel(logging.getLevelName(logging_level))
+
+        # add colored logs
+        coloredlogs.install(
+            level=logging.getLevelName(logging_level),
+            fmt=log_format,
+            logger=root_logger,
+            stream=sys.stdout,
+        )
+
+    def _clean_logs(self, logging_level: str = bumper_isc.bumper_level) -> None:
         for logger_name in [logging.getLogger()] + [logging.getLogger(name) for name in logging.getLogger().manager.loggerDict]:
             for handler in logger_name.handlers:
                 logger_name.removeHandler(handler)
-
-            # # define new base stream handler and log level
-            # logger_name.addHandler(streamHandler)
-            # logger_name.setLevel(logging.getLevelName(logging_level))
-
-            # add colored logs
-            coloredlogs.install(
-                level=logging.getLevelName(logging_level),
-                fmt=log_format,
-                logger=logger_name,
-                stream=sys.stdout,
-            )
+            # for filter in logger_name.filters:
+            #     logger_name.removeFilter(filter)
 
             if logging_level == "INFO" and logger_name.name.startswith("aiohttp.access"):
                 logger_name.setLevel(logging.DEBUG)
@@ -74,6 +75,3 @@ class AioHttpFilter(logging.Filter):
             record.levelno = 10
             record.levelname = "DEBUG"
         return bool(record.levelno == 10 and logging.getLogger("confserver").getEffectiveLevel() == 10)
-
-
-logHelper = LogHelper()

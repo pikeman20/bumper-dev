@@ -45,7 +45,7 @@ async def _handle_lg_log(request: Request) -> Response:
             raise Exception("'bumper.mqtt_helperbot' is None")
 
         json_body: dict[str, Any] = json.loads(await request.text())
-        did: str | None = json_body.get("did", None)
+        did: str | None = json_body.get("did")
 
         if did is None:
             _LOGGER.error("No DID specified :: connected to MQTT")
@@ -75,7 +75,7 @@ async def _handle_lg_log(request: Request) -> Response:
                 _LOGGER.debug(f"Bot Response - {body}")
                 try:
                     logs = []
-                    if body.get("resp", None) is None:
+                    if body.get("resp") is None:
                         _LOGGER.warning(f"lg logs return non 'resp': {json.dumps(body)}")
                     else:
                         logs_root: Element = ET.fromstring(body.get("resp"))

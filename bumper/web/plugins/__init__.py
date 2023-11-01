@@ -6,14 +6,9 @@ from collections.abc import Iterable
 from glob import glob
 from os.path import dirname, isfile, join
 from types import ModuleType
-from typing import Any
 
 from aiohttp import web
-from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
-
-from bumper.utils import utils
-from bumper.web import models
 
 
 class WebserverPlugin:
@@ -72,15 +67,3 @@ def add_plugins(app: web.Application) -> None:
         if not obj.__name__.startswith(plugin_module_name):
             continue
         _add_routes(app, obj, plugin_module_name)
-
-
-def get_success_response(data: Any) -> Response:
-    """Get success response with provided data."""
-    body = {
-        "code": models.RETURN_API_SUCCESS,
-        "data": data,
-        "msg": "The operation was successful",
-        "success": True,
-        "time": utils.get_current_time_as_millis(),
-    }
-    return web.json_response(body)

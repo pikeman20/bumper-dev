@@ -1,4 +1,5 @@
 """Neng plugin module."""
+import logging
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -7,6 +8,8 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from .. import WebserverPlugin
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class NengPlugin(WebserverPlugin):
@@ -92,12 +95,14 @@ async def _handle_read(_: Request) -> Response:
 async def _handle_v2_message_push(_: Request) -> Response:
     # EcoVacs Home
     # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_v2_message_push !!!")
     return web.json_response({"code": 0, "data": "success", "message": ""})
 
 
 async def _handle_v3_message_push_status(_: Request) -> Response:
     # EcoVacs Home
     # TODO: check what's needed to be implemented
+    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_v3_message_push_status !!!")
     # NOTE: devices has a list with dict of did,msgPushStatus,nickName
     # NOTE: uid is as userid in header. not implemented
     return web.json_response(

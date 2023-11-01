@@ -16,8 +16,9 @@ from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
+from bumper.web.response_utils import get_success_response
 
-from ... import WebserverPlugin, get_success_response
+from ... import WebserverPlugin
 from . import BASE_URL
 
 _LOGGER = logging.getLogger(__name__)
@@ -150,7 +151,8 @@ async def _handle_get_config(request: Request) -> Response:
         data: list[dict[str, str]] = []
         for key in request.query["keys"].split(","):
             if key == "PUBLIC.KEY.CONFIG":
-                # TODO: not sure if this is what is needed
+                # TODO: check what's needed to be implemented, not sure if this is what is needed
+                _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_get_config/PUBLIC.KEY.CONFIG !!!")
                 with open(bumper_isc.server_cert, "rb") as cert_file:
                     cert_data = cert_file.read()
                 cert = x509.load_pem_x509_certificate(cert_data, default_backend())
@@ -162,13 +164,14 @@ async def _handle_get_config(request: Request) -> Response:
                 data.append({"key": key, "value": '{"needVerify":"N"}'})
 
             elif key == "OPEN.APP.CERTIFICATE.CONFIG":
-                # data.append({"key": key, "value": '{"ISO27001":"ENABLED","TUV":"ENABLED"}'})
-                data.append({"key": key, "value": '{"ISO27001":"DISABLED","TUV":"DISABLED"}'})
+                data.append({"key": key, "value": '{"ISO27001":"ENABLED","TUV":"ENABLED"}'})
+                # data.append({"key": key, "value": '{"ISO27001":"DISABLED","TUV":"DISABLED"}'})
 
             elif key == "USER.DATA.COLLECTION":
-                data.append({"key": key, "value": "Y"})
+                data.append({"key": key, "value": "N"})
 
             else:
+                _LOGGER.warning(f"NEW CONFIG KEY :: {key} :: needs further investigation")
                 data.append({"key": key, "value": "Y"})
 
         return get_success_response(data)
@@ -190,7 +193,7 @@ async def _handle_get_user_config(request: Request) -> Response:
                     "saTraceConfig": {
                         "collectionStatus": "ENABLED",
                         "isTrace": "Y",
-                        "saUserId": f"fusername_{user['userid']}",
+                        "saUserId": user.userid,
                         "serverUrl": "https://sa-eu-datasink.ecovacs.com/sa?project=production",
                     }
                 }

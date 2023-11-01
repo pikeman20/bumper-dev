@@ -171,7 +171,7 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
         "auth": {
             "token": "us_52cb21fef8e547f38f4ec9a699a5d77e",
             "resource": "IOSF53D07BA",
-            "userid": "fuid_tmpuser",
+            "userid": "testuser",
             "with": "users",
             "realm": "ecouser.net",
         },
@@ -212,7 +212,7 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
         "auth": {
             "token": "us_52cb21fef8e547f38f4ec9a699a5d77e",
             "resource": "IOSF53D07BA",
-            "userid": "fuid_tmpuser",
+            "userid": "testuser",
             "with": "users",
             "realm": "ecouser.net",
         },
@@ -242,7 +242,7 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
         "auth": {
             "token": "us_52cb21fef8e547f38f4ec9a699a5d77e",
             "resource": "IOSF53D07BA",
-            "userid": "fuid_tmpuser",
+            "userid": "testuser",
             "with": "users",
             "realm": "ecouser.net",
         },

@@ -81,7 +81,8 @@ class WebServer:
                     web.post("/newauth.do", self._handle_new_auth),
                     web.post("/sa", self._handle_sa),
                     web.get("/config/Android.conf", self._handle_config_android_conf),
-                    web.get("/list_routes", self._handle_list_routes),
+                    web.get("/data_collect/upload/generalData", self._handle_data_collect),
+                    web.get("/list_routes", self._handle_list_routes),  # NOTE: for dev to check which api's are implemented
                 ]
             )
             if bumper_isc.DEBUG_LOGGING_API_ROUTE is True:
@@ -117,7 +118,7 @@ class WebServer:
 
                 await site.start()
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
             raise e
 
     async def shutdown(self) -> None:
@@ -129,7 +130,7 @@ class WebServer:
             self._runners.clear()
             await self._app.shutdown()
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
             raise e
 
     async def _handle_base(self, request: Request) -> Response:
@@ -169,7 +170,7 @@ class WebServer:
             }
             return aiohttp_jinja2.render_template("home.jinja2", request, context=context)
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
         raise HTTPInternalServerError
 
     async def _restart_helper_bot(self) -> None:
@@ -200,7 +201,7 @@ class WebServer:
                 return web.json_response({"status": "complete"})
             return web.json_response({"status": "invalid service"})
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
         raise HTTPInternalServerError
 
     async def _handle_remove_bot(self, request: Request) -> Response:
@@ -211,7 +212,7 @@ class WebServer:
                 return web.json_response({"status": "failed to remove bot"})
             return web.json_response({"status": "successfully removed bot"})
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
         raise HTTPInternalServerError
 
     async def _handle_remove_client(self, request: Request) -> Response:
@@ -222,7 +223,7 @@ class WebServer:
                 return web.json_response({"status": "failed to remove client"})
             return web.json_response({"status": "successfully removed client"})
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
         raise HTTPInternalServerError
 
     async def _handle_lookup(self, request: Request) -> Response:
@@ -254,7 +255,7 @@ class WebServer:
             return web.json_response({})
 
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
         raise HTTPInternalServerError
 
     async def _handle_new_auth(self, request: Request) -> Response:
@@ -273,7 +274,7 @@ class WebServer:
                 }
             )
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
         raise HTTPInternalServerError
 
     async def _handle_sa(self, request: Request) -> Response:
@@ -292,11 +293,12 @@ class WebServer:
                     _LOGGER.info(decompressed_data)
             return web.json_response(None)
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
         raise HTTPInternalServerError
 
     async def _handle_config_android_conf(self, _: Request) -> Response:
         # TODO: check what's needed to be implemented
+        _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_config_android_conf !!!")
         try:
             return web.json_response(
                 {
@@ -305,7 +307,16 @@ class WebServer:
                 }
             )
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, None), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+        raise HTTPInternalServerError
+
+    async def _handle_data_collect(self, _: Request) -> Response:
+        # TODO: check what's needed to be implemented
+        _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_data_collect !!!")
+        try:
+            return web.json_response(None)
+        except Exception as e:
+            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
         raise HTTPInternalServerError
 
     async def _handle_proxy(self, request: Request) -> Response:
@@ -380,7 +391,7 @@ class WebServer:
                 if isinstance(route, ResourceRoute):
                     resource = route.resource
                     if resource is not None:
-                        path: Any | None = resource.get_info().get("formatter", None) or resource.get_info().get("path", None)
+                        path: Any | None = resource.get_info().get("formatter") or resource.get_info().get("path")
                         routes.append(
                             {
                                 "method": route.method,
