@@ -6,6 +6,8 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
+from bumper.web.response_utils import response_success_v3
+
 from .. import WebserverPlugin
 
 
@@ -31,18 +33,14 @@ class RappPlugin(WebserverPlugin):
 
 async def _handle_map_get(_: Request) -> Response:
     """Map get."""
-    return web.json_response(
+    return response_success_v3(
         {
-            "code": 0,
-            "data": {
-                "data": {"name": "My Home"},
-                "tag": None,
-            },
-            "message": "success",
+            "data": {"name": "My Home"},
+            "tag": None,
         }
     )
 
 
 async def _handle_user_data_del(_: Request) -> Response:
     """Map get."""
-    return web.json_response({"code": 0, "data": None, "message": "success"})
+    return response_success_v3(None)

@@ -152,7 +152,7 @@ async def _handle_get_config(request: Request) -> Response:
         for key in request.query["keys"].split(","):
             if key == "PUBLIC.KEY.CONFIG":
                 # TODO: check what's needed to be implemented, not sure if this is what is needed
-                _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_get_config/PUBLIC.KEY.CONFIG !!!")
+                utils.default_log_warn_not_impl("_handle_get_config/PUBLIC.KEY.CONFIG")
                 with open(bumper_isc.server_cert, "rb") as cert_file:
                     cert_data = cert_file.read()
                 cert = x509.load_pem_x509_certificate(cert_data, default_backend())
@@ -164,8 +164,8 @@ async def _handle_get_config(request: Request) -> Response:
                 data.append({"key": key, "value": '{"needVerify":"N"}'})
 
             elif key == "OPEN.APP.CERTIFICATE.CONFIG":
-                data.append({"key": key, "value": '{"ISO27001":"ENABLED","TUV":"ENABLED"}'})
-                # data.append({"key": key, "value": '{"ISO27001":"DISABLED","TUV":"DISABLED"}'})
+                # data.append({"key": key, "value": '{"ISO27001":"ENABLED","TUV":"ENABLED"}'})
+                data.append({"key": key, "value": '{"ISO27001":"DISABLED","TUV":"DISABLED"}'})
 
             elif key == "USER.DATA.COLLECTION":
                 data.append({"key": key, "value": "N"})

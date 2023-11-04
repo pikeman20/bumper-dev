@@ -12,9 +12,6 @@ from bumper.mqtt.server import MQTTBinding, MQTTServer
 from bumper.utils import db
 from tests import HOST, MQTT_PORT
 
-# TODO: current not understand how this works with he logger defined in utils,
-#       LogCapture not checks the stdout logs, that's why check_present is commented
-
 
 async def test_helperbot_message(mqtt_client: Client):
     with LogCapture() as log:
@@ -28,16 +25,16 @@ async def test_helperbot_message(mqtt_client: Client):
 
         await asyncio.sleep(0.1)
 
-        # log.check_present(
-        #     (
-        #         "mqtt_messages",
-        #         "DEBUG",
-        #         (
-        #             "Received Broadcast :: Topic: iot/atr/DustCaseST/bot_serial/ls1ok3/wC3g/x"
-        #             " :: Message: <ctl ts='1547822804960' td='DustCaseST' st='0'/>"
-        #         ),
-        #     )
-        # )  # Check broadcast message was logged
+        log.check_present(
+            (
+                "bumper.mqtt.server.messages",
+                "DEBUG",
+                (
+                    "Received Broadcast :: Topic: iot/atr/DustCaseST/bot_serial/ls1ok3/wC3g/x"
+                    " :: Message: <ctl ts='1547822804960' td='DustCaseST' st='0'/>"
+                ),
+            )
+        )  # Check broadcast message was logged
         log.clear()
         await mqtt_helperbot.disconnect()
 
@@ -51,16 +48,16 @@ async def test_helperbot_message(mqtt_client: Client):
 
         await asyncio.sleep(0.1)
 
-        # log.check_present(
-        #     (
-        #         "mqtt_messages",
-        #         "DEBUG",
-        #         (
-        #             "Send Command :: Topic: iot/p2p/GetWKVer/helperbot/bumper/helperbot/bot_serial/ls1ok3/wC3g/q/iCmuqp/j"
-        #             " :: Message: {}"
-        #         ),
-        #     )
-        # )  # Check send command message was logged
+        log.check_present(
+            (
+                "bumper.mqtt.server.messages",
+                "DEBUG",
+                (
+                    "Send Command :: Topic: iot/p2p/GetWKVer/helperbot/bumper/helperbot/bot_serial/ls1ok3/wC3g/q/iCmuqp/j"
+                    " :: Message: {}"
+                ),
+            )
+        )  # Check send command message was logged
         log.clear()
         await mqtt_helperbot.disconnect()
 
@@ -74,16 +71,16 @@ async def test_helperbot_message(mqtt_client: Client):
 
         await asyncio.sleep(0.1)
 
-        # log.check_present(
-        #     (
-        #         "mqtt_messages",
-        #         "DEBUG",
-        #         (
-        #             "Received Response :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/iCmuqp/j"
-        #             ' :: Message: {"ret":"ok","ver":"0.13.5"}'
-        #         ),
-        #     )
-        # )  # Check received response message was logged
+        log.check_present(
+            (
+                "bumper.mqtt.server.messages",
+                "DEBUG",
+                (
+                    "Received Response :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/iCmuqp/j"
+                    ' :: Message: {"ret":"ok","ver":"0.13.5"}'
+                ),
+            )
+        )  # Check received response message was logged
         log.clear()
         await mqtt_helperbot.disconnect()
 
@@ -97,16 +94,16 @@ async def test_helperbot_message(mqtt_client: Client):
 
         await asyncio.sleep(0.2)
 
-        # log.check_present(
-        #     (
-        #         "mqtt_messages",
-        #         "DEBUG",
-        #         (
-        #             "Received Message :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/TESTBAD/bumper/helperbot/p/iCmuqp/j"
-        #             " :: Message: test"
-        #         ),
-        #     )
-        # )  # Check received message was logged
+        log.check_present(
+            (
+                "bumper.mqtt.server.messages",
+                "DEBUG",
+                (
+                    "Received Message :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/TESTBAD/bumper/helperbot/p/iCmuqp/j"
+                    " :: Message: test"
+                ),
+            )
+        )  # Check received message was logged
         log.clear()
         await mqtt_helperbot.disconnect()
 
@@ -120,16 +117,16 @@ async def test_helperbot_message(mqtt_client: Client):
 
         await asyncio.sleep(0.1)
 
-        # log.check_present(
-        #     (
-        #         "mqtt_messages",
-        #         "DEBUG",
-        #         (
-        #             "Received Broadcast :: Topic: iot/atr/errors/bot_serial/ls1ok3/wC3g/x"
-        #             " :: Message: <ctl ts='1560904925396' td='errors' old='' new='110'/>"
-        #         ),
-        #     )
-        # )  # Check received message was logged
+        log.check_present(
+            (
+                "bumper.mqtt.server.messages",
+                "DEBUG",
+                (
+                    "Received Broadcast :: Topic: iot/atr/errors/bot_serial/ls1ok3/wC3g/x"
+                    " :: Message: <ctl ts='1560904925396' td='errors' old='' new='110'/>"
+                ),
+            )
+        )  # Check received message was logged
         log.clear()
         await mqtt_helperbot.disconnect()
 
@@ -336,7 +333,7 @@ async def test_mqttserver():
 
             log.check_present(
                 (
-                    "mqtt_server",
+                    "bumper.mqtt.server",
                     "INFO",
                     "File Authentication Failed :: Username: test-client - ClientID: test-file-auth",
                 ),
@@ -351,7 +348,7 @@ async def test_mqttserver():
 
             log.check_present(
                 (
-                    "mqtt_server",
+                    "bumper.mqtt.server",
                     "INFO",
                     "File Authentication Failed :: No Entry for :: Username: test-client-noexist - ClientID: test-file-auth",
                 ),

@@ -15,6 +15,8 @@ if TYPE_CHECKING:
 class Config:
     """Config class."""
 
+    ECOVACS_DEFAULT_COUNTRY: str = "us"
+
     # ww: 52.53.84.66 | eu: 3.68.172.231
     ECOVACS_UPDATE_SERVER: str = "3.68.172.231"
     ECOVACS_UPDATE_SERVER_PORT: int = 8005
@@ -41,20 +43,20 @@ class Config:
     # Logging
     bumper_level: str = (os.environ.get("BUMPER_DEBUG_LEVEL") or "INFO").upper()
     bumper_verbose: int = int(os.environ.get("BUMPER_DEBUG_VERBOSE") or 1)
-    DEBUG_LOGGING_API_REQUEST: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_API_REQUEST")) or False
-    DEBUG_LOGGING_API_REQUEST_MISSING: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_API_REQUEST_MISSING")) or False
-    DEBUG_LOGGING_XMPP_REQUEST: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST")) or False
-    DEBUG_LOGGING_XMPP_REQUEST_REFACTOR: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST_REFACTOR")) or False
-    DEBUG_LOGGING_XMPP_RESPONSE: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_XMPP_RESPONSE")) or False
-    DEBUG_LOGGING_API_ROUTE: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_API_ROUTE")) or False
-    DEBUG_LOGGING_SA_RESULT: bool = utils.strtobool(os.environ.get("DEBUG_LOGGING_SA_RESULT")) or False
+    DEBUG_LOGGING_API_REQUEST: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_API_REQUEST")) or False
+    DEBUG_LOGGING_API_REQUEST_MISSING: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_API_REQUEST_MISSING")) or False
+    DEBUG_LOGGING_XMPP_REQUEST: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST")) or False
+    DEBUG_LOGGING_XMPP_REQUEST_REFACTOR: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST_REFACTOR")) or False
+    DEBUG_LOGGING_XMPP_RESPONSE: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_RESPONSE")) or False
+    DEBUG_LOGGING_API_ROUTE: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_API_ROUTE")) or False
+    DEBUG_LOGGING_SA_RESULT: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_SA_RESULT")) or False
 
     # Other
     USE_AUTH: bool = False
     TOKEN_VALIDITY_SECONDS: int = 3600  # 1 hour
     OAUTH_VALIDITY_DAYS: int = 15
-    BUMPER_PROXY_MQTT: bool = utils.strtobool(os.environ.get("BUMPER_PROXY_MQTT")) or False
-    BUMPER_PROXY_WEB: bool = utils.strtobool(os.environ.get("BUMPER_PROXY_WEB")) or False
+    BUMPER_PROXY_MQTT: bool = utils.str_to_bool(os.environ.get("BUMPER_PROXY_MQTT")) or False
+    BUMPER_PROXY_WEB: bool = utils.str_to_bool(os.environ.get("BUMPER_PROXY_WEB")) or False
 
     # Proxy
     PROXY_NAMESERVER: list[str] = ["1.1.1.1", "8.8.8.8"]

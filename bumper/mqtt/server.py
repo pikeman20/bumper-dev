@@ -16,9 +16,9 @@ from bumper.mqtt import proxy as mqtt_proxy
 from bumper.utils import db, dns, utils
 from bumper.utils.settings import config as bumper_isc
 
-_LOGGER = logging.getLogger("mqtt_server")
-_LOGGER_MESSAGES = logging.getLogger("mqtt_messages")
-_LOGGER_PROXY = logging.getLogger("mqtt_proxy")
+_LOGGER = logging.getLogger(__name__)
+_LOGGER_MESSAGES = logging.getLogger(f"{__name__}.messages")
+_LOGGER_PROXY = logging.getLogger(f"{__name__}.proxy")
 
 
 def _log__helperbot_message(custom_log_message: str, topic: str, data: str) -> None:
@@ -297,17 +297,20 @@ class BumperMQTTServerPlugin:
         self._set_client_connected(client_id, True)
 
     def _set_client_connected(self, client_id: str, connected: bool) -> None:
-        didsplit = str(client_id).split("@")
+        try:
+            didsplit = str(client_id).split("@")
 
-        bot = db.bot_get(didsplit[0])
-        if bot is not None:
-            db.bot_set_mqtt(bot.get("did"), connected)
-            return
+            bot = db.bot_get(didsplit[0])
+            if bot is not None:
+                db.bot_set_mqtt(bot.get("did"), connected)
+                return
 
-        clientresource = didsplit[1].split("/")[1]
-        client = db.client_get(clientresource)
-        if client:
-            db.client_set_mqtt(client["resource"], connected)
+            clientresource = didsplit[1].split("/")[1]
+            client = db.client_get(clientresource)
+            if client:
+                db.client_set_mqtt(client["resource"], connected)
+        except Exception as e:
+            _LOGGER.error(e)
 
     async def on_broker_message_received(self, message: IncomingApplicationMessage, client_id: str) -> None:
         """On message received."""
@@ -315,7 +318,7 @@ class BumperMQTTServerPlugin:
             topic = message.topic
             topic_split = str(topic).split("/")
             data_decoded = message.data
-            if isinstance(message.data, bytes):
+            if isinstance(message.data, (bytearray, bytes)):
                 data_decoded = message.data.decode("utf-8")
 
             if topic_split[6] == "helperbot":

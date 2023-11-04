@@ -11,7 +11,7 @@ from tinydb.table import Document
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import models
 
-_LOGGER = logging.getLogger("db")
+_LOGGER = logging.getLogger(__name__)
 
 
 TABLE_USERS = "users"
@@ -241,7 +241,6 @@ def token_by_auth_code(auth_code: str) -> Document | None:
 
 def check_auth_code(uid: str, auth_code: str) -> bool:
     """Check authcode."""
-    _LOGGER.debug(f"Checking for authcode: {auth_code}")
     with _db_get() as db:
         tokens = db.table(TABLE_TOKENS)
         return bool(tokens.contains((User_Query.authcode == auth_code) & (User_Query.userid == uid)))
@@ -249,7 +248,6 @@ def check_auth_code(uid: str, auth_code: str) -> bool:
 
 def login_by_it_token(auth_code: str) -> dict[str, Any] | None:
     """Login by token."""
-    _LOGGER.debug(f"Checking for authcode: {auth_code}")
     with _db_get() as db:
         tokens = db.table(TABLE_TOKENS)
         t_auth = tokens.get(User_Query.authcode == auth_code)

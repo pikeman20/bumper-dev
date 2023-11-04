@@ -1,4 +1,4 @@
-"""Ota plugin module."""
+"""Pim consumable plugin module."""
 import logging
 from collections.abc import Iterable
 
@@ -9,15 +9,14 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
-from bumper.web.response_utils import response_success_v6
-
-from .. import WebserverPlugin
+from bumper.web.plugins import WebserverPlugin
+from bumper.web.response_utils import response_success_v7
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class OtaPlugin(WebserverPlugin):
-    """Ota plugin."""
+class ConsumablePlugin(WebserverPlugin):
+    """Consumable plugin."""
 
     @property
     def routes(self) -> Iterable[AbstractRouteDef]:
@@ -25,19 +24,18 @@ class OtaPlugin(WebserverPlugin):
         return [
             web.route(
                 "*",
-                "/ota/products/wukong/class/{class}/firmware/latest.json",
-                _handle_products_firmware_latest,
+                "/consumable/getPurchaseUrl",
+                _handle_get_purchase_url,
             ),
         ]
 
 
-async def _handle_products_firmware_latest(_: Request) -> Response:
+async def _handle_get_purchase_url(_: Request) -> Response:
+    """Get purchas url."""
     # TODO: check what's needed to be implemented
-    utils.default_log_warn_not_impl("_handle_products_firmware_latest")
+    utils.default_log_warn_not_impl("_handle_get_exp_by_scene")
     try:
-        # device_class = request.match_info.get("class")
-        # did = request.query.get("did")
-        return response_success_v6(None)
+        return response_success_v7([])
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError

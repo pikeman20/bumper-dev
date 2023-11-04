@@ -19,7 +19,7 @@ from websockets.exceptions import InvalidHandshake, InvalidURI
 
 from bumper.utils.settings import config as bumper_isc
 
-_LOGGER = logging.getLogger("mqtt_proxy")
+_LOGGER = logging.getLogger(__name__)
 
 # iot/p2p/[command]]/[sender did]/[sender class]]/[sender resource]
 # /[receiver did]/[receiver class]]/[receiver resource]/[q|p/[request id/j

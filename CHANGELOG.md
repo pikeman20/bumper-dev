@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         - `homed/home/list`
         - `homed/home/update`
         - `homed/member/list`
-        - `microservice-recomend/userReminderResult`
+        - `microservice-recomend/userReminderResult/`
         - `neng/message/read`
         - `neng/v2/message/push`
         - `neng/v3/message/latest_by_did`
@@ -54,10 +54,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         - `neng/v3/shareMsg/hasUnreadMsg`
         - `ota/products/wukong/class/(.*?)/firmware/latest.json`
         - `pim/api/pim/file/get`
+        - `pim/consumable/getPurchaseUrl`
         - `pim/voice/get`
         - `pim/voice/getLanuages`
         - `rapp/sds/user/data/del`
         - `sds/baidu/audio/getcred`
+        - `dln/api/log/clean_result/del`
         - `dln/api/log/clean_result/list`
       - **v1**
         - `/user/getMyUserMenuInfo`
@@ -70,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         - `help/getProductHelpIndex`
         - `intl/member/basicInfo`
         - `intl/member/signStatus`
+        - `member/getExpByScene`
         - `osmall/getCountryConfig`
         - `osmall/index/getBannerList`
         - `osmall/index/getConfNetRobotPartsGoods`

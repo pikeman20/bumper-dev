@@ -1,8 +1,21 @@
 """Utils module."""
 import json
+import logging
 import os
 import re
 from datetime import datetime
+
+_LOGGER = logging.getLogger(__name__)
+
+# ******************************************************************************
+
+
+def default_log_warn_not_impl(func: str) -> None:
+    """Get default log warn for not implemented."""
+    _LOGGER.debug(f"!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: {func} !!!")
+
+
+# ******************************************************************************
 
 
 def default_exception_str_builder(e: Exception, info: str | None = None) -> str:
@@ -22,17 +35,12 @@ def get_current_time_as_millis() -> int:
     return convert_to_millis(datetime.utcnow().timestamp())
 
 
-def strtobool(strbool: str | int | bool | None) -> bool:
+def str_to_bool(value: str | int | bool | None) -> bool:
     """Convert str to bool."""
-    return str(strbool).lower() in ["true", "1", "t", "y", "on", "yes"]
+    return str(value).lower() in ["true", "1", "t", "y", "on", "yes"]
 
 
-def check_url_not_used(url: str) -> bool:
-    """Check if a url is not in the know api list, used in the middleware for debug."""
-    for pattern in _FIND_NOT_USED_API_REQUEST:
-        if re.search(pattern, url):
-            return True
-    return False
+# ******************************************************************************
 
 
 def get_dc_code(area_code: str) -> str:
@@ -47,6 +55,17 @@ def get_area_code_map() -> dict[str, str]:
         if isinstance(res, dict):
             return res
     return {}
+
+
+# ******************************************************************************
+
+
+def check_url_not_used(url: str) -> bool:
+    """Check if a url is not in the know api list, used in the middleware for debug."""
+    for pattern in _FIND_NOT_USED_API_REQUEST:
+        if re.search(pattern, url):
+            return True
+    return False
 
 
 _FIND_NOT_USED_API_REQUEST = [
@@ -75,7 +94,7 @@ _FIND_NOT_USED_API_REQUEST = [
     r"/api/homed/member/list",
     r"/api/iot/devmanager.do",
     r"/api/lg/log.do",
-    r"/api/microservice-recomend/userReminderResult",
+    r"/api/microservice-recomend/userReminderResult/",
     r"/api/neng/message/getlist",
     r"/api/neng/message/getShareMsgs",
     r"/api/neng/message/hasUnreadMsg",
@@ -88,6 +107,7 @@ _FIND_NOT_USED_API_REQUEST = [
     r"/api/neng/v3/shareMsg/hasUnreadMsg",
     r"/api/ota/products/wukong/class/(.*?)/firmware/latest.json",
     r"/api/pim/api/pim/file/get/(.*?)",
+    r"/api/pim/consumable/getPurchaseUrl",
     r"/api/pim/dictionary/getErrDetail",
     r"/api/pim/file/get/(.*?)",
     r"/api/pim/product/getConfigGroups",
@@ -100,6 +120,7 @@ _FIND_NOT_USED_API_REQUEST = [
     r"/api/rapp/sds/user/data/map/get",
     r"/api/sds/baidu/audio/getcred",
     r"/api/users/user.do",
+    r"/app/dln/api/log/clean_result/del",
     r"/app/dln/api/log/clean_result/list",
     r"/bot/remove/(.*?)",
     r"/client/remove/(.*?)",
@@ -133,6 +154,7 @@ _FIND_NOT_USED_API_REQUEST = [
     r"/v1/private/(.*?)/help/getProductHelpIndex",
     r"/v1/private/(.*?)/intl/member/basicInfo",
     r"/v1/private/(.*?)/intl/member/signStatus",
+    r"/v1/private/(.*?)/member/getExpByScene",
     r"/v1/private/(.*?)/message/getMsgList",
     r"/v1/private/(.*?)/message/hasUnreadMsg",
     r"/v1/private/(.*?)/osmall/getCountryConfig",

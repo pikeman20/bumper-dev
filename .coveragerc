@@ -5,3 +5,7 @@ source = bumper
 [report]
 omit =
     tests/*
+
+exclude_lines =
+    pragma: no cover
+    if TYPE_CHECKING:

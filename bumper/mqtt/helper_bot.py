@@ -13,7 +13,7 @@ from gmqtt.mqtt.constants import MQTTv311
 
 from bumper.utils import utils
 
-_LOGGER = logging.getLogger("helperbot")
+_LOGGER = logging.getLogger(__name__)
 HELPER_BOT_CLIENT_ID = "helperbot@bumper/helperbot"
 
 
@@ -67,17 +67,20 @@ class MQTTHelperBot:
             if self.is_connected is False:
                 await self.start()
 
+            payload_type = cmdjson.get("payloadType", "x")
+            payload = cmdjson.get("payload")
+
             topic = (
                 f"iot/p2p/{cmdjson['cmdName']}/helperbot/bumper/helperbot/{cmdjson['toId']}/"
-                f"{cmdjson['toType']}/{cmdjson['toRes']}/q/{request_id}/{cmdjson['payloadType']}"
+                f"{cmdjson['toType']}/{cmdjson['toRes']}/q/{request_id}/{payload_type}"
             )
 
-            if cmdjson["payloadType"] == "j":
-                payload = json.dumps(cmdjson["payload"])
+            if payload_type == "j":
+                payload = json.dumps(payload)
             else:
-                payload = str(cmdjson["payload"])
+                payload = str(payload)
 
-            command_dto = CommandDto(cmdjson["payloadType"])
+            command_dto = CommandDto(payload_type)
             self._commands[request_id] = command_dto
 
             _LOGGER.debug(f"Sending message :: topic={topic} :: payload={payload}")

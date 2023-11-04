@@ -6,13 +6,13 @@ from testfixtures import LogCapture
 
 import bumper
 from bumper.utils.settings import config as bumper_isc
-from bumper.utils.utils import strtobool
+from bumper.utils.utils import str_to_bool
 
 
 def test_strtobool():
-    assert strtobool("t") is True
-    assert strtobool("f") is False
-    assert strtobool(0) is False
+    assert str_to_bool("t") is True
+    assert str_to_bool("f") is False
+    assert str_to_bool(0) is False
 
 
 # TODO: current not understand how this works with he logger defined in utils,
@@ -32,11 +32,11 @@ async def test_start_stop(debug: bool):
         asyncio.create_task(bumper.start())
         await asyncio.sleep(0.1)
 
-        # log.check_present(("INFO", "bumper", "Starting Bumpers..."))
+        log.check_present(("bumper", "INFO", "Starting Bumpers..."))
 
         while True:
             try:
-                # log.check_present(("INFO", "bumper", "Bumper started successfully"))
+                # log.check_present(("bumper", "INFO", "Bumper started successfully"))
                 break
             except AssertionError:
                 pass
@@ -45,5 +45,5 @@ async def test_start_stop(debug: bool):
         log.clear()
 
         await asyncio.create_task(bumper.shutdown())
-        # log.check_present(("INFO", "bumper", "Shutting down..."), ("INFO", "bumper", "Shutdown complete!"))
+        # log.check_present(("bumper", "INFO", "Shutting down..."), ("bumper", "INFO", "Shutdown complete!"))
         assert bumper_isc.shutting_down is True

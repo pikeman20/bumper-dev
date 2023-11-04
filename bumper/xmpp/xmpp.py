@@ -14,8 +14,8 @@ import defusedxml.ElementTree as ET
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
 
-_LOGGER = logging.getLogger("xmpp_server")
-_LOGGER_CLIENT = logging.getLogger("xmpp_client")
+_LOGGER = logging.getLogger(__name__)
+_LOGGER_CLIENT = logging.getLogger(f"{__name__}.client")
 
 
 class XMPPServer:

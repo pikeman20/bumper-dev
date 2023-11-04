@@ -421,7 +421,7 @@ async def test_getProductIotMap(webserver_client):
     assert resp.status == 200
     text = await resp.text()
     jsonresp = json.loads(text)
-    assert jsonresp["code"] == RETURN_API_SUCCESS
+    assert jsonresp["code"] == 0
 
 
 async def test_pim_file(webserver_client):

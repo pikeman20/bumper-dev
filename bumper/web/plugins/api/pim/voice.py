@@ -8,6 +8,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.web.plugins import WebserverPlugin
+from bumper.web.response_utils import response_success_v3
 
 
 class VoicePlugin(WebserverPlugin):
@@ -39,46 +40,37 @@ async def _handle_get(request: Request) -> Response:
             language_name = voice.get("languageName", "English")
             break
 
-    return web.json_response(
-        {
-            "code": 0,
-            "msg": "success",
-            "voices": [
-                {
-                    "advertisementPhotoUrl": "",
-                    "desc": "",
-                    "downloadTimes": 65,
-                    "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61a8912cd302838d8898df9b",
-                    "id": "default",
-                    "isDefault": True,
-                    "languageName": language_name,
-                    "name": language_name,
-                    "needActive": False,
-                    "sampleVoiceUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61a8913a72e305f1cac11617",
-                    "sort": 401,
-                    "status": "valid",
-                    "support": ["yiko"],
-                    "tag": "",
-                    "voice": "65279265545c5fc089782ab8",  # pragma: allowlist secret
-                    "voiceLang": voice_lang,
-                    "voiceMd5": "27a816e229a0e0471703a244a7763f09",  # pragma: allowlist secret
-                    "voiceSize": 3823807,
-                    "voiceUrl": "https://portal-ww.ecouser.net/api/pim/voice/download/61a89146d30283475c98df9d",
-                }
-            ],
-        }
+    return response_success_v3(
+        [
+            {
+                "advertisementPhotoUrl": "",
+                "desc": "",
+                "downloadTimes": 65,
+                "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61a8912cd302838d8898df9b",
+                "id": "default",
+                "isDefault": True,
+                "languageName": language_name,
+                "name": language_name,
+                "needActive": False,
+                "sampleVoiceUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61a8913a72e305f1cac11617",
+                "sort": 401,
+                "status": "valid",
+                "support": ["yiko"],
+                "tag": "",
+                "voice": "65279265545c5fc089782ab8",  # pragma: allowlist secret
+                "voiceLang": voice_lang,
+                "voiceMd5": "27a816e229a0e0471703a244a7763f09",  # pragma: allowlist secret
+                "voiceSize": 3823807,
+                "voiceUrl": "https://portal-ww.ecouser.net/api/pim/voice/download/61a89146d30283475c98df9d",
+            }
+        ],
+        data_key="voices",
     )
 
 
 async def _handle_get_lanuages(_: Request) -> Response:
     """Get languages."""
-    return web.json_response(
-        {
-            "code": 0,
-            "msg": "success",
-            "voices": _get_voice_list(),
-        }
-    )
+    return response_success_v3(_get_voice_list(), data_key="voices")
 
 
 def _get_voice_list() -> list[dict]:

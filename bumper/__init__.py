@@ -13,7 +13,7 @@ from bumper.utils.settings import config as bumper_isc
 from bumper.web import server as server_web
 from bumper.xmpp import xmpp as server_xmpp
 
-_LOGGER = logging.getLogger("bumper")
+_LOGGER = logging.getLogger(__name__)
 
 
 async def start() -> None:

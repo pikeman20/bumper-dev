@@ -9,7 +9,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
-from bumper.web.response_utils import get_success_response_v3
+from bumper.web.response_utils import response_success_v6
 
 from .. import WebserverPlugin
 
@@ -25,7 +25,7 @@ class MicroserviceRecomendPlugin(WebserverPlugin):
         return [
             web.route(
                 "*",
-                "/microservice-recomend/userReminderResult",
+                "/microservice-recomend/userReminderResult/",
                 _handle_user_reminder_result,
             ),
         ]
@@ -33,9 +33,9 @@ class MicroserviceRecomendPlugin(WebserverPlugin):
 
 async def _handle_user_reminder_result(_: Request) -> Response:
     # TODO: check what's needed to be implemented
-    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_user_reminder_result !!!")
+    utils.default_log_warn_not_impl("_handle_user_reminder_result")
     try:
-        return get_success_response_v3(None)
+        return response_success_v6(None)
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError

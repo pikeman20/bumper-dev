@@ -11,6 +11,8 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
+from bumper.utils.settings import config as bumper_isc
+from bumper.web.response_utils import response_success_v5
 
 from .. import WebserverPlugin
 
@@ -35,7 +37,7 @@ class BasisPlugin(WebserverPlugin):
 async def _handle_get_by_area(request: Request) -> Response:
     """Get by area."""
     try:
-        area_code = request.query.get("area", "eu")
+        area_code = request.query.get("area", bumper_isc.ECOVACS_DEFAULT_COUNTRY).lower()
         code = 0
         data_str = "data"
         data: dict[str, Any] | str = {"dc": utils.get_dc_code(area_code)}
@@ -46,7 +48,7 @@ async def _handle_get_by_area(request: Request) -> Response:
             msg_list = '", "'.join(utils.get_area_code_map().keys())
             data = f'area: area must be one of the following: "{msg_list}"'
 
-        return web.json_response({"code": code, f"{data_str}": data})
+        return response_success_v5(data, code, data_str)
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError

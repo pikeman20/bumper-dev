@@ -9,7 +9,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
-from bumper.web.response_utils import get_success_response_v3
+from bumper.web.response_utils import response_success_v6
 
 from .. import WebserverPlugin
 
@@ -33,7 +33,7 @@ class SdsPlugin(WebserverPlugin):
 
 async def _handle(_: Request) -> Response:
     try:
-        return get_success_response_v3(None)
+        return response_success_v6(None)
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError

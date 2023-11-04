@@ -13,7 +13,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import auth_util
-from bumper.web.response_utils import get_error_response_v2
+from bumper.web.response_utils import response_error_v6, response_success_v9
 
 from .. import WebserverPlugin
 
@@ -47,6 +47,7 @@ async def _handle_user(request: Request) -> Response:
 
         todo = post_body.get("todo", "")
 
+        # NOTE: seams not anymore available
         if todo == "FindBest":
             service = post_body.get("service", "")
             if service == "EcoMsgNew":
@@ -54,11 +55,6 @@ async def _handle_user(request: Request) -> Response:
                 srv_port = bumper_isc.XMPP_LISTEN_PORT_TLS
                 _LOGGER.info(f"Announcing EcoMsgNew Server to bot as: {srv_ip}:{srv_port}")
                 body = web.json_response({"ip": srv_ip, "port": srv_port, "result": "ok"})
-                # TODO: check if below before was needed?!
-                # body = json.dumps({"ip": srv_ip, "port": srv_port, "result": "ok"})
-                # # NOTE: bot seems to be very picky about having no spaces, only way was with text
-                # body = body.replace(" ", "")
-
             elif service == "EcoUpdate":
                 srv_ip = bumper_isc.ECOVACS_UPDATE_SERVER
                 srv_port = bumper_isc.ECOVACS_UPDATE_SERVER_PORT
@@ -92,7 +88,7 @@ async def _handle_user(request: Request) -> Response:
 
         if todo == "GetAuthCode":
             # TODO: check what's needed to be implemented, which token is really needed and how to get correct
-            _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_user/GetAuthCode !!!")
+            utils.default_log_warn_not_impl("_handle_user/GetAuthCode")
             body = await auth_util.get_auth_code_v2(request)
 
         if todo == "GetDeviceList":
@@ -100,19 +96,19 @@ async def _handle_user(request: Request) -> Response:
 
         if todo == "SetDeviceNick":
             db.bot_set_nick(post_body.get("did"), post_body.get("nick"))
-            body = web.json_response({"result": "ok", "todo": "result"})
+            body = response_success_v9()
 
         if todo == "AddOneDevice":
             db.bot_set_nick(post_body.get("did"), post_body.get("nick"))
-            body = web.json_response({"result": "ok", "todo": "result"})
+            body = response_success_v9()
 
         if todo == "DeleteOneDevice":
             db.bot_remove(post_body["did"])
-            body = web.json_response({"result": "ok", "todo": "result"})
+            body = response_success_v9()
 
         if body is None:
             _LOGGER.error(f"todo is not know :: {todo}")
-            body = get_error_response_v2()
+            body = response_error_v6(todo)
         return body
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)

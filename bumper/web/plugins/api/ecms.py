@@ -9,8 +9,9 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
+from bumper.utils import utils
 from bumper.web.images import get_bot_image
-from bumper.web.response_utils import get_error_response_v2, get_success_response_v3
+from bumper.web.response_utils import response_success_v6
 
 from .. import WebserverPlugin
 
@@ -118,25 +119,25 @@ async def _handle_ad_res(_: Request) -> Response:
     #     "timeZone": 60
     # }
 
-    return get_success_response_v3([])
+    return response_success_v6([])
 
 
 async def _handle_hint(request: Request) -> Response:
     """Hint."""
     # TODO: check what's needed to be implemented
-    _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_hint !!!")
+    utils.default_log_warn_not_impl("_handle_hint")
     codes = request.query.get("codes", "").split(",")
     data = {}
     for code in codes:
         data[code] = True  # DEBUG: default saw only False
-    return get_success_response_v3(data)
+    return response_success_v6(data)
 
 
 async def _handle_resources(request: Request) -> Response:
     """Resources."""
     locations = request.query.get("locations", "")
     lang = request.query.get("lang", "en").lower()
-    data: list[dict[str, Any]] | None = None
+    data: list[dict[str, Any]] = []
 
     if locations == "home_manage_intro":
         data = []
@@ -168,14 +169,13 @@ async def _handle_resources(request: Request) -> Response:
                 "type": "svga",
             }
         ]
-    if data is not None:
-        return get_success_response_v3(data)
-    _LOGGER.error(f"locations is not know :: {locations}")
-    return get_error_response_v2()
+    if len(data) <= 0:
+        _LOGGER.error(f"locations is not know :: {locations}")
+    return response_success_v6(data)
 
 
 async def _handle_push_event(_: Request) -> Response:
     """Ad res."""
     # dataCategory = request.query.get("dataCategory", "Discover-Hint")
     # resourceId = request.query.get("resourceId", "Robot")
-    return get_success_response_v3("ok")
+    return response_success_v6("ok")

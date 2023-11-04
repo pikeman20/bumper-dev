@@ -12,7 +12,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
-from bumper.web import models
+from bumper.web.response_utils import response_error_v7
 
 from .. import WebserverPlugin
 
@@ -36,7 +36,6 @@ class DimPlugin(WebserverPlugin):
 
 async def _handle_dev_manager(request: Request) -> Response:
     """Dev Manager."""
-    random_id = "".join(random.sample(string.ascii_letters, 6))
     try:
         if bumper_isc.mqtt_helperbot is None:
             raise Exception("'bumper.mqtt_helperbot' is None")
@@ -44,18 +43,42 @@ async def _handle_dev_manager(request: Request) -> Response:
         json_body = json.loads(await request.text())
 
         # Its a command
-        did = json_body.get("toId")
-        if did is not None:
+        if (did := json_body.get("toId")) is not None:
             bot = db.bot_get(did)
-            if bot is not None and bot.get("company", "") == "eco-ng" and bot["mqtt_connection"]:
-                body = await bumper_isc.mqtt_helperbot.send_command(json_body, random_id)
-                _LOGGER.debug(f"Send Bot - {json_body}")
-                _LOGGER.debug(f"Bot Response - {body}")
-                return web.json_response(body)
+
+            if bot is None:
+                _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
+                return web.json_response(
+                    {
+                        "ret": "fail",
+                        "errno": 500,
+                        "error": "requested bot is not found",
+                        "debug": "requested bot is not found",
+                    }
+                )
+            if bot.get("company", "") != "eco-ng" or not bot["mqtt_connection"]:
+                _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
+                return web.json_response(
+                    {
+                        "ret": "fail",
+                        "errno": 500,
+                        "error": "requested bot is not supported",
+                        "debug": "requested bot is not supported",
+                    }
+                )
+
+            random_id = "".join(random.sample(string.ascii_letters, 6))
+            body = await bumper_isc.mqtt_helperbot.send_command(json_body, random_id)
+            _LOGGER.debug(f"Send Bot - {json_body}")
+            _LOGGER.debug(f"Bot Response - {body}")
 
             # No response, send error back
-            _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
-            return web.json_response({"id": random_id, "errno": 500, "ret": "fail", "debug": "wait for response timed out"})
+            if body.get("resp") is None:
+                _LOGGER.warning(f"iot return non 'resp' :: {body}")
+            else:
+                body.update({"payloadType": json_body.get("payloadType", "j")})
+
+            return web.json_response(body)
 
         td = json_body.get("td")
         if td is not None:
@@ -72,4 +95,4 @@ async def _handle_dev_manager(request: Request) -> Response:
 
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
-    return web.json_response({"id": random_id, "errno": models.ERR_COMMON, "ret": "fail"})
+    return response_error_v7()

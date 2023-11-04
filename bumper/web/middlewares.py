@@ -12,7 +12,7 @@ from aiohttp.web_response import Response, StreamResponse
 from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 
-_LOGGER = logging.getLogger("webserver_requests")
+_LOGGER = logging.getLogger(__name__)
 
 
 class CustomEncoder(json.JSONEncoder):

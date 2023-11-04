@@ -20,6 +20,8 @@
   - [Development](#development)
     - [Local run](#local-run)
     - [Code quality check](#code-quality-check)
+  - [NOTES](#notes)
+    - [clean logs](#clean-logs)
   - [References](#references)
   - [Thanks](#thanks)
 
@@ -81,6 +83,7 @@ Tested with:
 
 | Service                        | Version  | Bot         | Works | Info                                                                                                   |
 | :----------------------------- | :------- | :---------- | :---- | :----------------------------------------------------------------------------------------------------- |
+| Ecovacs Home                   | 2.2.1    | 930/950/T10 | Y     | Works best                                                                                             |
 | Ecovacs Home                   | 2.4.1    | 930/950/T10 | Y     |                                                                                                        |
 | Ecovacs Home                   | 2.4.3    | 930/950/T10 | Y     |                                                                                                        |
 | Ecovacs Home                   | >= 2.4.4 |             | N     | [Will possible not work](https://docs.mitmproxy.org/stable/concepts-certificates/#certificate-pinning) |
@@ -191,6 +194,16 @@ $python3 -m pip install -r requirements-dev.txt
 
 $pre-commit run --all-files
 ```
+
+---
+
+## NOTES
+
+### clean logs
+
+clean logs are accessible without credentials by url:
+
+`https://portal-eu.ecouser.net/api/lg/image/<DID>d@<REPLACED>@<RESOURCE>`
 
 ---
 

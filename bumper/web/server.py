@@ -19,11 +19,11 @@ from aiohttp.web_urldispatcher import ResourceRoute
 
 from bumper.utils import db, dns, utils
 from bumper.utils.settings import config as bumper_isc
-from bumper.web import middlewares, plugins
+from bumper.web import middlewares, models, plugins
 
-_LOGGER = logging.getLogger("webserver")
-_LOGGER_WEB_LOG = logging.getLogger("web_log")
-_LOGGER_PROXY = logging.getLogger("web_proxy")
+_LOGGER = logging.getLogger(__name__)
+_LOGGER_WEB_LOG = logging.getLogger(f"{__name__}.log")
+_LOGGER_PROXY = logging.getLogger(f"{__name__}.proxy")
 
 
 @dataclasses.dataclass(frozen=True)
@@ -259,17 +259,27 @@ class WebServer:
         raise HTTPInternalServerError
 
     async def _handle_new_auth(self, request: Request) -> Response:
-        # NOTE: Bumper is only returning the submitted token. No reason yet to create another new token
         try:
             if request.content_type == "application/x-www-form-urlencoded":
                 post_body = await request.post()
             else:
                 post_body = json.loads(await request.text())
             _LOGGER.debug(post_body)
+            todo = post_body.get("todo", "")
+            if todo == "OLoginByITToken":
+                # NOTE: Bumper is only returning the submitted token. No reason yet to create another new token
+                return web.json_response(
+                    {
+                        "authCode": post_body.get("itToken"),
+                        "result": "ok",
+                        "todo": "result",
+                    }
+                )
             return web.json_response(
                 {
-                    "authCode": post_body.get("itToken"),
-                    "result": "ok",
+                    "errno": models.ERR_UNKOWN_TODO,
+                    "result": "fail",
+                    "error": "Error request, unknown todo",
                     "todo": "result",
                 }
             )
@@ -298,7 +308,7 @@ class WebServer:
 
     async def _handle_config_android_conf(self, _: Request) -> Response:
         # TODO: check what's needed to be implemented
-        _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_config_android_conf !!!")
+        utils.default_log_warn_not_impl("_handle_config_android_conf")
         try:
             return web.json_response(
                 {
@@ -312,7 +322,7 @@ class WebServer:
 
     async def _handle_data_collect(self, _: Request) -> Response:
         # TODO: check what's needed to be implemented
-        _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_data_collect !!!")
+        utils.default_log_warn_not_impl("_handle_data_collect")
         try:
             return web.json_response(None)
         except Exception as e:

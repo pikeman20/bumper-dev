@@ -14,7 +14,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import auth_util
-from bumper.web.response_utils import get_error_response_v2, get_success_response_v2
+from bumper.web.response_utils import response_error_v5, response_success_v3, response_success_v4, response_success_v5
 
 from .. import WebserverPlugin
 from .pim import get_product_iot_map
@@ -97,17 +97,10 @@ async def _handle_app_do(request: Request) -> Response:
                     # Happens if the bot isn't on the EcoVacs Home list
                     if device is not None:
                         devices.append(device)
-            return web.json_response(
-                {
-                    "code": 0,
-                    "devices": devices,
-                    "ret": "ok",
-                    "todo": "result",
-                }
-            )
+            return response_success_v4(devices, data_key="devices")
 
         if todo == "GetCodepush":
-            return get_success_response_v2(
+            return response_success_v4(
                 {
                     "extend": {},
                     "type": "microsoft",
@@ -117,7 +110,7 @@ async def _handle_app_do(request: Request) -> Response:
 
         if todo == "RobotControl":
             # TODO: check what's needed to be implemented
-            _LOGGER.warning("!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: _handle_app_do/RobotControl !!!")
+            utils.default_log_warn_not_impl("_handle_app_do/RobotControl")
             # EXAMPLE request:
             #     {
             #         "app": {
@@ -163,7 +156,7 @@ async def _handle_app_do(request: Request) -> Response:
             #         "ret": "ok",
             #         "todo": "result"
             #     }
-            return get_success_response_v2({})
+            return response_success_v4({})
 
         if todo == "GetAppVideoUrl":
             keys = post_body.get("keys", [])
@@ -171,8 +164,10 @@ async def _handle_app_do(request: Request) -> Response:
             for key in keys:
                 if key == "t9_promotional_video":
                     data[key] = "https://globalapp-eu.oss-eu-central-1.aliyuncs.com/public/t9_promotional_video.mp4"
-            return get_success_response_v2(data)
+            return response_success_v4(data)
 
+        _LOGGER.error(f"todo is not know :: {todo}")
+        return response_error_v5()
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
@@ -181,14 +176,14 @@ async def _handle_app_do(request: Request) -> Response:
 async def _handle_app_config(request: Request) -> Response:
     """App config."""
     code = request.query.get("code", "")
-    data: list[dict[str, Any]] | None = None
+    data: list[dict[str, Any]] = []
 
     if code == "app_lang_enum":
         data = [
             {
                 "code": "app_lang_enum",
                 "description": "",
-                "name": "APP 语言枚举列表",
+                "name": "APP Language Enumeration Lists",
                 "resId": "622ee4977404d4518fd575fb",
                 "type": "json",
                 "content": {
@@ -579,16 +574,15 @@ async def _handle_app_config(request: Request) -> Response:
             }
         ]
 
-    if data is not None:
-        return web.json_response({"code": 0, "data": data, "message": "success"})
-    _LOGGER.error(f"code is not know :: {code}")
-    return get_error_response_v2()
+    if len(data) <= 0:
+        _LOGGER.error(f"code is not know :: {code}")
+    return response_success_v3(data)
 
 
 async def _handle_service_list(request: Request) -> Response:
     """Service list."""
     try:
-        area_code = request.query.get("area", "eu").lower()
+        area_code = request.query.get("area", bumper_isc.ECOVACS_DEFAULT_COUNTRY).lower()
         dc_code = utils.get_dc_code(area_code)
 
         # NOTE: original urls comment out as they are sub sub domain,
@@ -619,7 +613,7 @@ async def _handle_service_list(request: Request) -> Response:
             },
         }
 
-        return web.json_response({"code": 0, "data": data, "ret": "ok"})
+        return response_success_v4(data)
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
@@ -652,15 +646,11 @@ async def _handle_improve(request: Request) -> Response:
         f"&mid={query_mid}&uid={query_uid}&lang={query_lang}&a={query_a}&c={query_c}&v={query_v}&"
         f"p={query_p}&id=628dcf819dbd613d9ebb4fe4&ver=11.16&showRemark={query_show_remark}&remark=&token={query_token}"
     )
-
-    return web.json_response(
+    return response_success_v5(
         {
-            "code": 0,
-            "data": {
-                "content": content,
-                "remark": "",
-                "show": False,
-            },
+            "content": content,
+            "remark": "",
+            "show": False,
         }
     )
 
@@ -672,7 +662,7 @@ async def _handle_improve_accept(_: Request) -> Response:
 
 async def _handle_notice_home(_: Request) -> Response:
     """Notice home."""
-    return get_success_response_v2({})
+    return response_success_v4({})
 
 
 async def _handle_ota_firmware(_: Request) -> Response:
@@ -682,7 +672,7 @@ async def _handle_ota_firmware(_: Request) -> Response:
 
 async def _handle_device_blacklist_check(_: Request) -> Response:
     """Device blacklist check."""
-    return web.json_response({"code": 0, "data": [], "message": "success"})
+    return response_success_v3([])
 
 
 def _include_product_iot_map_info(bot: dict[str, Any]) -> dict[str, Any]:
