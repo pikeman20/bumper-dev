@@ -11,7 +11,7 @@ Typically written at /etc/dnsmasq.d/{##}-{name}.conf
 
 **File Contents:**
 
-```
+```txt
 address=/ecouser.net/{bumper server ip}
 address=/ecovacs.com/{bumper server ip}
 address=/ecovacs.net/{bumper server ip}
@@ -72,3 +72,39 @@ Replacement Examples:
 | `jmq-ngiot-{region}.dc.ww.ecouser.net`   | MQTT for App (v2+)                             |
 | `api-rop.dc-{region}.ww.ecouser.net`     | App (v2+)                                      |
 | `jmq-ngiot-{region}.area.ww.ecouser.net` | App (v2+)                                      |
+
+| Domain                                   | IP             | Port |
+| :--------------------------------------- | :------------- | :--- |
+| api-app.dc-as.ww.ecouser.net             | 13.213.212.149 | 443  |
+| api-app.dc-eu.ww.ecouser.net             | 52.58.74.156   | 443  |
+| api-app.ww.ecouser.net                   | 52.58.74.156   | 443  |
+| portal-ww.ecouser.net                    | 3.68.172.231   | 443  |
+| users-base.dc-eu.ww.ecouser.net          | 52.58.74.156   | 443  |
+| jmq-ngiot-eu.dc.ww.ecouser.net           | 3.127.110.57   | 8883 |
+| msg-eu.ecouser.net                       | 18.196.130.16  | 5223 |
+| api-base.robotww.ecouser.net             | 13.56.199.251  | 443  |
+|                                          |                |      |
+| gl-de-api.ecovacs.com                    | 3.123.55.28    | 443  |
+| gl-de-api.ecovacs.com                    | 52.58.23.18    | 443  |
+| gl-de-openapi.ecovacs.com                | 3.123.55.28    | 443  |
+| gl-us-api.ecovacs.com                    | 52.10.83.13    | 443  |
+| gl-us-api.ecovacs.com                    | 54.186.31.147  | 443  |
+| gl-us-pub.ecovacs.com                    | 108.138.7.23   | 443  |
+| gl-us-pub.ecovacs.com                    | 108.138.7.64   | 443  |
+| gl-us-pub.ecovacs.com                    | 13.224.222.120 | 443  |
+| recommender.ecovacs.com                  | 116.62.93.217  | 443  |
+| sa-eu-datasink.ecovacs.com               | 18.193.135.83  | 443  |
+| sa-eu-datasink.ecovacs.com               | 3.123.96.17    | 443  |
+| site-static.ecovacs.com                  | 13.32.27.60    | 443  |
+|                                          |                |      |
+| living-account.eu-central-1.aliyuncs.com | 8.211.2.91     | 443  |
+| sgp-sdk.openaccount.aliyun.com           | 8.219.176.883  | 443  |
+
+### Current domains with TLS error
+
+| Domain                                           | IP  | Port |
+| :----------------------------------------------- | :-- | :--- |
+| a2JaaxoKXLq.iot-as-mqtt.cn-shanghai.aliyuncs.com |     |      |
+| jmq-ngiot-na.dc.robotww.ecouser.net              |     |      |
+| jmq-ngiot-eu.dc.robotww.ecouser.net              |     |      |
+| public.itls.eu-central-1.aliyuncs.com            |     |      |

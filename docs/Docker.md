@@ -1,19 +1,64 @@
-# Docker Hub
+# Docker
 
 To download the image from Docker Hub you can run the following:
 
-`docker pull bmartin5692/bumper`
+`docker pull docker pull ghcr.io/mvladislav/bumper:develop`
 
-[View Bumper on Docker Hub](https://hub.docker.com/r/bmartin5692/bumper)
+[View Bumper on GitHub ghcr](https://github.com/MVladislav/bumper/pkgs/container/bumper)
 
-# Build a Docker image
+## Docker-compose
+
+Run the complete project with docker-compose.
+
+The docker-compose starts two services:
+
+- bumper itself
+- nginx proxy, which redirects MQTT traffic on port `443` to port `8883`
+
+The redirection is required as the app v2+ and robots with a newer firmware
+are connecting to the mqtt server on port 433.
+
+### default mode
+
+create `.env` file:
+
+> for more detailed version check main `README.md`
+
+```env
+BUMPER_ANNOUNCE_IP=0.0.0.0 # replace with the server public ip
+```
+
+than run:
+
+```sh
+$docker-compose up -d
+```
+
+### swarm mode
+
+create `.env` file:
+
+> for more detailed version check main `README.md`
+
+```env
+NETWORK_MODE=overlay
+BUMPER_ANNOUNCE_IP=0.0.0.0 # replace with the server public ip
+```
+
+than run:
+
+```sh
+$docker-swarm-compose: aliased to DOCKER_BUILDKIT=1 docker compose config | sed '1{/^name:/d}' | sed 's/published: "\(.*\)"/published: \1/' | DOCKER_BUILDKIT=1 CONFIG_VERSION=1 docker stack deploy --resolve-image=never --with-registry-auth --compose-file -
+```
+
+## Build a Docker image
 
 To build the docker image yourself you can run the following:
-`docker build -t bmartin5692/bumper .`
+`docker build -t mvladislav/bumper .`
 
 This requires Docker 17.09 or newer, but has also been tested with podman.
 
-# Docker usage
+## Docker usage
 
 To run the image in docker some environment settings and port mappings are required:
 
@@ -39,17 +84,6 @@ Optionally you can map existing directories for logs, data, and certs.
 
 **Full Example:**
 
+```sh
+$docker run -it -e "BUMPER_ANNOUNCE_IP=X.X.X.X" -p 443:443 -p 8007:8007 -p 8883:8883 -p 5223:5223 -v /home/user/bumper/data:/bumper/data --name bumper mvladislav/bumper
 ```
-docker run -it -e "BUMPER_ANNOUNCE_IP=X.X.X.X" -p 443:443 -p 8007:8007 -p 8883:8883 -p 5223:5223 -v /home/user/bumper/data:/bumper/data --name bumper bmartin5692/bumper
-```
-
-# Docker-compose
-
-A docker-compose example can be found in the ["example" folder](https://github.com/bmartin5692/bumper/tree/master/example/docker-compose).
-
-The docker-compose starts two services:
-
-- bumper itself
-- nginx proxy, which redirects MQTT traffic on port `443` to port `8883`
-
-The redirection is required as the app v2+ and robots with a newer firmware are connecting to the mqtt server on port 433.

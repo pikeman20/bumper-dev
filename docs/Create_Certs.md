@@ -26,7 +26,7 @@ The easiest way to create the required certs is at https://certificatetools.com/
 
 **_csrconfig_ca.txt_**
 
-```
+```ini
 [ req ]
 default_md = sha256
 prompt = no
@@ -44,7 +44,7 @@ basicConstraints=critical,CA:true,pathlen:1
 
 **_certconfig_ca.txt_**
 
-```
+```ini
 [ req ]
 default_md = sha256
 prompt = no
@@ -78,7 +78,7 @@ basicConstraints=critical,CA:true,pathlen:1
 
 **_csrconfig_bumper.txt_**
 
-```
+```ini
 [ req ]
 default_md = sha256
 prompt = no
@@ -109,7 +109,7 @@ DNS.9 = *.area.ww.ecouser.net
 
 **_certconfig_bumper.txt_**
 
-```
+```ini
 [ req ]
 default_md = sha256
 prompt = no
