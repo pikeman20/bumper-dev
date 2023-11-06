@@ -19,6 +19,7 @@ TABLE_CLIENTS = "clients"
 TABLE_BOTS = "bots"
 TABLE_TOKENS = "tokens"
 TABLE_OAUTH = "oauth"
+TABLE_CLEAN_LOGS = "clean_logs"
 
 User_Query = Query()
 
@@ -33,6 +34,7 @@ def _db_get() -> TinyDB:
     db.table(TABLE_BOTS, cache_size=0)
     db.table(TABLE_TOKENS, cache_size=0)
     db.table(TABLE_OAUTH, cache_size=0)
+    db.table(TABLE_CLEAN_LOGS, cache_size=0)
 
     return db
 
@@ -48,6 +50,68 @@ def _os_db_path() -> str:  # createdir=True):
 def _logging_message_not_document(value: Document | list[Document] | None, value_name: str) -> str:
     """Log Helper for generic not a Document info."""
     return f"'{value_name}' is not a 'Document' => {type(value)}"
+
+
+# ******************************************************************************
+#
+# LOGS HANDLER
+#
+# ******************************************************************************
+
+
+def clean_log_add(did: str, cid: str, log: models.CleanLog) -> None:
+    """Add new clean log."""
+    _update_clean_logs_list_field(did, cid, log.to_db(), add=True)
+
+
+def clean_log_by_id(did: str) -> list[models.CleanLog]:
+    """Get clean logs by did."""
+    clean_log_data: list[models.CleanLog] = []
+    with _db_get() as db:
+        clean_logs = db.table(TABLE_CLEAN_LOGS)
+        t_clean_logs = clean_logs.search(User_Query.did == did)
+        for t_clean_log in t_clean_logs:
+            logs = t_clean_log.get("logs", [])
+            for log in logs:
+                clean_log_data.append(models.CleanLog.from_dict(log))
+    return clean_log_data
+
+
+def _update_clean_logs_list_field(did: str, cid: str, clean_log: dict, add: bool) -> None:
+    """Help function to add or remove an item from a clean log list."""
+    with _db_get() as db:
+        clean_logs = db.table(TABLE_CLEAN_LOGS)
+        t_clean_log = clean_logs.get(User_Query.did == did and User_Query.cid == cid)
+        if t_clean_log is None:
+            _clean_logs_add(did, cid)
+            t_clean_log = clean_logs.get(User_Query.did == did and User_Query.cid == cid)
+        if isinstance(t_clean_log, Document):
+            clean_log_logs = list(t_clean_log.get("logs", []))
+            if add and clean_log not in clean_log_logs:
+                clean_log_logs.append(clean_log)
+            elif not add and clean_log in clean_log_logs:
+                clean_log_logs.remove(clean_log)
+            clean_logs.upsert({"logs": clean_log_logs}, User_Query.did == did and User_Query.cid == cid)
+        elif t_clean_log is not None:
+            _LOGGER.warning(_logging_message_not_document(t_clean_log, "t_clean_log"))
+
+
+def _clean_logs_add(did: str, cid: str) -> None:
+    """Add new empty clean log entry."""
+    with _db_get() as db:
+        new_clean_log = models.CleanLogs(did, cid)
+        clean_logs = db.table(TABLE_CLEAN_LOGS)
+        t_clean_log = clean_logs.get(User_Query.did == did and User_Query.cid == cid)
+
+        if t_clean_log is None:
+            _LOGGER.info(f"Adding new clean log with did: {did} and cid: {cid}")
+            clean_logs.upsert(new_clean_log.to_db(), User_Query.did == did and User_Query.cid == cid)
+
+
+def clean_logs_clean() -> None:
+    """Clean all logs."""
+    with _db_get() as db:
+        db.table(TABLE_CLEAN_LOGS).truncate()
 
 
 # ******************************************************************************
@@ -72,7 +136,7 @@ def user_add(user_id: str) -> None:
 def _user_full_upsert(user: models.BumperUser) -> None:
     with _db_get() as db:
         users = db.table(TABLE_USERS)
-        users.upsert(user.asdict(), User_Query.did == user.userid)
+        users.upsert(user.as_dict(), User_Query.did == user.userid)
         user_add_home(user.userid, bumper_isc.HOME_ID)
 
 
@@ -366,7 +430,7 @@ def client_add(user_id: str, realm: str, resource: str) -> None:
 def _client_full_upsert(client: models.VacBotClient) -> None:
     with _db_get() as db:
         clients = db.table(TABLE_CLIENTS)
-        clients.upsert(client.asdict(), User_Query.resource == client.resource)
+        clients.upsert(client.as_dict(), User_Query.resource == client.resource)
 
 
 def client_get(resource: str) -> Document | None:
@@ -449,7 +513,7 @@ def bot_full_upsert(vacbot: models.VacBotDevice) -> None:
     with _db_get() as db:
         bots = db.table(TABLE_BOTS)
         if vacbot.did is not None and vacbot.did != "":
-            bots.upsert(vacbot.asdict(), User_Query.did == vacbot.did)
+            bots.upsert(vacbot.as_dict(), User_Query.did == vacbot.did)
         else:
             _LOGGER.error(f"No DID in vacbot :: {vacbot}")
 

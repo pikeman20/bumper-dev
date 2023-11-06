@@ -8,7 +8,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.utils import utils
+from bumper.utils import db, utils
 from bumper.web.response_utils import response_success_v3
 
 from .. import WebserverPlugin
@@ -38,52 +38,23 @@ class DlnPlugin(WebserverPlugin):
 
 async def _handle_clean_result_list(request: Request) -> Response:
     """Clean result list."""
-    # TODO: check what's needed to be implemented
-    utils.default_log_warn_not_impl("_handle_clean_result_list")
     try:
-        did = request.query.get("did")
-        log_type = request.query.get("logType")
+        did: str | None = request.query.get("did")
+        log_type: str = request.query.get("logType", "")
         data = []
 
-        # did:         REPLACED
-        # res:         Gy2C
-        # country:     DE
-        # size:        10
-        # auth:        REPLACED
-        # version:     v2
-        # logType:     clean
-        # before:      1698540667000
-        # lang:        EN
-        # et1:         1698540667778
-        # defaultLang: zh_cn
-        # channel:     google_play
-
-        if log_type == "clean":
-            _LOGGER.debug(f"Log type for :: did: {did}")
-            # EXAMPLE
-            data.append(
-                {
-                    "aiavoid": 0,
-                    "aiopen": 0,
-                    "aitypes": [],
-                    "aq": 0,
-                    "area": 1,
-                    "cleanId": "987456321",
-                    "cornerDeep": 0,
-                    "did": did,
-                    "enablePowerMop": 0,
-                    "id": "123456789",
-                    "imageUrl": "https://portal-ww.ecouser.net/app/dln/api/log/clean_result/image?id=123456789",
-                    "last": 60,
-                    "mapName": "",
-                    "powerMopType": 1,
-                    "sceneName": "",
-                    "stopReason": 3,
-                    "triggerMode": 0,
-                    "ts": utils.get_current_time_as_millis(),
-                    "type": "auto",
-                }
-            )
+        if did is None:
+            _LOGGER.error("No DID specified :: connected to MQTT")
+        elif log_type == "clean":
+            bot = db.bot_get(did)
+            if bot is None or bot.get("company", "") != "eco-ng":
+                _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
+            else:
+                clean_logs = db.clean_log_by_id(did)
+                for clean_log in clean_logs:
+                    log = clean_log.as_dict()
+                    log.update({"did": did})
+                    data.append(log)
 
         return response_success_v3(data)
     except Exception as e:

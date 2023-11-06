@@ -74,7 +74,7 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
 
             # No response, send error back
             if body.get("resp") is None:
-                _LOGGER.warning(f"iot :: {json_body.get('td')} :: return non 'resp' :: {body}")
+                _LOGGER.warning(f"iot :: {json_body.get('cmdName')} :: return non 'resp' :: {body}")
             else:
                 body.update({"payloadType": json_body.get("payloadType", "j")})
 

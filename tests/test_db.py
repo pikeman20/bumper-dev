@@ -6,6 +6,7 @@ from tinydb import TinyDB
 
 from bumper.utils import db
 from bumper.utils.settings import config as bumper_isc
+from bumper.web.models import CleanLog
 
 
 def test_db_path():
@@ -121,3 +122,44 @@ def test_client_db():
 
     db.client_remove("resource_123")
     assert db.client_get("resource_123") is None
+
+
+def test_clean_logs_db():
+    did = "saocsa8c9basv"
+    cid = "1699297517"
+    start = 1699297517
+    rid = "sdu9"
+    clean_log = CleanLog(f"{did}@{start}@{rid}")
+    clean_log.area = 28
+    clean_log.last = 1699297517
+    clean_log.stop_reason = 1
+    clean_log.ts = start
+    clean_log.type = "auto"
+
+    db.clean_logs_clean()
+
+    db.clean_log_add(did, cid, clean_log)
+    assert len(db.clean_log_by_id(did)) == 1
+
+    clean_log.area = 33
+    db.clean_log_add(did, cid, clean_log)
+    assert len(db.clean_log_by_id(did)) == 2
+
+    cid = "cas0cbasv"
+    clean_log.area = 28
+    db.clean_log_add(did, cid, clean_log)
+    assert len(db.clean_log_by_id(did)) == 3
+
+    clean_log.area = 33
+    db.clean_log_add(did, cid, clean_log)
+    assert len(db.clean_log_by_id(did)) == 4
+
+    did = "cßa9sbas"
+    cid = "asicpasv98"
+    clean_log.area = 28
+    db.clean_log_add(did, cid, clean_log)
+    assert len(db.clean_log_by_id(did)) == 1
+
+    clean_log.area = 33
+    db.clean_log_add(did, cid, clean_log)
+    assert len(db.clean_log_by_id(did)) == 2

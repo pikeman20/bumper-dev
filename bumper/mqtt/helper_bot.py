@@ -11,6 +11,7 @@ from gmqtt import Client as MQTTClient
 from gmqtt import Subscription
 from gmqtt.mqtt.constants import MQTTv311
 
+from bumper.mqtt.handle_atr import clean_log
 from bumper.utils import utils
 
 _LOGGER = logging.getLogger(__name__)
@@ -126,14 +127,23 @@ class MQTTHelperBot:
     def _on_connect(self, *_: Any) -> None:
         _LOGGER.debug("HelperBot connected and will subscribe")
         self._client.subscribe(Subscription("iot/p2p/+/+/+/+/helperbot/bumper/helperbot/+/+/+"))
+        self._client.subscribe(Subscription("iot/atr/+/+/+/+/+"))
 
     def _on_message(self, _client: MQTTClient, topic: str, payload: bytes, _qos: int, _properties: dict) -> None:
         try:
-            decoded_payload = payload.decode()
+            decoded_payload: bytes | bytearray | str | memoryview = payload
+            if isinstance(decoded_payload, (bytearray, bytes)):
+                decoded_payload = decoded_payload.decode("utf-8")
+            if isinstance(decoded_payload, memoryview):
+                decoded_payload = decoded_payload.tobytes().decode("utf-8")
+
             _LOGGER.debug(f"Got message :: topic={topic} :: payload={decoded_payload}")
             topic_split = topic.split("/")
-            if topic_split[10] in self._commands:
+            if topic_split[1] == "p2p" and topic_split[10] in self._commands:
                 self._commands[topic_split[10]].add_response(decoded_payload)
+            elif topic_split[1] == "atr":
+                if topic_split[2] in ("onStats", "reportStats"):
+                    clean_log(did=topic_split[3], rid=topic_split[5], payload=decoded_payload)
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "on message"), exc_info=True)
             raise e

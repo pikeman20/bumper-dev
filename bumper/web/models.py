@@ -29,7 +29,7 @@ class VacBotDevice:
         self.mqtt_connection = False
         self.xmpp_connection = False
 
-    def asdict(self) -> dict[str, str | bool]:
+    def as_dict(self) -> dict[str, str | bool]:
         """Convert to dict."""
         return {
             "class": self.vac_bot_device_class,
@@ -67,7 +67,7 @@ class BumperUser:
         self.devices: list[str] = []
         self.bots: list[str] = []
 
-    def asdict(self) -> dict[str, Any]:
+    def as_dict(self) -> dict[str, Any]:
         """Convert to dict."""
         return {
             "userid": self.userid,
@@ -109,7 +109,7 @@ class VacBotClient:
         self.mqtt_connection = False
         self.xmpp_connection = False
 
-    def asdict(self) -> dict[str, Any]:
+    def as_dict(self) -> dict[str, Any]:
         """Convert to dict."""
         return {
             "userid": self.userid,
@@ -159,6 +159,82 @@ class OAuth:
         data = self.__dict__
         data["expire_at"] = utils.convert_to_millis(datetime.fromisoformat(self.expire_at).timestamp())
         return data
+
+
+class CleanLogs:
+    """Clean logs."""
+
+    logs: list["CleanLog"] = []
+
+    def __init__(self, did: str, cid: str) -> None:
+        """Clean logs init."""
+        self.did = did
+        self.cid = cid
+
+    def to_db(self) -> dict:
+        """Convert for db."""
+        return self.__dict__
+
+
+class CleanLog:
+    """Clean log."""
+
+    # NEW and OLD bots
+    aiavoid: int = 0
+    aitypes: list = []
+    area: int | None = None
+    image_url: str | None = None
+    stop_reason: int | None = None
+    last: int | None = None
+    ts: int | None = None
+    type: str | None = None
+
+    # # Only NEW bots
+    # aiopen:int|None = None
+    # aq:int|None = None
+    # cleanId:str|None = None
+    # cornerDeep:int|None = None
+    # enablePowerMop:int|None = None
+    # mapName:str|None = None
+    # powerMopType:int|None = None
+    # sceneName:int|None = None
+    # triggerMode:int|None = None
+
+    def __init__(self, clean_log_id: str) -> None:
+        """Clean log init."""
+        self.clean_log_id = clean_log_id
+
+    def to_db(self) -> dict:
+        """Convert for db."""
+        return self.__dict__
+
+    def as_dict(self) -> dict[str, Any]:
+        """Convert to dict."""
+        return {
+            "aiavoid": self.aiavoid,
+            "aitypes": self.aitypes,
+            "area": self.area,
+            "id": self.clean_log_id,
+            "imageUrl": self.image_url,
+            "last": self.last,
+            "stopReason": self.stop_reason,
+            "ts": self.ts,
+            "type": self.type,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "CleanLog":
+        """Create a CleanLog instance from a dictionary."""
+        clean_log = cls(clean_log_id=data["clean_log_id"])
+        clean_log.aiavoid = data.get("aiavoid", 0)
+        clean_log.aitypes = data.get("aitypes", [])
+        clean_log.area = data.get("area")
+        clean_log.image_url = data.get("image_url")
+        clean_log.last = data.get("last")
+        clean_log.stop_reason = data.get("stop_reason")
+        clean_log.ts = data.get("ts")
+        clean_log.type = data.get("type")
+        return clean_log
 
 
 RETURN_API_SUCCESS = "0000"
