@@ -51,7 +51,12 @@ async def _handle_lg_log(request: Request) -> Response:
                 for clean_log in clean_logs:
                     logs.append(clean_log.as_dict())
 
-        return web.json_response({"ret": "ok", "logs": logs})
+        return web.json_response(
+            {
+                "ret": "ok",
+                "logs": sorted(logs, key=lambda x: x["ts"], reverse=True),
+            }
+        )
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     return response_error_v7()

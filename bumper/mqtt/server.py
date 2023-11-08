@@ -319,7 +319,7 @@ class BumperMQTTServerPlugin:
             topic_split = str(topic).split("/")
             data_decoded = message.data
             if isinstance(message.data, (bytearray, bytes)):
-                data_decoded = message.data.decode("utf-8")
+                data_decoded = message.data.decode("utf-8", errors="replace")
 
             if topic_split[6] == "helperbot":
                 # Response to command

@@ -133,7 +133,7 @@ class MQTTHelperBot:
         try:
             decoded_payload: bytes | bytearray | str | memoryview = payload
             if isinstance(decoded_payload, (bytearray, bytes)):
-                decoded_payload = decoded_payload.decode("utf-8")
+                decoded_payload = decoded_payload.decode("utf-8", errors="replace")
             if isinstance(decoded_payload, memoryview):
                 decoded_payload = decoded_payload.tobytes().decode("utf-8")
 

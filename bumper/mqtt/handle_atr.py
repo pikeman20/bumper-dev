@@ -24,15 +24,12 @@ def clean_log(did: str, rid: str, payload: str) -> None:
             if not isinstance(body, dict):
                 return
 
-            # reportStats
             if (cid := body.get("cid")) is None:
+                return
+            if cid == "111":
                 return
             if (start := body.get("start")) is None:
                 return
-
-            # stop = body.get("stop") # if the clean is started (0) or stopped (1)
-            # map_count = body.get("mapCount")
-            # content = body.get("content")
 
             t_clean_log = CleanLog(f"{did}@{start}@{rid}")
             # t_clean_log.aiavoid =
@@ -43,6 +40,10 @@ def clean_log(did: str, rid: str, payload: str) -> None:
             t_clean_log.stop_reason = body.get("stopReason")
             t_clean_log.ts = start
             t_clean_log.type = body.get("type")
+
+            # stop = body.get("stop") # if the clean is started (0) or stopped (1)
+            # map_count = body.get("mapCount")
+            # content = body.get("content")
 
             db.clean_log_add(did, cid, t_clean_log)
 

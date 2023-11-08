@@ -61,7 +61,7 @@ def _logging_message_not_document(value: Document | list[Document] | None, value
 
 def clean_log_add(did: str, cid: str, log: models.CleanLog) -> None:
     """Add new clean log."""
-    _update_clean_logs_list_field(did, cid, log.to_db(), add=True)
+    _update_clean_logs_list_field(did, cid, log, add=True)
 
 
 def clean_log_by_id(did: str) -> list[models.CleanLog]:
@@ -77,7 +77,7 @@ def clean_log_by_id(did: str) -> list[models.CleanLog]:
     return clean_log_data
 
 
-def _update_clean_logs_list_field(did: str, cid: str, clean_log: dict, add: bool) -> None:
+def _update_clean_logs_list_field(did: str, cid: str, clean_log: models.CleanLog, add: bool) -> None:
     """Help function to add or remove an item from a clean log list."""
     with _db_get() as db:
         clean_logs = db.table(TABLE_CLEAN_LOGS)
@@ -87,13 +87,32 @@ def _update_clean_logs_list_field(did: str, cid: str, clean_log: dict, add: bool
             t_clean_log = clean_logs.get(User_Query.did == did and User_Query.cid == cid)
         if isinstance(t_clean_log, Document):
             clean_log_logs = list(t_clean_log.get("logs", []))
-            if add and clean_log not in clean_log_logs:
-                clean_log_logs.append(clean_log)
-            elif not add and clean_log in clean_log_logs:
-                clean_log_logs.remove(clean_log)
+            is_saved = _check_clean_log_saved(clean_log_logs, clean_log)
+            # Add because not saved
+            if add and is_saved is False:
+                clean_log_logs.append(clean_log.to_db())
+            # Update saved one
+            elif add and is_saved is True:
+                pass  # nothing todo, as it will updated in _check_clean_log_saved
+            # Remove saved one
+            elif not add and is_saved is True:
+                clean_log_logs.remove(clean_log.to_db())
             clean_logs.upsert({"logs": clean_log_logs}, User_Query.did == did and User_Query.cid == cid)
         elif t_clean_log is not None:
             _LOGGER.warning(_logging_message_not_document(t_clean_log, "t_clean_log"))
+
+
+def _check_clean_log_saved(clean_log_logs: list[dict], clean_log: models.CleanLog) -> bool:
+    for clean_log_log in clean_log_logs:
+        t_clean_log_log = models.CleanLog.from_dict(clean_log_log)
+        if (
+            t_clean_log_log.clean_log_id == clean_log.clean_log_id
+            and t_clean_log_log.ts == clean_log.ts
+            and t_clean_log_log.type == clean_log.type
+        ):
+            clean_log_log.update(clean_log.to_db())
+            return True
+    return False
 
 
 def _clean_logs_add(did: str, cid: str) -> None:

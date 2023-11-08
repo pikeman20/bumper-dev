@@ -56,7 +56,7 @@ async def _handle_clean_result_list(request: Request) -> Response:
                     log.update({"did": did})
                     data.append(log)
 
-        return response_success_v3(data)
+        return response_success_v3(sorted(data, key=lambda x: x["ts"], reverse=True))
     except Exception as e:
         _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError

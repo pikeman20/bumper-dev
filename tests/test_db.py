@@ -141,25 +141,47 @@ def test_clean_logs_db():
     db.clean_log_add(did, cid, clean_log)
     assert len(db.clean_log_by_id(did)) == 1
 
-    clean_log.area = 33
+    rid = "sdu8"
+    clean_log.clean_log_id = f"{did}@{start}@{rid}"
     db.clean_log_add(did, cid, clean_log)
     assert len(db.clean_log_by_id(did)) == 2
 
     cid = "cas0cbasv"
-    clean_log.area = 28
     db.clean_log_add(did, cid, clean_log)
     assert len(db.clean_log_by_id(did)) == 3
 
-    clean_log.area = 33
+    rid = "sdu7"
+    clean_log.clean_log_id = f"{did}@{start}@{rid}"
     db.clean_log_add(did, cid, clean_log)
     assert len(db.clean_log_by_id(did)) == 4
 
     did = "cßa9sbas"
     cid = "asicpasv98"
-    clean_log.area = 28
     db.clean_log_add(did, cid, clean_log)
     assert len(db.clean_log_by_id(did)) == 1
 
-    clean_log.area = 33
+    clean_log.type = "area"
+    db.clean_log_add(did, cid, clean_log)
+    assert len(db.clean_log_by_id(did)) == 2
+
+    db.clean_logs_clean()
+
+    clean_log.type = "a"
+    db.clean_log_add(did, cid, clean_log)
+    assert len(db.clean_log_by_id(did)) == 1
+
+    clean_log.type = "b"
+    db.clean_log_add(did, cid, clean_log)
+    assert len(db.clean_log_by_id(did)) == 2
+
+    clean_log.type = "b"
+    db.clean_log_add(did, cid, clean_log)
+    assert len(db.clean_log_by_id(did)) == 2
+
+    clean_log.last = 1699297520
+    db.clean_log_add(did, cid, clean_log)
+    assert len(db.clean_log_by_id(did)) == 2
+
+    clean_log.area = 28
     db.clean_log_add(did, cid, clean_log)
     assert len(db.clean_log_by_id(did)) == 2

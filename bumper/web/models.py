@@ -215,9 +215,9 @@ class CleanLog:
             "aitypes": self.aitypes,
             "area": self.area,
             "id": self.clean_log_id,
-            "imageUrl": self.image_url,
+            "imageUrl": self.image_url if self.image_url is not None else "",
             "last": self.last,
-            "stopReason": self.stop_reason,
+            "stopReason": self.stop_reason if self.stop_reason is not None else -2,
             "ts": self.ts,
             "type": self.type,
         }
