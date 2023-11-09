@@ -4,6 +4,7 @@
 [![Python code quality, tests and docker deploy](https://github.com/MVladislav/bumper/actions/workflows/ci.yml/badge.svg)](https://github.com/MVladislav/bumper/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/MVladislav/bumper/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MVladislav/bumper/actions/workflows/codeql-analysis.yml)
 [![codecov](https://codecov.io/gh/MVladislav/bumper/graph/badge.svg?token=8N89730Z1S)](https://codecov.io/gh/MVladislav/bumper)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/MVladislav/bumper/dev.svg)](https://results.pre-commit.ci/latest/github/MVladislav/bumper/dev)
 
 ---
 
@@ -83,8 +84,8 @@ Tested with:
 
 | Service                        | Version  | Bot         | Works | Info                                                                                                   |
 | :----------------------------- | :------- | :---------- | :---- | :----------------------------------------------------------------------------------------------------- |
-| Ecovacs Home                   | 2.2.1    | 930/950/T10 | Y     | Works best                                                                                             |
-| Ecovacs Home                   | 2.4.1    | 930/950/T10 | Y     |                                                                                                        |
+| Ecovacs Home                   | 2.2.1    | 930/950/T10 | Y     |                                                                                                        |
+| Ecovacs Home                   | 2.4.1    | 930/950/T10 | Y     | Works best                                                                                             |
 | Ecovacs Home                   | 2.4.3    | 930/950/T10 | Y     |                                                                                                        |
 | Ecovacs Home                   | >= 2.4.4 |             | N     | [Will possible not work](https://docs.mitmproxy.org/stable/concepts-certificates/#certificate-pinning) |
 | Deebot 4 Home Assistant        | 2.1.2    | 950/T10     | Y     |                                                                                                        |

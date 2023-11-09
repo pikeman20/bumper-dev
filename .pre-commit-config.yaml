@@ -84,34 +84,27 @@ repos:
       - id: yamllint
 
   # PYTHON ---------------------------------------------------------------------
+  # TODO: replace "PROJECT" below in `black>files` and `flake8>files`
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.4
+    hooks:
+      - id: ruff
+        args:
+          - --fix
+          - --line-length=130
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.15.0
     hooks:
       - id: pyupgrade
         args:
           - --py311-plus
-  - repo: https://github.com/psf/black
-    rev: 23.9.1
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 23.10.1
     hooks:
       - id: black
         args:
-          - --safe
           - --quiet
-          - --line-length=130
-        <<: &python-files-with-tests
-          files: ^((bumper|tests)/.+)?[^/]+\.py$
-  - repo: https://github.com/PyCQA/flake8
-    rev: 6.1.0
-    hooks:
-      - id: flake8
-        args:
-          - --max-line-length=130
-          - --ignore=E203,W503
-        additional_dependencies:
-          - flake8-docstrings==1.7.0
-          - pydocstyle==6.3.0
-        <<: &python-files
-          files: ^(bumper/.+)?[^/]+\.py$
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.5
     hooks:
@@ -120,15 +113,6 @@ repos:
           - --quiet
           - --format=custom
           - --configfile=bandit.yml
-        <<: *python-files-with-tests
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
-        args:
-          - --profile=black
-          - --line-length=130
-          - --filter-files
 
   - repo: local
     hooks:
@@ -143,7 +127,7 @@ repos:
         types:
           - python
         require_serial: true
-        <<: *python-files
+        exclude: ^tests/.+
       - id: pylint
         name: Check with pylint
         entry: scripts/run-in-env.sh pylint
@@ -151,4 +135,4 @@ repos:
         types:
           - python
         require_serial: true
-        <<: *python-files
+        exclude: ^tests/.+
