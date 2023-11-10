@@ -148,10 +148,10 @@ class WebServer:
                         }
                     )
 
-            helperbot_connected = None
+            helperbot_connected: bool = False
             if bumper_isc.mqtt_helperbot is not None:
                 helperbot_connected = bumper_isc.mqtt_helperbot.is_connected
-            mqtt_server_state = None
+            mqtt_server_state: str = "stopped"
             if bumper_isc.mqtt_server is not None:
                 mqtt_server_state = bumper_isc.mqtt_server.state
 

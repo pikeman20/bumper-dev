@@ -1,5 +1,6 @@
 """MQTT Server module."""
 
+import asyncio
 import dataclasses
 import logging
 import os
@@ -10,6 +11,7 @@ from amqtt.broker import Broker, BrokerContext
 from amqtt.mqtt.protocol.broker_handler import BrokerProtocolHandler
 from amqtt.session import IncomingApplicationMessage, Session
 from passlib.apps import custom_app_context as pwd_context
+from transitions import MachineError
 
 from bumper.mqtt import helper_bot
 from bumper.mqtt import proxy as mqtt_proxy
@@ -135,7 +137,10 @@ class MQTTServer:
     async def start(self) -> None:
         """Start MQTT server."""
         try:
-            if self.state not in ["stopping", "starting"]:
+            while self.state == "stopping":
+                await asyncio.sleep(0.1)
+
+            if self.state not in ["stopping", "starting", "started"]:
                 for binding in self._bindings:
                     _LOGGER.info(f"Starting MQTT Server at {binding.host}:{binding.port}")
                 await self._broker.start()
@@ -146,14 +151,64 @@ class MQTTServer:
     async def shutdown(self) -> None:
         """Shutdown server."""
         try:
-            if self.state not in ["stopped", "stopping", "not_started", "starting"]:
-                # stop session handler manually otherwise connection will not be closed correctly
+            if self.state == "started":
+                # Stop session handlers manually; handle exceptions more gracefully
                 for handler in self.handlers:
-                    await handler.stop()
-                await self._broker.shutdown()
+                    try:
+                        await handler.stop()
+                    except Exception as handler_error:
+                        _LOGGER.error("Error stopping session handler: %s", handler_error, exc_info=True)
+
+                # await self._broker.shutdown()
+                await self.shutdown_copy()
+            else:
+                _LOGGER.warning(f"MQTT server is not in a valid state for shutdown. Current state: {self.state}")
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "during shutdown"), exc_info=True)
             raise e
+
+    async def shutdown_copy(self) -> None:
+        """
+        Stop broker instance.
+
+        Closes all connected session, stop listening on network socket and free resources.
+        """
+        try:
+            self._broker._sessions = {}  # pylint: disable=protected-access
+            self._broker._subscriptions = {}  # pylint: disable=protected-access
+            self._broker._retained_messages = {}  # pylint: disable=protected-access
+            self._broker.transitions.shutdown()
+        except (MachineError, ValueError) as exc:
+            # Backwards compat: MachineError is raised by transitions < 0.5.0.
+            self._broker.logger.debug(f"Invalid method call at this moment: {exc}")
+            raise exc
+
+        # Fire broker_shutdown event to plugins
+        await self._broker.plugins_manager.fire_event("broker_pre_shutdown")
+
+        await self._shutdown_broadcast_loop()
+
+        # pylint: disable-next=protected-access,consider-using-dict-items
+        for listener_name in self._broker._servers:
+            server = self._broker._servers[listener_name]  # pylint: disable=protected-access
+            await server.close_instance()
+        self._broker.logger.debug("Broker closing")
+        self._broker.logger.info("Broker closed")
+        await self._broker.plugins_manager.fire_event("broker_post_shutdown")
+        self._broker.transitions.stopping_success()
+
+    async def _shutdown_broadcast_loop(self) -> None:
+        if self._broker._broadcast_task:  # pylint: disable=protected-access
+            if not self._broker._broadcast_shutdown_waiter.done():  # pylint: disable=protected-access
+                self._broker._broadcast_shutdown_waiter.set_result(True)  # pylint: disable=protected-access
+                try:
+                    await asyncio.wait_for(self._broker._broadcast_task, timeout=30)  # pylint: disable=protected-access
+                except BaseException as e:
+                    self._broker.logger.warning(f"Failed to cleanly shutdown broadcast loop: {e}")
+
+        if self._broker._broadcast_queue.qsize() > 0:  # pylint: disable=protected-access
+            # pylint: disable-next=protected-access
+            self._broker.logger.warning(f"{self._broker._broadcast_queue.qsize()} messages not broadcasted")
 
 
 class BumperMQTTServerPlugin:

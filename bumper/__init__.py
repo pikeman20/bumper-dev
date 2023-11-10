@@ -3,6 +3,7 @@ import argparse
 import asyncio
 import logging
 import os
+import signal
 import sys
 
 from bumper.mqtt import helper_bot
@@ -13,25 +14,22 @@ from bumper.utils.settings import config as bumper_isc
 from bumper.web import server as server_web
 from bumper.xmpp import xmpp as server_xmpp
 
+LogHelper()
+
 _LOGGER = logging.getLogger(__name__)
 
 
 async def start() -> None:
-    """Start bumper."""
+    """Start Bumper."""
     _LOGGER.info("Starting Bumpers...")
     start_configuration()
     await start_service()
     _LOGGER.info("Bumper started successfully")
-
-    # Start maintenance + endless loop
-    await asyncio.create_task(maintenance())
+    await maintenance()
 
 
 def start_configuration() -> None:
-    """Start bumper configuration."""
-    # Update logger (current only because for tests)
-    LogHelper()
-
+    """Start Bumper configuration."""
     if bumper_isc.bumper_level == "DEBUG":
         # Set asyncio loop to debug
         asyncio.get_event_loop().set_debug(True)
@@ -75,17 +73,17 @@ async def start_service() -> None:
 
     # Start MQTT Server
     if bumper_isc.mqtt_server is not None:
-        asyncio.create_task(bumper_isc.mqtt_server.start())
+        await bumper_isc.mqtt_server.start()
         while bumper_isc.mqtt_server.state != "started":
             _LOGGER.info("Waiting until MQTT server started...")
             await asyncio.sleep(0.1)
 
         # Start MQTT Helperbot
         if bumper_isc.mqtt_helperbot is not None:
-            asyncio.create_task(bumper_isc.mqtt_helperbot.start())
-            # while bumper_isc.mqtt_helperbot.is_connected is False:
-            #     _LOGGER.info("Waiting HelperBot connects...")
-            #     await asyncio.sleep(0.1)
+            await bumper_isc.mqtt_helperbot.start()
+            while bumper_isc.mqtt_helperbot.is_connected is False:
+                _LOGGER.info("Waiting HelperBot connects...")
+                await asyncio.sleep(0.1)
 
     # Start web servers
     if bumper_isc.web_server is not None:
@@ -94,14 +92,17 @@ async def start_service() -> None:
 
 async def maintenance() -> None:
     """Run maintenance."""
-    while not bumper_isc.shutting_down:
-        db.revoke_expired_tokens()
-        db.revoke_expired_oauths()
-        await asyncio.sleep(5)
+    try:
+        while not bumper_isc.shutting_down:
+            db.revoke_expired_tokens()
+            db.revoke_expired_oauths()
+            await asyncio.sleep(5)
+    except asyncio.CancelledError:
+        pass  # Ignore the cancellation error when shutting down
 
 
 async def shutdown() -> None:
-    """Shutdown bumper."""
+    """Shutdown Bumper."""
     try:
         _LOGGER.info("Shutting down...")
 
@@ -111,10 +112,12 @@ async def shutdown() -> None:
         if bumper_isc.mqtt_helperbot is not None:
             _LOGGER.info("Disconnect HelperBot...")
             await bumper_isc.mqtt_helperbot.disconnect()
+            _LOGGER.info("HelperBot disconnect complete.")
 
         if bumper_isc.web_server is not None:
             _LOGGER.info("Shutdown Server 1...")
             await bumper_isc.web_server.shutdown()
+            _LOGGER.info("Server 1 shutdown complete.")
 
         if bumper_isc.mqtt_server is not None:
             while bumper_isc.mqtt_server.state == "starting":
@@ -123,12 +126,22 @@ async def shutdown() -> None:
             if bumper_isc.mqtt_server.state == "started":
                 _LOGGER.info("Shutdown MQTT Server...")
                 await bumper_isc.mqtt_server.shutdown()
+                _LOGGER.info("MQTT Server shutdown complete.")
 
         if bumper_isc.xmpp_server is not None and bumper_isc.xmpp_server.server:
             _LOGGER.info("Shutdown XMPP Server...")
-            if bumper_isc.xmpp_server.server.is_serving() is not None:
+            if bumper_isc.xmpp_server.server.is_serving() is True:
                 bumper_isc.xmpp_server.server.close()
+                _LOGGER.info("XMPP Server close connection.")
             await bumper_isc.xmpp_server.server.wait_closed()
+            _LOGGER.info("XMPP Server shutdown complete.")
+
+        tasks = [task for task in asyncio.all_tasks() if task is not asyncio.current_task()]
+        _ = [task.cancel() for task in tasks]
+        await asyncio.gather(*tasks)
+
+        asyncio.get_running_loop().stop()
+
     except asyncio.CancelledError:
         _LOGGER.info("Coroutine canceled!")
     except Exception as e:
@@ -158,13 +171,14 @@ def read_args(argv: list[str] | None) -> None:
     if args.announce:
         bumper_isc.bumper_announce_ip = args.announce
 
-    # Update logger logger
+    # Update logging for args updates
     LogHelper()
 
 
 def main(argv: list[str] | None = None) -> None:
     """Start everything."""
-    loop: asyncio.AbstractEventLoop | None = None
+    loop = asyncio.get_event_loop()
+
     try:
         # Check for password file?
         if not os.path.exists(os.path.join(bumper_isc.data_dir, "passwd")):
@@ -178,13 +192,11 @@ def main(argv: list[str] | None = None) -> None:
             _LOGGER.fatal("No listen address configured")
             return
 
-        # Start the service
-        loop = asyncio.get_event_loop()
+        # Register the signal handler for SIGINT (Ctrl+C)
+        loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(shutdown()))
         loop.run_until_complete(start())
-    except KeyboardInterrupt:
-        _LOGGER.info("Keyboard Interrupt!")
     except Exception as e:
         _LOGGER.critical(utils.default_exception_str_builder(e), exc_info=True)
     finally:
-        if loop is not None:
-            loop.run_until_complete(shutdown())
+        _LOGGER.info("Shutdown complete!")
+        loop.close()

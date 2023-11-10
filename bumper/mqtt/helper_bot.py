@@ -126,8 +126,12 @@ class MQTTHelperBot:
 
     def _on_connect(self, *_: Any) -> None:
         _LOGGER.debug("HelperBot connected and will subscribe")
-        self._client.subscribe(Subscription("iot/p2p/+/+/+/+/helperbot/bumper/helperbot/+/+/+"))
-        self._client.subscribe(Subscription("iot/atr/+/+/+/+/+"))
+        self._client.subscribe(
+            (
+                Subscription("iot/p2p/+/+/+/+/helperbot/bumper/helperbot/+/+/+"),
+                Subscription("iot/atr/+/+/+/+/+"),
+            )
+        )
 
     def _on_message(self, _client: MQTTClient, topic: str, payload: bytes, _qos: int, _properties: dict) -> None:
         try:
