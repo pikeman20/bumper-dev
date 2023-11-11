@@ -15,10 +15,6 @@ def test_strtobool():
     assert str_to_bool(0) is False
 
 
-# TODO: current not understand how this works with he logger defined in utils,
-#       LogCapture not checks the stdout logs, that's why check_present is commented
-
-
 @pytest.mark.parametrize("debug", [False, True])
 async def test_start_stop(debug: bool):
     with LogCapture() as log:
@@ -36,7 +32,7 @@ async def test_start_stop(debug: bool):
 
         while True:
             try:
-                # log.check_present(("bumper", "INFO", "Bumper started successfully"))
+                log.check_present(("bumper", "INFO", "Bumper started successfully"))
                 break
             except AssertionError:
                 pass
@@ -45,5 +41,5 @@ async def test_start_stop(debug: bool):
         log.clear()
 
         await asyncio.create_task(bumper.shutdown())
-        # log.check_present(("bumper", "INFO", "Shutting down..."), ("bumper", "INFO", "Shutdown complete!"))
+        log.check_present(("bumper", "INFO", "Shutting down..."), ("bumper", "INFO", "Shutdown complete!"))
         assert bumper_isc.shutting_down is True

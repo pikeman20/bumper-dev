@@ -46,6 +46,7 @@ def test_user_db():
     # Test that token was found for testuser
 
     assert db.user_get_token("testuser", "token_1234")
+    assert db.user_get_token_v2("testuser")
     # Test that token was returned for testuser
 
     db.user_add_auth_code("testuser", "token_1234", "auth_1234")  # Add authcode to token_1234 for testuser
@@ -60,8 +61,10 @@ def test_user_db():
     db.user_add_token("testuser", "token_1234")  # Add token_1234
     db.user_add_token("testuser", "token_4321")  # Add token_4321
     assert len(db.user_get_tokens("testuser")) == 2  # Test 2 tokens are available
+    assert db.user_get_token_v2("testuser")
     db.user_revoke_all_tokens("testuser")  # Revoke all tokens
     assert len(db.user_get_tokens("testuser")) == 0  # Test 0 tokens are available
+    assert db.user_get_token_v2("testuser") is None
 
     db_test = TinyDB("tests/tmp.db")
     tokens = db_test.table("tokens")
@@ -74,8 +77,10 @@ def test_user_db():
     )  # Add expired token
     db_test.close()
     assert len(db.user_get_tokens("testuser")) == 1  # Test 1 tokens are available
+    assert db.user_get_token_v2("testuser")
     db.user_revoke_expired_tokens("testuser")  # Revoke expired tokens
     assert len(db.user_get_tokens("testuser")) == 0  # Test 0 tokens are available
+    assert db.user_get_token_v2("testuser") is None
 
     db_test = TinyDB("tests/tmp.db")
     tokens = db_test.table("tokens")
@@ -88,8 +93,10 @@ def test_user_db():
     )  # Add expired token
     db_test.close()
     assert len(db.user_get_tokens("testuser")) == 1  # Test 1 tokens are available
+    assert db.user_get_token_v2("testuser")
     db.revoke_expired_tokens()  # Revoke expired tokens
     assert len(db.user_get_tokens("testuser")) == 0  # Test 0 tokens are available
+    assert db.user_get_token_v2("testuser") is None
 
 
 def test_bot_db():
@@ -104,6 +111,10 @@ def test_bot_db():
 
     db.bot_set_xmpp("did_123", True)
     assert db.bot_get("did_123").get("xmpp_connection")  # Test that xmpp was set True for bot
+
+    db.bot_reset_connection_status()
+    assert db.bot_get("did_123").get("mqtt_connection") is False  # Test that mqtt was reset False for bot
+    assert db.bot_get("did_123").get("xmpp_connection") is False  # Test that xmpp was reset False for bot
 
     db.bot_remove("did_123")
     assert db.bot_get("did_123") is None  # Test that bot is no longer in db
@@ -120,8 +131,32 @@ def test_client_db():
     assert db.client_get("resource_123").get("xmpp_connection") is False  # Test that xmpp was set False for client
     assert len(db.get_disconnected_xmpp_clients()) > 0  # Test len of connected xmpp clients is 1
 
+    db.client_reset_connection_status()
+    assert db.client_get("resource_123").get("mqtt_connection") is False  # Test that mqtt was reset False for client
+    assert db.client_get("resource_123").get("xmpp_connection") is False  # Test that xmpp was reset False for client
+
     db.client_remove("resource_123")
     assert db.client_get("resource_123") is None
+
+
+def test_oauth_db():
+    db.user_add("testuser")  # Add testuser
+    oauth = db.user_add_oauth("testuser")
+
+    assert oauth is not None
+    assert oauth.userId == "testuser"
+    assert oauth.access_token is not None
+
+    user_id1 = db.user_id_by_token(oauth.access_token)
+    assert oauth.userId == user_id1
+
+    db.user_revoke_expired_oauths("testuser")
+    user_id2 = db.user_id_by_token(oauth.access_token)
+    assert oauth.userId == user_id2
+
+    db.revoke_expired_oauths()
+    user_id2 = db.user_id_by_token(oauth.access_token)
+    assert oauth.userId == user_id2
 
 
 def test_clean_logs_db():
@@ -137,6 +172,7 @@ def test_clean_logs_db():
     clean_log.type = "auto"
 
     db.clean_logs_clean()
+    assert len(db.clean_log_by_id(did)) == 0
 
     db.clean_log_add(did, cid, clean_log)
     assert len(db.clean_log_by_id(did)) == 1
@@ -185,3 +221,6 @@ def test_clean_logs_db():
     clean_log.area = 28
     db.clean_log_add(did, cid, clean_log)
     assert len(db.clean_log_by_id(did)) == 2
+
+    db._update_clean_logs_list_field(did, cid, clean_log, False)
+    assert len(db.clean_log_by_id(did)) == 1

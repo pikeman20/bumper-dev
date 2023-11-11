@@ -69,7 +69,6 @@ async def test_restartService(webserver_client):
     resp = await webserver_client.get("/restart_Helperbot")
     assert resp.status == 200
 
-    # TODO: mqtt has problem with restart, needs to be checked why
     resp = await webserver_client.get("/restart_MQTTServer")
     assert resp.status == 200
 

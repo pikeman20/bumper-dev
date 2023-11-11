@@ -82,9 +82,13 @@ def _update_clean_logs_list_field(did: str, cid: str, clean_log: models.CleanLog
     with _db_get() as db:
         clean_logs = db.table(TABLE_CLEAN_LOGS)
         t_clean_log = clean_logs.get(User_Query.did == did and User_Query.cid == cid)
+
+        # if no clean log was saved before, create a new empty list
         if t_clean_log is None:
             _clean_logs_add(did, cid)
             t_clean_log = clean_logs.get(User_Query.did == did and User_Query.cid == cid)
+
+        # updated clean logs
         if isinstance(t_clean_log, Document):
             clean_log_logs = list(t_clean_log.get("logs", []))
             is_saved = _check_clean_log_saved(clean_log_logs, clean_log)
