@@ -22,7 +22,8 @@ class Config:
     ECOVACS_UPDATE_SERVER_PORT: int = 8005
 
     # os.environ['PYTHONASYNCIODEBUG'] = '1' # Uncomment to enable ASYNCIODEBUG
-    bumper_dir: str = f"{os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))}/../"
+    # bumper_dir: str = f"{os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))}/../../"
+    bumper_dir: str = os.getcwd()
 
     # Set defaults from environment variables first
     # Folders

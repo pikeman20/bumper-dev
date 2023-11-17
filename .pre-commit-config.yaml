@@ -46,7 +46,12 @@ repos:
         types: [text]
         args: [--markdown-linebreak-ext=md]
       - id: end-of-file-fixer
-      - id: requirements-txt-fixer
+      - id: check-toml
+      - id: check-json
+      - id: check-yaml
+      # - id: mixed-line-ending
+      # - id: name-tests-test
+      # - id: double-quote-string-fixer
 
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.0.3
@@ -68,9 +73,9 @@ repos:
           - --exclude-files=productIotMap.json
           - --exclude-files=productConfigBatch.json
           - --exclude-files=configNetAllResponse.json
-          - --exclude-files=bumper/web/plugins/api/appsvr.py
-          - --exclude-files=bumper/web/plugins/api/homed.py
-          - --exclude-files=bumper/web/templates/home.jinja2
+          - --exclude-files=appsvr.py
+          - --exclude-files=homed.py
+          - --exclude-files=home.jinja2
           - --exclude-files=tests/*
 
   - repo: https://github.com/gitleaks/gitleaks
@@ -104,7 +109,11 @@ repos:
     hooks:
       - id: black
         args:
-          - --quiet
+          - --config=./pyproject.toml
+  - repo: https://github.com/asottile/blacken-docs
+    rev: 1.15.0
+    hooks:
+      - id: blacken-docs
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.5
     hooks:

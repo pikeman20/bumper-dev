@@ -87,35 +87,25 @@ class MQTTServer:
             raise e
 
     def _add_entry_point(self) -> None:
+        dist_location = "amqtt.broker.plugins"
+        plugin_name = "bumper"
+        module_path = "bumper.mqtt.server"
+        function_name = "BumperMQTTServerPlugin"
+
+        # ep = importlib.metadata.EntryPoint(plugin_name, f"{module_path}:{function_name}", dist_location)
+        # ExtensionManager.ENTRY_POINT_CACHE = {dist_location: [ep]}
+        # [print(f"{x.group} :: {x.name} :: {x.value}") for x in importlib.metadata.entry_points(group=dist_location)]
+
         # The below adds a plugin to the amqtt.broker.plugins without having to futz with setup.py
-        distribution = pkg_resources.Distribution("amqtt.broker.plugins")
+        distribution = pkg_resources.Distribution(dist_location)
         bumper_plugin = pkg_resources.EntryPoint.parse(
-            "bumper = bumper.mqtt.server:BumperMQTTServerPlugin",
+            f"{plugin_name} = {module_path}:{function_name}",
             dist=distribution,
         )
         # pylint: disable=protected-access
-        distribution._ep_map = {"amqtt.broker.plugins": {"bumper": bumper_plugin}}  # type: ignore
+        distribution._ep_map = {dist_location: {plugin_name: bumper_plugin}}  # type: ignore
         pkg_resources.working_set.add(distribution)
-
-        # The below adds a plugin to the amqtt.broker.plugins without having to futz with setup.py
-        # print("*************************************************************************************************************")
-        # [
-        #     print(f"{x.group} :: {x.name} :: {x.value}")
-        #     for x in importlib.metadata.entry_points().select(group="amqtt.broker.plugins")
-        # ]
-        # # distribution = importlib.metadata.distribution("amqtt")
-        # entry_points = importlib.metadata.distribution("amqtt").entry_points
-        # # entry = importlib.metadata.entry_points().select(group="amqtt.broker.plugins")
-        # entry_point = importlib.metadata.EntryPoint(
-        #     name="bumper",
-        #     value="bumper.mqtt.server:BumperMQTTServerPlugin",
-        #     group="amqtt.broker.plugins",
-        # )
-        # entry_points.append(entry_point)
-        # print("*************************************************************************************************************")
-        # [print(f"{x.group} :: {x.name} :: {x.value}") for x in entry_points]
-        # print("*************************************************************************************************************")
-        # [print(x) for x in pkg_resources.iter_entry_points("amqtt.broker.plugins")]
+        bumper_plugin.load()
 
     @property
     def state(self) -> str:

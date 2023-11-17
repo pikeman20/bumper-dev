@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of package names
-packages=("aiodns" "aiohttp" "aiohttp-jinja2" "amqtt" "cachetools" "coloredlogs" "defusedxml" "gmqtt" "Jinja2" "passlib" "setuptools" "tinydb" "verboselogs" "websockets")
+packages=("aiodns" "aiohttp" "aiohttp-jinja2" "cachetools" "coloredlogs" "cryptography" "defusedxml" "gmqtt" "Jinja2" "passlib" "setuptools" "tinydb" "verboselogs" "websockets" "stevedore")
 
 echo "" >requirements.txt
 # Loop through the packages
@@ -16,7 +16,7 @@ done
 
 packages_dev=("mypy" "pre-commit" "pylint" "pytest" "pytest-aiohttp" "pytest-asyncio" "pytest-cov" "pytest-env" "pytest-timeout" "testfixtures" "types-cachetools" "types-setuptools")
 
-echo "" >requirements_dev.txt
+echo "" >requirements-dev.txt
 # Loop through the packages
 for package in "${packages_dev[@]}"; do
   # Get the latest version number using jq and curl

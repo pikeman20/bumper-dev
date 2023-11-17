@@ -12,6 +12,8 @@ from types import ModuleType
 from aiohttp import web
 from aiohttp.web_routedef import AbstractRouteDef
 
+_LOGGER = logging.getLogger(__name__)
+
 
 class WebserverPlugin:
     """Abstract webserver plugin."""
@@ -37,7 +39,7 @@ def _add_routes(app: web.Application, module: ModuleType, plugin_module_name: st
         if issubclass(clazz, WebserverPlugin) and clazz != WebserverPlugin:
             web_obj: WebserverPlugin = clazz()
             sub_app.add_routes(web_obj.routes)
-            logging.debug(f"Added routes from {clazz.__name__}")
+            _LOGGER.debug(f"Added routes from {clazz.__name__}")
 
     for _, obj in inspect.getmembers(module, inspect.ismodule):
         _add_routes(sub_app, obj, plugin_module_name)
@@ -63,9 +65,9 @@ def _import_plugins(module: ModuleType) -> None:
             plugin_name = file.replace(os.path.sep, ".")
             plugin_name = plugin_name[plugin_name.find(module.__name__) : -3].removesuffix(".__init__")
             imported_module = __import__(plugin_name, fromlist=["*"])
-            logging.debug(f"Imported plugin module: {imported_module.__name__}")
+            _LOGGER.debug(f"Imported plugin module: {imported_module.__name__}")
         except Exception as e:
-            logging.error(f"Failed to import plugin module {plugin_name}: {e}")
+            _LOGGER.error(f"Failed to import plugin module {plugin_name}: {e}")
 
 
 def add_plugins(app: web.Application) -> None:

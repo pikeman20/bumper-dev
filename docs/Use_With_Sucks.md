@@ -42,5 +42,4 @@ vacbot.connect_and_wait_until_ready()
 
 # Send a command
 vacbot.run(Clean())
-
 ```

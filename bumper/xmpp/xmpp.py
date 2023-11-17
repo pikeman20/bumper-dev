@@ -272,6 +272,9 @@ class XMPPAsyncClient:
             if "errno" in data:
                 _LOGGER_CLIENT.error(f"Error from bot :: {data}")
 
+            # NOTE: possible errno='5' is happen after sensor error and the bot will be on without further possible interactions,
+            # manual button interaction current needed
+
             # No permissions, usually if bot was last on Ecovac network, Bumper will try to add fuid user as owner
             if "errno='103'" in data:
                 if self.type == self.BOT:
