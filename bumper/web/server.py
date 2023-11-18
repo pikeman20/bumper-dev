@@ -16,6 +16,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_urldispatcher import ResourceRoute
 import aiohttp_jinja2
 import jinja2
+from yarl import URL
 
 from bumper.utils import db, dns, utils
 from bumper.utils.settings import config as bumper_isc
@@ -358,7 +359,10 @@ class WebServer:
                 else:
                     _LOGGER_PROXY.info(f"HTTP Proxy Request to EcoVacs (body=false) (URL:{request.url})")
 
-                async with session.request(request.method, request.url, data=data, json=json_data) as resp:
+                # Validate and sanitize user-provided input
+                validated_url = self._validate_and_sanitize_url(request.url)
+
+                async with session.request(request.method, validated_url, data=data, json=json_data) as resp:
                     if resp.content_type == "application/octet-stream":
                         _LOGGER_PROXY.info(
                             f"HTTP Proxy Response from EcoVacs (URL: {request.url}) :: (Status: {resp.status}) :: <BYTES CONTENT>"
@@ -376,6 +380,22 @@ class WebServer:
         except Exception as e:
             _LOGGER_PROXY.exception(utils.default_exception_str_builder(e, "during proxy the request"), exc_info=True)
         raise HTTPInternalServerError
+
+    def _validate_and_sanitize_url(self, url: URL) -> str:
+        # Perform URL validation and sanitization here
+        # For example, you can check if the URL is in an allowed list
+        # and parse it to remove any unwanted components.
+
+        # Sample validation: Check if the host is in an allowed list
+        allowed_hosts = {"ecouser.net", "ecovacs.com"}
+
+        if url.host not in allowed_hosts:
+            # You may raise an exception or handle it based on your requirements
+            raise ValueError("Invalid or unauthorized host")
+
+        # You can also perform additional sanitization if needed
+        # For example, remove any query parameters, fragments, etc.
+        return str(url.with_query(None).with_fragment(None))
 
     async def _handle_log(self, request: Request) -> Response:
         to_log = {}
