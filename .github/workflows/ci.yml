@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
           cache: "pip"
-          cache-dependency-path: "requirements*"
+          cache-dependency-path: "pyproject.toml"
       - name: Install dependencies
         run: |
           pip install .
@@ -57,7 +57,7 @@ jobs:
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
           cache: "pip"
-          cache-dependency-path: "requirements*"
+          cache-dependency-path: "pyproject.toml"
       - name: Install dependencies
         run: |
           pip install .
