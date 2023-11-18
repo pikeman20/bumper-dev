@@ -6,9 +6,8 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
+from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_success_v3
-
-from .. import WebserverPlugin
 
 
 class RappPlugin(WebserverPlugin):

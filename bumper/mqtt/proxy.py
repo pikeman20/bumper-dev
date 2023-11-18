@@ -1,13 +1,12 @@
 """Mqtt proxy module."""
 import asyncio
+from collections.abc import MutableMapping
 import logging
 import ssl
 import typing
-from collections.abc import MutableMapping
 from typing import Any, Literal
 from urllib.parse import urlparse, urlunparse
 
-import websockets
 from amqtt.adapters import StreamReaderAdapter, StreamWriterAdapter, WebSocketsReader, WebSocketsWriter
 from amqtt.client import ConnectException, MQTTClient, Session
 from amqtt.mqtt.connack import CONNECTION_ACCEPTED, SERVER_UNAVAILABLE
@@ -15,6 +14,7 @@ from amqtt.mqtt.constants import QOS_0
 from amqtt.mqtt.protocol.client_handler import ClientProtocolHandler
 from amqtt.mqtt.protocol.handler import ProtocolHandlerException
 from cachetools import TTLCache
+import websockets
 from websockets.exceptions import InvalidHandshake, InvalidURI
 
 from bumper.utils.settings import config as bumper_isc
@@ -51,7 +51,7 @@ class ProxyClient:
             _LOGGER.exception("An exception occurred during startup", exc_info=True)
             raise e
 
-        asyncio.create_task(self._handle_messages())
+        asyncio.Task(self._handle_messages())
 
     async def _handle_messages(self) -> None:
         if self._client.session is None or bumper_isc.mqtt_helperbot is None:
@@ -84,7 +84,7 @@ class ProxyClient:
 
                 bumper_isc.mqtt_helperbot.publish(topic, data)
             except Exception:
-                _LOGGER.error("An error occurred during handling a message", exc_info=True)
+                _LOGGER.exception("An error occurred during handling a message", exc_info=True)
 
     async def subscribe(self, topic: str, qos: Any = QOS_0) -> None:
         """Subscribe to topic."""
@@ -101,8 +101,7 @@ class ProxyClient:
 
 class _NoCertVerifyClient(MQTTClient):  # type:ignore[misc]
     # pylint: disable=all
-    """
-    Mqtt client, which is not verify the certificate.
+    """Mqtt client, which is not verify the certificate.
 
     Purpose is only to add "sc.verify_mode = ssl.CERT_NONE  # Ignore verify of cert"
     """
@@ -114,12 +113,12 @@ class _NoCertVerifyClient(MQTTClient):  # type:ignore[misc]
         if isinstance(self.session, Session) is False:
             return SERVER_UNAVAILABLE
 
-        kwargs = dict()
+        kwargs = {}
 
         # Decode URI attributes
         uri_attributes = urlparse(self.session.broker_uri)
         scheme = uri_attributes.scheme
-        secure = True if scheme in ("mqtts", "wss") else False
+        secure = scheme in ("mqtts", "wss")
         self.session.username = self.session.username if self.session.username else uri_attributes.username
         self.session.password = self.session.password if self.session.password else uri_attributes.password
         self.session.remote_address = uri_attributes.hostname
@@ -130,14 +129,14 @@ class _NoCertVerifyClient(MQTTClient):  # type:ignore[misc]
             self.session.remote_port = 443 if scheme == "wss" else 80
         if scheme in ("ws", "wss"):
             # Rewrite URI to conform to https://tools.ietf.org/html/rfc6455#section-3
-            uri = (
+            uri = [
                 scheme,
-                self.session.remote_address + ":" + str(self.session.remote_port),
+                f"{self.session.remote_address}:{str(self.session.remote_port)}",
                 uri_attributes[2],
                 uri_attributes[3],
                 uri_attributes[4],
                 uri_attributes[5],
-            )
+            ]
             self.session.broker_uri = urlunparse(uri)
         # Init protocol handler
         # if not self._handler:
@@ -181,28 +180,33 @@ class _NoCertVerifyClient(MQTTClient):  # type:ignore[misc]
             # Start MQTT protocol
             self._handler.attach(self.session, reader, writer)
             return_code = await self._handler.mqtt_connect()
+
             if return_code is not CONNECTION_ACCEPTED:
                 self.session.transitions.disconnect()
-                self.logger.warning("Connection rejected with code '%s'" % return_code)
+                self.logger.warning(f"Connection rejected with code '{return_code}'")
                 exc = ConnectException("Connection rejected by broker")
                 exc.return_code = return_code
                 raise exc
-            else:
-                # Handle MQTT protocol
-                await self._handler.start()
-                self.session.transitions.connect()
-                self._connected_state.set()
-                self.logger.debug(f"connected to {self.session.remote_address}:{self.session.remote_port}")
+
+            # Handle MQTT protocol
+            await self._handler.start()
+            self.session.transitions.connect()
+            self._connected_state.set()
+            self.logger.debug(f"connected to {self.session.remote_address}:{self.session.remote_port}")
+
             return return_code
         except InvalidURI as iuri:
-            self.logger.warning("connection failed: invalid URI '%s'" % self.session.broker_uri)
+            self.logger.warning(f"connection failed: invalid URI '{self.session.broker_uri}'")
             self.session.transitions.disconnect()
-            raise ConnectException("connection failed: invalid URI '%s'" % self.session.broker_uri, iuri)
+            # raise ConnectException(f"connection failed: invalid URI '{self.session.broker_uri}'", iuri)
+            raise iuri
         except InvalidHandshake as ihs:
             self.logger.warning("connection failed: invalid websocket handshake")
             self.session.transitions.disconnect()
-            raise ConnectException("connection failed: invalid websocket handshake", ihs)
+            # raise ConnectException("connection failed: invalid websocket handshake", ihs)
+            raise ihs
         except (ProtocolHandlerException, ConnectionError, OSError) as e:
-            self.logger.warning("MQTT connection failed: %r" % e)
+            self.logger.warning(f"MQTT connection failed: {e}")
             self.session.transitions.disconnect()
-            raise ConnectException(e)
+            # raise ConnectException(e)
+            raise e

@@ -1,9 +1,9 @@
 """Homed plugin module."""
+from collections.abc import Iterable
 import json
 import logging
-import uuid
-from collections.abc import Iterable
 from typing import Any
+import uuid
 
 from aiohttp import web
 from aiohttp.web_exceptions import HTTPInternalServerError
@@ -13,9 +13,8 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
+from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_success_v3, response_success_v8
-
-from .. import WebserverPlugin
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -82,7 +81,7 @@ async def _handle_home_list(request: Request) -> Response:
                     )
         return response_success_v3(data)
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 
@@ -106,9 +105,9 @@ async def _handle_home_update(request: Request) -> Response:
     # TODO: check what's needed to be implemented
     utils.default_log_warn_not_impl("_handle_home_update")
     json_body = json.loads(await request.text())
-    homeId = json_body.get("homeId")  # pylint: disable=invalid-name
+    home_id = json_body.get("homeId")
     name = json_body.get("name")
-    _LOGGER.debug(f"Update :: homeId: {homeId} - name: {name}")
+    _LOGGER.debug(f"Update :: homeId: {home_id} - name: {name}")
     return response_success_v8()
 
 
@@ -151,7 +150,7 @@ async def _handle_member_list(request: Request) -> Response:
             )
 
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 

@@ -4,8 +4,8 @@ from collections.abc import Iterable
 from aiohttp import web
 from aiohttp.web_routedef import AbstractRouteDef
 
-from ... import auth_util
-from .. import WebserverPlugin
+from bumper.web import auth_util
+from bumper.web.plugins import WebserverPlugin
 
 
 class GlobalAuthPlugin(WebserverPlugin):

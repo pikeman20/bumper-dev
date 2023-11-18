@@ -6,8 +6,7 @@ import os
 import signal
 import sys
 
-from bumper.mqtt import helper_bot
-from bumper.mqtt import server as server_mqtt
+from bumper.mqtt import helper_bot, server as server_mqtt
 from bumper.utils import db, utils
 from bumper.utils.log_helper import LogHelper
 from bumper.utils.settings import config as bumper_isc
@@ -69,7 +68,7 @@ async def start_service() -> None:
     """Start bumper services."""
     # Start XMPP Server
     if bumper_isc.xmpp_server is not None:
-        asyncio.create_task(bumper_isc.xmpp_server.start_async_server())
+        asyncio.Task(bumper_isc.xmpp_server.start_async_server())
 
     # Start MQTT Server
     if bumper_isc.mqtt_server is not None:
@@ -87,7 +86,7 @@ async def start_service() -> None:
 
     # Start web servers
     if bumper_isc.web_server is not None:
-        asyncio.create_task(bumper_isc.web_server.start())
+        asyncio.Task(bumper_isc.web_server.start())
 
 
 async def maintenance() -> None:
@@ -145,7 +144,7 @@ async def shutdown() -> None:
     except asyncio.CancelledError:
         _LOGGER.info("Coroutine canceled!")
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
     finally:
         _LOGGER.info("Shutdown complete!")
 

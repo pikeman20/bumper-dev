@@ -2,8 +2,8 @@
 import hashlib
 import json
 import logging
-import uuid
 from typing import Any
+import uuid
 
 from aiohttp.web_exceptions import HTTPInternalServerError
 from aiohttp.web_request import Request
@@ -21,6 +21,9 @@ from bumper.web.response_utils import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+GENERATE_AUTH_CODE_V1 = 1
+GENERATE_AUTH_CODE_V2 = 2
 
 # ******************************************************************************
 #
@@ -42,7 +45,7 @@ async def login(request: Request) -> Response:
         else:
             if (account := request.query.get("account")) is not None:
                 uid = _generate_uid(account)
-            # encryptPwd = request.query.get("encryptPwd")
+            _ = request.query.get("encryptPwd")
 
         device_id = request.match_info.get("devid")
         country_code = request.match_info.get("country", bumper_isc.ECOVACS_DEFAULT_COUNTRY)
@@ -91,7 +94,7 @@ async def get_auth_code(request: Request) -> Response:
 
         return response_error_v1(msg="Interface Authentication Failure", code=models.ERR_TOKEN_INVALID)
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during get auth code"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during get auth code"), exc_info=True)
     raise HTTPInternalServerError
 
 
@@ -115,28 +118,27 @@ async def get_auth_code_v2(request: Request) -> Response:
 
         return response_error_v2(msg="auth error", code="1004")
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during get auth code v2"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during get auth code v2"), exc_info=True)
     raise HTTPInternalServerError
 
 
 def _get_auth_code(
-    user_id: str, access_token: str, country: str = bumper_isc.ECOVACS_DEFAULT_COUNTRY, version: int = 1
+    user_id: str, access_token: str, country: str = bumper_isc.ECOVACS_DEFAULT_COUNTRY, version: int = GENERATE_AUTH_CODE_V1
 ) -> str | None:
     """Get auth code."""
     auth_code: str | None = None
 
     # version 2 ignore the access_token, because current it was the easiest workaround ^^
-    if version == 2:
+    if version == GENERATE_AUTH_CODE_V2:
         if (token := db.user_get_token_v2(user_id)) is not None:
             if (auth_code := token.get("authcode")) is None:
                 auth_code = _generate_auth_code(user_id, country, access_token, 2)
             return auth_code
 
-    else:
-        if (token := db.user_get_token(user_id, access_token)) is not None:
-            if (auth_code := token.get("authcode")) is None:
-                auth_code = _generate_auth_code(user_id, country, access_token)
-            return auth_code
+    elif (token := db.user_get_token(user_id, access_token)) is not None:
+        if (auth_code := token.get("authcode")) is None:
+            auth_code = _generate_auth_code(user_id, country, access_token)
+        return auth_code
 
     return None
 
@@ -233,7 +235,7 @@ def oauth_callback(request: Request) -> Response:
 
         return response_success_v2(oauth.to_response())
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling oauth callback"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling oauth callback"), exc_info=True)
     raise HTTPInternalServerError
 
 
@@ -258,63 +260,63 @@ def _generate_token(user_id: str) -> str:
     return token
 
 
-def _generate_auth_code(user_id: str, country_code: str, token: str, version: int = 1) -> str:
+def _generate_auth_code(user_id: str, country_code: str, token: str, version: int = GENERATE_AUTH_CODE_V1) -> str:
     """Generate new auth token and add to DB."""
     tmp_auth_code = f"{country_code}_{uuid.uuid4().hex}"
-    if version == 1:
+    if version == GENERATE_AUTH_CODE_V1:
         db.user_add_auth_code(user_id, token, tmp_auth_code)
-    elif version == 2:
+    elif version == GENERATE_AUTH_CODE_V2:
         db.user_add_auth_code_v2(user_id, tmp_auth_code)
     return tmp_auth_code
 
 
-async def get_auth_info(request: Request) -> tuple[tuple | None, tuple | None]:
-    """Get auth info from requests."""
-    try:
-        auth_keys = ["accessToken", "token", "user_token"]
-        user_keys = ["uid", "userid"]
+# async def get_auth_info(request: Request) -> tuple[tuple | None, tuple | None]:
+#     """Get auth info from requests."""
+#     try:
+#         auth_keys = ["accessToken", "token", "user_token"]
+#         user_keys = ["uid", "userid"]
 
-        token: tuple | None = None
-        user: tuple | None = None
+#         token: tuple | None = None
+#         user: tuple | None = None
 
-        # Search in headers or query for credentials
-        for key in auth_keys:
-            auth_value = request.headers.get(key) or request.query.get(key)
-            if auth_value:
-                token = (key, auth_value)
+#         # Search in headers or query for credentials
+#         for key in auth_keys:
+#             auth_value = request.headers.get(key) or request.query.get(key)
+#             if auth_value:
+#                 token = (key, auth_value)
 
-        # Search in headers or query for user info
-        for key in user_keys:
-            user_value = request.headers.get(key) or request.query.get(key)
-            if user_value:
-                user = (key, user_value)
+#         # Search in headers or query for user info
+#         for key in user_keys:
+#             user_value = request.headers.get(key) or request.query.get(key)
+#             if user_value:
+#                 user = (key, user_value)
 
-        # Search in JSON body
-        try:
-            if token is None and user is None:
-                token = _find_keys_in_json(await request.json(), auth_keys)
-                user = _find_keys_in_json(await request.json(), user_keys)
-        except Exception:
-            pass  # Handle JSON decoding error if necessary
+#         # Search in JSON body
+#         try:
+#             if token is None and user is None:
+#                 token = _find_keys_in_json(await request.json(), auth_keys)
+#                 user = _find_keys_in_json(await request.json(), user_keys)
+#         except Exception as e:
+#             _LOGGER.warning(utils.default_exception_str_builder(e, "during handle json decoding"))
 
-        return (user, token)
-    except Exception as e:
-        _LOGGER.warning(utils.default_exception_str_builder(e, "during auth info gather"))
-    return (None, None)
+#         return (user, token)
+#     except Exception as e:
+#         _LOGGER.warning(utils.default_exception_str_builder(e, "during auth info gather"))
+#     return (None, None)
 
 
-def _find_keys_in_json(data: dict | list | None, keys_to_find: list[str]) -> tuple | None:
-    if isinstance(data, dict):
-        for key, value in data.items():
-            if key in keys_to_find:
-                return (key, value)
-            if isinstance(value, (dict, list)):
-                result = _find_keys_in_json(value, keys_to_find)
-                if result:
-                    return result
-    elif isinstance(data, list):
-        for item in data:
-            result = _find_keys_in_json(item, keys_to_find)
-            if result:
-                return result
-    return None
+# def _find_keys_in_json(data: dict | list | None, keys_to_find: list[str]) -> tuple | None:
+#     if isinstance(data, dict):
+#         for key, value in data.items():
+#             if key in keys_to_find:
+#                 return (key, value)
+#             if isinstance(value, (dict, list)):
+#                 result = _find_keys_in_json(value, keys_to_find)
+#                 if result:
+#                     return result
+#     elif isinstance(data, list):
+#         for item in data:
+#             result = _find_keys_in_json(item, keys_to_find)
+#             if result:
+#                 return result
+#     return None

@@ -34,7 +34,7 @@ class VoicePlugin(WebserverPlugin):
 async def _handle_get(request: Request) -> Response:
     """Get voice."""
     voice_lang = request.query.get("voiceLang", "EN").lower()
-    language_name = "English"
+    language_name: str | list[str] = "English"
     for voice in _get_voice_list():
         if voice.get("voiceLang") == voice_lang:
             language_name = voice.get("languageName", "English")
@@ -73,7 +73,7 @@ async def _handle_get_lanuages(_: Request) -> Response:
     return response_success_v3(_get_voice_list(), data_key="voices")
 
 
-def _get_voice_list() -> list[dict]:
+def _get_voice_list() -> list[dict[str, str | list[str]]]:
     return [
         {"languageName": "English", "support": ["yiko"], "voiceLang": "en"},
         {"languageName": "English(Australian)", "support": ["yiko"], "voiceLang": "en-au"},

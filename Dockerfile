@@ -13,12 +13,9 @@ LABEL org.opencontainers.image.licenses=GPLv3
 RUN apk add --no-cache bash git openssl
 
 WORKDIR /bumper
+COPY . .
 
-COPY requirements.txt /requirements.txt
-RUN pip3 install -r /requirements.txt
-
-# Copy only required folders instead of all
-COPY bumper/ bumper/
+RUN pip3 install .
 
 EXPOSE 443
 EXPOSE 5223

@@ -1,16 +1,15 @@
-"""Global plugin module."""
+"""Global upload plugin module."""
 from collections.abc import Iterable
 
 from aiohttp import web
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.web import images
-
-from .. import WebserverPlugin
+from bumper.web.plugins import WebserverPlugin
 
 
 class GlobalPlugin(WebserverPlugin):
-    """Global plugin."""
+    """Global upload plugin."""
 
     @property
     def routes(self) -> Iterable[AbstractRouteDef]:

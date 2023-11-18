@@ -1,7 +1,7 @@
 """Models module."""
-import uuid
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Any
+import uuid
 
 from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
@@ -43,7 +43,7 @@ class VacBotDevice:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "VacBotDevice":
+    def from_dict(cls, data: dict[str, Any]) -> "VacBotDevice":
         """Create a VacBotDevice instance from a dictionary."""
         bot = cls(did=data.get("did", ""))
         bot.vac_bot_device_class = data.get("vac_bot_device_class", "")
@@ -78,7 +78,7 @@ class BumperUser:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "BumperUser":
+    def from_dict(cls, data: dict[str, Any]) -> "BumperUser":
         """Create a BumperUser instance from a dictionary."""
         user = cls(userid=data.get("userid", ""))
         user.username = data.get("username", "bumper")
@@ -93,9 +93,9 @@ class GlobalVacBotDevice(VacBotDevice):
 
     UILogicId: str = ""
     ota: bool = True
-    updateInfo: dict[str, Any] = {"changeLog": "", "needUpdate": False}
+    updateInfo: dict[str, Any] = {"changeLog": "", "needUpdate": False}  # noqa: N815
     icon: str = ""
-    deviceName: str = ""
+    deviceName: str = ""  # noqa: N815
 
 
 class VacBotClient:
@@ -120,7 +120,7 @@ class VacBotClient:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "VacBotClient":
+    def from_dict(cls, data: dict[str, Any]) -> "VacBotClient":
         """Create a VacBotClient instance from a dictionary."""
         bot = cls(userid=data.get("userid", ""), realm=data.get("realm", ""), token=data.get("token", ""))
         bot.mqtt_connection = data.get("mqtt_connection", False)
@@ -134,7 +134,7 @@ class OAuth:
     access_token: str = ""
     expire_at: str = ""
     refresh_token: str = ""
-    userId: str = ""
+    userId: str = ""  # noqa: N815
 
     def __init__(self, **entries: str):
         """Oauth init."""
@@ -146,11 +146,11 @@ class OAuth:
         oauth = OAuth()
         oauth.userId = user_id  # pylint: disable=invalid-name
         oauth.access_token = uuid.uuid4().hex
-        oauth.expire_at = f"{datetime.utcnow() + timedelta(days=bumper_isc.OAUTH_VALIDITY_DAYS)}"
+        oauth.expire_at = f"{datetime.now(tz=UTC) + timedelta(days=bumper_isc.OAUTH_VALIDITY_DAYS)}"
         oauth.refresh_token = uuid.uuid4().hex
         return oauth
 
-    def to_db(self) -> dict:
+    def to_db(self) -> dict[str, Any]:
         """Convert for db."""
         return self.__dict__
 
@@ -171,7 +171,7 @@ class CleanLogs:
         self.did = did
         self.cid = cid
 
-    def to_db(self) -> dict:
+    def to_db(self) -> dict[str, Any]:
         """Convert for db."""
         return self.__dict__
 
@@ -181,7 +181,7 @@ class CleanLog:
 
     # NEW and OLD bots
     aiavoid: int = 0
-    aitypes: list = []
+    aitypes: list[Any] = []
     area: int | None = None
     image_url: str | None = None
     stop_reason: int | None = None
@@ -204,7 +204,7 @@ class CleanLog:
         """Clean log init."""
         self.clean_log_id = clean_log_id
 
-    def to_db(self) -> dict:
+    def to_db(self) -> dict[str, Any]:
         """Convert for db."""
         return self.__dict__
 
@@ -223,7 +223,7 @@ class CleanLog:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "CleanLog":
+    def from_dict(cls, data: dict[str, Any]) -> "CleanLog":
         """Create a CleanLog instance from a dictionary."""
         clean_log = cls(clean_log_id=data["clean_log_id"])
         clean_log.aiavoid = data.get("aiavoid", 0)
@@ -238,7 +238,7 @@ class CleanLog:
 
 
 RETURN_API_SUCCESS = "0000"
-ERR_ACTIVATE_TOKEN_TIMEOUT = "1006"
+ERR_ACTIVATE_TOKEN_TIMEOUT = "1006"  # noqa: S105
 ERR_COMMON = "0001"
 ERR_DEFAULT = "9000"
 ERR_EMAIL_NON_EXIST = "1002"
@@ -246,15 +246,15 @@ ERR_EMAIL_SEND_TIME_LIMIT = "1011"
 ERR_EMAIL_USED = "1001"
 ERR_INTERFACE_AUTH = "0002"
 ERR_PARAM_INVALID = "0003"
-ERR_PWD_WRONG = "1005"
-ERR_RESET_PWD_TOKEN_TIMEOUT = "1007"
+ERR_PWD_WRONG = "1005"  # noqa: S105
+ERR_RESET_PWD_TOKEN_TIMEOUT = "1007"  # noqa: S105
 ERR_TIMESTAMP_INVALID = "0005"
-ERR_TOKEN_INVALID = "0004"
+ERR_TOKEN_INVALID = "0004"  # noqa: S105
 ERR_USER_DISABLE = "1004"
 ERR_USER_NOT_ACTIVATED = "1003"
-ERR_WRONG_COMFIRM_PWD = "10010"
+ERR_WRONG_COMFIRM_PWD = "10010"  # noqa: S105
 ERR_WRONG_EMAIL_ADDRESS = "1008"
-ERR_WRONG_PWD_FROMATE = "1009"
+ERR_WRONG_PWD_FROMATE = "1009"  # noqa: S105
 ERR_UNKOWN_TODO = "1202"
 
 API_ERRORS: dict[str, str] = {

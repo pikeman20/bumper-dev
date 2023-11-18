@@ -56,7 +56,7 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
                 )
             )
     except Exception as e:
-        _LOGGER.error(e, exc_info=True)
+        _LOGGER.exception(e, exc_info=True)
 
     if request.match_info.route.resource is None or request.match_info.route.resource.canonical in _EXCLUDE_FROM_LOGGING:
         return await handler(request)
@@ -97,7 +97,9 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
             }
 
             if isinstance(response, Response) and response.body:
-                assert response.text
+                if response.text is None:
+                    raise ValueError("Response text is not provided.")
+
                 if response.content_type == "application/json":
                     to_log["response"]["body"] = json.loads(response.text)
                 elif response.content_type.startswith("text"):

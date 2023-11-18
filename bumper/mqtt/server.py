@@ -6,15 +6,14 @@ import logging
 import os
 from typing import Any, Literal
 
-import pkg_resources
 from amqtt.broker import Broker, BrokerContext
 from amqtt.mqtt.protocol.broker_handler import BrokerProtocolHandler
 from amqtt.session import IncomingApplicationMessage, Session
 from passlib.apps import custom_app_context as pwd_context
+import pkg_resources
 from transitions import MachineError
 
-from bumper.mqtt import helper_bot
-from bumper.mqtt import proxy as mqtt_proxy
+from bumper.mqtt import helper_bot, proxy as mqtt_proxy
 from bumper.utils import db, dns, utils
 from bumper.utils.settings import config as bumper_isc
 
@@ -102,8 +101,9 @@ class MQTTServer:
             f"{plugin_name} = {module_path}:{function_name}",
             dist=distribution,
         )
-        # pylint: disable=protected-access
-        distribution._ep_map = {dist_location: {plugin_name: bumper_plugin}}  # type: ignore
+
+        # pylint: disable-next=protected-access
+        distribution._ep_map = {dist_location: {plugin_name: bumper_plugin}}  # type: ignore # noqa: SLF001
         pkg_resources.working_set.add(distribution)
         bumper_plugin.load()
 
@@ -116,13 +116,13 @@ class MQTTServer:
     def sessions(self) -> list[Session]:
         """Get sessions."""
         # pylint: disable-next=protected-access
-        return [session for (session, _) in self._broker._sessions.values()]
+        return [session for (session, _) in self._broker._sessions.values()]  # noqa: SLF001
 
     @property
     def handlers(self) -> list[BrokerProtocolHandler]:
         """Get handlers."""
         # pylint: disable-next=protected-access
-        return [handler for (_, handler) in self._broker._sessions.values()]
+        return [handler for (_, handler) in self._broker._sessions.values()]  # noqa: SLF001
 
     async def start(self) -> None:
         """Start MQTT server."""
@@ -147,7 +147,7 @@ class MQTTServer:
                     try:
                         await handler.stop()
                     except Exception as handler_error:
-                        _LOGGER.error("Error stopping session handler: %s", handler_error, exc_info=True)
+                        _LOGGER.exception(f"Error stopping session handler: {handler_error}", exc_info=True)
 
                 # await self._broker.shutdown()
                 await self.shutdown_copy()
@@ -158,15 +158,14 @@ class MQTTServer:
             raise e
 
     async def shutdown_copy(self) -> None:
-        """
-        Stop broker instance.
+        """Stop broker instance.
 
         Closes all connected session, stop listening on network socket and free resources.
         """
         try:
-            self._broker._sessions = {}  # pylint: disable=protected-access
-            self._broker._subscriptions = {}  # pylint: disable=protected-access
-            self._broker._retained_messages = {}  # pylint: disable=protected-access
+            self._broker._sessions = {}  # pylint: disable=protected-access # noqa: SLF001
+            self._broker._subscriptions = {}  # pylint: disable=protected-access # noqa: SLF001
+            self._broker._retained_messages = {}  # pylint: disable=protected-access # noqa: SLF001
             self._broker.transitions.shutdown()
         except (MachineError, ValueError) as exc:
             # Backwards compat: MachineError is raised by transitions < 0.5.0.
@@ -179,8 +178,8 @@ class MQTTServer:
         await self._shutdown_broadcast_loop()
 
         # pylint: disable-next=protected-access,consider-using-dict-items
-        for listener_name in self._broker._servers:
-            server = self._broker._servers[listener_name]  # pylint: disable=protected-access
+        for listener_name in self._broker._servers:  # noqa: SLF001
+            server = self._broker._servers[listener_name]  # pylint: disable=protected-access # noqa: SLF001
             await server.close_instance()
         self._broker.logger.debug("Broker closing")
         self._broker.logger.info("Broker closed")
@@ -188,17 +187,20 @@ class MQTTServer:
         self._broker.transitions.stopping_success()
 
     async def _shutdown_broadcast_loop(self) -> None:
-        if self._broker._broadcast_task:  # pylint: disable=protected-access
-            if not self._broker._broadcast_shutdown_waiter.done():  # pylint: disable=protected-access
-                self._broker._broadcast_shutdown_waiter.set_result(True)  # pylint: disable=protected-access
-                try:
-                    await asyncio.wait_for(self._broker._broadcast_task, timeout=30)  # pylint: disable=protected-access
-                except BaseException as e:
-                    self._broker.logger.warning(f"Failed to cleanly shutdown broadcast loop: {e}")
-
-        if self._broker._broadcast_queue.qsize() > 0:  # pylint: disable=protected-access
+        # pylint: disable-next=protected-access
+        if self._broker._broadcast_task and not self._broker._broadcast_shutdown_waiter.done():  # noqa: SLF001
             # pylint: disable-next=protected-access
-            self._broker.logger.warning(f"{self._broker._broadcast_queue.qsize()} messages not broadcasted")
+            self._broker._broadcast_shutdown_waiter.set_result(True)  # noqa: SLF001
+            try:
+                # pylint: disable-next=protected-access
+                await asyncio.wait_for(self._broker._broadcast_task, timeout=30)  # noqa: SLF001
+            except BaseException as e:
+                self._broker.logger.warning(f"Failed to cleanly shutdown broadcast loop: {e}")
+
+        # pylint: disable-next=protected-access
+        if self._broker._broadcast_queue.qsize() > 0:  # noqa: SLF001
+            # pylint: disable-next=protected-access
+            self._broker.logger.warning(f"{self._broker._broadcast_queue.qsize()} messages not broadcasted")  # noqa: SLF001
 
 
 class BumperMQTTServerPlugin:
@@ -312,9 +314,9 @@ class BumperMQTTServerPlugin:
                     if self.context.logger is not None:
                         self.context.logger.debug(f"Reading user database from {password_file}")
                     for line in file:
-                        line = line.strip()
-                        if not line.startswith("#"):  # Allow comments in files
-                            (username, pwd_hash) = line.split(sep=":", maxsplit=3)
+                        t_line = line.strip()
+                        if not t_line.startswith("#"):  # Allow comments in files
+                            (username, pwd_hash) = t_line.split(sep=":", maxsplit=3)
                             if username:
                                 users[username] = pwd_hash
                                 if self.context.logger is not None:

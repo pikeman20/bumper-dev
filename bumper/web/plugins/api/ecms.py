@@ -1,7 +1,7 @@
 """Ecms plugin module."""
 
-import logging
 from collections.abc import Iterable
+import logging
 from typing import Any
 
 from aiohttp import web
@@ -11,9 +11,8 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
 from bumper.web.images import get_bot_image
+from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_success_v6
-
-from .. import WebserverPlugin
 
 _LOGGER = logging.getLogger(__name__)
 

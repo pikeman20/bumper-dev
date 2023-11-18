@@ -1,9 +1,9 @@
 """Utils module."""
+import datetime
 import json
 import logging
 import os
 import re
-from datetime import datetime
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -25,14 +25,14 @@ def default_exception_str_builder(e: Exception, info: str | None = None) -> str:
     return f"Unexpected exception occurred :: {info} :: {e}"
 
 
-def convert_to_millis(seconds: int | float) -> int:
+def convert_to_millis(seconds: float) -> int:
     """Convert seconds to milliseconds."""
     return int(round(seconds * 1000))
 
 
 def get_current_time_as_millis() -> int:
     """Get current time in millis."""
-    return convert_to_millis(datetime.utcnow().timestamp())
+    return convert_to_millis(datetime.datetime.now(tz=datetime.UTC).timestamp())
 
 
 def str_to_bool(value: str | int | bool | None) -> bool:
@@ -62,10 +62,7 @@ def get_area_code_map() -> dict[str, str]:
 
 def check_url_not_used(url: str) -> bool:
     """Check if a url is not in the know api list, used in the middleware for debug."""
-    for pattern in _FIND_NOT_USED_API_REQUEST:
-        if re.search(pattern, url):
-            return True
-    return False
+    return bool(re.search(pattern, url) for pattern in _FIND_NOT_USED_API_REQUEST)
 
 
 _FIND_NOT_USED_API_REQUEST = [

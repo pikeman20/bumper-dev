@@ -1,9 +1,9 @@
 import asyncio
 import ssl
 
-import pytest
 from gmqtt import Client
 from gmqtt.mqtt.constants import MQTTv311
+import pytest
 
 from bumper.mqtt.helper_bot import MQTTHelperBot
 from bumper.mqtt.server import MQTTBinding, MQTTServer
@@ -18,7 +18,7 @@ async def mqtt_server():
 
     await mqtt_server.start()
     bumper_isc.mqtt_server = mqtt_server
-    while not mqtt_server.state == "started":
+    while mqtt_server.state != "started":
         await asyncio.sleep(0.1)
 
     yield mqtt_server

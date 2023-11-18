@@ -1,7 +1,7 @@
 """Database module."""
+from datetime import datetime, timedelta
 import logging
 import os
-from datetime import datetime, timedelta
 from typing import Any
 
 from tinydb import Query, TinyDB, where
@@ -106,7 +106,7 @@ def _update_clean_logs_list_field(did: str, cid: str, clean_log: models.CleanLog
             _LOGGER.warning(_logging_message_not_document(t_clean_log, "t_clean_log"))
 
 
-def _check_clean_log_saved(clean_log_logs: list[dict], clean_log: models.CleanLog) -> bool:
+def _check_clean_log_saved(clean_log_logs: list[dict[str, Any]], clean_log: models.CleanLog) -> bool:
     for clean_log_log in clean_log_logs:
         t_clean_log_log = models.CleanLog.from_dict(clean_log_log)
         if (
@@ -526,7 +526,7 @@ def bot_add(sn: str, did: str, dev_class: str, resource: str, company: str) -> N
     existing_bot = bot_get(did)
     # Not existing bot in database
     # AND try to prevent bad additions to the bot list
-    if existing_bot is None and (not dev_class == "" or "@" not in sn or "tmp" not in sn):
+    if existing_bot is None and (dev_class != "" or "@" not in sn or "tmp" not in sn):
         _LOGGER.info(f"Adding new bot with SN: {new_bot.name} DID: {new_bot.did}")
         bot_full_upsert(new_bot)
 

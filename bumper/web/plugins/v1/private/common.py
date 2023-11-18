@@ -1,10 +1,11 @@
 """Common plugin module."""
 import base64
+from collections.abc import Iterable
 import json
 import logging
 import os
-from collections.abc import Iterable
 
+import aiofiles
 from aiohttp import web
 from aiohttp.web_exceptions import HTTPInternalServerError
 from aiohttp.web_request import Request
@@ -16,9 +17,9 @@ from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
+from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import get_success_response
 
-from ... import WebserverPlugin
 from . import BASE_URL
 
 _LOGGER = logging.getLogger(__name__)
@@ -153,8 +154,8 @@ async def _handle_get_config(request: Request) -> Response:
             if key == "PUBLIC.KEY.CONFIG":
                 # TODO: check what's needed to be implemented, not sure if this is what is needed
                 utils.default_log_warn_not_impl("_handle_get_config/PUBLIC.KEY.CONFIG")
-                with open(bumper_isc.server_cert, "rb") as cert_file:
-                    cert_data = cert_file.read()
+                async with aiofiles.open(bumper_isc.server_cert, "rb") as cert_file:
+                    cert_data = await cert_file.read()
                 cert = x509.load_pem_x509_certificate(cert_data, default_backend())
                 public_key = cert.public_key().public_bytes(encoding=Encoding.DER, format=PublicFormat.SubjectPublicKeyInfo)
                 base64_encoded_public_key = base64.b64encode(public_key).decode("utf-8")
@@ -176,7 +177,7 @@ async def _handle_get_config(request: Request) -> Response:
 
         return get_success_response(data)
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 
@@ -199,17 +200,18 @@ async def _handle_get_user_config(request: Request) -> Response:
                 }
             )
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 
 async def _handle_get_areas(_: Request) -> Response:
     """Get Areas."""
     try:
-        with open(os.path.join(os.path.dirname(__file__), "common_area.json"), encoding="utf-8") as file:
-            return get_success_response(json.load(file))
+        async with aiofiles.open(os.path.join(os.path.dirname(__file__), "common_area.json"), encoding="utf-8") as file:
+            file_content = await file.read()
+            return get_success_response(json.loads(file_content))
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 

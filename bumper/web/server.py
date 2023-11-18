@@ -9,13 +9,13 @@ import os
 import ssl
 from typing import Any
 
-import aiohttp_jinja2
-import jinja2
 from aiohttp import ClientSession, TCPConnector, web
 from aiohttp.web_exceptions import HTTPInternalServerError
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_urldispatcher import ResourceRoute
+import aiohttp_jinja2
+import jinja2
 
 from bumper.utils import db, dns, utils
 from bumper.utils.settings import config as bumper_isc
@@ -176,12 +176,12 @@ class WebServer:
     async def _restart_helper_bot(self) -> None:
         if bumper_isc.mqtt_helperbot is not None:
             await bumper_isc.mqtt_helperbot.disconnect()
-            asyncio.create_task(bumper_isc.mqtt_helperbot.start())
+            asyncio.Task(bumper_isc.mqtt_helperbot.start())
 
     async def _restart_mqtt_server(self) -> None:
         if bumper_isc.mqtt_server is not None:
             await bumper_isc.mqtt_server.shutdown()
-            asyncio.create_task(bumper_isc.mqtt_server.start())
+            asyncio.Task(bumper_isc.mqtt_server.start())
 
     async def _handle_restart_service(self, request: Request) -> Response:
         try:

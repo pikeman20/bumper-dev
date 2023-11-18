@@ -113,6 +113,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- update for `project.toml`
+  - move specific tool setup files into `project.toml`
 - bumper updates
   - created folder `utils` and moved the files `db.py` and `dns.py`
   - moved `models.py` into `web` folder

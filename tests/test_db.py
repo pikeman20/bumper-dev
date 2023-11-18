@@ -1,5 +1,5 @@
-import os
 from datetime import datetime, timedelta
+import os
 from unittest import mock
 
 from tinydb import TinyDB

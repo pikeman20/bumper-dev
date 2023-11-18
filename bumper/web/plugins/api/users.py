@@ -1,7 +1,7 @@
 """Users plugin module."""
+from collections.abc import Iterable, Mapping
 import json
 import logging
-from collections.abc import Iterable, Mapping
 from typing import Any
 
 from aiohttp import web
@@ -13,9 +13,8 @@ from aiohttp.web_routedef import AbstractRouteDef
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import auth_util
+from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_error_v6, response_success_v9
-
-from .. import WebserverPlugin
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -111,5 +110,5 @@ async def _handle_user(request: Request) -> Response:
             body = response_error_v6(todo)
         return body
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError

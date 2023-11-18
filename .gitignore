@@ -9,11 +9,12 @@
 !.codecov.yml
 !.coveragerc
 
+!.dockerignore
 !.gitattributes
 !.gitignore
 !.gitempty
 
-# !CHANGELOG.md
+!CHANGELOG.md
 !LICENSE
 # !SECURITY.md
 

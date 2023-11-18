@@ -1,14 +1,13 @@
 """Helper bot module."""
 import asyncio
+from collections.abc import MutableMapping
 import json
 import logging
 import ssl
-from collections.abc import MutableMapping
 from typing import Any
 
 from cachetools import TTLCache
-from gmqtt import Client as MQTTClient
-from gmqtt import Subscription
+from gmqtt import Client as MQTTClient, Subscription
 from gmqtt.mqtt.constants import MQTTv311
 
 from bumper.mqtt.handle_atr import clean_log
@@ -76,10 +75,7 @@ class MQTTHelperBot:
                 f"{cmdjson['toType']}/{cmdjson['toRes']}/q/{request_id}/{payload_type}"
             )
 
-            if payload_type == "j":
-                payload = json.dumps(payload)
-            else:
-                payload = str(payload)
+            payload = json.dumps(payload) if payload_type == "j" else str(payload)
 
             command_dto = CommandDto(payload_type)
             self._commands[request_id] = command_dto
@@ -133,7 +129,7 @@ class MQTTHelperBot:
             )
         )
 
-    def _on_message(self, _client: MQTTClient, topic: str, payload: bytes, _qos: int, _properties: dict) -> None:
+    def _on_message(self, _client: MQTTClient, topic: str, payload: bytes, _qos: int, _properties: dict[str, Any]) -> None:
         try:
             decoded_payload: bytes | bytearray | str | memoryview = payload
             if isinstance(decoded_payload, (bytearray, bytes)):
@@ -145,9 +141,8 @@ class MQTTHelperBot:
             topic_split = topic.split("/")
             if topic_split[1] == "p2p" and topic_split[10] in self._commands:
                 self._commands[topic_split[10]].add_response(decoded_payload)
-            elif topic_split[1] == "atr":
-                if topic_split[2] in ("onStats", "reportStats"):
-                    clean_log(did=topic_split[3], rid=topic_split[5], payload=decoded_payload)
+            elif topic_split[1] == "atr" and topic_split[2] in ("onStats", "reportStats"):
+                clean_log(did=topic_split[3], rid=topic_split[5], payload=decoded_payload)
         except Exception as e:
             _LOGGER.exception(utils.default_exception_str_builder(e, "on message"), exc_info=True)
             raise e

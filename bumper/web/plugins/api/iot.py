@@ -1,9 +1,9 @@
 """Iot plugin module."""
+from collections.abc import Iterable
 import json
 import logging
 import random
 import string
-from collections.abc import Iterable
 
 from aiohttp import web
 from aiohttp.web_request import Request
@@ -12,9 +12,8 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
+from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_error_v7
-
-from .. import WebserverPlugin
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -96,5 +95,5 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
             _LOGGER.error(f"TD is not know :: {td} :: connected to MQTT")
 
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     return response_error_v7()

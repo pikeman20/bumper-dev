@@ -1,12 +1,12 @@
 """Webserver plugin module."""
-import inspect
-import logging
-import os
-import sys
 from abc import abstractmethod
 from collections.abc import Iterable
 from glob import glob
+import inspect
+import logging
+import os
 from os.path import isfile
+import sys
 from types import ModuleType
 
 from aiohttp import web
@@ -26,14 +26,14 @@ class WebserverPlugin:
 
 
 def _add_routes(app: web.Application, module: ModuleType, plugin_module_name: str) -> None:
+    """Add routes from a module and its sub-modules to the web application."""
     if not module.__name__.startswith(plugin_module_name):
         return
 
-    assert module.__file__ is not None
-    if module.__file__.endswith("__init__.py"):
-        sub_app = web.Application()
-    else:
-        sub_app = app
+    if module.__file__ is None:
+        raise ValueError("Module file is not available.")
+
+    sub_app = web.Application() if module.__file__.endswith("__init__.py") else app
 
     for _, clazz in inspect.getmembers(module, inspect.isclass):
         if issubclass(clazz, WebserverPlugin) and clazz != WebserverPlugin:
@@ -51,7 +51,9 @@ def _add_routes(app: web.Application, module: ModuleType, plugin_module_name: st
 
 
 def _import_plugins(module: ModuleType) -> None:
-    assert module.__file__ is not None
+    """Import all plugins in a module."""
+    if module.__file__ is None:
+        raise ValueError("Module file is not available.")
 
     plugin_files = [
         file
@@ -71,7 +73,7 @@ def _import_plugins(module: ModuleType) -> None:
 
 
 def add_plugins(app: web.Application) -> None:
-    """Discover and add all plugins to app."""
+    """Discover and add all plugins to the web application."""
     module = sys.modules[__name__]
     _import_plugins(module)
 

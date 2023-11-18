@@ -1,6 +1,6 @@
 """User plugin module."""
-import logging
 from collections.abc import Iterable
+import logging
 
 from aiohttp import web
 from aiohttp.web_exceptions import HTTPInternalServerError
@@ -10,9 +10,9 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import db, utils
 from bumper.web import auth_util
+from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import get_success_response
 
-from ... import WebserverPlugin
 from . import BASE_URL
 
 _LOGGER = logging.getLogger(__name__)
@@ -102,13 +102,12 @@ async def _logout(request: Request) -> Response:
             user = db.user_by_device_id(device_id)
             if user is None:
                 _LOGGER.warning(f"No user found for {device_id}")
-            else:
-                if db.check_token(user.userid, access_token):
-                    # Deactivate old tokens and authcodes
-                    db.user_revoke_token(user.userid, access_token)
+            elif db.check_token(user.userid, access_token):
+                # Deactivate old tokens and authcodes
+                db.user_revoke_token(user.userid, access_token)
         return get_success_response(None)
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
     raise HTTPInternalServerError
 
 
@@ -162,7 +161,7 @@ async def _handle_get_user_account_info(request: Request) -> Response:
                 }
             )
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 

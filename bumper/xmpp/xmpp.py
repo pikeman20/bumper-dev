@@ -1,15 +1,15 @@
 """XMPP module."""
 import asyncio
+from asyncio import Task, transports
 import base64
 import logging
 import re
 import ssl
-import uuid
-from asyncio import Task, transports
 from typing import Optional
+import uuid
 from xml.etree.ElementTree import Element
 
-import defusedxml.ElementTree as ET
+import defusedxml.ElementTree as ET  # noqa: N817
 
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
@@ -75,7 +75,7 @@ class XMPPServerProtocol(asyncio.Protocol):
             client = XMPPAsyncClient(transport)
             self._client = client
             XMPPServer.clients.append(client)
-            self._client.state = getattr(client, "CONNECT")
+            self._client.state = client.CONNECT
             _LOGGER.debug(f"New Connection from {client.address}")
 
     def connection_lost(self, _: Exception | None) -> None:
@@ -194,12 +194,12 @@ class XMPPAsyncClient:
                 )
                 return
 
-            if xml.get("type") == "set":
-                if "com:sf" in data and xml.get("to") == "rl.ecorobot.net":  # Android bind? Not sure what this does yet.
-                    self.send(
-                        f'<iq id="{xml.get("id")}" to="{self.uid}@{XMPPServer.server_id}/{self.clientresource}"'
-                        ' from="rl.ecorobot.net" type="result"/>'
-                    )
+            # Android bind? Not sure what this does yet.
+            if xml.get("type") == "set" and "com:sf" in data and xml.get("to") == "rl.ecorobot.net":
+                self.send(
+                    f'<iq id="{xml.get("id")}" to="{self.uid}@{XMPPServer.server_id}/{self.clientresource}"'
+                    ' from="rl.ecorobot.net" type="result"/>'
+                )
 
             if len(xml[0]) > 0:
                 ctl = xml[0][0]
@@ -219,12 +219,11 @@ class XMPPAsyncClient:
                     # clean up string to remove namespaces added by ET
                     rxmlstring = self._xml_replacer(xml, "query", "com:ctl")
 
-                    if client.type == self.BOT and ctl_to is not None:
-                        if client.uid.lower() in ctl_to.lower():
-                            _LOGGER_CLIENT.debug(
-                                f"Sending ctl to bot: {rxmlstring}",
-                            )
-                            client.send(rxmlstring)
+                    if client.type == self.BOT and ctl_to is not None and client.uid.lower() in ctl_to.lower():
+                        _LOGGER_CLIENT.debug(
+                            f"Sending ctl to bot: {rxmlstring}",
+                        )
+                        client.send(rxmlstring)
 
         except Exception as e:
             _LOGGER_CLIENT.error(utils.default_exception_str_builder(e))
@@ -247,9 +246,13 @@ class XMPPAsyncClient:
                 pingstring = self._xml_replacer(xml, "ping", "urn:xmpp:ping")
 
                 for client in XMPPServer.clients:
-                    if pingto is not None and client.bumper_jid != self.bumper_jid and client.state == client.READY:
-                        if client.uid.lower() in pingto.lower():
-                            client.send(pingstring)
+                    if (
+                        pingto is not None
+                        and client.bumper_jid != self.bumper_jid
+                        and client.state == client.READY
+                        and client.uid.lower() in pingto.lower()
+                    ):
+                        client.send(pingstring)
 
         except Exception as e:
             _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e), exc_info=True)
@@ -259,10 +262,11 @@ class XMPPAsyncClient:
         if self.state == 5:  # disconnected
             return
         self.send(
-            f"<iq from='{XMPPServer.server_id}' to='{self.bumper_jid}' id='s2c1' type='get'>" "<ping xmlns='urn:xmpp:ping'/></iq>"
+            f"<iq from='{XMPPServer.server_id}' to='{self.bumper_jid}' id='s2c1' type='get'>"
+            " <ping xmlns='urn:xmpp:ping'/></iq>"
         )
         await asyncio.sleep(time)
-        asyncio.create_task(self.schedule_ping(time))
+        asyncio.Task(self.schedule_ping(time))
 
     def _handle_result(self, xml: Element, data: str) -> None:
         try:
@@ -293,7 +297,7 @@ class XMPPAsyncClient:
                     if (
                         ctl_to is not None
                         and adminuser is not None
-                        and not (adminuser.startswith("fuid_") or adminuser.startswith("fusername_") or bumper_isc.USE_AUTH)
+                        and not (adminuser.startswith(("fuid_", "fusername_")) or bumper_isc.USE_AUTH)
                     ):  # if not fuid_ then its ecovacs OR ignore bumper auth
                         # NOTE: Implement auth later, should this user have access to bot?
 
@@ -326,11 +330,10 @@ class XMPPAsyncClient:
 
             else:
                 rxmlstring = self._xml_replacer(xml, "query", "com:ctl")
-                if self.type == self.BOT:
-                    if ctl_to == "de.ecorobot.net":  # Send to all clients
-                        _LOGGER_CLIENT.debug(f"Sending to all clients because of de: {rxmlstring}")
-                        for client in XMPPServer.clients:
-                            client.send(rxmlstring)
+                if self.type == self.BOT and ctl_to == "de.ecorobot.net":  # Send to all clients
+                    _LOGGER_CLIENT.debug(f"Sending to all clients because of de: {rxmlstring}")
+                    for client in XMPPServer.clients:
+                        client.send(rxmlstring)
 
                 if ctl_to is not None and ctl_to.find("@") != -1:  # address Found
                     ctl_to = f"{ctl_to.split('@')[0]}@ecouser.net"
@@ -381,11 +384,10 @@ class XMPPAsyncClient:
 
                     else:
                         self.send("</stream>")
+                elif "urn:ietf:params:xml:ns:xmpp-sasl" in xml.tag:  # Handle SASL Auth
+                    self._handle_sasl_auth(xml)
                 else:
-                    if "urn:ietf:params:xml:ns:xmpp-sasl" in xml.tag:  # Handle SASL Auth
-                        self._handle_sasl_auth(xml)
-                    else:
-                        _LOGGER_CLIENT.error(f"Couldn't handle :: {xml}")
+                    _LOGGER_CLIENT.error(f"Couldn't handle :: {xml}")
 
             elif self.state == self.INIT:
                 if xml is None:
@@ -403,10 +405,7 @@ class XMPPAsyncClient:
                         )
 
                 else:  # Handle init bind
-                    if len(xml):
-                        child = self._tag_strip_uri(xml[0].tag)
-                    else:
-                        child = None
+                    child = self._tag_strip_uri(xml[0].tag) if len(xml) else None
 
                     if xml.tag == "iq":
                         if child == "bind":
@@ -476,9 +475,7 @@ class XMPPAsyncClient:
 
             else:
                 auth = False
-                if db.check_auth_code(self.uid, authcode):
-                    auth = True
-                elif bumper_isc.USE_AUTH is False:
+                if db.check_auth_code(self.uid, authcode) or bumper_isc.USE_AUTH is False:
                     auth = True
 
                 if auth and self.clientresource is not None:
@@ -536,7 +533,7 @@ class XMPPAsyncClient:
     def _handle_session(self, xml: Element) -> None:
         self.set_state("READY")
         self.send(f'<iq type="result" id="{xml.get("id")}" />')
-        asyncio.create_task(self.schedule_ping(30))
+        asyncio.Task(self.schedule_ping(30))
 
     def _handle_presence(self, xml: Element) -> None:
         if len(xml) and xml[0].tag == "status":
@@ -615,10 +612,10 @@ class XMPPAsyncClient:
                 item_tag: str = item.tag.split("}")[-1]
                 item_namespace: str = item.tag.split("}")[0][1:]
 
-                if "root" == item_tag:
+                if item_tag == "root":
                     continue
 
-                if "iq" == item_tag:
+                if item_tag == "iq":
                     if self.log_incoming_data:
                         _LOGGER_CLIENT.debug(
                             f"from ({self.address[0]}:{self.address[1]} | {self.bumper_jid})"
@@ -631,19 +628,19 @@ class XMPPAsyncClient:
                     self._handle_iq(item, newdata)
                     item.clear()
 
-                elif "auth" == item_tag and "urn:ietf:params:xml:ns:xmpp-sasl" == item_namespace:  # SASL Auth
+                elif item_tag == "auth" and item_namespace == "urn:ietf:params:xml:ns:xmpp-sasl":  # SASL Auth
                     self._handle_sasl_auth(item)
                     item.clear()
 
-                elif "starttls" == item_tag and self.tls_upgraded is False:
-                    asyncio.create_task(self._handle_starttls())
+                elif item_tag == "starttls" and self.tls_upgraded is False:
+                    asyncio.Task(self._handle_starttls())
                     item.clear()
 
-                elif "presence" == item_tag:
+                elif item_tag == "presence":
                     self._handle_presence(item)
                     item.clear()
 
-                elif "stream" == item_tag and self.state in (self.CONNECT, self.INIT):
+                elif item_tag == "stream" and self.state in (self.CONNECT, self.INIT):
                     _LOGGER_CLIENT.debug(f"Handling connect data - {newdata}")
                     self._handle_connect(newdata)
                     item.clear()
@@ -660,10 +657,7 @@ class XMPPAsyncClient:
             _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e), exc_info=True)
 
     def _handle_iq(self, xml: Element, data: str) -> None:
-        if len(xml):
-            child = self._tag_strip_uri(xml[0].tag)
-        else:
-            child = None
+        child = self._tag_strip_uri(xml[0].tag) if len(xml) else None
 
         if xml.tag == "iq":
             if child == "bind":
@@ -677,16 +671,8 @@ class XMPPAsyncClient:
                     self._handle_result(xml, data)
                 else:
                     self._handle_ctl(xml, data)
-            elif xml.get("type") == "result":
-                if self.type == self.BOT:
-                    self._handle_result(xml, data)
-                else:
-                    self._handle_result(xml, data)
-            elif xml.get("type") == "set":
-                if self.type == self.BOT:
-                    self._handle_result(xml, data)
-                else:
-                    self._handle_result(xml, data)
+            elif xml.get("type") == "result" or xml.get("type") == "set":
+                self._handle_result(xml, data)
 
     def _xml_replacer(self, xml: Element, tag: str, xmlns: str) -> str:
         # clean up string to remove namespaces added by ET

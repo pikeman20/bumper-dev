@@ -1,9 +1,11 @@
 """Pim product plugin module."""
+from collections.abc import Iterable
 import json
 import logging
 import os
-from collections.abc import Iterable
+from typing import Any
 
+import aiofiles
 from aiohttp import web
 from aiohttp.web_exceptions import HTTPInternalServerError
 from aiohttp.web_request import Request
@@ -60,35 +62,38 @@ async def _handle_get_product_iot_map(_: Request) -> Response:
         return response_success_v5(get_product_iot_map())
 
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 
 async def _handle_get_config_net_all(_: Request) -> Response:
     """Get config net all."""
     try:
-        with open(os.path.join(os.path.dirname(__file__), "configNetAllResponse.json"), encoding="utf-8") as file:
-            return web.json_response(json.load(file))
+        async with aiofiles.open(os.path.join(os.path.dirname(__file__), "configNetAllResponse.json"), encoding="utf-8") as file:
+            file_content = await file.read()
+            return web.json_response(json.loads(file_content))
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 
 async def _handle_get_config_groups(_: Request) -> Response:
     """Get config groups."""
     try:
-        with open(os.path.join(os.path.dirname(__file__), "configGroupsResponse.json"), encoding="utf-8") as file:
-            return web.json_response(json.load(file))
+        async with aiofiles.open(os.path.join(os.path.dirname(__file__), "configGroupsResponse.json"), encoding="utf-8") as file:
+            file_content = await file.read()
+            return web.json_response(json.loads(file_content))
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 
 async def _handle_config_batch(request: Request) -> Response:
     """Handle product config batch."""
     try:
-        with open(os.path.join(os.path.dirname(__file__), "productConfigBatch.json"), encoding="utf-8") as file:
-            product_config_batch: list[dict] = json.load(file)
+        async with aiofiles.open(os.path.join(os.path.dirname(__file__), "productConfigBatch.json"), encoding="utf-8") as file:
+            file_content = await file.read()
+            product_config_batch: list[dict[str, Any]] = json.loads(file_content)
 
         json_body = json.loads(await request.text())
         data = []
@@ -104,7 +109,7 @@ async def _handle_config_batch(request: Request) -> Response:
 
         return response_success_v3(data, 200)
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 
@@ -118,5 +123,5 @@ async def _handle_get_share_info(request: Request) -> Response:
         _LOGGER.debug(f"Share info :: {scene}")
         return response_success_v5([])
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError

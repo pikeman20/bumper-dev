@@ -7,9 +7,8 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
+from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_success_v3, response_success_v5, response_success_v8
-
-from .. import WebserverPlugin
 
 
 class NengPlugin(WebserverPlugin):

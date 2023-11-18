@@ -16,5 +16,5 @@ async def get_bot_image(_: Request) -> FileResponse:
     try:
         return FileResponse(os.path.join(os.path.dirname(__file__), "robotvac_image.jpg"))
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
     raise HTTPInternalServerError

@@ -1,0 +1,4 @@
+*
+!bumper/
+!bumper/**
+!pyproject.toml

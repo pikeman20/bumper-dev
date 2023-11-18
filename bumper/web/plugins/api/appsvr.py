@@ -1,8 +1,8 @@
 """Appsvr plugin module."""
+from collections.abc import Iterable, Mapping
 import copy
 import json
 import logging
-from collections.abc import Iterable, Mapping
 from typing import Any
 
 from aiohttp import web
@@ -14,9 +14,9 @@ from aiohttp.web_routedef import AbstractRouteDef
 from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import auth_util
+from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_error_v5, response_success_v3, response_success_v4, response_success_v5
 
-from .. import WebserverPlugin
 from .pim import get_product_iot_map
 
 _LOGGER = logging.getLogger(__name__)
@@ -169,7 +169,7 @@ async def _handle_app_do(request: Request) -> Response:
         _LOGGER.error(f"todo is not know :: {todo}")
         return response_error_v5()
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 
@@ -615,7 +615,7 @@ async def _handle_service_list(request: Request) -> Response:
 
         return response_success_v4(data)
     except Exception as e:
-        _LOGGER.error(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
     raise HTTPInternalServerError
 
 

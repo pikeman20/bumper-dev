@@ -179,7 +179,7 @@ BUMPER_ANNOUNCE_IP=0.0.0.0 # replace with the server public ip
 $python3 -m pip install virtualenv --break-system-packages
 $python3 -m venv venv
 $source ./venv/bin/activate
-$python3 -m pip install -r requirements.txt
+$python3 -m pip install .
 
 $python3 -m bumper
 ```
@@ -190,10 +190,11 @@ $python3 -m bumper
 $python3 -m pip install virtualenv --break-system-packages
 $python3 -m venv venv
 $source ./venv/bin/activate
-$python3 -m pip install -r requirements.txt
-$python3 -m pip install -r requirements-dev.txt
+$python3 -m pip install -e .
+$python3 -m pip install -e .[dev]
 
-$pre-commit run --all-files
+$clear && pre-commit run --all-files
+$clear && pytest
 ```
 
 ---
