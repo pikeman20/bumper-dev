@@ -34,8 +34,8 @@ jobs:
           cache-dependency-path: "requirements*"
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+          pip install .
+          pip install .[dev]
       # Following steps cannot run by pre-commit.ci as repo = local
       - name: Run mypy
         run: mypy ${{ env.PROJECT_PATH }}/
@@ -60,8 +60,8 @@ jobs:
           cache-dependency-path: "requirements*"
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+          pip install .
+          pip install .[dev]
       - name: Run pytest
         run: pytest --cov=./ --cov-report=xml
 
