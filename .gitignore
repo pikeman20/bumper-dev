@@ -40,12 +40,16 @@
 !scripts/**
 
 !tests/
-!tests/test_certs/
-!tests/test_certs/*
-!tests/passwd
-!tests/passwd_bad
+!tests/_test_files/
+!tests/_test_files/*
+!tests/mqtt/
+!tests/mqtt/**
+!tests/utils/
+!tests/utils/**
 !tests/web/
 !tests/web/**
+!tests/xmpp/
+!tests/xmpp/**
 !tests/__init__.py
 !tests/conftest.py
 !tests/test*.py
