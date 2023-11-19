@@ -57,7 +57,7 @@ async def _handle_clean_result_list(request: Request) -> Response:
 
         return response_success_v3(sorted(data, key=lambda x: x["ts"], reverse=True))
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
     raise HTTPInternalServerError
 
 
@@ -68,5 +68,5 @@ async def _handle_clean_result_del(_: Request) -> Response:
     try:
         return response_success_v3(None)
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
     raise HTTPInternalServerError

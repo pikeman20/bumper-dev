@@ -119,7 +119,7 @@ class WebServer:
 
                 await site.start()
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
             raise e
 
     async def shutdown(self) -> None:
@@ -131,7 +131,7 @@ class WebServer:
             self._runners.clear()
             await self._app.shutdown()
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
             raise e
 
     async def _handle_base(self, request: Request) -> Response:
@@ -171,7 +171,7 @@ class WebServer:
             }
             return aiohttp_jinja2.render_template("home.jinja2", request, context=context)
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
         raise HTTPInternalServerError
 
     async def _restart_helper_bot(self) -> None:
@@ -202,7 +202,7 @@ class WebServer:
                 return web.json_response({"status": "complete"})
             return web.json_response({"status": "invalid service"})
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
         raise HTTPInternalServerError
 
     async def _handle_remove_bot(self, request: Request) -> Response:
@@ -213,7 +213,7 @@ class WebServer:
                 return web.json_response({"status": "failed to remove bot"})
             return web.json_response({"status": "successfully removed bot"})
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
         raise HTTPInternalServerError
 
     async def _handle_remove_client(self, request: Request) -> Response:
@@ -224,7 +224,7 @@ class WebServer:
                 return web.json_response({"status": "failed to remove client"})
             return web.json_response({"status": "successfully removed client"})
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
         raise HTTPInternalServerError
 
     async def _handle_lookup(self, request: Request) -> Response:
@@ -256,7 +256,7 @@ class WebServer:
             return web.json_response({})
 
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
         raise HTTPInternalServerError
 
     async def _handle_new_auth(self, request: Request) -> Response:
@@ -285,7 +285,7 @@ class WebServer:
                 }
             )
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
         raise HTTPInternalServerError
 
     async def _handle_sa(self, request: Request) -> Response:
@@ -304,7 +304,7 @@ class WebServer:
                     _LOGGER.info(decompressed_data)
             return web.json_response(None)
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
         raise HTTPInternalServerError
 
     async def _handle_config_android_conf(self, _: Request) -> Response:
@@ -318,7 +318,7 @@ class WebServer:
                 }
             )
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
         raise HTTPInternalServerError
 
     async def _handle_data_collect(self, _: Request) -> Response:
@@ -327,7 +327,7 @@ class WebServer:
         try:
             return web.json_response(None)
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
         raise HTTPInternalServerError
 
     async def _handle_proxy(self, request: Request) -> Response:

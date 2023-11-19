@@ -95,5 +95,5 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
             _LOGGER.error(f"TD is not know :: {td} :: connected to MQTT")
 
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
     return response_error_v7()

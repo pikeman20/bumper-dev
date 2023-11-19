@@ -5,6 +5,8 @@ import logging
 import os
 import re
 
+import validators
+
 _LOGGER = logging.getLogger(__name__)
 
 # ******************************************************************************
@@ -15,14 +17,14 @@ def default_log_warn_not_impl(func: str) -> None:
     _LOGGER.debug(f"!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: {func} !!!")
 
 
-# ******************************************************************************
-
-
 def default_exception_str_builder(e: Exception, info: str | None = None) -> str:
     """Build default exception message."""
     if info is None:
         return f"Unexpected exception occurred :: {e}"
     return f"Unexpected exception occurred :: {info} :: {e}"
+
+
+# ******************************************************************************
 
 
 def convert_to_millis(seconds: float) -> int:
@@ -43,6 +45,19 @@ def str_to_bool(value: str | int | bool | None) -> bool:
 # ******************************************************************************
 
 
+def is_valid_url(url: str | None) -> bool:
+    """Validate if is a url."""
+    return bool(validators.url(url))
+
+
+def is_valid_ip(ip: str | None) -> bool:
+    """Validate if is ipv4 or ipv6."""
+    return bool(validators.ipv4(ip) or validators.ipv6(ip))
+
+
+# ******************************************************************************
+
+
 def get_dc_code(area_code: str) -> str:
     """Return to a area code the corresponding dc code."""
     return get_area_code_map().get(area_code, "na")
@@ -50,19 +65,19 @@ def get_dc_code(area_code: str) -> str:
 
 def get_area_code_map() -> dict[str, str]:
     """Return area code map."""
-    with open(os.path.join(os.path.dirname(__file__), "utils_area_code_mapping.json"), encoding="utf-8") as file:
-        res = json.load(file)
-        if isinstance(res, dict):
-            return res
+    try:
+        with open(os.path.join(os.path.dirname(__file__), "utils_area_code_mapping.json"), encoding="utf-8") as file:
+            res = json.load(file)
+            if isinstance(res, dict):
+                return res
+    except Exception:
+        _LOGGER.warning("Could not find/read utils_area_code_mapping.json")
     return {}
-
-
-# ******************************************************************************
 
 
 def check_url_not_used(url: str) -> bool:
     """Check if a url is not in the know api list, used in the middleware for debug."""
-    return bool(re.search(pattern, url) for pattern in _FIND_NOT_USED_API_REQUEST)
+    return any(re.search(pattern, url) for pattern in _FIND_NOT_USED_API_REQUEST)
 
 
 _FIND_NOT_USED_API_REQUEST = [

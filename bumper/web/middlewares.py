@@ -56,7 +56,7 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
                 )
             )
     except Exception as e:
-        _LOGGER.exception(e, exc_info=True)
+        _LOGGER.exception(e)
 
     if request.match_info.route.resource is None or request.match_info.route.resource.canonical in _EXCLUDE_FROM_LOGGING:
         return await handler(request)
@@ -80,7 +80,7 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
                 else:
                     to_log["request"]["body"] = set(await request.post())
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during logging the request"), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e, "during logging the request"))
             raise e
 
         response: StreamResponse | None = await handler(request)
@@ -107,7 +107,7 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
 
             return response
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during logging the response"), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e, "during logging the response"))
             raise e
 
     except web.HTTPNotFound as h:

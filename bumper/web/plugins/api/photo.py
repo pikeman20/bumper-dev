@@ -36,5 +36,5 @@ async def _handle(_: Request) -> Response:
     try:
         return response_success_v6(None)
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
     raise HTTPInternalServerError

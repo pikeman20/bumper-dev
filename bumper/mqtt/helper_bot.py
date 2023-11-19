@@ -52,7 +52,7 @@ class MQTTHelperBot:
 
                 await self._client.connect(self._host, self._port, ssl=ssl_ctx, version=MQTTv311)
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during startup"), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e, "during startup"))
             raise e
 
     async def disconnect(self) -> None:
@@ -85,7 +85,7 @@ class MQTTHelperBot:
 
             return await self._wait_for_resp(command_dto, request_id)
         except Exception as e:
-            _LOGGER.exception(f"Could not send command :: {e}", exc_info=True)
+            _LOGGER.exception(f"Could not send command :: {e}")
             return {
                 "id": request_id,
                 "errno": 500,
@@ -112,7 +112,7 @@ class MQTTHelperBot:
         except asyncio.CancelledError:
             _LOGGER.debug("wait_for_resp cancelled by asyncio", exc_info=True)
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during wait for response"), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e, "during wait for response"))
         return {
             "id": request_id,
             "errno": 500,
@@ -132,7 +132,7 @@ class MQTTHelperBot:
     def _on_message(self, _client: MQTTClient, topic: str, payload: bytes, _qos: int, _properties: dict[str, Any]) -> None:
         try:
             decoded_payload: bytes | bytearray | str | memoryview = payload
-            if isinstance(decoded_payload, (bytearray, bytes)):
+            if isinstance(decoded_payload, bytearray | bytes):
                 decoded_payload = decoded_payload.decode("utf-8", errors="replace")
             if isinstance(decoded_payload, memoryview):
                 decoded_payload = decoded_payload.tobytes().decode("utf-8")
@@ -144,7 +144,7 @@ class MQTTHelperBot:
             elif topic_split[1] == "atr" and topic_split[2] in ("onStats", "reportStats"):
                 clean_log(did=topic_split[3], rid=topic_split[5], payload=decoded_payload)
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "on message"), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e, "on message"))
             raise e
 
 

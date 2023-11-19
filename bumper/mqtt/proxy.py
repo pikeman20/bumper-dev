@@ -1,6 +1,7 @@
 """Mqtt proxy module."""
 import asyncio
 from collections.abc import MutableMapping
+import contextlib
 import logging
 import ssl
 import typing
@@ -33,7 +34,7 @@ class ProxyClient:
         self,
         client_id: str,
         host: str,
-        port: int = 443,
+        port: int = bumper_isc.WEB_SERVER_TLS_LISTEN_PORT,
         config: dict[str, Any] | None = None,
         timeout: float = 180,
     ):
@@ -48,7 +49,7 @@ class ProxyClient:
         try:
             await self._client.connect(f"mqtts://{username}:{password}@{self._host}:{self._port}")
         except Exception as e:
-            _LOGGER.exception("An exception occurred during startup", exc_info=True)
+            _LOGGER.exception("An exception occurred during startup")
             raise e
 
         asyncio.Task(self._handle_messages())
@@ -84,7 +85,7 @@ class ProxyClient:
 
                 bumper_isc.mqtt_helperbot.publish(topic, data)
             except Exception:
-                _LOGGER.exception("An error occurred during handling a message", exc_info=True)
+                _LOGGER.exception("An error occurred during handling a message")
 
     async def subscribe(self, topic: str, qos: Any = QOS_0) -> None:
         """Subscribe to topic."""
@@ -92,7 +93,8 @@ class ProxyClient:
 
     async def disconnect(self) -> None:
         """Disconnect."""
-        await self._client.disconnect()
+        with contextlib.suppress(AttributeError):
+            await self._client.disconnect()
 
     async def publish(self, topic: str, message: bytes, qos: int | None = None) -> None:
         """Publish message."""

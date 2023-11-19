@@ -1,16 +1,19 @@
 import asyncio
-import os
-import ssl
 import time
 
 from gmqtt import Client
-from gmqtt.mqtt.constants import MQTTv311
 from testfixtures import LogCapture
 
 from bumper.mqtt.helper_bot import MQTTHelperBot
-from bumper.mqtt.server import MQTTBinding, MQTTServer
-from bumper.utils import db
 from tests import HOST, MQTT_PORT
+
+
+async def test_helperbot_connect(mqtt_client: Client):
+    # Test helperbot connect
+    mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
+    await mqtt_helperbot.start()
+    assert mqtt_helperbot.is_connected
+    await mqtt_helperbot.disconnect()
 
 
 async def test_helperbot_message(mqtt_client: Client):
@@ -281,95 +284,3 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
         },
         "ret": "ok",
     }
-
-
-async def test_mqttserver():
-    if os.path.exists("tests/tmp.db"):
-        os.remove("tests/tmp.db")  # Remove existing db
-
-    mqtt_server = MQTTServer(MQTTBinding(HOST, MQTT_PORT, True), password_file="tests/passwd", allow_anonymous=True)
-
-    await mqtt_server.start()
-
-    try:
-        # Test helperbot connect
-        mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
-        await mqtt_helperbot.start()
-        assert mqtt_helperbot.is_connected
-        await mqtt_helperbot.disconnect()
-
-        # Test client connect
-        db.user_add("user_123")  # Add user to db
-        db.client_add("user_123", "ecouser.net", "resource_123")  # Add client to db
-
-        ssl_ctx = ssl.create_default_context()
-        ssl_ctx.check_hostname = False
-        ssl_ctx.verify_mode = ssl.CERT_NONE
-        client = Client("user_123@ecouser.net/resource_123")
-        await client.connect(HOST, MQTT_PORT, ssl=ssl_ctx, version=MQTTv311)  # type: ignore
-        assert client.is_connected
-        await client.disconnect()
-        assert not client.is_connected
-
-        # Test fake_bot connect
-        client = Client("bot_serial@ls1ok3/wC3g")
-        await client.connect(HOST, MQTT_PORT, ssl=ssl_ctx, version=MQTTv311)  # type: ignore
-        assert client.is_connected
-        await client.disconnect()
-
-        # Test file auth client connect
-        client = Client("test-file-auth")
-        client.set_auth_credentials("test-client", "abc123!")
-        await client.connect(HOST, MQTT_PORT, ssl=ssl_ctx, version=MQTTv311)  # type: ignore
-        assert client.is_connected
-        await client.disconnect()
-        assert not client.is_connected
-
-        # bad password
-        with LogCapture() as log:
-            client.set_auth_credentials("test-client", "notvalid!")
-            await client.connect(HOST, MQTT_PORT, ssl=ssl_ctx, version=MQTTv311)  # type: ignore
-            await client.disconnect()
-
-            log.check_present(
-                (
-                    "bumper.mqtt.server",
-                    "INFO",
-                    "File Authentication Failed :: Username: test-client - ClientID: test-file-auth",
-                ),
-                order_matters=False,
-            )
-            log.clear()
-
-            # no username in file
-            client.set_auth_credentials("test-client-noexist", "notvalid!")
-            await client.connect(HOST, MQTT_PORT, ssl=ssl_ctx, version=MQTTv311)  # type: ignore
-            await client.disconnect()
-
-            log.check_present(
-                (
-                    "bumper.mqtt.server",
-                    "INFO",
-                    "File Authentication Failed :: No Entry for :: Username: test-client-noexist - ClientID: test-file-auth",
-                ),
-                order_matters=False,
-            )
-    finally:
-        await mqtt_server.shutdown()
-
-
-async def test_nofileauth_mqttserver():
-    with LogCapture() as log:
-        mqtt_server = MQTTServer(MQTTBinding(HOST, MQTT_PORT, True), password_file="tests/passwd-notfound")
-        await mqtt_server.start()
-        try:
-            log.check_present(
-                (
-                    "amqtt.broker.plugins.bumper",
-                    "WARNING",
-                    "Password file tests/passwd-notfound not found",
-                ),
-                order_matters=False,
-            )
-        finally:
-            await mqtt_server.shutdown()

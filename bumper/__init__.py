@@ -3,7 +3,6 @@ import argparse
 import asyncio
 import logging
 import os
-import signal
 import sys
 
 from bumper.mqtt import helper_bot, server as server_mqtt
@@ -20,22 +19,25 @@ _LOGGER = logging.getLogger(__name__)
 
 async def start() -> None:
     """Start Bumper."""
-    _LOGGER.info("Starting Bumpers...")
-    start_configuration()
-    await start_service()
-    _LOGGER.info("Bumper started successfully")
-    await maintenance()
+    try:
+        # LogHelper()
+        _LOGGER.info("Starting Bumpers...")
+        await start_configuration()
+        await start_service()
+        _LOGGER.info("Bumper started successfully")
+        await maintenance()
+    except Exception as e:
+        _LOGGER.exception(e)
 
 
-def start_configuration() -> None:
+async def start_configuration() -> None:
     """Start Bumper configuration."""
     if bumper_isc.bumper_level == "DEBUG":
         # Set asyncio loop to debug
         asyncio.get_event_loop().set_debug(True)
 
     if bumper_isc.bumper_listen is None:
-        _LOGGER.fatal("No listen address configured")
-        sys.exit(1)
+        raise Exception("No listen address configured!")
 
     # Reset xmpp/mqtt to false in database for bots and clients
     db.bot_reset_connection_status()
@@ -144,7 +146,7 @@ async def shutdown() -> None:
     except asyncio.CancelledError:
         _LOGGER.info("Coroutine canceled!")
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e))
     finally:
         _LOGGER.info("Shutdown complete!")
 
@@ -187,15 +189,15 @@ def main(argv: list[str] | None = None) -> None:
         # Read arguments from command line
         read_args(argv)
 
-        if bumper_isc.bumper_listen is None:
-            _LOGGER.fatal("No listen address configured")
-            return
+        if not utils.is_valid_ip(bumper_isc.bumper_listen):
+            raise Exception("No listen address configured!")
 
-        # Register the signal handler for SIGINT (Ctrl+C)
-        loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(shutdown()))
         loop.run_until_complete(start())
+    except KeyboardInterrupt:
+        _LOGGER.debug("Keyboard Interrupt!")
     except Exception as e:
-        _LOGGER.critical(utils.default_exception_str_builder(e), exc_info=True)
+        _LOGGER.critical(utils.default_exception_str_builder(e))
     finally:
-        _LOGGER.info("Shutdown complete!")
-        loop.close()
+        loop.run_until_complete(shutdown())
+        if loop.is_running():
+            loop.close()

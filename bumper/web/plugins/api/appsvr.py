@@ -169,7 +169,7 @@ async def _handle_app_do(request: Request) -> Response:
         _LOGGER.error(f"todo is not know :: {todo}")
         return response_error_v5()
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
     raise HTTPInternalServerError
 
 
@@ -615,7 +615,7 @@ async def _handle_service_list(request: Request) -> Response:
 
         return response_success_v4(data)
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
     raise HTTPInternalServerError
 
 
@@ -729,5 +729,5 @@ def _include_product_iot_map_info(bot: dict[str, Any]) -> dict[str, Any]:
                     did = session.client_id.split("@")[0]
                     if did == bot["did"] and session.transitions.state == "connected":
                         result["status"] = 1
-            break
+                        break
     return result

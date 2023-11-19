@@ -177,7 +177,7 @@ async def _handle_get_config(request: Request) -> Response:
 
         return get_success_response(data)
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
     raise HTTPInternalServerError
 
 
@@ -200,7 +200,7 @@ async def _handle_get_user_config(request: Request) -> Response:
                 }
             )
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
     raise HTTPInternalServerError
 
 
@@ -211,7 +211,7 @@ async def _handle_get_areas(_: Request) -> Response:
             file_content = await file.read()
             return get_success_response(json.loads(file_content))
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
     raise HTTPInternalServerError
 
 

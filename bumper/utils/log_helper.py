@@ -13,47 +13,36 @@ from bumper.utils.settings import config as bumper_isc
 class LogHelper:
     """LogHelper."""
 
-    def __init__(self, logging_verbose: int = bumper_isc.bumper_verbose, logging_level: str = bumper_isc.bumper_level) -> None:
+    def __init__(self) -> None:
         """Log Helper init."""
         logger_name_size = self._clean_logs()
         # configure logger for requested verbosity
         log_format: str = "%(message)s"
-        if logging_verbose >= 5:
-            log_format = "[%(asctime)s] :: %(levelname)s :: %(name)s :: %(module)s :: %(funcName)s :: %(lineno)d :: %(message)s"
-        elif logging_verbose == 4:
-            log_format = (
-                "[%(asctime)s,%(msecs)03d] :: %(levelname)-7s ::"
-                " %(name)s[%(process)d] {%(lineno)-6d: (%(funcName)-30s)} - %(message)s"
-            )
-        elif logging_verbose == 3:
-            log_format = (
-                "[%(asctime)s] :: %(levelname)-5s ::"
-                " [%(filename)-18s/%(module)-10s - %(lineno)-6d: (%(funcName)-30s)] - %(message)s"
-            )
-        elif logging_verbose == 2:
+        if bumper_isc.bumper_verbose == 2:
             log_format = f"[%(asctime)s] %(levelname)-5s :: %(name)-{logger_name_size}s - %(message)s"
-        elif logging_verbose == 1:
+        elif bumper_isc.bumper_verbose == 1:
             log_format = "[%(asctime)s] - %(message)s"
 
-        self._clean_logs(logging_level)
+        self._clean_logs()
         root_logger = logging.getLogger("root")
+        root_logger.setLevel(logging.getLevelName(bumper_isc.bumper_level))
 
         root_handler = logging.StreamHandler(sys.stdout)
         root_handler.setFormatter(logging.Formatter(log_format))
+        root_handler.removeFilter(SanitizeFilter())
         root_handler.addFilter(SanitizeFilter())
 
         # root_logger.addHandler(root_handler)
-        # root_logger.setLevel(logging.getLevelName(logging_level))
 
         # add colored logs
         coloredlogs.install(
-            level=logging.getLevelName(logging_level),
+            level=logging.getLevelName(bumper_isc.bumper_level),
             fmt=log_format,
             logger=root_logger,
             stream=sys.stdout,
         )
 
-    def _clean_logs(self, logging_level: str = bumper_isc.bumper_level) -> int:
+    def _clean_logs(self) -> int:
         logger_name_size = 4
         for logger_name in [logging.getLogger()] + [logging.getLogger(name) for name in logging.getLogger().manager.loggerDict]:
             for handler in logger_name.handlers:
@@ -61,14 +50,15 @@ class LogHelper:
             # for filter in logger_name.filters:
             #     logger_name.removeFilter(filter)
 
-            if logging_level == "INFO" and logger_name.name.startswith("aiohttp.access"):
+            if bumper_isc.bumper_level == "INFO" and logger_name.name.startswith("aiohttp.access"):
                 logger_name.setLevel(logging.DEBUG)
                 logger_name.addFilter(AioHttpFilter())
 
-            if logging_level == "INFO" and logger_name.name.startswith("httpx"):
+            if bumper_isc.bumper_level == "INFO" and logger_name.name.startswith("httpx"):
                 logger_name.setLevel(logging.WARNING)
-            if logging_level == "INFO" and logger_name.name.startswith("amqtt"):
+            if bumper_isc.bumper_level == "INFO" and logger_name.name.startswith("amqtt"):
                 logger_name.setLevel(logging.WARNING)
+
             if (logger_name_size := len(logger_name.name)) >= logger_name_size:
                 pass
         return logger_name_size + 1
@@ -79,10 +69,12 @@ class AioHttpFilter(logging.Filter):
 
     def filter(self, record: logging.LogRecord) -> bool:
         """Aio Http Filter filter."""
-        if record.name == "aiohttp.access" and record.levelno == 20:  # Filters aiohttp.access log to switch it from INFO to DEBUG
-            record.levelno = 10
+        if (
+            record.name == "aiohttp.access" and record.levelno == logging.INFO
+        ):  # Filters aiohttp.access log to switch it from INFO to DEBUG
+            record.levelno = logging.DEBUG
             record.levelname = "DEBUG"
-        return bool(record.levelno == 10 and logging.getLogger("confserver").getEffectiveLevel() == 10)
+        return bool(record.levelno == logging.DEBUG and logging.getLevelName(bumper_isc.bumper_level) == logging.DEBUG)
 
 
 class SanitizeFilter(logging.Filter):
@@ -112,8 +104,12 @@ class SanitizeFilter(logging.Filter):
 
     def _sanitize_data(self, data: Any) -> Any:
         """Sanitize data (remove personal data)."""
-        if isinstance(data, (set, list)):
+        if isinstance(data, set | list):
             return [self._sanitize_data(entry) for entry in data]
+
+        # NOTE: do be done as it will remove everything and not only the secret when loop above for tuple
+        if isinstance(data, str) and any(substring in data.lower() for substring in self._SANITIZE_LOG_KEYS):
+            return "[REMOVED]"
 
         if not isinstance(data, dict):
             return data
@@ -124,7 +120,7 @@ class SanitizeFilter(logging.Filter):
                 if sanitized_data is None:
                     sanitized_data = copy.deepcopy(data)
                 sanitized_data[key] = "[REMOVED]"
-            elif isinstance(value, (set, list, dict)):
+            elif isinstance(value, set | list | dict):
                 if sanitized_data is None:
                     sanitized_data = copy.deepcopy(data)
                 sanitized_data[key] = self._sanitize_data(value)

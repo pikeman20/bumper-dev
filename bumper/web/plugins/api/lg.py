@@ -57,5 +57,5 @@ async def _handle_lg_log(request: Request) -> Response:
             }
         )
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
     return response_error_v7()

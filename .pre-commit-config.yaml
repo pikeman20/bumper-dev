@@ -1,5 +1,6 @@
 ---
 ##### CI for use by github no need for action to be added
+##### https://pre-commit.com/hooks.html
 ##### Inherited
 ci:
   autofix_prs: false
@@ -27,7 +28,7 @@ repos:
     hooks:
       # Safety
       - id: detect-private-key
-        exclude: tests/test_certs
+        exclude: tests/_test_files/certs/
 
       # git checks
       - id: check-merge-conflict

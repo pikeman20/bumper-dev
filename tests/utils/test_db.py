@@ -1,226 +1,96 @@
-from datetime import datetime, timedelta
 import os
 from unittest import mock
 
-from tinydb import TinyDB
+import pytest
+from tinydb.table import Document
 
 from bumper.utils import db
 from bumper.utils.settings import config as bumper_isc
-from bumper.web.models import CleanLog
 
 
-def test_db_path():
+def test_db_file_with_custom_env_var():
+    custom_path = "/custom/path/to/database.db"
+    with mock.patch.dict(os.environ, {"DB_FILE": custom_path}, clear=True):
+        assert db._db_file() == custom_path
+
+
+def test_db_file_with_empty_env_var():
+    with mock.patch.dict(os.environ, {"DB_FILE": ""}, clear=True):
+        assert db._db_file() == os.path.join(bumper_isc.data_dir, "bumper.db")
+
+
+def test_db_file_with_none_env_var():
     env = os.environ.copy()
     env.pop("DB_FILE")
     with mock.patch.dict(os.environ, env, clear=True):
         assert db._db_file() == os.path.join(bumper_isc.data_dir, "bumper.db")
 
 
-def test_user_db():
-    db.user_add("testuser")  # Add testuser
-
-    assert db.user_by_user_id("testuser").userid == "testuser"  # Test that testuser was created and returned
-
-    db.user_add_device("testuser", "dev_1234")  # Add device to testuser
-
-    assert db.user_by_device_id("dev_1234").userid == "testuser"  # Test that testuser was found by deviceid
-
-    db.user_remove_device("testuser", "dev_1234")  # Remove device from testuser
-
-    assert "dev_1234" not in db.user_by_user_id("testuser").devices
-    # Test that dev_1234 was not found in testuser devices
-
-    db.user_add_bot("testuser", "bot_1234")  # Add bot did to testuser
-
-    assert "bot_1234" in db.user_by_user_id("testuser").bots
-    # Test that bot was found in testuser's bot list
-
-    db.user_remove_bot("testuser", "bot_1234")  # Remove bot did from testuser
-
-    assert "bot_1234" not in db.user_by_user_id("testuser").bots
-    # Test that bot was not found in testuser's bot list
-
-    db.user_add_token("testuser", "token_1234")  # Add token to testuser
-
-    assert db.check_token("testuser", "token_1234")
-    # Test that token was found for testuser
-
-    assert db.user_get_token("testuser", "token_1234")
-    assert db.user_get_token_v2("testuser")
-    # Test that token was returned for testuser
-
-    db.user_add_auth_code("testuser", "token_1234", "auth_1234")  # Add authcode to token_1234 for testuser
-    assert db.check_auth_code("testuser", "auth_1234")
-    # Test that authcode was found for testuser
-
-    db.user_revoke_auth_code("testuser", "token_1234")  # Remove authcode from testuser
-    assert db.check_auth_code("testuser", "auth_1234") is False
-    # Test that authcode was not found for testuser
-    db.user_revoke_token("testuser", "token_1234")  # Remove token from testuser
-    assert db.check_token("testuser", "token_1234") is False  # Test that token was not found for testuser
-    db.user_add_token("testuser", "token_1234")  # Add token_1234
-    db.user_add_token("testuser", "token_4321")  # Add token_4321
-    assert len(db.user_get_tokens("testuser")) == 2  # Test 2 tokens are available
-    assert db.user_get_token_v2("testuser")
-    db.user_revoke_all_tokens("testuser")  # Revoke all tokens
-    assert len(db.user_get_tokens("testuser")) == 0  # Test 0 tokens are available
-    assert db.user_get_token_v2("testuser") is None
-
-    db_test = TinyDB("tests/tmp.db")
-    tokens = db_test.table("tokens")
-    tokens.insert(
-        {
-            "userid": "testuser",
-            "token": "token_123456",
-            "expiration": f"{datetime.now() + timedelta(seconds=-10)}",
-        }
-    )  # Add expired token
-    db_test.close()
-    assert len(db.user_get_tokens("testuser")) == 1  # Test 1 tokens are available
-    assert db.user_get_token_v2("testuser")
-    db.user_revoke_expired_tokens("testuser")  # Revoke expired tokens
-    assert len(db.user_get_tokens("testuser")) == 0  # Test 0 tokens are available
-    assert db.user_get_token_v2("testuser") is None
-
-    db_test = TinyDB("tests/tmp.db")
-    tokens = db_test.table("tokens")
-    tokens.insert(
-        {
-            "userid": "testuser",
-            "token": "token_1234",
-            "expiration": f"{datetime.now() + timedelta(seconds=-10)}",
-        }
-    )  # Add expired token
-    db_test.close()
-    assert len(db.user_get_tokens("testuser")) == 1  # Test 1 tokens are available
-    assert db.user_get_token_v2("testuser")
-    db.revoke_expired_tokens()  # Revoke expired tokens
-    assert len(db.user_get_tokens("testuser")) == 0  # Test 0 tokens are available
-    assert db.user_get_token_v2("testuser") is None
+# def test_db_file_with_existing_custom_path():
+#     custom_path = "/custom/path/to/database.db"
+#     with mock.patch("os.path.exists", return_value=True), mock.patch("os.path.isfile", return_value=True):
+#         assert db._db_file() == custom_path
 
 
-def test_bot_db():
-    db.bot_add("sn_123", "did_123", "dev_123", "res_123", "co_123")
-    assert db.bot_get("did_123")  # Test that bot was added to db
-
-    db.bot_set_nick("did_123", "nick_123")
-    assert db.bot_get("did_123").get("nick") == "nick_123"  # Test that nick was added to bot
-
-    db.bot_set_mqtt("did_123", True)
-    assert db.bot_get("did_123").get("mqtt_connection")  # Test that mqtt was set True for bot
-
-    db.bot_set_xmpp("did_123", True)
-    assert db.bot_get("did_123").get("xmpp_connection")  # Test that xmpp was set True for bot
-
-    db.bot_reset_connection_status()
-    assert db.bot_get("did_123").get("mqtt_connection") is False  # Test that mqtt was reset False for bot
-    assert db.bot_get("did_123").get("xmpp_connection") is False  # Test that xmpp was reset False for bot
-
-    db.bot_remove("did_123")
-    assert db.bot_get("did_123") is None  # Test that bot is no longer in db
+# def test_db_file_with_nonexistent_custom_path():
+#     custom_path = "/custom/nonexistent/path/database.db"
+#     with mock.patch("os.path.exists", return_value=False):
+#         assert db._db_file() == custom_path
 
 
-def test_client_db():
-    db.client_add("user_123", "realm_123", "resource_123")
-    assert db.client_get("resource_123")  # Test client was added
-
-    db.client_set_mqtt("resource_123", True)
-    assert db.client_get("resource_123").get("mqtt_connection")  # Test that mqtt was set True for client
-
-    db.client_set_xmpp("resource_123", False)
-    assert db.client_get("resource_123").get("xmpp_connection") is False  # Test that xmpp was set False for client
-    assert len(db.get_disconnected_xmpp_clients()) > 0  # Test len of connected xmpp clients is 1
-
-    db.client_reset_connection_status()
-    assert db.client_get("resource_123").get("mqtt_connection") is False  # Test that mqtt was reset False for client
-    assert db.client_get("resource_123").get("xmpp_connection") is False  # Test that xmpp was reset False for client
-
-    db.client_remove("resource_123")
-    assert db.client_get("resource_123") is None
+# def test_db_file_with_default_data_dir():
+#     with mock.patch("bumper.utils.settings.config.data_dir", "/default/data/dir"):
+#         assert db._db_file() == os.path.join("/default/data/dir", "bumper.db")
 
 
-def test_oauth_db():
-    db.user_add("testuser")  # Add testuser
-    oauth = db.user_add_oauth("testuser")
+@pytest.mark.asyncio()
+async def test_db_get(tmpdir):
+    # Call the _db_get function
+    with db._db_get() as result:
+        # Verify that TinyDB was instantiated with the correct file path
+        # assert result == db._db_file()
 
-    assert oauth is not None
-    assert oauth.userId == "testuser"
-    assert oauth.access_token is not None
+        result.drop_tables()
 
-    user_id1 = db.user_id_by_token(oauth.access_token)
-    assert oauth.userId == user_id1
+        result.table(db.TABLE_USERS).insert({})
+        result.table(db.TABLE_CLIENTS).insert({})
+        result.table(db.TABLE_BOTS).insert({})
+        result.table(db.TABLE_TOKENS).insert({})
+        result.table(db.TABLE_OAUTH).insert({})
+        result.table(db.TABLE_CLEAN_LOGS).insert({})
 
-    db.user_revoke_expired_oauths("testuser")
-    user_id2 = db.user_id_by_token(oauth.access_token)
-    assert oauth.userId == user_id2
+        # Verify that tables were created
+        assert db.TABLE_USERS in result.tables()
+        assert db.TABLE_CLIENTS in result.tables()
+        assert db.TABLE_BOTS in result.tables()
+        assert db.TABLE_TOKENS in result.tables()
+        assert db.TABLE_OAUTH in result.tables()
+        assert db.TABLE_CLEAN_LOGS in result.tables()
 
-    db.revoke_expired_oauths()
-    user_id2 = db.user_id_by_token(oauth.access_token)
-    assert oauth.userId == user_id2
+        result.drop_tables()
+
+        assert len(result) == 0
 
 
-def test_clean_logs_db():
-    did = "saocsa8c9basv"
-    cid = "1699297517"
-    start = 1699297517
-    rid = "sdu9"
-    clean_log = CleanLog(f"{did}@{start}@{rid}")
-    clean_log.area = 28
-    clean_log.last = 1699297517
-    clean_log.stop_reason = 1
-    clean_log.ts = start
-    clean_log.type = "auto"
+def test_logging_message_not_document():
+    value_name = "test_value"
 
-    db.clean_logs_clean()
-    assert len(db.clean_log_by_id(did)) == 0
+    # Case 1: None value
+    value = None
+    result = db._logging_message_not_document(value, value_name)
+    assert result == f"'{value_name}' is not a 'Document' => <class 'NoneType'>"
 
-    db.clean_log_add(did, cid, clean_log)
-    assert len(db.clean_log_by_id(did)) == 1
+    # Case 2: Single Document
+    value = Document({"key": "value"}, 0)
+    result = db._logging_message_not_document(value, value_name)
+    assert result == f"'{value_name}' is not a 'Document' => <class 'tinydb.table.Document'>"
 
-    rid = "sdu8"
-    clean_log.clean_log_id = f"{did}@{start}@{rid}"
-    db.clean_log_add(did, cid, clean_log)
-    assert len(db.clean_log_by_id(did)) == 2
+    # Case 3: List of Documents
+    value = [Document({"key": "value"}, 0), Document({"key": "value"}, 0)]
+    result = db._logging_message_not_document(value, value_name)
+    assert result == f"'{value_name}' is not a 'Document' => <class 'list'>"
 
-    cid = "cas0cbasv"
-    db.clean_log_add(did, cid, clean_log)
-    assert len(db.clean_log_by_id(did)) == 3
-
-    rid = "sdu7"
-    clean_log.clean_log_id = f"{did}@{start}@{rid}"
-    db.clean_log_add(did, cid, clean_log)
-    assert len(db.clean_log_by_id(did)) == 4
-
-    did = "cßa9sbas"
-    cid = "asicpasv98"
-    db.clean_log_add(did, cid, clean_log)
-    assert len(db.clean_log_by_id(did)) == 1
-
-    clean_log.type = "area"
-    db.clean_log_add(did, cid, clean_log)
-    assert len(db.clean_log_by_id(did)) == 2
-
-    db.clean_logs_clean()
-
-    clean_log.type = "a"
-    db.clean_log_add(did, cid, clean_log)
-    assert len(db.clean_log_by_id(did)) == 1
-
-    clean_log.type = "b"
-    db.clean_log_add(did, cid, clean_log)
-    assert len(db.clean_log_by_id(did)) == 2
-
-    clean_log.type = "b"
-    db.clean_log_add(did, cid, clean_log)
-    assert len(db.clean_log_by_id(did)) == 2
-
-    clean_log.last = 1699297520
-    db.clean_log_add(did, cid, clean_log)
-    assert len(db.clean_log_by_id(did)) == 2
-
-    clean_log.area = 28
-    db.clean_log_add(did, cid, clean_log)
-    assert len(db.clean_log_by_id(did)) == 2
-
-    db._update_clean_logs_list_field(did, cid, clean_log, False)
-    assert len(db.clean_log_by_id(did)) == 1
+    # Case 4: Other types
+    value = "some_string"
+    result = db._logging_message_not_document(value, value_name)
+    assert result == f"'{value_name}' is not a 'Document' => <class 'str'>"

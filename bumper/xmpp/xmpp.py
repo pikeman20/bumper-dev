@@ -42,7 +42,7 @@ class XMPPServer:
             self.server = await loop.create_server(self.xmpp_protocol, host=self._host, port=self._port)
             # self.server_coro = loop.create_task(self.server.serve_forever())
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e))
             raise e
 
     def disconnect(self) -> None:

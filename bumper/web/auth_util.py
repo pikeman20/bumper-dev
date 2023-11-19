@@ -69,7 +69,7 @@ async def login(request: Request) -> Response:
         if device_id is not None and app_type is not None:
             return _auth_any(uid, access_token, device_id, app_type, country_code, check)
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during login"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during login"))
     raise HTTPInternalServerError
 
 
@@ -94,7 +94,7 @@ async def get_auth_code(request: Request) -> Response:
 
         return response_error_v1(msg="Interface Authentication Failure", code=models.ERR_TOKEN_INVALID)
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during get auth code"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during get auth code"))
     raise HTTPInternalServerError
 
 
@@ -118,7 +118,7 @@ async def get_auth_code_v2(request: Request) -> Response:
 
         return response_error_v2(msg="auth error", code="1004")
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during get auth code v2"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during get auth code v2"))
     raise HTTPInternalServerError
 
 
@@ -235,7 +235,7 @@ def oauth_callback(request: Request) -> Response:
 
         return response_success_v2(oauth.to_response())
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling oauth callback"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling oauth callback"))
     raise HTTPInternalServerError
 
 

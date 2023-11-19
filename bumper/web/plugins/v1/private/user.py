@@ -107,7 +107,7 @@ async def _logout(request: Request) -> Response:
                 db.user_revoke_token(user.userid, access_token)
         return get_success_response(None)
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e))
     raise HTTPInternalServerError
 
 
@@ -161,7 +161,7 @@ async def _handle_get_user_account_info(request: Request) -> Response:
                 }
             )
     except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"), exc_info=True)
+        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
     raise HTTPInternalServerError
 
 

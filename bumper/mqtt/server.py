@@ -20,6 +20,7 @@ from bumper.utils.settings import config as bumper_isc
 _LOGGER = logging.getLogger(__name__)
 _LOGGER_MESSAGES = logging.getLogger(f"{__name__}.messages")
 _LOGGER_PROXY = logging.getLogger(f"{__name__}.proxy")
+_LOGGER_BROKER = logging.getLogger(f"{__name__}.broker")
 
 
 def _log__helperbot_message(custom_log_message: str, topic: str, data: str) -> None:
@@ -39,7 +40,9 @@ class MQTTBinding:
 class MQTTServer:
     """Mqtt server."""
 
-    def __init__(self, bindings: list[MQTTBinding] | MQTTBinding, **kwargs: Any) -> None:
+    def __init__(
+        self, bindings: list[MQTTBinding] | MQTTBinding, password_file: str | None = None, allow_anonymous: bool = False
+    ) -> None:
         """MQTT server init."""
         try:
             if isinstance(bindings, MQTTBinding):
@@ -48,8 +51,8 @@ class MQTTServer:
 
             # For file auth, set user:hash in passwd file see
             # (https://hbmqtt.readthedocs.io/en/latest/references/hbmqtt.html#configuration-example)
-            passwd_file = kwargs.get("password_file", os.path.join(os.path.join(bumper_isc.data_dir, "passwd")))
-            allow_anon = kwargs.get("allow_anonymous", False)
+            if password_file is None:
+                password_file = os.path.join(os.path.join(bumper_isc.data_dir, "passwd"))
 
             self._add_entry_point()
 
@@ -70,8 +73,8 @@ class MQTTServer:
                 "listeners": config_bind,
                 "sys_interval": 0,
                 "auth": {
-                    "allow-anonymous": allow_anon,
-                    "password-file": passwd_file,
+                    "allow-anonymous": allow_anonymous,
+                    "password-file": password_file,
                     "plugins": ["bumper"],  # Bumper plugin provides auth and handling of bots/clients connecting
                 },
                 "topic-check": {
@@ -82,7 +85,7 @@ class MQTTServer:
 
             self._broker = Broker(config=config)
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during initialize"), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e, "during initialize"))
             raise e
 
     def _add_entry_point(self) -> None:
@@ -127,15 +130,14 @@ class MQTTServer:
     async def start(self) -> None:
         """Start MQTT server."""
         try:
-            while self.state == "stopping":
-                await asyncio.sleep(0.1)
-
             if self.state not in ["stopping", "starting", "started"]:
                 for binding in self._bindings:
                     _LOGGER.info(f"Starting MQTT Server at {binding.host}:{binding.port}")
                 await self._broker.start()
+            else:
+                _LOGGER.info("MQTT Server is still running, stop first for a restart!")
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during startup"), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e, "during startup"))
             raise e
 
     async def shutdown(self) -> None:
@@ -147,14 +149,14 @@ class MQTTServer:
                     try:
                         await handler.stop()
                     except Exception as handler_error:
-                        _LOGGER.exception(f"Error stopping session handler: {handler_error}", exc_info=True)
+                        _LOGGER.exception(f"Error stopping session handler: {handler_error}")
 
                 # await self._broker.shutdown()
                 await self.shutdown_copy()
             else:
                 _LOGGER.warning(f"MQTT server is not in a valid state for shutdown. Current state: {self.state}")
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during shutdown"), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e, "during shutdown"))
             raise e
 
     async def shutdown_copy(self) -> None:
@@ -169,7 +171,7 @@ class MQTTServer:
             self._broker.transitions.shutdown()
         except (MachineError, ValueError) as exc:
             # Backwards compat: MachineError is raised by transitions < 0.5.0.
-            self._broker.logger.debug(f"Invalid method call at this moment: {exc}")
+            _LOGGER_BROKER.debug(f"Invalid method call at this moment: {exc}")
             raise exc
 
         # Fire broker_shutdown event to plugins
@@ -181,8 +183,8 @@ class MQTTServer:
         for listener_name in self._broker._servers:  # noqa: SLF001
             server = self._broker._servers[listener_name]  # pylint: disable=protected-access # noqa: SLF001
             await server.close_instance()
-        self._broker.logger.debug("Broker closing")
-        self._broker.logger.info("Broker closed")
+        _LOGGER_BROKER.debug("Broker closing")
+        _LOGGER_BROKER.info("Broker closed")
         await self._broker.plugins_manager.fire_event("broker_post_shutdown")
         self._broker.transitions.stopping_success()
 
@@ -195,12 +197,12 @@ class MQTTServer:
                 # pylint: disable-next=protected-access
                 await asyncio.wait_for(self._broker._broadcast_task, timeout=30)  # noqa: SLF001
             except BaseException as e:
-                self._broker.logger.warning(f"Failed to cleanly shutdown broadcast loop: {e}")
+                _LOGGER_BROKER.warning(f"Failed to cleanly shutdown broadcast loop: {e}")
 
         # pylint: disable-next=protected-access
         if self._broker._broadcast_queue.qsize() > 0:  # noqa: SLF001
             # pylint: disable-next=protected-access
-            self._broker.logger.warning(f"{self._broker._broadcast_queue.qsize()} messages not broadcasted")  # noqa: SLF001
+            _LOGGER_BROKER.warning(f"{self._broker._broadcast_queue.qsize()} messages not broadcasted")  # noqa: SLF001
 
 
 class BumperMQTTServerPlugin:
@@ -217,10 +219,9 @@ class BumperMQTTServerPlugin:
             else:
                 raise Exception("context config is not set")
         except KeyError:
-            if self.context.logger is not None:
-                self.context.logger.warning("'bumper' section not found in context configuration")
+            _LOGGER.warning("'bumper' section not found in context configuration")
         except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during plugin initialization"), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(e, "during plugin initialization"))
             raise e
 
     async def authenticate(self, session: Session, **kwargs: dict[str, Any]) -> bool:
@@ -293,13 +294,11 @@ class BumperMQTTServerPlugin:
                     )
 
         except Exception as e:
-            _LOGGER.exception(f"Session: {kwargs.get('session', '')} :: {e}", exc_info=True)
+            _LOGGER.exception(f"Session: {kwargs.get('session', '')} :: {e}")
 
         # Check for allow anonymous
         if self.auth_config.get("allow-anonymous", True):
             message = f"Anonymous Authentication Success: config allows anonymous :: Username: {username}"
-            if self.context.logger is not None:
-                self.context.logger.debug(message)
             _LOGGER.info(message)
             return True
 
@@ -311,26 +310,24 @@ class BumperMQTTServerPlugin:
         if password_file:
             try:
                 with open(password_file, encoding="utf-8") as file:
-                    if self.context.logger is not None:
-                        self.context.logger.debug(f"Reading user database from {password_file}")
+                    _LOGGER.debug(f"Reading user database from {password_file}")
                     for line in file:
                         t_line = line.strip()
                         if not t_line.startswith("#"):  # Allow comments in files
                             (username, pwd_hash) = t_line.split(sep=":", maxsplit=3)
                             if username:
                                 users[username] = pwd_hash
-                                if self.context.logger is not None:
-                                    self.context.logger.debug(f"user: {username} :: hash: {pwd_hash}")
-                if self.context.logger is not None:
-                    self.context.logger.debug(f"{(len(users))} user(s) read from file {password_file}")
+                                _LOGGER.debug(f"user: {username} :: hash: {pwd_hash}")
+
+                _LOGGER.debug(f"{(len(users))} user(s) read from file {password_file}")
             except FileNotFoundError:
-                if self.context.logger is not None:
-                    self.context.logger.warning(f"Password file {password_file} not found")
+                _LOGGER.warning(f"Password file {password_file} not found")
 
         return users
 
     async def on_broker_client_subscribed(self, client_id: str, topic: str, qos: Literal[0, 1, 2]) -> None:
         """Is called when a client subscribes on the broker."""
+        _LOGGER.debug(f"MQTT Broker :: New MQTT Topic Subscription :: Client: {client_id} :: Topic: {topic}")
         if bumper_isc.BUMPER_PROXY_MQTT:
             # if proxy mode, also subscribe on ecovacs server
             if client_id in self._proxy_clients:
@@ -365,7 +362,7 @@ class BumperMQTTServerPlugin:
             topic = message.topic
             topic_split = str(topic).split("/")
             data_decoded = message.data
-            if isinstance(message.data, (bytearray, bytes)):
+            if isinstance(message.data, bytearray | bytes):
                 data_decoded = message.data.decode("utf-8", errors="replace")
 
             if topic_split[6] == "helperbot":
