@@ -146,6 +146,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - updated max-parents
     - added max-args
   - updated `mypy.ini` to python version 3.11
+    - update python to 3.12
   - update `Dockerfile`
     - update from versions as variables
     - add labels

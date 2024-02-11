@@ -159,8 +159,8 @@ DEBUG_LOGGING_XMPP_REQUEST=false
 
 # BUILD variable
 # ______________________________________________________________________________
-PY_VERSION=3.11.6-alpine3.18
-ALPINE_VERSION=1.25.2-alpine3.18-slim
+PY_VERSION=3.12.2-alpine3.19
+ALPINE_VERSION=3.19
 ```
 
 #### Example short `.env`
@@ -195,6 +195,15 @@ $python3 -m pip install -e .
 $python3 -m pip install -e .[dev]
 
 $clear && pre-commit run --all-files
+$clear && pytest
+```
+
+or
+
+```sh
+$docker-compose -f dev.docker-compose.yaml build
+$docker-compose -f dev.docker-compose.yaml run bumper
+
 $clear && pytest
 ```
 

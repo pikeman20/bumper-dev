@@ -50,7 +50,7 @@ dev = [
   "pylint==3.0.2",
   "pytest-aiofiles==0.2.0",
   "pytest-aiohttp==1.0.5",
-  "pytest-asyncio==0.23.5a0",
+  "pytest-asyncio==0.23.5",
   "pytest-cov==4.1.0",
   "pytest-env==1.1.1",
   "pytest-timeout==2.2.0",
@@ -67,7 +67,7 @@ py-modules = ["bumper"]
 
 # ----------------------------------- BLACK -----------------------------------
 [tool.black]
-target-version = ['py311']
+target-version = ['py312']
 safe = true
 line-length = 130
 
@@ -75,7 +75,7 @@ line-length = 130
 # https://docs.astral.sh/ruff/settings/
 [tool.ruff]
 line-length = 130
-target-version = "py311"
+target-version = "py312"
 fix = true
 
 select = [
@@ -205,7 +205,7 @@ timeout = 10
 # ------------------------------------ MYPY ------------------------------------
 [tool.mypy]
 follow_imports = "silent"
-python_version = "3.11"
+python_version = "3.12"
 show_error_codes = true
 ignore_missing_imports = true
 strict_equality = true
@@ -226,7 +226,7 @@ strict = true
 
 # ----------------------------------- PYLINT -----------------------------------
 [tool.pylint.MAIN]
-py-version = "3.11"
+py-version = "3.12"
 ignore = ["tests"]
 jobs = 2
 

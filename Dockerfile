@@ -1,8 +1,8 @@
 ARG ARCH=amd64
 # https://hub.docker.com/_/python/tags
-ARG PY_VERSION=3.11.6-alpine3.18
+ARG PY_VERSION=3.12.2-alpine3.19
 # https://hub.docker.com/_/alpine/tags
-ARG ALPINE_VERSION=3.18.4
+ARG ALPINE_VERSION=3.19
 FROM ${ARCH}/python:${PY_VERSION}
 
 LABEL org.opencontainers.image.source=https://github.com/MVladislav/bumper
