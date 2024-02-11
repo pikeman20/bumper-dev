@@ -57,11 +57,11 @@ $~/Android/Sdk/platform-tools/adb wait-for-device
 
 ## Install App
 
-Download **[Ecovacs Home App from Aptiode](https://ecovacs-home.en.aptoide.com/app)** or **[Ecovacs Home App from Apkpure](https://apkpure.com/ecovacs-home/com.eco.global.app/download/2.4.1)**
+Download **[Ecovacs Home App from Aptiode](https://ecovacs-home.en.aptoide.com/app)** or **[Ecovacs Home App from Apkpure](https://apkpure.net/ecovacs-home/com.eco.global.app/download/2.4.1)**
 and install in emulator.
 
 For **socks5** proxy, to use with **mitmproxy**, you can
-for example install **[Super Proxy from Aptiode](https://super-proxy-scheler-software.en.aptoide.com/app)** or **[Super Proxy from Apkpure](https://apkpure.com/super-proxy/com.scheler.superproxy)**
+for example install **[Super Proxy from Aptiode](https://super-proxy-scheler-software.en.aptoide.com/app)** or **[Super Proxy from Apkpure](https://apkpure.net/super-proxy/com.scheler.superproxy)**
 
 ## Run mitmproxy
 

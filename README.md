@@ -70,15 +70,16 @@ Bumper has had limited testing. There are a number of EcoVacs models that it has
 Bumper should be compatible with most wifi-enabled robots that use either the Ecovacs Android/iOS app
 or the Ecovacs Home Android/iOS app, but has only been reported to work on the below:
 
-| Model           | Protocol Used | Bumper Version Tested | EcoVacs App Tested   |
-| :-------------- | :------------ | :-------------------- | :------------------- |
-| Deebot 900/901  | MQTT          | main                  | Ecovacs/Ecovacs Home |
-| Deebot 600      | MQTT          | main                  | Ecovacs Home         |
-| Deebot Ozmo 950 | MQTT          | main                  | Ecovacs Home         |
-| Deebot T10      | MQTT          | main                  | Ecovacs Home         |
-| Deebot Ozmo 601 | XMPP          | main                  | Ecovacs              |
-| Deebot Ozmo 930 | XMPP          | main                  | Ecovacs/Ecovacs Home |
-| Deebot M81 Pro  | XMPP          | v0.1.0                | Ecovacs              |
+| Model           | Protocol Used | Bumper Version Tested | EcoVacs App Tested                                                 |
+| :-------------- | :------------ | :-------------------- | :----------------------------------------------------------------- |
+| Deebot 900/901  | MQTT          | main                  | Ecovacs/Ecovacs Home                                               |
+| Deebot 600      | MQTT          | main                  | Ecovacs Home                                                       |
+| Deebot Ozmo 950 | MQTT          | main                  | Ecovacs Home                                                       |
+| Deebot T10      | MQTT          | main                  | Ecovacs Home                                                       |
+| Deebot X1 Omni  | MQTT          | main                  | [Discussions](https://github.com/MVladislav/bumper/discussions/51) |
+| Deebot Ozmo 601 | XMPP          | main                  | Ecovacs                                                            |
+| Deebot Ozmo 930 | XMPP          | main                  | Ecovacs/Ecovacs Home                                               |
+| Deebot M81 Pro  | XMPP          | v0.1.0                | Ecovacs                                                            |
 
 Tested with:
 
