@@ -8,6 +8,6 @@ usage: bumper [-h] [--listen LISTEN] [--announce ANNOUNCE] [--debug]
 optional arguments:
 -h, --help           show this help message and exit
 --listen LISTEN      start serving on address
---announce ANNOUNCE  announce address to bots on checkin
+--announce ANNOUNCE  announce address to bots on check-in
 --debug              enable debug logs
 ```

@@ -1,7 +1,9 @@
 """Database module."""
+
 from datetime import datetime, timedelta
 import logging
 import os
+from pathlib import Path
 from typing import Any
 
 from tinydb import Query, TinyDB, where
@@ -44,7 +46,7 @@ def _db_file() -> str:
 
 
 def _os_db_path() -> str:  # createdir=True):
-    return os.path.join(bumper_isc.data_dir, "bumper.db")
+    return str(Path(bumper_isc.data_dir) / "bumper.db")
 
 
 def _logging_message_not_document(value: Document | list[Document] | None, value_name: str) -> str:
@@ -72,8 +74,7 @@ def clean_log_by_id(did: str) -> list[models.CleanLog]:
         t_clean_logs = clean_logs.search(User_Query.did == did)
         for t_clean_log in t_clean_logs:
             logs = t_clean_log.get("logs", [])
-            for log in logs:
-                clean_log_data.append(models.CleanLog.from_dict(log))
+            clean_log_data.extend(models.CleanLog.from_dict(log) for log in logs)
     return clean_log_data
 
 
@@ -260,8 +261,10 @@ def user_add_token(user_id: str, token: str) -> None:
                 {
                     "userid": user_id,
                     "token": token,
-                    "expiration": str(datetime.now() + timedelta(seconds=bumper_isc.TOKEN_VALIDITY_SECONDS)),
-                }
+                    "expiration": str(
+                        datetime.now(bumper_isc.LOCAL_TIMEZONE) + timedelta(seconds=bumper_isc.TOKEN_VALIDITY_SECONDS),
+                    ),
+                },
             )
 
 
@@ -349,7 +352,9 @@ def user_revoke_expired_tokens(user_id: str) -> None:
     """Revoke expired user tokens."""
     with _db_get() as db:
         tokens = db.table(TABLE_TOKENS)
-        expired_tokens = tokens.search((User_Query.userid == user_id) & (where("expiration") < str(datetime.now())))
+        expired_tokens = tokens.search(
+            (User_Query.userid == user_id) & (where("expiration") < str(datetime.now(bumper_isc.LOCAL_TIMEZONE))),
+        )
 
         for token_doc in expired_tokens:
             _LOGGER.debug(f"Removing token {token_doc.get('token')} due to expiration")
@@ -367,7 +372,7 @@ def revoke_expired_tokens() -> None:
     """Revoke expired tokens."""
     with _db_get() as db:
         tokens = db.table(TABLE_TOKENS)
-        expired_tokens = tokens.search(where("expiration") < str(datetime.now()))
+        expired_tokens = tokens.search(where("expiration") < str(datetime.now(bumper_isc.LOCAL_TIMEZONE)))
 
         for token_doc in expired_tokens:
             _LOGGER.debug(f"Removing token {token_doc.get('token')} due to expiration")
@@ -402,7 +407,9 @@ def user_revoke_expired_oauths(user_id: str) -> None:
     """Revoke expired oauths by user."""
     with _db_get() as db:
         oauth_table = db.table(TABLE_OAUTH)
-        expired_oauths = oauth_table.search((User_Query.userid == user_id) & (where("expire_at") < str(datetime.now())))
+        expired_oauths = oauth_table.search(
+            (User_Query.userid == user_id) & (where("expire_at") < str(datetime.now(bumper_isc.LOCAL_TIMEZONE))),
+        )
 
         for oauth_doc in expired_oauths:
             _LOGGER.debug(f"Removing oauth {oauth_doc.get('access_token')} due to expiration")
@@ -425,7 +432,7 @@ def revoke_expired_oauths() -> None:
     """Revoke expired oauths."""
     with _db_get() as db:
         oauth_table = db.table(TABLE_OAUTH)
-        expired_oauths = oauth_table.search(where("expire_at") < str(datetime.now()))
+        expired_oauths = oauth_table.search(where("expire_at") < str(datetime.now(bumper_isc.LOCAL_TIMEZONE)))
 
         for oauth_doc in expired_oauths:
             _LOGGER.debug(f"Removing oauth {oauth_doc.get('access_token')} due to expiration")
@@ -476,6 +483,7 @@ def client_get_all() -> list[Document]:
 def get_disconnected_xmpp_clients() -> list[Document]:
     """Get disconnected XMPP clients."""
     clients = _db_get().table(TABLE_CLIENTS)
+    # pylint: disable-next=singleton-comparison
     return clients.search(User_Query.xmpp_connection == False)  # noqa: E712
 
 

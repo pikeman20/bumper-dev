@@ -1,8 +1,9 @@
 """Init module."""
+
 import argparse
 import asyncio
 import logging
-import os
+from pathlib import Path
 import sys
 
 from bumper.mqtt import helper_bot, server as server_mqtt
@@ -26,8 +27,8 @@ async def start() -> None:
         await start_service()
         _LOGGER.info("Bumper started successfully")
         await maintenance()
-    except Exception as e:
-        _LOGGER.exception(e)
+    except Exception:
+        _LOGGER.exception("Failed to start bumper")
 
 
 async def start_configuration() -> None:
@@ -37,7 +38,8 @@ async def start_configuration() -> None:
         asyncio.get_event_loop().set_debug(True)
 
     if bumper_isc.bumper_listen is None:
-        raise Exception("No listen address configured!")
+        _LOGGER.exception("No listen address configured!")
+        raise Exception
 
     # Reset xmpp/mqtt to false in database for bots and clients
     db.bot_reset_connection_status()
@@ -52,7 +54,7 @@ async def start_configuration() -> None:
         [
             server_mqtt.MQTTBinding(bumper_isc.bumper_listen, bumper_isc.MQTT_LISTEN_PORT_TLS, True),
             # server_mqtt.MQTTBinding(bumper_isc.bumper_listen, bumper_isc.MQTT_LISTEN_PORT, False),
-        ]
+        ],
     )
     bumper_isc.mqtt_helperbot = helper_bot.MQTTHelperBot(bumper_isc.bumper_listen, bumper_isc.MQTT_LISTEN_PORT_TLS, True)
     # bumper_isc.mqtt_helperbot = helper_bot.MQTTHelperBot(bumper_isc.bumper_listen, bumper_isc.MQTT_LISTEN_PORT, False)
@@ -145,8 +147,8 @@ async def shutdown() -> None:
 
     except asyncio.CancelledError:
         _LOGGER.info("Coroutine canceled!")
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder())
     finally:
         _LOGGER.info("Shutdown complete!")
 
@@ -158,7 +160,7 @@ def read_args(argv: list[str] | None) -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--listen", type=str, default=None, help="start serving on address")
-    parser.add_argument("--announce", type=str, default=None, help="announce address to bots on checkin")
+    parser.add_argument("--announce", type=str, default=None, help="announce address to bots on check-in")
     parser.add_argument("--debug_level", type=str, help="enable debug logs")
     parser.add_argument("--debug_verbose", type=int, help="enable debug logs")
     args = parser.parse_args(args=argv)
@@ -182,21 +184,23 @@ def main(argv: list[str] | None = None) -> None:
 
     try:
         # Check for password file?
-        if not os.path.exists(os.path.join(bumper_isc.data_dir, "passwd")):
-            with open(os.path.join(bumper_isc.data_dir, "passwd"), "w", encoding="utf-8"):
+        passwd_path = Path(bumper_isc.data_dir) / "passwd"
+        if not passwd_path.exists():
+            with passwd_path.open("w", encoding="utf-8"):
                 pass
 
         # Read arguments from command line
         read_args(argv)
 
         if not utils.is_valid_ip(bumper_isc.bumper_listen):
-            raise Exception("No listen address configured!")
+            msg = "No listen address configured!"
+            raise Exception(msg)
 
         loop.run_until_complete(start())
     except KeyboardInterrupt:
         _LOGGER.debug("Keyboard Interrupt!")
-    except Exception as e:
-        _LOGGER.critical(utils.default_exception_str_builder(e))
+    except Exception:
+        _LOGGER.critical(utils.default_exception_str_builder())
     finally:
         loop.run_until_complete(shutdown())
         if loop.is_running():

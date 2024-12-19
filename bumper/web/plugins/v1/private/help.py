@@ -1,4 +1,5 @@
 """Help plugin module."""
+
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -103,7 +104,7 @@ async def _handle_get_help_index(_: Request) -> Response:
                 },
             ],
             "moreHelpModuleList": [],
-        }
+        },
     )
 
 
@@ -236,5 +237,5 @@ async def _handle_get_product_help_index(_: Request) -> Response:
                     "videoId": "20200115064102_160366390cc2205aeb20515674ddd4ec",
                 },
             ],
-        }
+        },
     )

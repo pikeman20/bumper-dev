@@ -1,10 +1,10 @@
 """Helper bot module."""
+
 import asyncio
-from collections.abc import MutableMapping
 import json
 import logging
 import ssl
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from cachetools import TTLCache
 from gmqtt import Client as MQTTClient, Subscription
@@ -12,6 +12,9 @@ from gmqtt.mqtt.constants import MQTTv311
 
 from bumper.mqtt.handle_atr import clean_log
 from bumper.utils import utils
+
+if TYPE_CHECKING:
+    from collections.abc import MutableMapping
 
 _LOGGER = logging.getLogger(__name__)
 HELPER_BOT_CLIENT_ID = "helperbot@bumper/helperbot"
@@ -51,9 +54,9 @@ class MQTTHelperBot:
                     ssl_ctx.verify_mode = ssl.CERT_NONE
 
                 await self._client.connect(self._host, self._port, ssl=ssl_ctx, version=MQTTv311)
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during startup"))
-            raise e
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder(info="during startup"))
+            raise
 
     async def disconnect(self) -> None:
         """Disconnect helper bot."""
@@ -84,8 +87,8 @@ class MQTTHelperBot:
             self.publish(topic, payload)
 
             return await self._wait_for_resp(command_dto, request_id)
-        except Exception as e:
-            _LOGGER.exception(f"Could not send command :: {e}")
+        except Exception:
+            _LOGGER.exception("Could not send command")
             return {
                 "id": request_id,
                 "errno": 500,
@@ -111,8 +114,8 @@ class MQTTHelperBot:
             _LOGGER.debug("wait_for_resp timeout reached")
         except asyncio.CancelledError:
             _LOGGER.debug("wait_for_resp cancelled by asyncio", exc_info=True)
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during wait for response"))
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder(info="during wait for response"))
         return {
             "id": request_id,
             "errno": 500,
@@ -126,7 +129,7 @@ class MQTTHelperBot:
             (
                 Subscription("iot/p2p/+/+/+/+/helperbot/bumper/helperbot/+/+/+"),
                 Subscription("iot/atr/+/+/+/+/+"),
-            )
+            ),
         )
 
     def _on_message(self, _client: MQTTClient, topic: str, payload: bytes, _qos: int, _properties: dict[str, Any]) -> None:
@@ -143,9 +146,9 @@ class MQTTHelperBot:
                 self._commands[topic_split[10]].add_response(decoded_payload)
             elif topic_split[1] == "atr" and topic_split[2] in ("onStats", "reportStats"):
                 clean_log(did=topic_split[3], rid=topic_split[5], payload=decoded_payload)
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "on message"))
-            raise e
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder(info="on message"))
+            raise
 
 
 class CommandDto:

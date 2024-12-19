@@ -4,7 +4,7 @@ from bumper.utils import db
 
 
 @pytest.mark.usefixtures("clean_database")
-def test_bot_db():
+def test_bot_db() -> None:
     db.bot_add("sn_123", "did_123", "dev_123", "res_123", "co_123")
     assert db.bot_get("did_123")  # Test that bot was added to db
 

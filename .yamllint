@@ -1,4 +1,3 @@
-# Based on ansible-lint config
 ---
 extends: default
 
@@ -35,8 +34,7 @@ rules:
     level: error
     require-starting-space: true
     min-spaces-from-content: 1
-  comments-indentation:
-    level: error
+  comments-indentation: false
   document-end:
     level: error
     present: false
@@ -68,5 +66,5 @@ rules:
     level: error
   truthy: disable
   octal-values:
-    forbid-implicit-octal: false
+    forbid-implicit-octal: true
     forbid-explicit-octal: true

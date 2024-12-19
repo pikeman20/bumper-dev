@@ -1,4 +1,5 @@
 """Neng plugin module."""
+
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -109,7 +110,7 @@ async def _handle_v3_message_push_status(_: Request) -> Response:
             "devices": [],
             "msgPushStatus": {"DEVICE": True, "SHARE": True},
             "uid": "",
-        }
+        },
     )
 
 
@@ -135,7 +136,7 @@ async def _handle_v3_product_msg_tabs(_: Request) -> Response:
                 "code": "error",
                 "name": "Malfunction messages",
             },
-        ]
+        ],
     )
 
 

@@ -71,7 +71,7 @@ To run the image in docker some environment settings and port mappings are requi
 
 **Environment Settings: (-e)**
 
-`BUMPER_ANNOUNCE_IP` should be used so the actual host IP is reported to bots that checkin.
+`BUMPER_ANNOUNCE_IP` should be used so the actual host IP is reported to bots that check-in.
 
 - BUMPER_ANNOUNCE_IP - `-e "BUMPER_ANNOUNCE_IP=X.X.X.X"`
 

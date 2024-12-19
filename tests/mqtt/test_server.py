@@ -21,7 +21,7 @@ def async_return(result):
     return f
 
 
-def test_log__helperbot_message():
+def test_log__helperbot_message() -> None:
     custom_log_message = "custom_log_message"
     topic = "topic"
     data = "data"
@@ -39,7 +39,7 @@ def test_log__helperbot_message():
 
 @pytest.mark.usefixtures("clean_database")
 @pytest.mark.parametrize("proxy", [False, True])
-async def test_mqttserver(proxy: bool):
+async def test_mqttserver(proxy: bool) -> None:
     bumper_isc.BUMPER_PROXY_MQTT = proxy
 
     mqtt_server = MQTTServer(MQTTBinding(HOST, MQTT_PORT, True), password_file="tests/_test_files/passwd", allow_anonymous=True)
@@ -141,7 +141,7 @@ async def test_mqttserver(proxy: bool):
 
 @pytest.mark.usefixtures("clean_database")
 @pytest.mark.parametrize("proxy", [False])
-async def test_mqttserver_subscribe(proxy: bool):
+async def test_mqttserver_subscribe(proxy: bool) -> None:
     with LogCapture() as log:
         # NOTE: for proxy test subscription solution how to connect needs to be checked
         bumper_isc.BUMPER_PROXY_MQTT = proxy
@@ -149,7 +149,9 @@ async def test_mqttserver_subscribe(proxy: bool):
             dns.resolve = mock.MagicMock(return_value=async_return("127.0.0.1"))
 
         mqtt_server = MQTTServer(
-            MQTTBinding(HOST, MQTT_PORT, True), password_file="tests/_test_files/passwd", allow_anonymous=True
+            MQTTBinding(HOST, MQTT_PORT, True),
+            password_file="tests/_test_files/passwd",
+            allow_anonymous=True,
         )
 
         try:
@@ -186,7 +188,7 @@ async def test_mqttserver_subscribe(proxy: bool):
             await mqtt_server.shutdown()
 
 
-async def test_mqttserver_no_file_auth():
+async def test_mqttserver_no_file_auth() -> None:
     with LogCapture() as log:
         mqtt_server = MQTTServer(MQTTBinding(HOST, MQTT_PORT, True), password_file="tests/_test_files/passwd-notfound")
         await mqtt_server.start()
@@ -203,7 +205,7 @@ async def test_mqttserver_no_file_auth():
             await mqtt_server.shutdown()
 
 
-async def test_mqttserver_default_pw_file_double_start():
+async def test_mqttserver_default_pw_file_double_start() -> None:
     with LogCapture() as log:
         mqtt_server = MQTTServer(MQTTBinding(HOST, MQTT_PORT, True))
         try:
@@ -232,7 +234,7 @@ async def test_mqttserver_default_pw_file_double_start():
             await mqtt_server.shutdown()
 
 
-async def test_mqttserver_shutdown():
+async def test_mqttserver_shutdown() -> None:
     with LogCapture() as log:
         mqtt_server = MQTTServer(MQTTBinding(HOST, MQTT_PORT, True))
         try:

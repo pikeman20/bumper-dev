@@ -48,6 +48,6 @@ async def _handle_get_msg_receive_setting(_: Request) -> Response:
                     "openOrClose": "Y",
                     "settingType": "CUSTOMER_SERVICE",
                 },
-            ]
-        }
+            ],
+        },
     )

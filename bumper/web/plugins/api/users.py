@@ -1,4 +1,5 @@
 """Users plugin module."""
+
 from collections.abc import Iterable, Mapping
 import json
 import logging
@@ -70,7 +71,7 @@ async def _handle_user(request: Request) -> Response:
                             "todo": "result",
                             "token": post_body["token"],
                             "userId": post_body["userId"],
-                        }
+                        },
                     )
             else:  # EcoVacs Home LoginByITToken
                 login_token = db.login_by_it_token(post_body["token"])
@@ -82,7 +83,7 @@ async def _handle_user(request: Request) -> Response:
                             "todo": "result",
                             "token": login_token["token"],
                             "userId": login_token["userid"],
-                        }
+                        },
                     )
 
         if todo == "GetAuthCode":
@@ -109,6 +110,6 @@ async def _handle_user(request: Request) -> Response:
             _LOGGER.error(f"todo is not know :: {todo}")
             body = response_error_v6(todo)
         return body
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError

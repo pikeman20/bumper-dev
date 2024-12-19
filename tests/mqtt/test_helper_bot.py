@@ -8,7 +8,7 @@ from bumper.mqtt.helper_bot import MQTTHelperBot
 from tests import HOST, MQTT_PORT
 
 
-async def test_helperbot_connect(mqtt_client: Client):
+async def test_helperbot_connect(mqtt_client: Client) -> None:
     # Test helperbot connect
     mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
     await mqtt_helperbot.start()
@@ -16,7 +16,7 @@ async def test_helperbot_connect(mqtt_client: Client):
     await mqtt_helperbot.disconnect()
 
 
-async def test_helperbot_message(mqtt_client: Client):
+async def test_helperbot_message(mqtt_client: Client) -> None:
     with LogCapture() as log:
         # Test broadcast message
         mqtt_helperbot = MQTTHelperBot(HOST, MQTT_PORT, True)
@@ -36,7 +36,7 @@ async def test_helperbot_message(mqtt_client: Client):
                     "Received Broadcast :: Topic: iot/atr/DustCaseST/bot_serial/ls1ok3/wC3g/x"
                     " :: Message: <ctl ts='1547822804960' td='DustCaseST' st='0'/>"
                 ),
-            )
+            ),
         )  # Check broadcast message was logged
         log.clear()
         await mqtt_helperbot.disconnect()
@@ -59,7 +59,7 @@ async def test_helperbot_message(mqtt_client: Client):
                     "Send Command :: Topic: iot/p2p/GetWKVer/helperbot/bumper/helperbot/bot_serial/ls1ok3/wC3g/q/iCmuqp/j"
                     " :: Message: {}"
                 ),
-            )
+            ),
         )  # Check send command message was logged
         log.clear()
         await mqtt_helperbot.disconnect()
@@ -82,7 +82,7 @@ async def test_helperbot_message(mqtt_client: Client):
                     "Received Response :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/iCmuqp/j"
                     ' :: Message: {"ret":"ok","ver":"0.13.5"}'
                 ),
-            )
+            ),
         )  # Check received response message was logged
         log.clear()
         await mqtt_helperbot.disconnect()
@@ -105,7 +105,7 @@ async def test_helperbot_message(mqtt_client: Client):
                     "Received Message :: Topic: iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/TESTBAD/bumper/helperbot/p/iCmuqp/j"
                     " :: Message: test"
                 ),
-            )
+            ),
         )  # Check received message was logged
         log.clear()
         await mqtt_helperbot.disconnect()
@@ -128,13 +128,13 @@ async def test_helperbot_message(mqtt_client: Client):
                     "Received Broadcast :: Topic: iot/atr/errors/bot_serial/ls1ok3/wC3g/x"
                     " :: Message: <ctl ts='1560904925396' td='errors' old='' new='110'/>"
                 ),
-            )
+            ),
         )  # Check received message was logged
         log.clear()
         await mqtt_helperbot.disconnect()
 
 
-async def test_helperbot_expire_message(mqtt_client: Client, helper_bot: MQTTHelperBot):
+async def test_helperbot_expire_message(mqtt_client: Client, helper_bot: MQTTHelperBot) -> None:
     expire_msg_payload = '{"ret":"ok","ver":"0.13.5"}'
     expire_msg_topic_name = "iot/p2p/GetWKVer/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/testgood/j"
     currenttime = time.time()
@@ -159,7 +159,7 @@ async def test_helperbot_expire_message(mqtt_client: Client, helper_bot: MQTTHel
     assert helper_bot._commands.get(request_id, None) is None
 
 
-async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelperBot):
+async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelperBot) -> None:
     cmdjson = {
         "toType": "ls1ok3",
         "payloadType": "j",

@@ -1,4 +1,5 @@
 """Web server middleware module."""
+
 import json
 import logging
 from typing import Any
@@ -53,10 +54,10 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
                         "body": await request.text(),
                     },
                     cls=CustomEncoder,
-                )
+                ),
             )
-    except Exception as e:
-        _LOGGER.exception(e)
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during logging the debug request"))
 
     if request.match_info.route.resource is None or request.match_info.route.resource.canonical in _EXCLUDE_FROM_LOGGING:
         return await handler(request)
@@ -69,7 +70,7 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
             "query_string": request.query_string,
             "headers": set(request.headers.items()),
             "route_resource": request.match_info.route.resource.canonical,
-        }
+        },
     }
 
     try:
@@ -79,9 +80,9 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
                     to_log["request"]["body"] = await request.json()
                 else:
                     to_log["request"]["body"] = set(await request.post())
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during logging the request"))
-            raise e
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder(info="during logging the request"))
+            raise
 
         response: StreamResponse | None = await handler(request)
 
@@ -98,7 +99,8 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
 
             if isinstance(response, Response) and response.body:
                 if response.text is None:
-                    raise ValueError("Response text is not provided.")
+                    msg = "Response text is not provided."
+                    raise ValueError(msg)
 
                 if response.content_type == "application/json":
                     to_log["response"]["body"] = json.loads(response.text)
@@ -106,12 +108,12 @@ async def log_all_requests(request: Request, handler: Handler) -> StreamResponse
                     to_log["response"]["body"] = response.text
 
             return response
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during logging the response"))
-            raise e
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder(info="during logging the response"))
+            raise
 
-    except web.HTTPNotFound as h:
+    except web.HTTPNotFound:
         _LOGGER.debug(f"Request path {request.raw_path} not found")
-        raise h
+        raise
     finally:
         _LOGGER.debug(json.dumps(to_log, cls=CustomEncoder))

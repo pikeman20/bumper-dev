@@ -18,7 +18,7 @@ from tests import HOST, MQTT_PORT, WEBSERVER_PORT
 # NOTE: use with:
 # @pytest.mark.usefixtures("clean_database")
 @pytest.fixture(name="clean_database")
-def _clean_database():
+def _clean_database() -> None:
     db._db_get().drop_tables()
     if os.path.exists("tests/_test_files/tmp.db"):
         os.remove("tests/_test_files/tmp.db")  # Remove existing db

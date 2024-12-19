@@ -1,4 +1,5 @@
 """Member plugin module."""
+
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -69,7 +70,7 @@ async def _handle_get_exp_by_scene(request: Request) -> Response:
                     "getPoint": get_point,
                     f"{key_only_once1}{key_only_once2}": "N",
                     "prompt": prompt,
-                }
-            ]
-        }
+                },
+            ],
+        },
     )

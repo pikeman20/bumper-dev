@@ -1,4 +1,5 @@
 """Message plugin module."""
+
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -83,6 +84,6 @@ async def _handle_module_configuration(_: Request) -> Response:
                     "sort": 4000,
                     "tip": None,
                 },
-            ]
-        }
+            ],
+        },
     )

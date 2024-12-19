@@ -28,7 +28,7 @@ def test_argparse(
     expected_verbose: int,
     expected_listen: str,
     expected_announce: str,
-):
+) -> None:
     bumper_isc.ca_cert = "tests/_test_files/certs/ca.crt"
     bumper_isc.server_cert = "tests/_test_files/certs/bumper.crt"
     bumper_isc.server_key = "tests/_test_files/certs/bumper.key"
@@ -50,7 +50,7 @@ def test_argparse(
 
 @patch("bumper.start")
 @patch("bumper.shutdown")
-def test_arg_listen_none(mock_shutdown: MagicMock, mock_start: MagicMock):
+def test_arg_listen_none(mock_shutdown: MagicMock, mock_start: MagicMock) -> None:
     bumper.main(["--listen", None])
     assert not utils.is_valid_ip(bumper_isc.bumper_listen)
 

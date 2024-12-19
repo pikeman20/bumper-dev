@@ -3,7 +3,7 @@
 import asyncio
 import dataclasses
 import logging
-import os
+from pathlib import Path
 from typing import Any, Literal
 
 from amqtt.broker import Broker, BrokerContext
@@ -41,7 +41,10 @@ class MQTTServer:
     """Mqtt server."""
 
     def __init__(
-        self, bindings: list[MQTTBinding] | MQTTBinding, password_file: str | None = None, allow_anonymous: bool = False
+        self,
+        bindings: list[MQTTBinding] | MQTTBinding,
+        password_file: str | None = None,
+        allow_anonymous: bool = False,
     ) -> None:
         """MQTT server init."""
         try:
@@ -52,7 +55,7 @@ class MQTTServer:
             # For file auth, set user:hash in passwd file see
             # (https://hbmqtt.readthedocs.io/en/latest/references/hbmqtt.html#configuration-example)
             if password_file is None:
-                password_file = os.path.join(os.path.join(bumper_isc.data_dir, "passwd"))
+                password_file = str(Path(bumper_isc.data_dir) / "passwd")
 
             self._add_entry_point()
 
@@ -64,9 +67,9 @@ class MQTTServer:
                     "ssl": "on" if binding.use_ssl is True else "off",
                 }
                 if binding.use_ssl is True:
-                    config_bind[f"{listener_prefix}{index}"]["cafile"] = bumper_isc.ca_cert
-                    config_bind[f"{listener_prefix}{index}"]["certfile"] = bumper_isc.server_cert
-                    config_bind[f"{listener_prefix}{index}"]["keyfile"] = bumper_isc.server_key
+                    config_bind[f"{listener_prefix}{index}"]["cafile"] = str(bumper_isc.ca_cert)
+                    config_bind[f"{listener_prefix}{index}"]["certfile"] = str(bumper_isc.server_cert)
+                    config_bind[f"{listener_prefix}{index}"]["keyfile"] = str(bumper_isc.server_key)
 
             # Initialize bot server
             config = {
@@ -84,9 +87,9 @@ class MQTTServer:
             }
 
             self._broker = Broker(config=config)
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during initialize"))
-            raise e
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder(info="during initialize"))
+            raise
 
     def _add_entry_point(self) -> None:
         dist_location = "amqtt.broker.plugins"
@@ -106,7 +109,7 @@ class MQTTServer:
         )
 
         # pylint: disable-next=protected-access
-        distribution._ep_map = {dist_location: {plugin_name: bumper_plugin}}  # type: ignore # noqa: SLF001
+        distribution._ep_map = {dist_location: {plugin_name: bumper_plugin}}  # type: ignore # noqa: SLF001, PGH003
         pkg_resources.working_set.add(distribution)
         bumper_plugin.load()
 
@@ -136,9 +139,9 @@ class MQTTServer:
                 await self._broker.start()
             else:
                 _LOGGER.info("MQTT Server is still running, stop first for a restart!")
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during startup"))
-            raise e
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder(info="during startup"))
+            raise
 
     async def shutdown(self) -> None:
         """Shutdown server."""
@@ -148,16 +151,16 @@ class MQTTServer:
                 for handler in self.handlers:
                     try:
                         await handler.stop()
-                    except Exception as handler_error:
-                        _LOGGER.exception(f"Error stopping session handler: {handler_error}")
+                    except Exception:
+                        _LOGGER.exception("Error stopping session handler")
 
                 # await self._broker.shutdown()
                 await self.shutdown_copy()
             else:
                 _LOGGER.warning(f"MQTT server is not in a valid state for shutdown. Current state: {self.state}")
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during shutdown"))
-            raise e
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder(info="during shutdown"))
+            raise
 
     async def shutdown_copy(self) -> None:
         """Stop broker instance.
@@ -172,7 +175,7 @@ class MQTTServer:
         except (MachineError, ValueError) as exc:
             # Backwards compat: MachineError is raised by transitions < 0.5.0.
             _LOGGER_BROKER.debug(f"Invalid method call at this moment: {exc}")
-            raise exc
+            raise
 
         # Fire broker_shutdown event to plugins
         await self._broker.plugins_manager.fire_event("broker_pre_shutdown")
@@ -217,12 +220,13 @@ class BumperMQTTServerPlugin:
                 self.auth_config = self.context.config["auth"]
                 self._users: dict[str, str] = self._read_password_file()
             else:
-                raise Exception("context config is not set")
+                msg = "context config is not set"
+                raise Exception(msg)
         except KeyError:
             _LOGGER.warning("'bumper' section not found in context configuration")
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e, "during plugin initialization"))
-            raise e
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder(info="during plugin initialization"))
+            raise
 
     async def authenticate(self, session: Session, **kwargs: dict[str, Any]) -> bool:
         """Authenticate session."""
@@ -254,7 +258,7 @@ class BumperMQTTServerPlugin:
                         "eco-ng",
                     )
                     _LOGGER.info(
-                        f"Bumper Authentication Success :: Bot :: SN: {username} :: DID: {tmp_did} :: Class: {tmp_dev_class}"
+                        f"Bumper Authentication Success :: Bot :: SN: {username} :: DID: {tmp_did} :: Class: {tmp_dev_class}",
                     )
 
                     if bumper_isc.BUMPER_PROXY_MQTT and password is not None:
@@ -265,7 +269,7 @@ class BumperMQTTServerPlugin:
                         await proxy.connect(username, password)
                     return True
 
-                if password is not None and db.check_auth_code(tmp_did, password) or not bumper_isc.USE_AUTH:
+                if (password is not None and db.check_auth_code(tmp_did, password)) or not bumper_isc.USE_AUTH:
                     db.client_add(
                         tmp_did,
                         tmp_dev_class,
@@ -293,8 +297,8 @@ class BumperMQTTServerPlugin:
                         f"File Authentication Failed :: No Entry for :: {message_suffix}",
                     )
 
-        except Exception as e:
-            _LOGGER.exception(f"Session: {kwargs.get('session', '')} :: {e}")
+        except Exception:
+            _LOGGER.exception(f"Session: {kwargs.get('session', '')}")
 
         # Check for allow anonymous
         if self.auth_config.get("allow-anonymous", True):
@@ -309,7 +313,7 @@ class BumperMQTTServerPlugin:
         users: dict[str, str] = {}
         if password_file:
             try:
-                with open(password_file, encoding="utf-8") as file:
+                with Path.open(password_file, encoding="utf-8") as file:
                     _LOGGER.debug(f"Reading user database from {password_file}")
                     for line in file:
                         t_line = line.strip()
@@ -353,8 +357,8 @@ class BumperMQTTServerPlugin:
             client = db.client_get(clientresource)
             if client:
                 db.client_set_mqtt(client["resource"], connected)
-        except Exception as e:
-            _LOGGER.error(e)
+        except Exception:
+            _LOGGER.exception("failed to connect client")
 
     async def on_broker_message_received(self, message: IncomingApplicationMessage, client_id: str) -> None:
         """On message received."""
@@ -388,13 +392,13 @@ class BumperMQTTServerPlugin:
                     if ttopic[6] == "":
                         _LOGGER_PROXY.warning(
                             "Request mapper is missing entry, probably request took to"
-                            f" long... Client_id: {client_id} :: Request_id: {ttopic[10]}"
+                            f" long... Client_id: {client_id} :: Request_id: {ttopic[10]}",
                         )
                         return
 
                     ttopic_join = "/".join(ttopic)
                     _LOGGER_PROXY.info(
-                        f"Bot Message Converted Topic From {message.topic} TO {ttopic_join} with message: {data_decoded}"
+                        f"Bot Message Converted Topic From {message.topic} TO {ttopic_join} with message: {data_decoded}",
                     )
                 else:
                     ttopic_join = message.topic

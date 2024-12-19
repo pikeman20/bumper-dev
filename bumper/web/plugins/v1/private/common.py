@@ -1,9 +1,10 @@
 """Common plugin module."""
+
 import base64
 from collections.abc import Iterable
 import json
 import logging
-import os
+from pathlib import Path
 
 import aiofiles
 from aiohttp import web
@@ -106,7 +107,7 @@ async def _handle_check_version(_: Request) -> Response:
             "u": None,
             "ut": 0,
             "v": None,
-        }
+        },
     )
 
 
@@ -123,7 +124,7 @@ async def _handle_check_app_version(_: Request) -> Response:
             "u": None,
             "ut": 0,
             "v": None,
-        }
+        },
     )
 
 
@@ -142,7 +143,7 @@ async def _handle_get_system_reminder(_: Request) -> Response:
                 "openNotificationFlag": "N",
                 "openNotificationTitle": None,
             },
-        }
+        },
     )
 
 
@@ -176,8 +177,8 @@ async def _handle_get_config(request: Request) -> Response:
                 data.append({"key": key, "value": "Y"})
 
         return get_success_response(data)
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
 
 
@@ -196,22 +197,22 @@ async def _handle_get_user_config(request: Request) -> Response:
                         "isTrace": "Y",
                         "saUserId": user.userid,
                         "serverUrl": "https://sa-eu-datasink.ecovacs.com/sa?project=production",
-                    }
-                }
+                    },
+                },
             )
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
 
 
 async def _handle_get_areas(_: Request) -> Response:
     """Get Areas."""
     try:
-        async with aiofiles.open(os.path.join(os.path.dirname(__file__), "common_area.json"), encoding="utf-8") as file:
+        async with aiofiles.open(Path(__file__).parent / "common_area.json", encoding="utf-8") as file:
             file_content = await file.read()
             return get_success_response(json.loads(file_content))
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
 
 
@@ -236,7 +237,7 @@ async def _handle_get_agreement_url_batch(_: Request) -> Response:
                 "url": f"{domain}?id=20180804040245_4e7c56dfb7ebd3b81b1f2747d0859fac&language=EN",
                 "version": "1.03",
             },
-        ]
+        ],
     )
 
 
@@ -295,7 +296,7 @@ async def _handle_get_bottom_navigate_info_list(_: Request) -> Response:
                 "positionType": "Mine",
                 "tabItemActionUrl": None,
             },
-        ]
+        ],
     )
 
 
@@ -331,5 +332,5 @@ async def _handle_get_current_area_support_service_info(_: Request) -> Response:
             "officialWebSite": None,
             "phoneServiceInfo": None,
             "salesforceLiveChat": None,
-        }
+        },
     )

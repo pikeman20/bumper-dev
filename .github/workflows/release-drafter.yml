@@ -1,3 +1,4 @@
+---
 name: Release Drafter
 
 on:
@@ -6,8 +7,6 @@ on:
       # Push events to matching v*, i.e. v1.0, v20.15.10
       - "v*"
   workflow_dispatch:
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 jobs:
   update_release_draft:

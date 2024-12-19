@@ -1,4 +1,5 @@
 """User plugin module."""
+
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -59,5 +60,5 @@ async def _handle_check_agreement_batch(_: Request) -> Response:
                     "version": "1.07",
                 },
             ],
-        }
+        },
     )

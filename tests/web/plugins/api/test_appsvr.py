@@ -9,7 +9,7 @@ USER_ID = _generate_uid("tmpuser")
 
 
 @pytest.mark.usefixtures("clean_database", "mqtt_client")
-async def test_appsvr_api(webserver_client):
+async def test_appsvr_api(webserver_client) -> None:
     # Test GetGlobalDeviceList
     postbody = {
         "aliliving": False,

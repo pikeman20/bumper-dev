@@ -1,4 +1,5 @@
 """Webserver utils module."""
+
 from typing import Any
 
 from aiohttp import web
@@ -19,7 +20,7 @@ def response_success_v1(data: Any) -> Response:
             "msg": "The operation was successful.",
             "success": True,
             "time": utils.get_current_time_as_millis(),
-        }
+        },
     )
 
 
@@ -30,7 +31,7 @@ def response_success_v2(data: Any, data_key: str = "data") -> Response:
             data_key: data,
             "ret": "ok",
             "todo": "result",
-        }
+        },
     )
 
 
@@ -41,7 +42,7 @@ def response_success_v3(data: Any, code: int = 0, data_key: str = "data") -> Res
             "code": code,
             data_key: data,
             "message": "success",
-        }
+        },
     )
 
 
@@ -53,7 +54,7 @@ def response_success_v4(data: Any, data_key: str = "data") -> Response:
             data_key: data,
             "ret": "ok",
             "todo": "result",
-        }
+        },
     )
 
 
@@ -63,7 +64,7 @@ def response_success_v5(data: Any, code: int = 0, data_key: str = "data") -> Res
         {
             "code": code,
             data_key: data,
-        }
+        },
     )
 
 
@@ -75,7 +76,7 @@ def response_success_v6(data: Any, code: int = 0) -> Response:
             "data": data,
             "message": "success",
             "success": True,
-        }
+        },
     )
 
 
@@ -86,7 +87,7 @@ def response_success_v7(data: Any, code: int = 0) -> Response:
             "code": code,
             "data": data,
             "msg": "success",
-        }
+        },
     )
 
 
@@ -110,7 +111,7 @@ def response_error_v1(msg: str = "Parameter error. Please try again later", code
             "code": code,
             "msg": msg,
             "time": utils.get_current_time_as_millis(),
-        }
+        },
     )
 
 
@@ -122,7 +123,7 @@ def response_error_v2(msg: str = "Parameter error. Please try again later", code
             "error": msg,
             "result": "fail",
             "todo": "result",
-        }
+        },
     )
 
 
@@ -134,7 +135,7 @@ def response_error_v3(msg: str = "Parameter error. Please try again later", code
             "error": msg,
             "result": "fail",
             "todo": "result",
-        }
+        },
     )
 
 
@@ -145,7 +146,7 @@ def response_error_v4(msg: str = "Parameter error. Please try again later") -> R
             "todo": "result",
             "ret": "fail",
             "errno": msg,
-        }
+        },
     )
 
 
@@ -158,7 +159,7 @@ def response_error_v5() -> Response:
             "err": 2004,
             "errno": 2004,
             "code": 2004,
-        }
+        },
     )
 
 
@@ -171,7 +172,7 @@ def response_error_v6(debug: str, error: str = "Error request, unknown todo") ->
             "errno": 1,
             "error": error,
             "debug": debug,
-        }
+        },
     )
 
 
@@ -182,7 +183,7 @@ def response_error_v7(errno: int = 1, error: str = "unknown") -> Response:
             "ret": "fail",
             "errno": errno,
             "error": error,
-        }
+        },
     )
 
 
@@ -198,7 +199,7 @@ def get_success_response(data: Any) -> Response:
             "msg": "The operation was successful",
             "success": True,
             "time": utils.get_current_time_as_millis(),
-        }
+        },
     )
 
 

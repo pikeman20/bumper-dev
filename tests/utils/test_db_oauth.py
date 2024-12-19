@@ -4,7 +4,7 @@ from bumper.utils import db
 
 
 @pytest.mark.usefixtures("clean_database")
-def test_oauth_db():
+def test_oauth_db() -> None:
     db.user_add("testuser")  # Add testuser
     oauth = db.user_add_oauth("testuser")
 

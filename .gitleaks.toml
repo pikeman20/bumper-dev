@@ -1,0 +1,5 @@
+[allowlist]
+paths = ['''tests/_test_files/certs''']
+
+[extend]
+useDefault = true

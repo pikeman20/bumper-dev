@@ -4,7 +4,7 @@ from bumper.utils import db
 
 
 @pytest.mark.usefixtures("clean_database")
-def test_client_db():
+def test_client_db() -> None:
     db.client_add("user_123", "realm_123", "resource_123")
     assert db.client_get("resource_123")  # Test client was added
 
@@ -24,7 +24,7 @@ def test_client_db():
 
 
 @pytest.mark.usefixtures("clean_database")
-def test_client_add_no_existing():
+def test_client_add_no_existing() -> None:
     # Add a new client
     db.client_add("user_456", "realm_456", "resource_456")
 
@@ -33,7 +33,7 @@ def test_client_add_no_existing():
 
 
 @pytest.mark.usefixtures("clean_database")
-def test_client_add_existing():
+def test_client_add_existing() -> None:
     # Add an initial client
     db.client_add("user_789", "realm_789", "resource_789")
 
@@ -47,7 +47,7 @@ def test_client_add_existing():
 
 
 @pytest.mark.usefixtures("clean_database")
-def test_client_remove():
+def test_client_remove() -> None:
     # Add a client
     db.client_add("user_remove", "realm_remove", "resource_remove")
 
@@ -59,7 +59,7 @@ def test_client_remove():
 
 
 @pytest.mark.usefixtures("clean_database")
-def test_client_set_status():
+def test_client_set_status() -> None:
     # Add a client
     db.client_add("user_status", "realm_status", "resource_status")
 
@@ -75,7 +75,7 @@ def test_client_set_status():
 
 
 @pytest.mark.usefixtures("clean_database")
-def test_client_reset_connection_status():
+def test_client_reset_connection_status() -> None:
     # Add multiple clients
     db.client_add("user_reset_1", "realm_reset_1", "resource_reset_1")
     db.client_add("user_reset_2", "realm_reset_2", "resource_reset_2")
@@ -95,7 +95,7 @@ def test_client_reset_connection_status():
 
 
 @pytest.mark.usefixtures("clean_database")
-def test_client_get_all():
+def test_client_get_all() -> None:
     # Add multiple clients
     db.client_add("user_all_1", "realm_all_1", "resource_all_1")
     db.client_add("user_all_2", "realm_all_2", "resource_all_2")

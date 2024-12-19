@@ -1,4 +1,5 @@
 """Pim consumable plugin module."""
+
 from collections.abc import Iterable
 import logging
 
@@ -220,8 +221,8 @@ async def _handle_get_purchase_url(_: Request) -> Response:
                     "type": "dModule",
                     "url": "",
                 },
-            ]
+            ],
         )
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError

@@ -1,4 +1,5 @@
 """Ota plugin module."""
+
 from collections.abc import Iterable
 import logging
 
@@ -37,6 +38,6 @@ async def _handle_products_firmware_latest(_: Request) -> Response:
         # device_class = request.match_info.get("class")
         # did = request.query.get("did")
         return response_success_v6(None)
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError

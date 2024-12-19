@@ -1,4 +1,5 @@
 """XMPP module."""
+
 import asyncio
 from asyncio import Task, transports
 import base64
@@ -26,7 +27,7 @@ class XMPPServer:
     exit_flag: bool = False
     server: asyncio.Server | None = None
 
-    def __init__(self, host: str, port: int):
+    def __init__(self, host: str, port: int) -> None:
         """XMPP server init."""
         # Initialize bot server
         self._host = host
@@ -40,10 +41,9 @@ class XMPPServer:
             _LOGGER.info(f"Starting XMPP Server at {self._host}:{self._port}")
             loop = asyncio.get_running_loop()
             self.server = await loop.create_server(self.xmpp_protocol, host=self._host, port=self._port)
-            # self.server_coro = loop.create_task(self.server.serve_forever())
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
-            raise e
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
+            raise
 
     def disconnect(self) -> None:
         """Disconnect."""
@@ -105,7 +105,7 @@ class XMPPAsyncClient:
     CONTROLLER: int = 2
     tls_upgraded: bool = False
 
-    def __init__(self, transport: transports.BaseTransport):
+    def __init__(self, transport: transports.BaseTransport) -> None:
         """XMPP client init."""
         self.type = self.UNKNOWN
         self.state = self.IDLE
@@ -130,8 +130,8 @@ class XMPPAsyncClient:
                 if bumper_isc.DEBUG_LOGGING_XMPP_RESPONSE is True:
                     _LOGGER_CLIENT.info(f"SENDING  :: {command}")
                 self.transport.write(command.encode())
-        except Exception as e:
-            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e), exc_info=True)
+        except Exception:
+            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(), exc_info=True)
 
     def disconnect(self) -> None:
         """Disconnect."""
@@ -144,15 +144,15 @@ class XMPPAsyncClient:
                 if client:
                     db.client_set_xmpp(client.get("resource"), False)
             self.transport.close()
-        except Exception as e:
-            _LOGGER_CLIENT.error(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER_CLIENT.error(utils.default_exception_str_builder())
 
     def _tag_strip_uri(self, tag: str) -> str:
         try:
             if tag[0] == "{":
                 _, _, tag = tag[1:].partition("}")
-        except Exception as e:
-            _LOGGER_CLIENT.error(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER_CLIENT.error(utils.default_exception_str_builder())
         return tag
 
     def set_state(self, state: str) -> None:
@@ -160,13 +160,14 @@ class XMPPAsyncClient:
         try:
             new_state = getattr(XMPPAsyncClient, state)
             if self.state > new_state:
-                raise Exception(f"{self.address} illegal state change {self.state}->{new_state}")
+                msg = f"{self.address} illegal state change {self.state}->{new_state}"
+                raise Exception(msg)
             _LOGGER_CLIENT.debug(f"({self.address[0]}:{self.address[1]} | {self.bumper_jid}) state: {state}")
             self.state = new_state
             if new_state == 5:
                 self.disconnect()
-        except Exception as e:
-            _LOGGER_CLIENT.error(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER_CLIENT.error(utils.default_exception_str_builder())
 
     def _handle_ctl(self, xml: Element, data: str) -> None:
         try:
@@ -174,7 +175,7 @@ class XMPPAsyncClient:
                 # Return not-implemented for roster
                 self.send(
                     f'<iq type="error" id="{xml.get("id")}"><error type="cancel" code="501">'
-                    '<feature-not-implemented xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/></error></iq>'
+                    '<feature-not-implemented xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/></error></iq>',
                 )
                 return
 
@@ -182,7 +183,7 @@ class XMPPAsyncClient:
                 # Return  not-implemented for disco#items
                 self.send(
                     f'<iq type="error" id="{xml.get("id")}"><error type="cancel" code="501">'
-                    '<feature-not-implemented xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/></error></iq>'
+                    '<feature-not-implemented xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/></error></iq>',
                 )
                 return
 
@@ -190,7 +191,7 @@ class XMPPAsyncClient:
                 # Return not-implemented for disco#info
                 self.send(
                     f'<iq type="error" id="{xml.get("id")}"><error type="cancel" code="501">'
-                    '<feature-not-implemented xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/></error></iq>'
+                    '<feature-not-implemented xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/></error></iq>',
                 )
                 return
 
@@ -198,7 +199,7 @@ class XMPPAsyncClient:
             if xml.get("type") == "set" and "com:sf" in data and xml.get("to") == "rl.ecorobot.net":
                 self.send(
                     f'<iq id="{xml.get("id")}" to="{self.uid}@{XMPPServer.server_id}/{self.clientresource}"'
-                    ' from="rl.ecorobot.net" type="result"/>'
+                    ' from="rl.ecorobot.net" type="result"/>',
                 )
 
             if len(xml[0]) > 0:
@@ -225,8 +226,8 @@ class XMPPAsyncClient:
                         )
                         client.send(rxmlstring)
 
-        except Exception as e:
-            _LOGGER_CLIENT.error(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER_CLIENT.error(utils.default_exception_str_builder())
 
     def _handle_ping(self, xml: Element) -> None:
         try:
@@ -235,7 +236,6 @@ class XMPPAsyncClient:
             if pingto is not None and pingto.find("@") == -1:  # No to address
                 # Ping to server - respond
                 pingresp = f'<iq type="result" id="{xml.get("id")}" from="{pingto}" />'
-                # xmppserverlog.debug( f"Server Ping resp: {pingresp}")
                 self.send(pingresp)
 
             else:
@@ -254,8 +254,8 @@ class XMPPAsyncClient:
                     ):
                         client.send(pingstring)
 
-        except Exception as e:
-            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e), exc_info=True)
+        except Exception:
+            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(), exc_info=True)
 
     async def schedule_ping(self, time: float) -> None:
         """Schedule ping."""
@@ -263,7 +263,7 @@ class XMPPAsyncClient:
             return
         self.send(
             f"<iq from='{XMPPServer.server_id}' to='{self.bumper_jid}' id='s2c1' type='get'>"
-            " <ping xmlns='urn:xmpp:ping'/></iq>"
+            " <ping xmlns='urn:xmpp:ping'/></iq>",
         )
         await asyncio.sleep(time)
         asyncio.Task(self.schedule_ping(time))
@@ -284,9 +284,9 @@ class XMPPAsyncClient:
                 if self.type == self.BOT:
                     _LOGGER_CLIENT.info(
                         "Bot reported user has no permissions, Bumper will attempt to add user to bot. "
-                        "This is typical if bot was last on Ecovacs Network."
+                        "This is typical if bot was last on Ecovacs Network.",
                     )
-                    ctl = list(list(xml)[0])
+                    ctl = list(next(iter(xml)))
                     adminuser = None
                     if "error" in ctl[0].attrib:
                         ctlerr = ctl[0].attrib["error"]
@@ -325,7 +325,7 @@ class XMPPAsyncClient:
                         # GetUserInfo - Just to confirm it set correctly
                         self.send(
                             f'<iq type="set" id="{uuid.uuid4()}" from="{adminuser}" to="{self.bumper_jid}">'
-                            '<query xmlns="com:ctl"><ctl td="GetUserInfo" id="4444" /><UserInfos/></query></iq>'
+                            '<query xmlns="com:ctl"><ctl td="GetUserInfo" id="4444" /><UserInfos/></query></iq>',
                         )
 
             else:
@@ -346,8 +346,8 @@ class XMPPAsyncClient:
                         elif client.uid.lower() in ctl_to.lower():  # If client matches TO=
                             _LOGGER_CLIENT.debug(f"Sending from {self.uid} to client {client.uid}: {rxmlstring}")
                             client.send(rxmlstring)
-        except Exception as e:
-            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e, ET.tostring(xml).decode("utf-8")), exc_info=True)
+        except Exception:
+            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(info=ET.tostring(xml).decode("utf-8")), exc_info=True)
 
     def _handle_connect(self, xml_str: str, xml: Element | None = None) -> None:
         try:
@@ -363,7 +363,7 @@ class XMPPAsyncClient:
                         # Send stream tag to client, acknowledging connection
                         self.send(
                             '<stream:stream xmlns:stream="http://etherx.jabber.org/streams"'
-                            f' xmlns="jabber:client" version="1.0" id="1" from="{XMPPServer.server_id}">'
+                            f' xmlns="jabber:client" version="1.0" id="1" from="{XMPPServer.server_id}">',
                         )
 
                         # Send STARTTLS to client with auth mechanisms
@@ -372,14 +372,14 @@ class XMPPAsyncClient:
                             self.send(
                                 '<stream:features><starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"><required/></starttls>'
                                 '<mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl"><mechanism>PLAIN</mechanism></mechanisms>'
-                                "</stream:features>"
+                                "</stream:features>",
                             )
 
                         else:
                             # Already using TLS send authentication support for SASL
                             self.send(
                                 '<stream:features><mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">'
-                                "<mechanism>PLAIN</mechanism></mechanisms></stream:features>"
+                                "<mechanism>PLAIN</mechanism></mechanisms></stream:features>",
                             )
 
                     else:
@@ -396,12 +396,12 @@ class XMPPAsyncClient:
                         # ack jabbr:client
                         self.send(
                             '<stream:stream xmlns:stream="http://etherx.jabber.org/streams"'
-                            f' xmlns="jabber:client" version="1.0" id="1" from="{XMPPServer.server_id}">'
+                            f' xmlns="jabber:client" version="1.0" id="1" from="{XMPPServer.server_id}">',
                         )
 
                         self.send(
                             '<stream:features><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"/>'
-                            '<session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></stream:features>'
+                            '<session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></stream:features>',
                         )
 
                 else:  # Handle init bind
@@ -413,8 +413,8 @@ class XMPPAsyncClient:
                     else:
                         _LOGGER_CLIENT.error(f"Couldn't handle :: {xml}")
 
-        except Exception as e:
-            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e), exc_info=True)
+        except Exception:
+            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(), exc_info=True)
 
     async def _handle_starttls(self) -> None:
         try:
@@ -439,8 +439,8 @@ class XMPPAsyncClient:
                 if new_transport is not None:
                     protocol.connection_made(new_transport)
 
-        except Exception as e:
-            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e), exc_info=True)
+        except Exception:
+            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(), exc_info=True)
 
     def _handle_sasl_auth(self, xml: Element) -> None:
         try:
@@ -490,8 +490,8 @@ class XMPPAsyncClient:
                     # Failed to authenticate
                     self.send('<response xmlns="urn:ietf:params:xml:ns:xmpp-sasl"/>')  # Fail
 
-        except Exception as e:
-            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e), exc_info=True)
+        except Exception:
+            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(), exc_info=True)
 
     def _handle_bind(self, xml: Element) -> None:
         try:
@@ -505,7 +505,7 @@ class XMPPAsyncClient:
                     db.client_set_xmpp(client["resource"], True)
 
             type_added = "client"
-            clientresourcexml = list(list(xml)[0])
+            clientresourcexml = list(next(iter(xml)))
             if self.devclass:  # its a bot
                 self.name = f"XMPP_Client_{self.uid}_{self.devclass}"
                 self.bumper_jid = f"{self.uid}@{self.devclass}.ecorobot.net/atom"
@@ -527,8 +527,8 @@ class XMPPAsyncClient:
             self.set_state("BIND")
             self.send(res)
 
-        except Exception as e:
-            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e), exc_info=True)
+        except Exception:
+            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(), exc_info=True)
 
     def _handle_session(self, xml: Element) -> None:
         self.set_state("READY")
@@ -548,7 +548,7 @@ class XMPPAsyncClient:
                 # get device info
                 self.send(
                     f'<iq type="set" id="14" to="{self.bumper_jid}" from="{XMPPServer.server_id}">'
-                    '<query xmlns="com:ctl"><ctl td="GetDeviceInfo"/></query></iq>'
+                    '<query xmlns="com:ctl"><ctl td="GetDeviceInfo"/></query></iq>',
                 )
 
         else:
@@ -561,7 +561,7 @@ class XMPPAsyncClient:
                 self.send(f'<presence to="{self.bumper_jid}"> dummy </presence>')
             elif xml.get("type") == "unavailable":
                 _LOGGER_CLIENT.debug(
-                    f"client presence unavailable (DISCONNECT) - {ET.tostring(xml, encoding='utf-8').decode('utf-8')}"
+                    f"client presence unavailable (DISCONNECT) - {ET.tostring(xml, encoding='utf-8').decode('utf-8')}",
                 )
 
                 self.set_state("DISCONNECT")
@@ -619,7 +619,7 @@ class XMPPAsyncClient:
                     if self.log_incoming_data:
                         _LOGGER_CLIENT.debug(
                             f"from ({self.address[0]}:{self.address[1]} | {self.bumper_jid})"
-                            f" - {str(ET.tostring(item, encoding='utf-8').decode('utf-8')).replace('ns0:', '')}"
+                            f" - {str(ET.tostring(item, encoding='utf-8').decode('utf-8')).replace('ns0:', '')}",
                         )
                         if 'td="error"' in newdata or "errs=" in newdata or 'k="DeviceAlert' in newdata:
                             _LOGGER_CLIENT.error(
@@ -647,14 +647,14 @@ class XMPPAsyncClient:
 
                 elif self.log_incoming_data:
                     _LOGGER_CLIENT.warning(
-                        f"Unparsed Item - {str(ET.tostring(item, encoding='utf-8').decode('utf-8')).replace('ns0:', '')}"
+                        f"Unparsed Item - {str(ET.tostring(item, encoding='utf-8').decode('utf-8')).replace('ns0:', '')}",
                     )
                     item.clear()
 
         except ET.ParseError as e:
             _LOGGER_CLIENT.error(f"xml parse error :: {newdata} :: {e}", exc_info=True)
-        except Exception as e:
-            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(e), exc_info=True)
+        except Exception:
+            _LOGGER_CLIENT.exception(utils.default_exception_str_builder(), exc_info=True)
 
     def _handle_iq(self, xml: Element, data: str) -> None:
         child = self._tag_strip_uri(xml[0].tag) if len(xml) else None

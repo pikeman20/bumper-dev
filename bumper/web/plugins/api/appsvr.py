@@ -1,4 +1,5 @@
 """Appsvr plugin module."""
+
 from collections.abc import Iterable, Mapping
 import copy
 import json
@@ -105,7 +106,7 @@ async def _handle_app_do(request: Request) -> Response:
                     "extend": {},
                     "type": "microsoft",
                     "url": "",
-                }
+                },
             )
 
         if todo == "RobotControl":
@@ -168,8 +169,8 @@ async def _handle_app_do(request: Request) -> Response:
 
         _LOGGER.error(f"todo is not know :: {todo}")
         return response_error_v5()
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
 
 
@@ -226,7 +227,7 @@ async def _handle_app_config(request: Request) -> Response:
                     "zh-hant": "繁體中文",
                     "zh_cn": "简体中文",
                 },
-            }
+            },
         ]
 
     elif code == "codepush_config":
@@ -521,7 +522,7 @@ async def _handle_app_config(request: Request) -> Response:
                         "version": "1.0.0",
                     },
                 },
-            }
+            },
         ]
 
     elif code == "base_station_guide":
@@ -534,7 +535,7 @@ async def _handle_app_config(request: Request) -> Response:
                 "name": "Introduction to AES base stations",
                 "resId": "61cd0abe312d7cfc89acf608",
                 "type": "text",
-            }
+            },
         ]
 
     elif code == "time_zone_list":
@@ -571,7 +572,7 @@ async def _handle_app_config(request: Request) -> Response:
                 "description": "",
                 "resId": "61a055be6533d2e6d9d8f0f1",
                 "type": "json",
-            }
+            },
         ]
 
     if len(data) <= 0:
@@ -614,8 +615,8 @@ async def _handle_service_list(request: Request) -> Response:
         }
 
         return response_success_v4(data)
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
 
 
@@ -651,7 +652,7 @@ async def _handle_improve(request: Request) -> Response:
             "content": content,
             "remark": "",
             "show": False,
-        }
+        },
     )
 
 
@@ -677,7 +678,8 @@ async def _handle_device_blacklist_check(_: Request) -> Response:
 
 def _include_product_iot_map_info(bot: dict[str, Any]) -> dict[str, Any]:
     if bumper_isc.mqtt_server is None:
-        raise Exception("'bumper.mqtt_server' is None")
+        msg = "'bumper.mqtt_server' is None"
+        raise Exception(msg)
 
     result = copy.deepcopy(bot)
 

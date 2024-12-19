@@ -48,6 +48,6 @@ async def _handle_get_by_area(request: Request) -> Response:
             data = f'area: area must be one of the following: "{msg_list}"'
 
         return response_success_v5(data, code, data_str)
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError

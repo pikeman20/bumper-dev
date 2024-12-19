@@ -9,7 +9,7 @@ USER_ID = _generate_uid("tmpuser")
 
 
 @pytest.mark.usefixtures("clean_database")
-async def test_getUsersAPI(webserver_client):
+async def test_getUsersAPI(webserver_client) -> None:
     resp = await webserver_client.post("/api/users/user.do", json={})
     assert resp.status == 200
     text = await resp.text()
@@ -18,7 +18,7 @@ async def test_getUsersAPI(webserver_client):
 
 
 @pytest.mark.usefixtures("clean_database")
-async def test_postUsersAPI(webserver_client):
+async def test_postUsersAPI(webserver_client) -> None:
     # Test FindBest
     postbody = {"todo": "FindBest", "service": "EcoMsgNew"}
     resp = await webserver_client.post("/api/users/user.do", json=postbody)

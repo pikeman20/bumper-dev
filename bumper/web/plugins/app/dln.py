@@ -1,4 +1,5 @@
 """Dln plugin module."""
+
 from collections.abc import Iterable
 import logging
 
@@ -56,8 +57,8 @@ async def _handle_clean_result_list(request: Request) -> Response:
                     data.append(log)
 
         return response_success_v3(sorted(data, key=lambda x: x["ts"], reverse=True))
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
 
 
@@ -67,6 +68,6 @@ async def _handle_clean_result_del(_: Request) -> Response:
     utils.default_log_warn_not_impl("_handle_clean_result_del")
     try:
         return response_success_v3(None)
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError

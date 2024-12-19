@@ -1,4 +1,5 @@
 """Lg plugin module."""
+
 from collections.abc import Iterable
 import json
 import logging
@@ -37,7 +38,7 @@ async def _handle_lg_log(request: Request) -> Response:
         json_body: dict[str, Any] = json.loads(await request.text())
         did: str | None = json_body.get("did")
         td: str = json_body.get("td", "")
-        logs = []
+        logs: list[dict[str, Any]] = []
 
         if did is None:
             _LOGGER.error("No DID specified :: connected to MQTT")
@@ -47,15 +48,14 @@ async def _handle_lg_log(request: Request) -> Response:
                 _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
             else:
                 clean_logs = db.clean_log_by_id(did)
-                for clean_log in clean_logs:
-                    logs.append(clean_log.as_dict())
+                logs.extend(clean_log.as_dict() for clean_log in clean_logs)
 
         return web.json_response(
             {
                 "ret": "ok",
                 "logs": sorted(logs, key=lambda x: x["ts"], reverse=True),
-            }
+            },
         )
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     return response_error_v7()

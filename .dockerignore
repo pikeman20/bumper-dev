@@ -1,4 +1,10 @@
+# Ignore .hidden files
+.*
+# Ignore everything
 *
+
 !bumper/
 !bumper/**
 !pyproject.toml
+
+!README.md

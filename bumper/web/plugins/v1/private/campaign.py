@@ -1,4 +1,5 @@
 """Campaign plugin module."""
+
 from collections.abc import Iterable
 from datetime import datetime, timedelta
 
@@ -8,6 +9,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
+from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import get_success_response
 
@@ -37,7 +39,7 @@ async def _handle_home_page_alert(_: Request) -> Response:
             "clickWebUrl": None,
             "hasCampaign": "N",
             "imageUrl": None,
-            "nextAlertTime": utils.convert_to_millis((datetime.now() + timedelta(hours=12)).timestamp()),
+            "nextAlertTime": utils.convert_to_millis((datetime.now(bumper_isc.LOCAL_TIMEZONE) + timedelta(hours=12)).timestamp()),
             "serverTime": utils.get_current_time_as_millis(),
-        }
+        },
     )

@@ -4,7 +4,7 @@ import pytest
 
 
 @pytest.mark.usefixtures("clean_database")
-async def test_neng_hasUnreadMessage(webserver_client):
+async def test_neng_hasUnreadMessage(webserver_client) -> None:
     postbody = {
         "auth": {
             "realm": "ecouser.net",

@@ -15,7 +15,7 @@ def async_return(result):
 
 
 @pytest.mark.usefixtures("clean_database", "create_webserver")
-async def test_dim_devmanager(webserver_client, helper_bot: MQTTHelperBot):
+async def test_dim_devmanager(webserver_client, helper_bot: MQTTHelperBot) -> None:
     # Test PollSCResult
     postbody = {"td": "PollSCResult"}
     resp = await webserver_client.post("/api/dim/devmanager.do", json=postbody)

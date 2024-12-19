@@ -1,4 +1,5 @@
 """Dim plugin module."""
+
 from collections.abc import Iterable
 import json
 import logging
@@ -37,7 +38,8 @@ async def _handle_dev_manager(request: Request) -> Response:
     """Dev Manager."""
     try:
         if bumper_isc.mqtt_helperbot is None:
-            raise Exception("'bumper.mqtt_helperbot' is None")
+            msg = "'bumper.mqtt_helperbot' is None"
+            raise Exception(msg)
 
         json_body = json.loads(await request.text())
 
@@ -53,7 +55,7 @@ async def _handle_dev_manager(request: Request) -> Response:
                         "errno": 500,
                         "error": "requested bot is not found",
                         "debug": "requested bot is not found",
-                    }
+                    },
                 )
             if bot.get("company", "") != "eco-ng" or not bot["mqtt_connection"]:
                 _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
@@ -63,7 +65,7 @@ async def _handle_dev_manager(request: Request) -> Response:
                         "errno": 500,
                         "error": "requested bot is not supported",
                         "debug": "requested bot is not supported",
-                    }
+                    },
                 )
 
             random_id = "".join(random.sample(string.ascii_letters, 6))
@@ -92,6 +94,6 @@ async def _handle_dev_manager(request: Request) -> Response:
 
             _LOGGER.error(f"TD is not know :: {td} :: connected to MQTT")
 
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     return response_error_v7()

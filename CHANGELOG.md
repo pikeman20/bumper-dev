@@ -152,7 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - add labels
     - changed to work with bumper updates
   - moved `docker-compose.yaml` and extend with additional configs
-  - moved `ngnix.conf` into new folder configs/ngnix
+  - moved `nginx.conf` into new folder configs/nginx
   - update `.gitignore`
   - update `.yamllint`
   - update `.pre-commit-config.yaml`

@@ -1,5 +1,6 @@
 """Models module."""
-from datetime import UTC, datetime, timedelta
+
+from datetime import datetime, timedelta
 from typing import Any
 import uuid
 
@@ -18,7 +19,7 @@ class VacBotDevice:
         name: str = "",
         nick: str = "",
         company: str = "",
-    ):
+    ) -> None:
         """Vacuum bot device init."""
         self.vac_bot_device_class = vac_bot_device_class
         self.company = company
@@ -59,7 +60,7 @@ class VacBotDevice:
 class BumperUser:
     """Bumper user."""
 
-    def __init__(self, userid: str = ""):
+    def __init__(self, userid: str = "") -> None:
         """Bumper user init."""
         self.userid: str = userid
         self.username: str = "bumper"
@@ -101,7 +102,7 @@ class GlobalVacBotDevice(VacBotDevice):
 class VacBotClient:
     """Vacuum client."""
 
-    def __init__(self, userid: str = "", realm: str = "", token: str = ""):
+    def __init__(self, userid: str = "", realm: str = "", token: str = "") -> None:
         """Vacuum client init."""
         self.userid = userid
         self.realm = realm
@@ -136,7 +137,7 @@ class OAuth:
     refresh_token: str = ""
     userId: str = ""  # noqa: N815
 
-    def __init__(self, **entries: str):
+    def __init__(self, **entries: str) -> None:
         """Oauth init."""
         self.__dict__.update(entries)
 
@@ -146,7 +147,7 @@ class OAuth:
         oauth = OAuth()
         oauth.userId = user_id  # pylint: disable=invalid-name
         oauth.access_token = uuid.uuid4().hex
-        oauth.expire_at = f"{datetime.now(tz=UTC) + timedelta(days=bumper_isc.OAUTH_VALIDITY_DAYS)}"
+        oauth.expire_at = f"{datetime.now(bumper_isc.LOCAL_TIMEZONE) + timedelta(days=bumper_isc.OAUTH_VALIDITY_DAYS)}"
         oauth.refresh_token = uuid.uuid4().hex
         return oauth
 

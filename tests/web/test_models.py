@@ -1,7 +1,7 @@
 from bumper.web.models import OAuth
 
 
-def test_oauth():
+def test_oauth() -> None:
     userId = "test"
     o_auth = OAuth.create_new(userId)
     assert o_auth is not None

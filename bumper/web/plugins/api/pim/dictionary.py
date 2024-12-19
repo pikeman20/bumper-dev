@@ -1,4 +1,5 @@
 """Pim dictionary plugin module."""
+
 from collections.abc import Iterable
 import logging
 
@@ -37,8 +38,8 @@ async def _handle_get_err_detail(_: Request) -> Response:
                 "code": -1,
                 "data": [],
                 "msg": "This errcode's detail is not exists",
-            }
+            },
         )
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError

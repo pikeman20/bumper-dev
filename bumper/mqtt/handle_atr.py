@@ -1,6 +1,5 @@
 """Helper bot handle atr."""
 
-
 import json
 import logging
 
@@ -47,5 +46,5 @@ def clean_log(did: str, rid: str, payload: str) -> None:
 
             db.clean_log_add(did, cid, t_clean_log)
 
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handle add log"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handle add log"))

@@ -1,4 +1,5 @@
 """Message plugin module."""
+
 from collections.abc import Iterable
 
 from aiohttp import web

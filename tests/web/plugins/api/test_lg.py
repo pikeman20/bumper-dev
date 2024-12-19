@@ -18,7 +18,7 @@ def async_return(result):
 
 
 @pytest.mark.usefixtures("clean_database", "create_webserver")
-async def test_lg_logs(webserver_client, helper_bot: MQTTHelperBot):
+async def test_lg_logs(webserver_client, helper_bot: MQTTHelperBot) -> None:
     db.bot_add("sn_1234", "did_1234", "ls1ok3", "res_1234", "eco-ng")
     db.bot_set_mqtt("did_1234", True)
 

@@ -1,4 +1,5 @@
 """OS mall plugin module."""
+
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -89,7 +90,7 @@ async def _handle_get_country_config(request: Request) -> Response:
             "defaultLang": request.match_info.get("country", "EN").upper(),
             "openNative": "Y",
             "wapMallUrl": "",
-        }
+        },
     )
 
 
@@ -110,7 +111,7 @@ async def _handle_get_layout(_: Request) -> Response:
                 {"moduleType": "OFFICIAL_BENEFIT"},
                 {"moduleType": "SAFE_PAYMENT"},
             ],
-        }
+        },
     )
 
 
@@ -162,8 +163,8 @@ async def _handle_get_banner_list(_: Request) -> Response:
                     "bannerType": "AD",
                     "goodsInfo": None,
                 },
-            ]
-        }
+            ],
+        },
     )
 
 
@@ -208,8 +209,8 @@ async def _handle_get_goods_category(_: Request) -> Response:
                     "categoryPageTopImgUrl": f"{domain}/2023/03/29/20230329125218_bc88e13645ee1538bade4f7618719e35.jpg",
                     "categorySubTitle": "A CLASS OF ITS OWN",
                 },
-            ]
-        }
+            ],
+        },
     )
 
 
@@ -244,7 +245,7 @@ async def _handle_order_list(_: Request) -> Response:
                 "total_count": 0.0,
                 "total_page": 0.0,
             },
-        }
+        },
     )
 
 

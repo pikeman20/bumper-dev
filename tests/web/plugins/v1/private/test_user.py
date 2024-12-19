@@ -10,7 +10,7 @@ USER_ID = _generate_uid("tmpuser")
 
 
 @pytest.mark.usefixtures("clean_database")
-async def test_checkLogin(webserver_client):
+async def test_checkLogin(webserver_client) -> None:
     # Test without token
     resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={None}")
     assert resp.status == 200
@@ -77,7 +77,7 @@ async def test_checkLogin(webserver_client):
 
 
 @pytest.mark.usefixtures("clean_database")
-async def test_getAuthCode(webserver_client):
+async def test_getAuthCode(webserver_client) -> None:
     # Test without user or token
     resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid={None}&accessToken={None}")
     assert resp.status == 200
@@ -115,7 +115,7 @@ async def test_getAuthCode(webserver_client):
 
 
 @pytest.mark.usefixtures("clean_database")
-async def test_checkAgreement(webserver_client):
+async def test_checkAgreement(webserver_client) -> None:
     resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/checkAgreement")
     assert resp.status == 200
     text = await resp.text()
@@ -131,7 +131,7 @@ async def test_checkAgreement(webserver_client):
 
 
 @pytest.mark.usefixtures("clean_database")
-async def test_getUserAccountInfo(webserver_client):
+async def test_getUserAccountInfo(webserver_client) -> None:
     db.user_add(USER_ID)
     db.user_add_device(USER_ID, "dev_1234")
     db.user_add_token(USER_ID, "token_1234")

@@ -6,7 +6,7 @@ from bumper.utils.log_helper import AioHttpFilter, LogHelper, SanitizeFilter
 
 
 @pytest.mark.parametrize("level", ["INFO"])
-def test_log_helper_init(log_helper, caplog: pytest.LogCaptureFixture):
+def test_log_helper_init(log_helper, caplog: pytest.LogCaptureFixture) -> None:
     assert isinstance(log_helper, LogHelper)
 
     # Check that log level is set correctly
@@ -26,13 +26,13 @@ def test_log_helper_init(log_helper, caplog: pytest.LogCaptureFixture):
     assert "Test log message" in caplog.text
 
 
-def test_log_helper_clean_logs():
+def test_log_helper_clean_logs() -> None:
     logger_name_size = LogHelper()._clean_logs()
     assert logger_name_size > 0
 
 
 @pytest.mark.parametrize("level", ["DEBUG"])
-def test_aiohttp_filter(log_helper):
+def test_aiohttp_filter(log_helper) -> None:
     aiohttp_filter = AioHttpFilter()
 
     # Test that it switches INFO to DEBUG
@@ -62,7 +62,7 @@ def test_aiohttp_filter(log_helper):
     assert record.levelno == logging.INFO
 
 
-def test_sanitize_filter():
+def test_sanitize_filter() -> None:
     sanitize_filter = SanitizeFilter()
 
     # Test that it removes sensitive data in dict

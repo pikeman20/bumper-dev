@@ -10,7 +10,7 @@ USER_ID = _generate_uid("tmpuser")
 
 
 @pytest.mark.usefixtures("clean_database")
-async def test_login_with_user(webserver_client):
+async def test_login_with_user(webserver_client) -> None:
     # Test without user
     resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/login")
     assert resp.status == 200
@@ -23,7 +23,7 @@ async def test_login_with_user(webserver_client):
 
 
 @pytest.mark.usefixtures("clean_database")
-async def test_login_without_user(webserver_client):
+async def test_login_without_user(webserver_client) -> None:
     # Test global_e without user
     resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/user/login")
     assert resp.status == 200
@@ -36,7 +36,7 @@ async def test_login_without_user(webserver_client):
 
 
 @pytest.mark.usefixtures("clean_database")
-async def test_login_with_existing_user(webserver_client):
+async def test_login_with_existing_user(webserver_client) -> None:
     # Add a user to db and test with existing users
     db.user_add(USER_ID)
     resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/login")
@@ -80,7 +80,7 @@ async def test_login_with_existing_user(webserver_client):
 
 
 @pytest.mark.usefixtures("clean_database")
-async def test_logout(webserver_client):
+async def test_logout(webserver_client) -> None:
     # Add a token to user and test
     db.user_add(USER_ID)
     db.user_add_device(USER_ID, "dev_1234")

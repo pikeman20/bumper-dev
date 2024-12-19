@@ -1,6 +1,7 @@
 """Api pim module plugin."""
+
 import json
-import os
+from pathlib import Path
 from typing import Any
 
 
@@ -8,8 +9,8 @@ from typing import Any
 # https://portal-ww.ecouser.net/api/pim/product/getProductIotMap
 def get_product_iot_map() -> tuple[Any]:
     """Get product iot map."""
-    with open(
-        os.path.join(os.path.dirname(__file__), "productIotMap.json"),
+    with Path.open(
+        Path(__file__).parent / "productIotMap.json",
         encoding="utf-8",
     ) as file:
         return (json.load(file),)

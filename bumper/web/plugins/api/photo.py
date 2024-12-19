@@ -1,4 +1,5 @@
 """Photo plugin module."""
+
 from collections.abc import Iterable
 import logging
 
@@ -35,6 +36,6 @@ async def _handle(_: Request) -> Response:
     utils.default_log_warn_not_impl("photo/list")
     try:
         return response_success_v6(None)
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError

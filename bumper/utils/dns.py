@@ -1,4 +1,5 @@
 """Dns module."""
+
 from aiohttp import AsyncResolver
 
 from bumper.utils.settings import config as bumper_isc

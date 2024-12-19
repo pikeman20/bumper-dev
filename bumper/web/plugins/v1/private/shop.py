@@ -1,4 +1,5 @@
 """Shop plugin module."""
+
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -35,5 +36,5 @@ async def _handle_get_cn_wap_shop_config(_: Request) -> Response:
             "myShopUrl": "",
             "shopIndexShowFlag": "N",
             "shopIndexUrl": "",
-        }
+        },
     )

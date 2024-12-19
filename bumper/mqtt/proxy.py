@@ -1,6 +1,6 @@
 """Mqtt proxy module."""
+
 import asyncio
-from collections.abc import MutableMapping
 import contextlib
 import logging
 import ssl
@@ -20,6 +20,9 @@ from websockets.exceptions import InvalidHandshake, InvalidURI
 
 from bumper.utils.settings import config as bumper_isc
 
+if typing.TYPE_CHECKING:
+    from collections.abc import MutableMapping
+
 _LOGGER = logging.getLogger(__name__)
 
 # iot/p2p/[command]]/[sender did]/[sender class]]/[sender resource]
@@ -37,7 +40,7 @@ class ProxyClient:
         port: int = bumper_isc.WEB_SERVER_TLS_LISTEN_PORT,
         config: dict[str, Any] | None = None,
         timeout: float = 180,
-    ):
+    ) -> None:
         """Mqtt proxy client init."""
         self.request_mapper: MutableMapping[str, str] = TTLCache(maxsize=timeout * timeout, ttl=timeout * 1.1)
         self._client: MQTTClient = _NoCertVerifyClient(client_id=client_id, config=config)
@@ -48,9 +51,9 @@ class ProxyClient:
         """Connect."""
         try:
             await self._client.connect(f"mqtts://{username}:{password}@{self._host}:{self._port}")
-        except Exception as e:
+        except Exception:
             _LOGGER.exception("An exception occurred during startup")
-            raise e
+            raise
 
         asyncio.Task(self._handle_messages())
 
@@ -133,7 +136,7 @@ class _NoCertVerifyClient(MQTTClient):  # type:ignore[misc]
             # Rewrite URI to conform to https://tools.ietf.org/html/rfc6455#section-3
             uri = [
                 scheme,
-                f"{self.session.remote_address}:{str(self.session.remote_port)}",
+                f"{self.session.remote_address}:{self.session.remote_port!s}",
                 uri_attributes[2],
                 uri_attributes[3],
                 uri_attributes[4],
@@ -166,7 +169,9 @@ class _NoCertVerifyClient(MQTTClient):  # type:ignore[misc]
             # Open connection
             if scheme in ("mqtt", "mqtts"):
                 conn_reader, conn_writer = await asyncio.open_connection(
-                    self.session.remote_address, self.session.remote_port, **kwargs
+                    self.session.remote_address,
+                    self.session.remote_port,
+                    **kwargs,
                 )
                 reader = StreamReaderAdapter(conn_reader)
                 writer = StreamWriterAdapter(conn_writer)
@@ -197,18 +202,18 @@ class _NoCertVerifyClient(MQTTClient):  # type:ignore[misc]
             self.logger.debug(f"connected to {self.session.remote_address}:{self.session.remote_port}")
 
             return return_code
-        except InvalidURI as iuri:
+        except InvalidURI:
             self.logger.warning(f"connection failed: invalid URI '{self.session.broker_uri}'")
             self.session.transitions.disconnect()
             # raise ConnectException(f"connection failed: invalid URI '{self.session.broker_uri}'", iuri)
-            raise iuri
-        except InvalidHandshake as ihs:
+            raise
+        except InvalidHandshake:
             self.logger.warning("connection failed: invalid websocket handshake")
             self.session.transitions.disconnect()
             # raise ConnectException("connection failed: invalid websocket handshake", ihs)
-            raise ihs
+            raise
         except (ProtocolHandlerException, ConnectionError, OSError) as e:
             self.logger.warning(f"MQTT connection failed: {e}")
             self.session.transitions.disconnect()
             # raise ConnectException(e)
-            raise e
+            raise

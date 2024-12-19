@@ -5,7 +5,7 @@ from bumper.web.models import CleanLog
 
 
 @pytest.mark.usefixtures("clean_database")
-def test_clean_logs_db():
+def test_clean_logs_db() -> None:
     did = "saocsa8c9basv"
     cid = "1699297517"
     start = 1699297517

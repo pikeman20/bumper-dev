@@ -16,7 +16,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2d996c4d60de0001eaf2b5"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2d996c4d60de0001eaf2b5",
+      "status": "valid"
     }
   },
   {
@@ -36,7 +37,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425981269020008a9627b"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425981269020008a9627b",
+      "status": "valid"
     }
   },
   {
@@ -56,7 +58,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064258d1269020008a9627a"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064258d1269020008a9627a",
+      "status": "valid"
     }
   },
   {
@@ -76,7 +79,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f51243b03f50007b6c2ca"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f51243b03f50007b6c2ca",
+      "status": "valid"
     }
   },
   {
@@ -96,7 +100,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f5147c8115100083364bc"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f5147c8115100083364bc",
+      "status": "valid"
     }
   },
   {
@@ -116,7 +121,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b7b65f176f7f10001e9a0c2"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b7b65f176f7f10001e9a0c2",
+      "status": "valid"
     }
   },
   {
@@ -136,7 +142,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c93204b63023c0001e7faa7"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c93204b63023c0001e7faa7",
+      "status": "valid"
     }
   },
   {
@@ -156,7 +163,29 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d1474632a6bd50001b5b6f3"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d1474632a6bd50001b5b6f3",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "5a3tgs",
+    "product": {
+      "_id": "5d898678590c0d00016717ef",
+      "materialNo": "3882489284092",
+      "smartType": "MQ_AP",
+      "name": "ROBOT",
+      "icon": "5da014801636240001f988e4",
+      "model": "REECOOV912",
+      "UILogicId": "REECOO_V900",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5da014801636240001f988e4",
+      "status": "valid"
     }
   },
   {
@@ -176,7 +205,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426ebb0a931000860fad4"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426ebb0a931000860fad4",
+      "status": "valid"
     }
   },
   {
@@ -196,7 +226,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6050503e1269020008a95afa"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6050503e1269020008a95afa",
+      "status": "valid"
     }
   },
   {
@@ -216,7 +247,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5fa105bbd16a99000667eb52"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5fa105bbd16a99000667eb52",
+      "status": "valid"
     }
   },
   {
@@ -236,7 +268,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064256ed18cbd0008e2fcee"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064256ed18cbd0008e2fcee",
+      "status": "valid"
     }
   },
   {
@@ -256,7 +289,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5acc32067c295c0001876eea"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5acc32067c295c0001876eea",
+      "status": "valid"
     }
   },
   {
@@ -276,7 +310,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606278df4a84d700082b39f1"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606278df4a84d700082b39f1",
+      "status": "valid"
     }
   },
   {
@@ -296,7 +331,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c931fef280fda0001770d7e"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c931fef280fda0001770d7e",
+      "status": "valid"
     }
   },
   {
@@ -316,7 +352,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c2aa64d60de0001eaf1f6"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c2aa64d60de0001eaf1f6",
+      "status": "valid"
     }
   },
   {
@@ -336,7 +373,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7640de51dd0001fee131"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7640de51dd0001fee131",
+      "status": "valid"
     }
   },
   {
@@ -356,7 +394,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d280ce3350e7a0001e84c95"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d280ce3350e7a0001e84c95",
+      "status": "valid"
     }
   },
   {
@@ -376,7 +415,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425784a84d700082b39f6"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425784a84d700082b39f6",
+      "status": "valid"
     }
   },
   {
@@ -396,7 +436,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a2017babb8be0008b6ad16"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a2017babb8be0008b6ad16",
+      "status": "valid"
     }
   },
   {
@@ -416,7 +457,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cf711aeb0acfc000179ff8a"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cf711aeb0acfc000179ff8a",
+      "status": "valid"
     }
   },
   {
@@ -436,7 +478,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606278d3fc527c00087fdb08"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606278d3fc527c00087fdb08",
+      "status": "valid"
     }
   },
   {
@@ -456,7 +499,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d157f9f77a3a60001051f69"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d157f9f77a3a60001051f69",
+      "status": "valid"
     }
   },
   {
@@ -476,7 +520,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426254a84d700082b39f9"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426254a84d700082b39f9",
+      "status": "valid"
     }
   },
   {
@@ -496,7 +541,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5feaeb27d4cb3a0006679047"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5feaeb27d4cb3a0006679047",
+      "status": "valid"
     }
   },
   {
@@ -516,7 +562,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c778731280fda0001770ba0"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c778731280fda0001770ba0",
+      "status": "valid"
     }
   },
   {
@@ -536,7 +583,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c932067280fda0001770d7f"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c932067280fda0001770d7f",
+      "status": "valid"
     }
   },
   {
@@ -556,7 +604,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca31df112851900016858c0"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca31df112851900016858c0",
+      "status": "valid"
     }
   },
   {
@@ -576,7 +625,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cb7cfbab72c4d00010e5fc7"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cb7cfbab72c4d00010e5fc7",
+      "status": "valid"
     }
   },
   {
@@ -586,7 +636,7 @@
       "materialNo": "110-1919-0901",
       "smartType": "MQ_AP",
       "name": "DEEBOT U2",
-      "icon": "606425dfd18cbd0008e2fcf3",
+      "icon": "65e935af7b7ff008809320a0",
       "model": "U2_AUL",
       "UILogicId": "U2_HIGH_G",
       "ota": true,
@@ -596,7 +646,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425dfd18cbd0008e2fcf3"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65e935af7b7ff008809320a0",
+      "status": "valid"
     }
   },
   {
@@ -616,7 +667,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425a11269020008a9627d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425a11269020008a9627d",
+      "status": "valid"
     }
   },
   {
@@ -636,7 +688,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ef31b80f5dcdf000767cf4d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ef31b80f5dcdf000767cf4d",
+      "status": "valid"
     }
   },
   {
@@ -656,7 +709,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425821269020008a96279"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425821269020008a96279",
+      "status": "valid"
     }
   },
   {
@@ -676,7 +730,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60ece97ed4fc6e0008e4aaa5"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60ece97ed4fc6e0008e4aaa5",
+      "status": "valid"
     }
   },
   {
@@ -696,7 +751,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d3aa309ba13eb00013feb69"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d3aa309ba13eb00013feb69",
+      "status": "valid"
     }
   },
   {
@@ -716,7 +772,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d83375f6b6a570001569e26"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d83375f6b6a570001569e26",
+      "status": "valid"
     }
   },
   {
@@ -736,7 +793,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bbfb0a931000860fac9"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bbfb0a931000860fac9",
+      "status": "valid"
     }
   },
   {
@@ -756,7 +814,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5feaeb585f437d0008e0e00c"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5feaeb585f437d0008e0e00c",
+      "status": "valid"
     }
   },
   {
@@ -776,7 +835,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c63a5ba13eb00013feab7"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c63a5ba13eb00013feab7",
+      "status": "valid"
     }
   },
   {
@@ -796,7 +856,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca32ab2e9e9270001354b3d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca32ab2e9e9270001354b3d",
+      "status": "valid"
     }
   },
   {
@@ -816,7 +877,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b34d1269020008a95aef"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b34d1269020008a95aef",
+      "status": "valid"
     }
   },
   {
@@ -836,7 +898,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6062795ad18cbd0008e2fce8"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6062795ad18cbd0008e2fce8",
+      "status": "valid"
     }
   },
   {
@@ -856,7 +919,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e53207a26be71596c4b55cd"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e53207a26be71596c4b55cd",
+      "status": "valid"
     }
   },
   {
@@ -876,7 +940,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ef31b8cee3c1200075b6f67"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ef31b8cee3c1200075b6f67",
+      "status": "valid"
     }
   },
   {
@@ -896,7 +961,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61318e07e37c4686071aee67"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61318e07e37c4686071aee67",
+      "status": "valid"
     }
   },
   {
@@ -916,7 +982,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b3631269020008a95af0"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b3631269020008a95af0",
+      "status": "valid"
     }
   },
   {
@@ -936,7 +1003,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a201729fe5580009c6d769"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a201729fe5580009c6d769",
+      "status": "valid"
     }
   },
   {
@@ -956,7 +1024,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61318dbc1d27796ece1d1baa"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61318dbc1d27796ece1d1baa",
+      "status": "valid"
     }
   },
   {
@@ -976,7 +1045,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/608b98c51269020008a962db"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/608b98c51269020008a962db",
+      "status": "valid"
     }
   },
   {
@@ -996,7 +1066,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60d59206abb8be0008b6af2f"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60d59206abb8be0008b6af2f",
+      "status": "valid"
     }
   },
   {
@@ -1005,7 +1076,7 @@
       "_id": "5cbd97b961526a00019799bd",
       "materialNo": "110-1628-0302",
       "smartType": "SPA",
-      "name": "DEEBOT",
+      "name": "DEEBOT OZMO 600 Series",
       "icon": "5d4b7628de51dd0001fee12f",
       "model": "D600",
       "UILogicId": "ECO_INTL_152",
@@ -1016,7 +1087,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7628de51dd0001fee12f"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7628de51dd0001fee12f",
+      "status": "valid"
     }
   },
   {
@@ -1036,7 +1108,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e731a4a06f6de700464c69d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e731a4a06f6de700464c69d",
+      "status": "valid"
     }
   },
   {
@@ -1056,7 +1129,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426feb0a931000860fad5"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426feb0a931000860fad5",
+      "status": "valid"
     }
   },
   {
@@ -1076,7 +1150,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5edf2bbedb28cc00062f8bd7"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5edf2bbedb28cc00062f8bd7",
+      "status": "valid"
     }
   },
   {
@@ -1096,7 +1171,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b5ac4e45f21100001882bb9"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b5ac4e45f21100001882bb9",
+      "status": "valid"
     }
   },
   {
@@ -1116,7 +1192,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8da019032edd9008c66bf0"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8da019032edd9008c66bf0",
+      "status": "valid"
     }
   },
   {
@@ -1136,7 +1213,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca1ca79e9e9270001354b2d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca1ca79e9e9270001354b2d",
+      "status": "valid"
     }
   },
   {
@@ -1156,7 +1234,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d117d4f0ac6ad00012b792d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d117d4f0ac6ad00012b792d",
+      "status": "valid"
     }
   },
   {
@@ -1176,7 +1255,29 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c152f4d60de0001eaf1f4"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c152f4d60de0001eaf1f4",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "a731ux",
+    "product": {
+      "_id": "5cfdf647da73e90001dc3bb1",
+      "materialNo": "900",
+      "smartType": "MQ_AP",
+      "name": "IBOTO",
+      "icon": "5d89b1a9590c0d00016717f4",
+      "model": "IBOTO",
+      "UILogicId": "REECOO_V900",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d89b1a9590c0d00016717f4",
+      "status": "valid"
     }
   },
   {
@@ -1196,7 +1297,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8e93a7032edd3f5ec66d4a"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8e93a7032edd3f5ec66d4a",
+      "status": "valid"
     }
   },
   {
@@ -1216,7 +1318,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605b059217c95b0008ff20d4"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605b059217c95b0008ff20d4",
+      "status": "valid"
     }
   },
   {
@@ -1236,7 +1339,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60700a7e1269020008a96293"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60700a7e1269020008a96293",
+      "status": "valid"
     }
   },
   {
@@ -1256,7 +1360,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a201829fe5580009c6d76a"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60a201829fe5580009c6d76a",
+      "status": "valid"
     }
   },
   {
@@ -1276,7 +1381,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b5ac4cc8d5a56000111e769"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b5ac4cc8d5a56000111e769",
+      "status": "valid"
     }
   },
   {
@@ -1296,7 +1402,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cd4ca505b032200015a455d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5cd4ca505b032200015a455d",
+      "status": "valid"
     }
   },
   {
@@ -1316,7 +1423,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425bed18cbd0008e2fcf2"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425bed18cbd0008e2fcf2",
+      "status": "valid"
     }
   },
   {
@@ -1336,7 +1444,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5fb474d4d16a99000667edd9"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5fb474d4d16a99000667edd9",
+      "status": "valid"
     }
   },
   {
@@ -1356,7 +1465,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f510e3b03f50007b6c2c9"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/603f510e3b03f50007b6c2c9",
+      "status": "valid"
     }
   },
   {
@@ -1376,7 +1486,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bcafc527c00087fdb0c"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bcafc527c00087fdb0c",
+      "status": "valid"
     }
   },
   {
@@ -1396,7 +1507,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c874326280fda0001770d2a"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5c874326280fda0001770d2a",
+      "status": "valid"
     }
   },
   {
@@ -1416,7 +1528,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca32a1012851900016858c6"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ca32a1012851900016858c6",
+      "status": "valid"
     }
   },
   {
@@ -1436,7 +1549,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605053e7fc527c00087fda1e"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605053e7fc527c00087fda1e",
+      "status": "valid"
     }
   },
   {
@@ -1456,7 +1570,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605be27250928b0007c13264"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605be27250928b0007c13264",
+      "status": "valid"
     }
   },
   {
@@ -1476,7 +1591,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064263ad18cbd0008e2fcf4"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064263ad18cbd0008e2fcf4",
+      "status": "valid"
     }
   },
   {
@@ -1496,7 +1612,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b32ad18cbd0008e2f812"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6049b32ad18cbd0008e2f812",
+      "status": "valid"
     }
   },
   {
@@ -1516,7 +1633,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60810dddd18cbd0008e2fd27"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60810dddd18cbd0008e2fd27",
+      "status": "valid"
     }
   },
   {
@@ -1536,7 +1654,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7606de51dd0001fee12d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d4b7606de51dd0001fee12d",
+      "status": "valid"
     }
   },
   {
@@ -1556,7 +1675,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c14414d60de0001eaf1f2"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c14414d60de0001eaf1f2",
+      "status": "valid"
     }
   },
   {
@@ -1576,7 +1696,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d3fe649de51dd0001fee0de"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d3fe649de51dd0001fee0de",
+      "status": "valid"
     }
   },
   {
@@ -1596,7 +1717,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e58a2df36e8f39e318f031d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e58a2df36e8f39e318f031d",
+      "status": "valid"
     }
   },
   {
@@ -1616,7 +1738,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627a92fc527c00087fdb0a"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627a92fc527c00087fdb0a",
+      "status": "valid"
     }
   },
   {
@@ -1636,7 +1759,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606e960b45505e0008e5cb55"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606e960b45505e0008e5cb55",
+      "status": "valid"
     }
   },
   {
@@ -1656,7 +1780,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/608b997e17c95b0008ff221f"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/608b997e17c95b0008ff221f",
+      "status": "valid"
     }
   },
   {
@@ -1676,7 +1801,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b04c0217ccd1a0001e1f6a7"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5b04c0217ccd1a0001e1f6a7",
+      "status": "valid"
     }
   },
   {
@@ -1696,7 +1822,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5da834a8d66cd10001f58265"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5da834a8d66cd10001f58265",
+      "status": "valid"
     }
   },
   {
@@ -1716,7 +1843,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8e8d146482551d72530e47"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e8e8d146482551d72530e47",
+      "status": "valid"
     }
   },
   {
@@ -1736,7 +1864,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064260545505e0008e5cb49"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6064260545505e0008e5cb49",
+      "status": "valid"
     }
   },
   {
@@ -1756,7 +1885,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425ab4a84d700082b39f7"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606425ab4a84d700082b39f7",
+      "status": "valid"
     }
   },
   {
@@ -1776,7 +1906,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627c09b0a931000860facd"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627c09b0a931000860facd",
+      "status": "valid"
     }
   },
   {
@@ -1796,7 +1927,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bde50928b0007c13273"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bde50928b0007c13273",
+      "status": "valid"
     }
   },
   {
@@ -1816,7 +1948,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605053f7d18cbd0008e2f814"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605053f7d18cbd0008e2f814",
+      "status": "valid"
     }
   },
   {
@@ -1836,7 +1969,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ba4a2cb6c2f120001c32839"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5ba4a2cb6c2f120001c32839",
+      "status": "valid"
     }
   },
   {
@@ -1856,7 +1990,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c150dba13eb00013feaae"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5d2c150dba13eb00013feaae",
+      "status": "valid"
     }
   },
   {
@@ -1876,7 +2011,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426c64a84d700082b39fa"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/606426c64a84d700082b39fa",
+      "status": "valid"
     }
   },
   {
@@ -1896,7 +2032,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5f59e774c0f03a0008ee72e0"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5f59e774c0f03a0008ee72e0",
+      "status": "valid"
     }
   },
   {
@@ -1916,7 +2053,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627a9cb0a931000860fac7"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627a9cb0a931000860fac7",
+      "status": "valid"
     }
   },
   {
@@ -1936,7 +2074,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bd517c95b0008ff20ec"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60627bd517c95b0008ff20ec",
+      "status": "valid"
     }
   },
   {
@@ -1956,7 +2095,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e71c7df298f0d9cabfef86f"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/5e71c7df298f0d9cabfef86f",
+      "status": "valid"
     }
   },
   {
@@ -1976,7 +2116,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605050031269020008a95af9"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/605050031269020008a95af9",
+      "status": "valid"
     }
   },
   {
@@ -1996,7 +2137,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6010c6be4d8cf90006292d1e"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6010c6be4d8cf90006292d1e",
+      "status": "valid"
     }
   },
   {
@@ -2016,7 +2158,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60dd6db3038a38000888bd5b"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60dd6db3038a38000888bd5b",
+      "status": "valid"
     }
   },
   {
@@ -2036,7 +2179,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60e55da5b343a50008f79f15"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60e55da5b343a50008f79f15",
+      "status": "valid"
     }
   },
   {
@@ -2056,7 +2200,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60fa62b079330100089a7ce0"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/60fa62b079330100089a7ce0",
+      "status": "valid"
     }
   },
   {
@@ -2076,7 +2221,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6111dafd5a2dff000a243364"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6111dafd5a2dff000a243364",
+      "status": "valid"
     }
   },
   {
@@ -2096,7 +2242,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61cd6ea0258755faa61c832d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61cd6ea0258755faa61c832d",
+      "status": "valid"
     }
   },
   {
@@ -2116,7 +2263,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61b0498272e305141cc11624"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61b0498272e305141cc11624",
+      "status": "valid"
     }
   },
   {
@@ -2136,7 +2284,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c422316de01220a2adb91d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c422316de01220a2adb91d",
+      "status": "valid"
     }
   },
   {
@@ -2156,7 +2305,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61b0497b658e844efac7848d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61b0497b658e844efac7848d",
+      "status": "valid"
     }
   },
   {
@@ -2176,7 +2326,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6225bd1c2af2127804f540e5"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6225bd1c2af2127804f540e5",
+      "status": "valid"
     }
   },
   {
@@ -2196,7 +2347,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6225bd3b7604e551a50e46ac"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6225bd3b7604e551a50e46ac",
+      "status": "valid"
     }
   },
   {
@@ -2216,7 +2368,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/619477bc01fb68b814bf290b"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/619477bc01fb68b814bf290b",
+      "status": "valid"
     }
   },
   {
@@ -2236,7 +2389,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c58ddc75bfe17354e4804e"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c58ddc75bfe17354e4804e",
+      "status": "valid"
     }
   },
   {
@@ -2256,7 +2410,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c42246e2567cc9d413d46a"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61c42246e2567cc9d413d46a",
+      "status": "valid"
     }
   },
   {
@@ -2276,7 +2431,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61e90bd1fd39e47adc132e1b"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61e90bd1fd39e47adc132e1b",
+      "status": "valid"
     }
   },
   {
@@ -2296,7 +2452,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/630711c6c87b95033a7817f9"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/630711c6c87b95033a7817f9",
+      "status": "valid"
     }
   },
   {
@@ -2316,7 +2473,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61e90bbbfe80232316d12ea7"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61e90bbbfe80232316d12ea7",
+      "status": "valid"
     }
   },
   {
@@ -2336,7 +2494,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61a712dbd540b3fc0684cdd6"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61a712dbd540b3fc0684cdd6",
+      "status": "valid"
     }
   },
   {
@@ -2356,7 +2515,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61d569d0843b5a6dbdb74e32"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61d569d0843b5a6dbdb74e32",
+      "status": "valid"
     }
   },
   {
@@ -2376,7 +2536,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61f0ba7970c881c6bf65ec3d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61f0ba7970c881c6bf65ec3d",
+      "status": "valid"
     }
   },
   {
@@ -2385,9 +2546,9 @@
       "_id": "621c1e5457e71a48e6bf3dd6",
       "materialNo": "116-2201-0001",
       "smartType": "BLAP",
-      "name": "GOAT",
+      "name": "GOAT G1",
       "icon": "63913d74df25d049785c3bd7",
-      "model": "GOAT",
+      "model": "GOAT_INT",
       "UILogicId": "goat_ww_h_goat",
       "ota": true,
       "supportType": {
@@ -2396,7 +2557,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63913d74df25d049785c3bd7"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63913d74df25d049785c3bd7",
+      "status": "valid"
     }
   },
   {
@@ -2416,7 +2578,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6243b185784d1652c082ef31"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6243b185784d1652c082ef31",
+      "status": "valid"
     }
   },
   {
@@ -2436,7 +2599,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/624d4e73031bdd7c7b531af9"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/624d4e73031bdd7c7b531af9",
+      "status": "valid"
     }
   },
   {
@@ -2456,7 +2620,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6253e2ccf93ca0b88a72067a"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6253e2ccf93ca0b88a72067a",
+      "status": "valid"
     }
   },
   {
@@ -2476,7 +2641,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/637ada094b606f5d29b84250"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/637ada094b606f5d29b84250",
+      "status": "valid"
     }
   },
   {
@@ -2496,7 +2662,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6296c56ad3980b9a63026b08"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6296c56ad3980b9a63026b08",
+      "status": "valid"
     }
   },
   {
@@ -2516,7 +2683,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/62ac2a8ad5e94f3b732102d0"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/62ac2a8ad5e94f3b732102d0",
+      "status": "valid"
     }
   },
   {
@@ -2536,7 +2704,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/62ce310962e15734ec63da96"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/62ce310962e15734ec63da96",
+      "status": "valid"
     }
   },
   {
@@ -2556,7 +2725,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/62f323edb2147111664ed6b2"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/62f323edb2147111664ed6b2",
+      "status": "valid"
     }
   },
   {
@@ -2576,7 +2746,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/630ecb3e2a71f93c2cea5c0f"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/630ecb3e2a71f93c2cea5c0f",
+      "status": "valid"
     }
   },
   {
@@ -2596,7 +2767,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/631b04eec87b9559c2781a1f"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/631b04eec87b9559c2781a1f",
+      "status": "valid"
     }
   },
   {
@@ -2616,7 +2788,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63bd303edf25d05eba5c3bf2"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63bd303edf25d05eba5c3bf2",
+      "status": "valid"
     }
   },
   {
@@ -2636,7 +2809,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6364a23e37c2e709d6d48003"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6364a23e37c2e709d6d48003",
+      "status": "valid"
     }
   },
   {
@@ -2656,7 +2830,8 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6364a0eb37c2e740f6d48002"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6364a0eb37c2e740f6d48002",
+      "status": "valid"
     }
   },
   {
@@ -2676,7 +2851,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64dec730215d4f35d90f069a"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64dec730215d4f35d90f069a",
+      "status": "valid"
     }
   },
   {
@@ -2696,7 +2872,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63e1e022d775e750ca44246b"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63e1e022d775e750ca44246b",
+      "status": "valid"
     }
   },
   {
@@ -2716,7 +2893,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63e1e031d775e7e16544246d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63e1e031d775e7e16544246d",
+      "status": "valid"
     }
   },
   {
@@ -2736,7 +2914,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6363621b7fe5cbdcc1de8582"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6363621b7fe5cbdcc1de8582",
+      "status": "valid"
     }
   },
   {
@@ -2756,7 +2935,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63887a3237c2e75595d48120"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63887a3237c2e75595d48120",
+      "status": "valid"
     }
   },
   {
@@ -2776,7 +2956,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63bd2ff5df25d04e415c3bf0"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63bd2ff5df25d04e415c3bf0",
+      "status": "valid"
     }
   },
   {
@@ -2796,7 +2977,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63bd2febdf25d06f775c3bee"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63bd2febdf25d06f775c3bee",
+      "status": "valid"
     }
   },
   {
@@ -2816,7 +2998,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63e1e03cdf25d0b5715c3c0b"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63e1e03cdf25d0b5715c3c0b",
+      "status": "valid"
     }
   },
   {
@@ -2836,7 +3019,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6389be59df25d07dec5c3bcd"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6389be59df25d07dec5c3bcd",
+      "status": "valid"
     }
   },
   {
@@ -2856,7 +3040,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6411873116d2f22991fc1bbc"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6411873116d2f22991fc1bbc",
+      "status": "valid"
     }
   },
   {
@@ -2876,7 +3061,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64c213889f69200af52cb92d"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64c213889f69200af52cb92d",
+      "status": "valid"
     }
   },
   {
@@ -2896,7 +3082,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63f2ddc22fd60963ea2f64f7"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63f2ddc22fd60963ea2f64f7",
+      "status": "valid"
     }
   },
   {
@@ -2916,7 +3103,8 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6411872416d2f20076fc1bba"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6411872416d2f20076fc1bba",
+      "status": "valid"
     }
   },
   {
@@ -2936,14 +3124,15 @@
         "assistant": false,
         "alexa": false
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64e57126ae02c4811a994d24"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64e57126ae02c4811a994d24",
+      "status": "valid"
     }
   },
   {
     "classid": "e6ofmn",
     "product": {
       "_id": "649a9374cad12cdf554544cb",
-      "materialNo": "110-2228-0408",
+      "materialNo": "110-2228-0410",
       "smartType": "BLAP2",
       "name": "DEEBOT X2",
       "icon": "64dec744215d4f42f80f069c",
@@ -2956,7 +3145,29 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64dec744215d4f42f80f069c"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64dec744215d4f42f80f069c",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "itk04l",
+    "product": {
+      "_id": "649aa2bfadc065d3d0ad48a4",
+      "materialNo": "116-2201-0201",
+      "smartType": "BLAP",
+      "name": "GOAT G1",
+      "icon": "649aa2beadc065e714ad48a2",
+      "model": "GOAT_INT_G1",
+      "UILogicId": "goat_ww_h_goat",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/649aa2beadc065e714ad48a2",
+      "status": "valid"
     }
   },
   {
@@ -2976,7 +3187,1751 @@
         "assistant": true,
         "alexa": true
       },
-      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64c2137fd312a2e54b777217"
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64c2137fd312a2e54b777217",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "9ku8nu",
+    "product": {
+      "_id": "64d05301d938716789b08f19",
+      "materialNo": "110-2230-0105",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T20e OMNI",
+      "icon": "64d052f39f692007dd2cb934",
+      "model": "T20E_OMINI_INT",
+      "UILogicId": "t10_ww_n_darwin_e",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64d052f39f692007dd2cb934",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "2gab4o",
+    "product": {
+      "_id": "64d9c495f159742a106aed8e",
+      "materialNo": "110-2315-0002",
+      "smartType": "MQ_AP",
+      "name": "X1S PRO PLUS",
+      "icon": "64d9faedae02c4424d994d17",
+      "model": "X1S_PRO_PLUS_TW",
+      "UILogicId": "x1proplus_ww_n_x1proh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/64d9faedae02c4424d994d17",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "ind025",
+    "product": {
+      "_id": "64f59229215d4f48fd0f06ba",
+      "materialNo": "111-2250-0002",
+      "smartType": "BT",
+      "name": "W2 OMNI",
+      "icon": "673fe41f8f7305b0a0f8f6c6",
+      "model": "W2_STATION_EMEA",
+      "UILogicId": "w2pro_ww_h_w2",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/673fe41f8f7305b0a0f8f6c6",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "yephu9",
+    "product": {
+      "_id": "64f59270f1597445a96aedce",
+      "materialNo": "111-2250-0201",
+      "smartType": "BT",
+      "name": "W2",
+      "icon": "656ecd6636bf3581016720ed",
+      "model": "W2_SINGLE_EMEA",
+      "UILogicId": "w2_ww_h_w2",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/656ecd6636bf3581016720ed",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "81gpyd",
+    "product": {
+      "_id": "650d4cf9d938715f04b09109",
+      "materialNo": "111-2250-0005",
+      "smartType": "BT",
+      "name": "W2 OMNI",
+      "icon": "656e8ca0645b0986fdb84509",
+      "model": "W2_STATION_AMR",
+      "UILogicId": "w2pro_ww_h_w2",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/656e8ca0645b0986fdb84509",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "e6rcnf",
+    "product": {
+      "_id": "65151d01545c5f0043782aa7",
+      "materialNo": "110-2307-0101",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X2 COMBO",
+      "icon": "65bb008ac1daff549c800b0c",
+      "model": "X2_Combo_INT",
+      "UILogicId": "x2combo_ww_h_x2omnih5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65bb008ac1daff549c800b0c",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "822x8d",
+    "product": {
+      "_id": "652251de7c33ed789206a471",
+      "materialNo": "110-2310-0206",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30 OMNI",
+      "icon": "65e03f22fcab265d9479ceb2",
+      "model": "T30_MAX_INT",
+      "UILogicId": "t30max_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65e03f22fcab265d9479ceb2",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "ip3mmy",
+    "product": {
+      "_id": "652fa87a7c33ed3faa06a49e",
+      "materialNo": "110-2228-1000",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X2 PRO OMNI",
+      "icon": "6565a4e6545c5f1516782c20",
+      "model": "X2_OMNI_HIGH_INT",
+      "UILogicId": "x2whiteplus_ww_h_x2omnih5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6565a4e6545c5f1516782c20",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "77atlz",
+    "product": {
+      "_id": "653239a095d0c64cf6bbfba3",
+      "materialNo": "116-2325-0102",
+      "smartType": "BLAP",
+      "name": "GOAT G1-800",
+      "icon": "65547f567c33edad6806a500",
+      "model": "GOAT_INT_G1_800",
+      "UILogicId": "goat_ww_h_goat",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65547f567c33edad6806a500",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "guzput",
+    "product": {
+      "_id": "65323a3e95d0c656afbbfba8",
+      "materialNo": "116-2325-0001",
+      "smartType": "BLAP",
+      "name": "GOAT G1-800",
+      "icon": "65547f667c33ed71d406a502",
+      "model": "GOAT_INT_G1_800_WHITE",
+      "UILogicId": "goat_ww_h_goat",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65547f667c33ed71d406a502",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "s69g6z",
+    "product": {
+      "_id": "65323bcd95d0c675b0bbfbad",
+      "materialNo": "116-2326-0001",
+      "smartType": "BLAP",
+      "name": "GOAT G1-2000",
+      "icon": "65547f7495d0c65fe6bbfc88",
+      "model": "GOAT_INT_G1_2000",
+      "UILogicId": "goat_ww_h_goat",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65547f7495d0c65fe6bbfc88",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "py3qif",
+    "product": {
+      "_id": "6555e3e215f423976a747800",
+      "materialNo": "110-2230-0503",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT T20e OMNI",
+      "icon": "65b8c343a1bbb57a7eb8174d",
+      "model": "T20E_OMNI_SE_INT",
+      "UILogicId": "t10_ww_n_darwinnoyiko_e",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65b8c343a1bbb57a7eb8174d",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "4vhygi",
+    "product": {
+      "_id": "6556d1ab15f423e04d747809",
+      "materialNo": "110-2330-0206",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30 PRO OMNI",
+      "icon": "65e03f9ca16bb4c5609e8013",
+      "model": "T30_PRO_INT",
+      "UILogicId": "t30pro_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65e03f9ca16bb4c5609e8013",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "2ap5uq",
+    "product": {
+      "_id": "65729dfa545c5f794e782c28",
+      "materialNo": "116-2347-0001",
+      "smartType": "BLAP",
+      "name": "GOAT GX-600",
+      "icon": "65d6a3b4c2779efa11e50b9f",
+      "model": "GOAT_GX_600_EU",
+      "UILogicId": "goat_ww_h_goatx",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65d6a3b4c2779efa11e50b9f",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "ao7fpw",
+    "product": {
+      "_id": "6576b26d7c33edf46b06a560",
+      "materialNo": "116-2347-0101",
+      "smartType": "BLAP",
+      "name": " GOAT GX-600",
+      "icon": "65d6a3bdc2779edb91e50ba1",
+      "model": "GOAT_GX_600_NA",
+      "UILogicId": "goat_ww_h_goatx",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65d6a3bdc2779edb91e50ba1",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "kduunv",
+    "product": {
+      "_id": "6582b68355b58bde146f0b15",
+      "materialNo": "722-0001-2500",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT Y1 PRO",
+      "icon": "66e3993888204fdc683f2bad",
+      "model": "CARTESIAN_WHITE_INT",
+      "UILogicId": "y30_ww_h_y30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66e3993888204fdc683f2bad",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "cqyi87",
+    "product": {
+      "_id": "6582b7b012e3c64d4cdcb760",
+      "materialNo": "722-0001-2200",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT Y1 PRO",
+      "icon": "66e399249dd37cb64a2846d0",
+      "model": "CARTESIAN_BLACK_INT",
+      "UILogicId": "y30_ww_h_y30h5",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66e399249dd37cb64a2846d0",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "rvbmro",
+    "product": {
+      "_id": "6582bb276e03b90e1f469804",
+      "materialNo": " 722-0001-0500",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT Y1 PRO PLUS",
+      "icon": "65b0cec3fe7a003bb0ff2e36",
+      "model": "CARTESIANPLUS_WHITE_INT",
+      "UILogicId": "y30aes_ww_h_y30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65b0cec3fe7a003bb0ff2e36",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "xjkrto",
+    "product": {
+      "_id": "65854d7e9788b842226517ef",
+      "materialNo": " 111-2343-0101",
+      "smartType": "BT",
+      "name": "WINBOT W1S",
+      "icon": "65a725ac900d8c7d091f615f",
+      "model": "W980_SK",
+      "UILogicId": "belugapro_ww_h_beluga",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65a725ac900d8c7d091f615f",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "988he2",
+    "product": {
+      "_id": "65854dda900d8c70061f60c0",
+      "materialNo": " 111-2343-0201",
+      "smartType": "BT",
+      "name": " WINBOT NEO",
+      "icon": "65a725b69788b80fb76518a9",
+      "model": "W980_AUS",
+      "UILogicId": "belugapro_cn_h_beluga",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65a725b69788b80fb76518a9",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "dd5b88",
+    "product": {
+      "_id": "6589509f9788b880016517f9",
+      "materialNo": "722-0001-0400",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT Y1 PRO PLUS",
+      "icon": "65b0cea0fe7a007b22ff2e30",
+      "model": "CARTESIANPLUS_BLACK_INT",
+      "UILogicId": "y30aes_ww_h_y30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65b0cea0fe7a007b22ff2e30",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "3w7j5e",
+    "product": {
+      "_id": "658bc795900d8c49be1f60e8",
+      "materialNo": "110-2330-0202",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30 PRO OMNI",
+      "icon": "65e04026fcab26e42479ceb4",
+      "model": "T30_PRO_INT_BLACK",
+      "UILogicId": "t30pro_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65e04026fcab26e42479ceb4",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "z4lvk7",
+    "product": {
+      "_id": "658bc867fb9886e79d8d7aa9",
+      "materialNo": "110-2310-0201",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30 OMNI",
+      "icon": "65e03e6c280eb916abc60a96",
+      "model": "T30_MAX_INT_BLACK",
+      "UILogicId": "t30max_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65e03e6c280eb916abc60a96",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "gwtll7",
+    "product": {
+      "_id": "65af2702900d8ca1b21f6198",
+      "materialNo": "110-2406-0002",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 PRO PLUS",
+      "icon": "66431252a3e5962ad7fe9d4b",
+      "model": "Y2_AES_INT",
+      "UILogicId": "y2_ww_h_y2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66431252a3e5962ad7fe9d4b",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "e6yxdm",
+    "product": {
+      "_id": "65c043d6fe7a00005bff2f8a",
+      "materialNo": "110-2357-0102",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X5 OMNI",
+      "icon": "66261233eba5145dcaf7eed6",
+      "model": "BOHR_INT_BK",
+      "UILogicId": "bohr_ww_h_bohrh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66261233eba5145dcaf7eed6",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "4jd37g",
+    "product": {
+      "_id": "65c04444a1bbb5a5efb81766",
+      "materialNo": "110-2357-0101",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X5 OMNI",
+      "icon": "6626128aeba51493a0f7eeda",
+      "model": "BOHR_INT_WH",
+      "UILogicId": "bohrwhite_ww_h_bohrh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6626128aeba51493a0f7eeda",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "4bdkrs",
+    "product": {
+      "_id": "65d44b5a478cc87bfc551ab2",
+      "materialNo": "110-2362-0202",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30S COMBO",
+      "icon": "660d039b31620d56505fbb9b",
+      "model": "T30_COMBO_INT_BLACK",
+      "UILogicId": "t30combo_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/660d039b31620d56505fbb9b",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "8tyt2y",
+    "product": {
+      "_id": "65d44c2fa1bbb555edb8177e",
+      "materialNo": "110-2361-0303",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30S",
+      "icon": "660d02d003246150df294f7b",
+      "model": "T30_MIX_INT",
+      "UILogicId": "t30mix_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/660d02d003246150df294f7b",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "eqmf84",
+    "product": {
+      "_id": "65d44d1bfe7a0049b3ff2fab",
+      "materialNo": "110-2361-0302",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30S",
+      "icon": "660d03100324610935294f7d",
+      "model": "T30_MIX_INT_BLACK",
+      "UILogicId": "t30mix_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/660d03100324610935294f7d",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "9gqyaq",
+    "product": {
+      "_id": "65d44db9478cc87817551ab7",
+      "materialNo": "110-2362-0201",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30S COMBO",
+      "icon": "660d036929909212cf72fb99",
+      "model": "T30_COMBO_INT",
+      "UILogicId": "t30combo_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/660d036929909212cf72fb99",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "hdi1rf",
+    "product": {
+      "_id": "65d839a1c2779e8080e50bb3",
+      "materialNo": "110-2310-1001",
+      "smartType": "BLAP2",
+      "name": "YEEDI M12 PRO+",
+      "icon": "66134ffe31620d02475fbbd2",
+      "model": "T30_YEEDI_INT",
+      "UILogicId": "t30max_ww_h_yt30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66134ffe31620d02475fbbd2",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "tlthqk",
+    "product": {
+      "_id": "65d83a49b4e54abe7096a514",
+      "materialNo": "110-2330-0209",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30 PRO OMNI",
+      "icon": "65e03fdda16bb4e6c79e8017",
+      "model": "T30_PRO_INT_MILKTEA",
+      "UILogicId": "t30pro_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65e03fdda16bb4e6c79e8017",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "q287s6",
+    "product": {
+      "_id": "65e67257280eb92289c60aac",
+      "materialNo": "722-0001-4000",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT NEO 2.0 PLUS",
+      "icon": "65b0ce97478cc8800a551a73",
+      "model": "CARTESIANPLUS-BLACK-INT-STANDARD",
+      "UILogicId": "y30plus_ww_h_y30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65b0ce97478cc8800a551a73",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "7s881f",
+    "product": {
+      "_id": "65e672f85a1d6400edfbc7dd",
+      "materialNo": " 722-0001-0900",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT Y1 PLUS",
+      "icon": "65e672f45a1d6424fcfbc7db",
+      "model": "CARTESIANPLUS-WHITE-INT-STANDARD",
+      "UILogicId": "y30plus_ww_h_y30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/65e672f45a1d6424fcfbc7db",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "eyfj07",
+    "product": {
+      "_id": "65e674b0a16bb4907c9e8029",
+      "materialNo": "722-0001-4100",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT NEO 2.0",
+      "icon": "66e39a439dd37c10de285999",
+      "model": "CARTESIAN-BLACK-INT-STANDARD",
+      "UILogicId": "y30_ww_h_y30h5",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66e39a439dd37c10de285999",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "3ggyju",
+    "product": {
+      "_id": "65e676295a1d64697dfbc7e5",
+      "materialNo": "722-0001-3000",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT Y1",
+      "icon": "66e39944123f301d3cc1e6b0",
+      "model": "CARTESIAN-WHITE-INT-STANDARD",
+      "UILogicId": "y30_ww_h_y30h5",
+      "ota": false,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66e39944123f301d3cc1e6b0",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "rvflzn",
+    "product": {
+      "_id": "65e7c2075a1d64762ffbc7f3",
+      "materialNo": "110-2402-0104",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X5 PRO OMNI",
+      "icon": "666fa50e0e8603372ba33231",
+      "model": "BOHR_PRO_WHITE_INT",
+      "UILogicId": "bohrpro_ww_h_bohrh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/666fa50e0e8603372ba33231",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "lr4qcs",
+    "product": {
+      "_id": "65e7c25d5a1d644ac0fbc7f8",
+      "materialNo": " 110-2402-0105",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X5 PRO OMNI",
+      "icon": "666fa571d0a288fa43f990b4",
+      "model": "BOHR_PRO_BLACK_INT",
+      "UILogicId": "bohrproblack_ww_h_bohrh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/666fa571d0a288fa43f990b4",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "w7k3yc",
+    "product": {
+      "_id": "65e7c2a65a1d647083fbc7fd",
+      "materialNo": "110-2402-0203",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X5 PRO OMNI",
+      "icon": "66b197d71ff6765a3c1cbdd4",
+      "model": "BOHR_PRO_WHITE_TW",
+      "UILogicId": "bohrpro_ww_h_bohrh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66b197d71ff6765a3c1cbdd4",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "ue8kcc",
+    "product": {
+      "_id": "65ebce447b7ff0269f9320bf",
+      "materialNo": "110-2362-0108",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30S COMBO",
+      "icon": "660d03cf299092c43a72fb9d",
+      "model": "T30_COMBO_INT_PRO_BLACK",
+      "UILogicId": "t30combo_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/660d03cf299092c43a72fb9d",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "kr9c86",
+    "product": {
+      "_id": "65ebced15a1d647233fbc856",
+      "materialNo": "110-2362-0205",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30S COMBO",
+      "icon": "660d045231620d0e515fbba0",
+      "model": "T30_COMBO_INT_PRO",
+      "UILogicId": "t30combo_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/660d045231620d0e515fbba0",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "o0a4ju",
+    "product": {
+      "_id": "65f3de7b1d8af428b1cde8ff",
+      "materialNo": "110-2402-0204",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X5 PRO OMNI",
+      "icon": "66b1985091779b0ad29394cb",
+      "model": "BOHR_PRO_BLACK_TW",
+      "UILogicId": "bohrproblack_ww_h_bohrh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66b1985091779b0ad29394cb",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "yinacl",
+    "product": {
+      "_id": "65f7eb1d703ab80d89043a0c",
+      "materialNo": "110-2353-1202",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 Family",
+      "icon": "669a343e656502502579014e",
+      "model": "FS_WHITE_INT",
+      "UILogicId": "aes_ww_h_fsh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/669a343e656502502579014e",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "qhe2o2",
+    "product": {
+      "_id": "65f952b0b895cdc64b963623",
+      "materialNo": "110-2406-0001",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 PRO PLUS",
+      "icon": "66431238e8c24bd86854bca3",
+      "model": "Y2_AES_BLACK_INT",
+      "UILogicId": "y2_ww_h_y2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66431238e8c24bd86854bca3",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "aavvfb",
+    "product": {
+      "_id": "65f95336b895cd0760963627",
+      "materialNo": "110-2406-0201",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 PRO",
+      "icon": "6643128b028bb2c1e5ab10f5",
+      "model": "Y2_BLACK_INT",
+      "UILogicId": "y2dock_ww_h_y2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6643128b028bb2c1e5ab10f5",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "c8gerr",
+    "product": {
+      "_id": "65fa425f8f3dca509e743207",
+      "materialNo": "110-2406-0202",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 PRO",
+      "icon": "66431299a3e59641e9fe9d4e",
+      "model": "Y2_INT",
+      "UILogicId": "y2dock_ww_h_y2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66431299a3e59641e9fe9d4e",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "buom7k",
+    "product": {
+      "_id": "65fa42bcb895cd3c4796362b",
+      "materialNo": "110-2408-0001",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 PLUS",
+      "icon": "664312f5028bb26d95ab10f9",
+      "model": "Y2_AES_LITE_INT",
+      "UILogicId": "y2se_ww_h_y2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/664312f5028bb26d95ab10f9",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "i35yb6",
+    "product": {
+      "_id": "65fa4372d8fcb76305aede32",
+      "materialNo": "110-2408-0003",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 PLUS",
+      "icon": "66431314028bb2b0d7ab10fb",
+      "model": "Y2_AES_LITE_BLACK_INT",
+      "UILogicId": "y2se_ww_h_y2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66431314028bb2b0d7ab10fb",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "kr0277",
+    "product": {
+      "_id": "66010d1eb895cd687096368b",
+      "materialNo": "110-2408-0201",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20",
+      "icon": "664312d5028bb21f2eab10f7",
+      "model": "Y2_LITE_INT",
+      "UILogicId": "y2sedock_ww_h_y2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/664312d5028bb21f2eab10f7",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "gjr92u",
+    "product": {
+      "_id": "66010f91703ab83482043ada",
+      "materialNo": "110-2406-0102",
+      "smartType": "MQ_AP",
+      "name": "YEEDI C12 PRO PLUS",
+      "icon": "664425e1da9a1473be4b13b6",
+      "model": "Y2_AES_BLACK_YEDDI_INT",
+      "UILogicId": "y2_ww_h_yy2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/664425e1da9a1473be4b13b6",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "ojcqh7",
+    "product": {
+      "_id": "6601100cd8fcb7545baedeac",
+      "materialNo": "110-2408-0103",
+      "smartType": "MQ_AP",
+      "name": "YEEDI C12 PLUS",
+      "icon": "664425c6da9a1486484b13b4",
+      "model": "Y2_AES_LITE_YEDDI_INT",
+      "UILogicId": "y2se_ww_h_yy2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/664425c6da9a1486484b13b4",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "3doypz",
+    "product": {
+      "_id": "6601106bb895cd310996369a",
+      "materialNo": "110-2408-0303",
+      "smartType": "MQ_AP",
+      "name": "YEEDI C12",
+      "icon": "664425d10e8603668ca330a6",
+      "model": "Y2_LITE_YEDDI_INT",
+      "UILogicId": "y2sedock_ww_h_yy2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/664425d10e8603668ca330a6",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "ee23uv",
+    "product": {
+      "_id": "66061547299092445372fb67",
+      "materialNo": "110-2362-0203",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30S COMBO COMPLETE",
+      "icon": "660d03fc299092e27972fba2",
+      "model": "T30S_COMBO_COMPLETE",
+      "UILogicId": "t30combo_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/660d03fc299092e27972fba2",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "87swps",
+    "product": {
+      "_id": "660a49ba03246130f2294f57",
+      "materialNo": "110-2353-0303",
+      "smartType": "MQ_AP",
+      "name": " DEEBOT N30 PRO OMNI",
+      "icon": "669a34530e86038e73a3377a",
+      "model": "FS_OMNI_WHITE_INT",
+      "UILogicId": "omni_ww_h_fsh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/669a34530e86038e73a3377a",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "dlrbzq",
+    "product": {
+      "_id": "660a4a20299092bf0a72fb7d",
+      "materialNo": "110-2353-0202",
+      "smartType": "MQ_AP",
+      "name": " DEEBOT N30 PRO OMNI",
+      "icon": "669a342f0e8603c3b1a33776",
+      "model": "FS_OMNI_BLACK_INT",
+      "UILogicId": "omni_ww_h_fsh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/669a342f0e8603c3b1a33776",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "xco2fc",
+    "product": {
+      "_id": "6617a76c03246191be295102",
+      "materialNo": "110-2407-0202",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30S PRO",
+      "icon": "665057280e86033a15a33131",
+      "model": "T30_MIX_PRO_BLACK_INT",
+      "UILogicId": "t30mixproblack_ww_h_t30mixproh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/665057280e86033a15a33131",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "cb69w5",
+    "product": {
+      "_id": "6617a7b7eba5148e04f7ee74",
+      "materialNo": "110-2407-0201",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30S PRO",
+      "icon": "66505750d0a288272df98fa5",
+      "model": "T30_MIX_PRO_INT",
+      "UILogicId": "t30mixpro_ww_h_t30mixproh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66505750d0a288272df98fa5",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "63y3bt",
+    "product": {
+      "_id": "662b6ea6eba5140c92f7f095",
+      "materialNo": "111-2343-0402",
+      "smartType": "BT",
+      "name": "WINBOT W1S",
+      "icon": "666a4c4a6565023951790041",
+      "model": "W1S_TW",
+      "UILogicId": "belugapro_ww_h_beluga",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/666a4c4a6565023951790041",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "ruhc0q",
+    "product": {
+      "_id": "663ae544e8c24bd9ad54bc60",
+      "materialNo": "110-2353-2402",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20e",
+      "icon": "669f04d70e860344f7a33784",
+      "model": "FS_DOCK_BLACK_INT",
+      "UILogicId": "aesdock_ww_h_fsh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/669f04d70e860344f7a33784",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "zgsvkq",
+    "product": {
+      "_id": "663ae466028bb2e33dab1089",
+      "materialNo": "110-2353-2401",
+      "smartType": "MQ_AP",
+      "name": " DEEBOT N20e",
+      "icon": "669f04e40e86033ddaa33786",
+      "model": "FS_DOCK_WHITE_INT",
+      "UILogicId": "aesdock_ww_h_fsh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/669f04e40e86033ddaa33786",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "7piq03",
+    "product": {
+      "_id": "66448b4a6565024c3678ff4b",
+      "materialNo": "110-2353-1201",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 Family",
+      "icon": "669a33c6d0a2886743f99d3b",
+      "model": "FS_AES_BLACK_INT",
+      "UILogicId": "aes_ww_h_fsh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/669a33c6d0a2886743f99d3b",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "zwkcqc",
+    "product": {
+      "_id": "6645d7ec0e86039a43a330f4",
+      "materialNo": "110-2353-2601",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N30 OMNI",
+      "icon": "669a34480e860350f5a33778",
+      "model": "FS_N_OMNI_BLACK_INT",
+      "UILogicId": "omnin_ww_h_fsh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/669a34480e860350f5a33778",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "2nps8i",
+    "product": {
+      "_id": "66568c47656502151578ffad",
+      "materialNo": "111-2250-0403",
+      "smartType": "BT",
+      "name": "W2 PRO OMNI",
+      "icon": "67404febec0f0908d3bcec40",
+      "model": "W2_STATION_HIGH_LEVEL",
+      "UILogicId": "w2pro_ww_h_w2",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/67404febec0f0908d3bcec40",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "p0l0af",
+    "product": {
+      "_id": "665fbac4d0a288b2cff99040",
+      "materialNo": "110-2406-0601",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 PRO PLUS",
+      "icon": "665ff6826565026a2179000d",
+      "model": "Y2_AES_BLACK_US",
+      "UILogicId": "y2_ww_h_y2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/665ff6826565026a2179000d",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "edoodo",
+    "product": {
+      "_id": "665fc98f65650208df790009",
+      "materialNo": "110-2408-0203",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20",
+      "icon": "6643128b028bb2c1e5ab10f5",
+      "model": "Y2_LITE_BLACK_INT",
+      "UILogicId": "y2sedock_ww_h_y2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6643128b028bb2c1e5ab10f5",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "9kpees",
+    "product": {
+      "_id": "667b7a45da9a142fb14b169e",
+      "materialNo": "110-2408-0104",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 PLUS",
+      "icon": "66431314028bb2b0d7ab10fb",
+      "model": "Y2_AES_LITE_BLACK_US",
+      "UILogicId": "y2se_ww_h_y2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66431314028bb2b0d7ab10fb",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "n772hl",
+    "product": {
+      "_id": "6695cbceda9a143bc74b172d",
+      "materialNo": "110-2437-0101",
+      "smartType": "MQ_AP",
+      "name": "YEEDI C12 COMBO",
+      "icon": "66c7f39b5aa1c802e8eed7ce",
+      "model": "C12_COMBO_BLACK_INT",
+      "UILogicId": "y2combo_ww_h_yy2h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66c7f39b5aa1c802e8eed7ce",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "63cum9",
+    "product": {
+      "_id": "66973569d0a28809abf996d2",
+      "materialNo": "110-2361-0305",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30S CARE",
+      "icon": "660d03100324610935294f7d",
+      "model": "DEEBOT_T30S_CARE",
+      "UILogicId": "t30mix_ww_h_t30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/660d03100324610935294f7d",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "k1lgm7",
+    "product": {
+      "_id": "6698b0a20e8603f6e4a3375a",
+      "materialNo": "110-2407-0404",
+      "smartType": "BLAP2",
+      "name": "DEEBOT T30S AI",
+      "icon": "665057280e86033a15a33131",
+      "model": "DEEBOT_T30S_AI",
+      "UILogicId": "t30mixproblack_ww_h_t30mixproh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/665057280e86033a15a33131",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "rhjo55",
+    "product": {
+      "_id": "6698b306da9a1409534b1762",
+      "materialNo": "110-2310-1002",
+      "smartType": "BLAP2",
+      "name": " M12 ULTRA PLUS",
+      "icon": "66b60197cc0d353ceec2767c",
+      "model": "M12_ULTRA_PLUS",
+      "UILogicId": "t30max_ww_h_yt30h5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66b60197cc0d353ceec2767c",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "19xe25",
+    "product": {
+      "_id": "66b070bd91779b031e9394c7",
+      "materialNo": "111-2343-0003",
+      "smartType": "BT",
+      "name": "W1 PRO",
+      "icon": "63bd2febdf25d06f775c3bee",
+      "model": "W2_PRO_EU_B",
+      "UILogicId": "belugapro_cn_h_beluga",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/63bd2febdf25d06f775c3bee",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "crso4a",
+    "product": {
+      "_id": "66d519cb5aa1c846826e1f30",
+      "materialNo": "111-2432-0101",
+      "smartType": "BT",
+      "name": "WINBOT MINI",
+      "icon": "673e95b6b0a67b2f1b63e823",
+      "model": "WHITESHARK_INT",
+      "UILogicId": "sharkmini_ww_h_wshark",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/673e95b6b0a67b2f1b63e823",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "05uq5v",
+    "product": {
+      "_id": "66d6a1e69fed7e5cd3d7aced",
+      "materialNo": " 111-2432-0103",
+      "smartType": "BT",
+      "name": "WINBOT MINI",
+      "icon": "6746c965b0a67b9387c1c599",
+      "model": "WHITESHARK_INT_AMR",
+      "UILogicId": "sharkmini_ww_h_wshark",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6746c965b0a67b9387c1c599",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "n0vyif",
+    "product": {
+      "_id": "66daaa789dd37cf146cb1d2e",
+      "materialNo": "110-2417-0402",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X8 PRO OMNI",
+      "icon": "66e3ac63a2928902a25d83a0",
+      "model": "KEPLER_BLACK_AI_INT",
+      "UILogicId": "keplerh_ww_h_keplerh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66e3ac63a2928902a25d83a0",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "6q6ctd",
+    "product": {
+      "_id": "66e00e689dd37ca37c01875a",
+      "materialNo": "111-2432-0102",
+      "smartType": "BT",
+      "name": "WINBOT MINI",
+      "icon": "673e957cec0f097931aa7169",
+      "model": "WHITESHARK_INT_BROWN",
+      "UILogicId": "sharkmini_ww_h_wshark",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": false,
+        "alexa": false
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/673e957cec0f097931aa7169",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "co3fyu",
+    "product": {
+      "_id": "66e245519dd37c9e7d18d6d3",
+      "materialNo": "110-2479-0303",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X8 OMNI",
+      "icon": "66e3ac86a292891cdd5d86b9",
+      "model": "KEPLER_BLACK_INT",
+      "UILogicId": "kepler_ww_h_keplerh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/66e3ac86a292891cdd5d86b9",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "b7oysg",
+    "product": {
+      "_id": "66f52eeaec0f0953066ef145",
+      "materialNo": "111-2250-0408",
+      "smartType": "BT",
+      "name": "W2 PRO OMNI",
+      "icon": "67404fbb0aca160554acfd4f",
+      "model": "W2_STATION_HIGH_LEVEL_AMR",
+      "UILogicId": "w2pro_ww_h_w2",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/67404fbb0aca160554acfd4f",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "83bpgj",
+    "product": {
+      "_id": "66f512862a31c44ad821e23f",
+      "materialNo": "111-2433-0104",
+      "smartType": "BT",
+      "name": "W2 PRO",
+      "icon": "673fe2dd0aca161a7ea6fdd8",
+      "model": "W2_SE_SINGLE_AMR",
+      "UILogicId": "w2_ww_h_w2",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/673fe2dd0aca161a7ea6fdd8",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "9x9pbo",
+    "product": {
+      "_id": "66f52f660aca164a6d63c890",
+      "materialNo": "111-2433-0101",
+      "smartType": "BT",
+      "name": "W2 PRO",
+      "icon": "673fe45b8f73059ec9f8fa2f",
+      "model": "W2_SE_SINGLE_AMR",
+      "UILogicId": "w2_ww_h_w2",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/673fe45b8f73059ec9f8fa2f",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "uke6j4",
+    "product": {
+      "_id": "67061ffa0aca16c7801f5045",
+      "materialNo": "110-2417-0301",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X8 PRO OMNI with Auto Refill and Drain",
+      "icon": "6715b5118f7305100e052503",
+      "model": "KEPLER_BLACK_AI_UP_INT",
+      "UILogicId": "keplerhup_ww_h_keplerh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/6715b5118f7305100e052503",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "4bx3w9",
+    "product": {
+      "_id": "670621060aca165e391f6b29",
+      "materialNo": "110-2479-0301",
+      "smartType": "BLAP2",
+      "name": "DEEBOT X8 OMNI",
+      "icon": "670620f28f7305309743ba40",
+      "model": "KEPLER_WHITE_INT",
+      "UILogicId": "kepler_ww_h_keplerh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/670620f28f7305309743ba40",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "p1wg05",
+    "product": {
+      "_id": "67199f4d0aca16ae34009bf7",
+      "materialNo": "110-2353-1302",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 MAX PLUS",
+      "icon": "669a33c6d0a2886743f99d3b",
+      "model": "FS_AES_BLACK_JP",
+      "UILogicId": "aes_ww_h_fsh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/669a33c6d0a2886743f99d3b",
+      "status": "valid"
+    }
+  },
+  {
+    "classid": "m17zko",
+    "product": {
+      "_id": "67199f19ec0f0914c6149e6b",
+      "materialNo": "110-2353-1301",
+      "smartType": "MQ_AP",
+      "name": "DEEBOT N20 MAX PLUS",
+      "icon": "669a343e656502502579014e",
+      "model": "FS_AES_WHITE_JP",
+      "UILogicId": "aes_ww_h_fsh5",
+      "ota": true,
+      "supportType": {
+        "share": true,
+        "tmjl": false,
+        "assistant": true,
+        "alexa": true
+      },
+      "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/669a343e656502502579014e",
+      "status": "valid"
     }
   }
 ]

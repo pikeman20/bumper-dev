@@ -1,4 +1,5 @@
 """Homed plugin module."""
+
 from collections.abc import Iterable
 import json
 import logging
@@ -77,11 +78,11 @@ async def _handle_home_list(request: Request) -> Response:
                             "homeId": home_id,
                             "name": f"My Home ({index})",
                             "type": "own",
-                        }
+                        },
                     )
         return response_success_v3(data)
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
 
 
@@ -145,12 +146,12 @@ async def _handle_member_list(request: Request) -> Response:
                         "roleName": "",
                         "status": 1,
                         "uid": user.userid,
-                    }
-                ]
+                    },
+                ],
             )
 
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
 
 

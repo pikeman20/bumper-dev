@@ -1,4 +1,5 @@
 """Auth util module."""
+
 import hashlib
 import json
 import logging
@@ -68,8 +69,8 @@ async def login(request: Request) -> Response:
 
         if device_id is not None and app_type is not None:
             return _auth_any(uid, access_token, device_id, app_type, country_code, check)
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during login"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during login"))
     raise HTTPInternalServerError
 
 
@@ -87,14 +88,16 @@ async def get_auth_code(request: Request) -> Response:
                 _LOGGER.warning(f"No user found for {device_id}")
             else:
                 auth_code = _get_auth_code(
-                    user.userid, access_token, request.match_info.get("country", bumper_isc.ECOVACS_DEFAULT_COUNTRY)
+                    user.userid,
+                    access_token,
+                    request.match_info.get("country", bumper_isc.ECOVACS_DEFAULT_COUNTRY),
                 )
                 if auth_code is not None:
                     return response_success_v1({"authCode": auth_code, "ecovacsUid": user.userid})
 
         return response_error_v1(msg="Interface Authentication Failure", code=models.ERR_TOKEN_INVALID)
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during get auth code"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during get auth code"))
     raise HTTPInternalServerError
 
 
@@ -111,19 +114,25 @@ async def get_auth_code_v2(request: Request) -> Response:
                 _LOGGER.warning(f"No user found for {user_id}")
             else:
                 auth_code = _get_auth_code(
-                    user.userid, access_token, request.match_info.get("country", bumper_isc.ECOVACS_DEFAULT_COUNTRY), 2
+                    user.userid,
+                    access_token,
+                    request.match_info.get("country", bumper_isc.ECOVACS_DEFAULT_COUNTRY),
+                    2,
                 )
                 if auth_code is not None:
                     return response_success_v2(auth_code, "code")
 
         return response_error_v2(msg="auth error", code="1004")
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during get auth code v2"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during get auth code v2"))
     raise HTTPInternalServerError
 
 
 def _get_auth_code(
-    user_id: str, access_token: str, country: str = bumper_isc.ECOVACS_DEFAULT_COUNTRY, version: int = GENERATE_AUTH_CODE_V1
+    user_id: str,
+    access_token: str,
+    country: str = bumper_isc.ECOVACS_DEFAULT_COUNTRY,
+    version: int = GENERATE_AUTH_CODE_V1,
 ) -> str | None:
     """Get auth code."""
     auth_code: str | None = None
@@ -150,7 +159,12 @@ def _check_token(apptype: str, country_code: str, user: models.BumperUser, token
 
 
 def _auth_any(
-    uid: str | None, access_token: str | None, device_id: str, apptype: str, country_code: str, check: bool
+    uid: str | None,
+    access_token: str | None,
+    device_id: str,
+    apptype: str,
+    country_code: str,
+    check: bool,
 ) -> Response:
     if uid is None:
         uid = _generate_uid("tmpuser")
@@ -234,8 +248,8 @@ def oauth_callback(request: Request) -> Response:
             return response_error_v4()
 
         return response_success_v2(oauth.to_response())
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling oauth callback"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling oauth callback"))
     raise HTTPInternalServerError
 
 
@@ -297,11 +311,11 @@ def _generate_auth_code(user_id: str, country_code: str, token: str, version: in
 #                 token = _find_keys_in_json(await request.json(), auth_keys)
 #                 user = _find_keys_in_json(await request.json(), user_keys)
 #         except Exception as e:
-#             _LOGGER.warning(utils.default_exception_str_builder(e, "during handle json decoding"))
+#             _LOGGER.warning(utils.default_exception_str_builder(info="during handle json decoding"))
 
 #         return (user, token)
 #     except Exception as e:
-#         _LOGGER.warning(utils.default_exception_str_builder(e, "during auth info gather"))
+#         _LOGGER.warning(utils.default_exception_str_builder(info="during auth info gather"))
 #     return (None, None)
 
 

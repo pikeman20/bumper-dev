@@ -1,4 +1,5 @@
 """User plugin module."""
+
 from collections.abc import Iterable
 import logging
 
@@ -106,8 +107,8 @@ async def _logout(request: Request) -> Response:
                 # Deactivate old tokens and authcodes
                 db.user_revoke_token(user.userid, access_token)
         return get_success_response(None)
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder())
     raise HTTPInternalServerError
 
 
@@ -158,10 +159,10 @@ async def _handle_get_user_account_info(request: Request) -> Response:
                     "uid": user.userid,
                     "userName": user.username,
                     "userShowName": user.username,
-                }
+                },
             )
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
 
 
@@ -216,7 +217,7 @@ async def _handle_check_agreement_batch(_: Request) -> Response:
                     "version": "1.07",
                 },
             ],
-        }
+        },
     )
 
 
@@ -234,7 +235,7 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
                         "menuId": "20191216031849_4d744630f7ad2f5208a4b8051be61d10",
                         "menuName": "Help & Feedback",
                         "paramsJson": "",
-                    }
+                    },
                 ],
                 "menuPositionKey": "A_FIRST",
             },
@@ -247,7 +248,7 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
                         "menuId": "20191216032853_5fac4cc9cbd0e166dfa951485d1d8cc4",
                         "menuName": "Share Robot",
                         "paramsJson": "",
-                    }
+                    },
                 ],
                 "menuPositionKey": "B_SECOND",
             },
@@ -260,7 +261,7 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
                         "menuId": "20191216032545_ebea0fbb4cb02d9c2fec5bdf3371bc2d",
                         "menuName": "Settings",
                         "paramsJson": "",
-                    }
+                    },
                 ],
                 "menuPositionKey": "C_THIRD",
             },
@@ -273,11 +274,11 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
                         "menuId": "20191216032545_ebea0fbb4cb02d9c2fec5bdf3371bc2c",
                         "menuName": "Bumper Status",
                         "paramsJson": "",
-                    }
+                    },
                 ],
                 "menuPositionKey": "D_FOURTH",
             },
-        ]
+        ],
     )
 
 
@@ -331,9 +332,9 @@ async def _handle_get_my_user_menu_info(_: Request) -> Response:
                         },
                     ],
                     "menuPositionKey": "MY_A",
-                }
-            ]
-        }
+                },
+            ],
+        },
     )
 
 

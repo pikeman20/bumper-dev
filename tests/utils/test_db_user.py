@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from tinydb import TinyDB
@@ -8,7 +8,7 @@ from bumper.web.models import BumperUser
 
 
 @pytest.mark.usefixtures("clean_database")
-def test_user_db():
+def test_user_db() -> None:
     db.user_add("new_testuser")
     assert db.user_by_user_id("new_testuser").userid == "new_testuser"
 
@@ -76,8 +76,8 @@ def test_user_db():
         {
             "userid": "testuser",
             "token": "token_123456",
-            "expiration": f"{datetime.now() + timedelta(seconds=-10)}",
-        }
+            "expiration": f"{datetime.now(UTC) + timedelta(seconds=-10)}",
+        },
     )  # Add expired token
     db_test.close()
     assert len(db.user_get_tokens("testuser")) == 1  # Test 1 tokens are available
@@ -92,8 +92,8 @@ def test_user_db():
         {
             "userid": "testuser",
             "token": "token_1234",
-            "expiration": f"{datetime.now() + timedelta(seconds=-10)}",
-        }
+            "expiration": f"{datetime.now(UTC) + timedelta(seconds=-10)}",
+        },
     )  # Add expired token
     db_test.close()
     assert len(db.user_get_tokens("testuser")) == 1  # Test 1 tokens are available

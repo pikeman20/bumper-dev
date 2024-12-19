@@ -1,4 +1,5 @@
 """Voice plugin module."""
+
 # import logging
 from collections.abc import Iterable
 
@@ -62,7 +63,7 @@ async def _handle_get(request: Request) -> Response:
                 "voiceMd5": "27a816e229a0e0471703a244a7763f09",  # pragma: allowlist secret
                 "voiceSize": 3823807,
                 "voiceUrl": "https://portal-ww.ecouser.net/api/pim/voice/download/61a89146d30283475c98df9d",
-            }
+            },
         ],
         data_key="voices",
     )

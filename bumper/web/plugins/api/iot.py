@@ -1,4 +1,5 @@
 """Iot plugin module."""
+
 from collections.abc import Iterable
 import json
 import logging
@@ -37,7 +38,8 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
     """Dev manager bot command."""
     try:
         if bumper_isc.mqtt_helperbot is None:
-            raise Exception("'bumper.mqtt_helperbot' is None")
+            msg = "'bumper.mqtt_helperbot' is None"
+            raise Exception(msg)
 
         json_body = json.loads(await request.text())
 
@@ -53,7 +55,7 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
                         "errno": 500,
                         "error": "requested bot is not found",
                         "debug": "requested bot is not found",
-                    }
+                    },
                 )
             if bot.get("company", "") != "eco-ng":
                 _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
@@ -63,7 +65,7 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
                         "errno": 500,
                         "error": "requested bot is not supported",
                         "debug": "requested bot is not supported",
-                    }
+                    },
                 )
 
             random_id = "".join(random.sample(string.ascii_letters, 4))
@@ -75,7 +77,7 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
             if body.get("resp") is None:
                 _LOGGER.warning(
                     f"iot :: u:{request.query.get('u','')} :: did:{did}"
-                    f" :: cmd:{json_body.get('cmdName')} :: return non 'resp' :: {body}"
+                    f" :: cmd:{json_body.get('cmdName')} :: return non 'resp' :: {body}",
                 )
             else:
                 body.update({"payloadType": json_body.get("payloadType", "j")})
@@ -94,6 +96,6 @@ async def _handle_devmanager_bot_command(request: Request) -> Response:
 
             _LOGGER.error(f"TD is not know :: {td} :: connected to MQTT")
 
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     return response_error_v7()

@@ -9,7 +9,7 @@ from bumper.utils.settings import config as bumper_isc
 
 
 @pytest.mark.parametrize(("debug", "proxy"), [(False, False), (True, False), (False, True), (True, True)])
-async def test_start_stop(debug: bool, proxy: bool):
+async def test_start_stop(debug: bool, proxy: bool) -> None:
     with LogCapture() as log:
         if proxy:
             bumper_isc.BUMPER_PROXY_MQTT = True
@@ -60,7 +60,7 @@ async def test_start_stop(debug: bool, proxy: bool):
         bumper_isc.BUMPER_PROXY_WEB = False
 
 
-async def test_start_missing_listen():
+async def test_start_missing_listen() -> None:
     with LogCapture() as log:
         bumper_isc.bumper_verbose = 2
         bumper_isc.bumper_listen = None

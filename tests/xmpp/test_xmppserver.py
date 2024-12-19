@@ -14,7 +14,7 @@ def mock_transport_extra_info():
     return ("127.0.0.1", 5223)
 
 
-async def test_xmpp_server():
+async def test_xmpp_server() -> None:
     xmpp_server = XMPPServer("127.0.0.1", 5223)
     await xmpp_server.start_async_server()
 
@@ -46,7 +46,7 @@ async def test_xmpp_server():
     xmpp_server.disconnect()
 
 
-async def test_client_connect_no_starttls():
+async def test_client_connect_no_starttls() -> None:
     test_transport = mock.Mock()
     test_transport.get_extra_info = mock.Mock(return_value=mock_transport_extra_info())
     test_transport.write = mock.Mock(return_value=return_send_data)
@@ -89,7 +89,7 @@ async def test_client_connect_no_starttls():
     assert xmppclient.state == xmppclient.INIT  # Client moved to INIT state
 
 
-async def test_client_end_stream():
+async def test_client_end_stream() -> None:
     test_transport = mock.Mock()
     test_transport.get_extra_info = mock.Mock(return_value=mock_transport_extra_info())
     test_transport.write = mock.Mock(return_value=return_send_data)
@@ -121,7 +121,7 @@ async def test_client_end_stream():
     xmppclient.parse_data(test_data)
 
 
-async def test_client_connect_starttls_called():
+async def test_client_connect_starttls_called() -> None:
     test_transport = mock.Mock()
     test_transport.get_extra_info = mock.Mock(return_value=mock_transport_extra_info())
     test_transport.write = mock.Mock(return_value=return_send_data)
@@ -196,7 +196,7 @@ async def test_client_connect_starttls_called():
     assert xmppclient.state == xmppclient.INIT  # Client moved to INIT state
 
 
-async def test_client_init():
+async def test_client_init() -> None:
     test_transport = mock.Mock()
     test_transport.get_extra_info = mock.Mock(return_value=mock_transport_extra_info())
     test_transport.write = mock.Mock(return_value=return_send_data)
@@ -267,7 +267,7 @@ async def test_client_init():
     )  # client presence - dummy response
 
 
-async def test_bot_connect():
+async def test_bot_connect() -> None:
     test_transport = mock.Mock()
     test_transport.get_extra_info = mock.Mock(return_value=mock_transport_extra_info())
     test_transport.write = mock.Mock(return_value=return_send_data)
@@ -312,7 +312,7 @@ async def test_bot_connect():
     assert xmppclient.type == xmppclient.BOT  # Client type is now bot
 
 
-async def test_bot_init():
+async def test_bot_init() -> None:
     test_transport = mock.Mock()
     test_transport.get_extra_info = mock.Mock(return_value=mock_transport_extra_info())
     test_transport.write = mock.Mock(return_value=return_send_data)
@@ -381,7 +381,7 @@ async def test_bot_init():
     )  # bot presence - dummy response
 
 
-async def test_ping_server():
+async def test_ping_server() -> None:
     test_transport = mock.Mock()
     test_transport.get_extra_info = mock.Mock(return_value=mock_transport_extra_info())
     test_transport.write = mock.Mock(return_value=return_send_data)
@@ -401,7 +401,7 @@ async def test_ping_server():
     assert mock_send.mock_calls[0][1][0] == '<iq type="result" id="2542" from="159.ecorobot.net" />'  # ping response
 
 
-async def test_ping_client_to_client():
+async def test_ping_client_to_client() -> None:
     test_transport = mock.Mock()
     test_transport.get_extra_info = mock.Mock(return_value=mock_transport_extra_info())
     test_transport.write = mock.Mock(return_value=return_send_data)
@@ -441,7 +441,7 @@ async def test_ping_client_to_client():
     )  # ping response
 
 
-async def test_client_send_iq():
+async def test_client_send_iq() -> None:
     test_transport = mock.Mock()
     test_transport.get_extra_info = mock.Mock(return_value=mock_transport_extra_info())
     test_transport.write = mock.Mock(return_value=return_send_data)

@@ -1,4 +1,5 @@
 """Agreement plugin module."""
+
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -72,5 +73,5 @@ async def _handle_get_user_accept_info(_: Request) -> Response:
                     "version": "1.07",
                 },
             ],
-        }
+        },
     )

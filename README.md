@@ -8,69 +8,64 @@
 
 ---
 
-- [Bumper](#bumper)
-  - [Build Status](#build-status)
-  - [Why?](#why)
-  - [Compatibility](#compatibility)
-    - [Ecovacs Home `>= 2.4.4`](#ecovacs-home--244)
-  - [Documentation and Getting Started](#documentation-and-getting-started)
-  - [Pre setup](#pre-setup)
-  - [Basic configs for docker](#basic-configs-for-docker)
-    - [Create `.env` file](#create-env-file)
-      - [Example short `.env`](#example-short-env)
-  - [Development](#development)
-    - [Local run](#local-run)
-    - [Code quality check](#code-quality-check)
-  - [NOTES](#notes)
-    - [clean logs](#clean-logs)
-  - [References](#references)
-  - [Thanks](#thanks)
+**Forked from [edenhaus](https://github.com/edenhaus/bumper) ➔ [bmartin5692](https://github.com/bmartin5692/bumper)**
 
 ---
 
-**Forked from [edenhaus](https://github.com/edenhaus/bumper) -> [bmartin5692](https://github.com/bmartin5692/bumper)**
+**Bumper** is a standalone, self-hosted implementation of the central server used by Ecovacs vacuum robots.
+This project enables you to take full control of your Ecovacs robots without relying on external servers or cloud services.
 
----
+By using Bumper, you ensure that your data stays within your home, maintaining both privacy and security while using your Ecovacs cleaning robots.
 
-Bumper is a standalone and self-hosted implementation of the central server used by Ecovacs vacuum robots.
-Bumper allows you to have full control of your Ecovacs robots,
-without the robots or app talking to the Ecovacs servers and transmitting data outside of your home.
+**Note:** The current master branch is unstable and in active development.
 
 ![Bumper Diagram](./docs/images/BumperDiagram.png "Bumper Diagram")
 
-**Note:** The current master branch is unstable, and in active development.
+## Key Features
+
+- **Self-Hosted**: Run the server locally at your home without needing to connect to the Ecovacs cloud.
+- **Privacy-Focused**: Prevent data transmission to Ecovacs servers by using your own server.
+- **Full Control**: Manage your Ecovacs robots locally and access all features without relying on external services.
 
 ## Build Status
 
-**Community:**
-A Gitter community has been created for Bumper so users can chat and dig into issues outside of Github, join us here:
+### Community
+
+A **Gitter community** has been created for Bumper, where users can discuss issues and share insights beyond GitHub.
+Join us here:
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/ecovacs-bumper/community)
 
-**_Testing needed:_**
-Bumper needs users to assist with testing in order to ensure compatibility as bumper moves forward!
-If you've tested Bumper with your bot, please open an issue with details on success or issues.
+### Testing Needed
 
-**Please note:**
-_this software is experimental and not ready for production use. Use at your own risk._
+Bumper needs your help with **testing** to ensure compatibility and smooth operation as the project evolves.
+If you’ve tested Bumper with your Ecovacs bot, please open an issue with feedback on its performance (whether successful or problematic).
+
+> **Important**:  
+> _This software is experimental and not yet ready for production use. Please use at your own risk._
 
 ## Why?
 
-For fun, mostly :)
+The motivation behind Bumper can be summed up in a few points:
 
-But seriously, there are a several reasons for eliminating the central server:
+### 1. Convenience
 
-1. Convenience: It works without an internet connection or if Ecovacs servers are down
-2. Performance: No need for messages to travel to Ecovacs server and back.
-3. Security: We can completely isolate the robot from the public Internet.
+- Bumper allows your robot to operate without needing an internet connection or relying on Ecovacs servers.
+
+### 2. Performance
+
+- By eliminating the need to send messages to external servers, Bumper improves response times and efficiency.
+
+### 3. Security
+
+- Running the server locally means you can completely isolate your robot from the public Internet, reducing exposure to potential security risks.
 
 ## Compatibility
 
-As work to reverse the protocols and provide a self-hosted central server is still in progress,
-Bumper has had limited testing. There are a number of EcoVacs models that it hasn't been tested against.
-Bumper should be compatible with most wifi-enabled robots that use either the Ecovacs Android/iOS app
-or the Ecovacs Home Android/iOS app, but has only been reported to work on the below:
+As work to reverse the protocols and provide a self-hosted central server is still in progress, Bumper has had limited testing. There are several EcoVacs models that have not been tested yet.
 
-| Model           | Protocol Used | Bumper Version Tested | EcoVacs App Tested                                                 |
+Bumper should be compatible with most Wi-Fi-enabled robots that use either the **Ecovacs Android/iOS app** or the **Ecovacs Home Android/iOS app**. However, it has only been reported to work on the following models:
+
+| Model           | Protocol Used | Bumper Version Tested | Ecovacs App Tested                                                 |
 | :-------------- | :------------ | :-------------------- | :----------------------------------------------------------------- |
 | Deebot 900/901  | MQTT          | main                  | Ecovacs/Ecovacs Home                                               |
 | Deebot 600      | MQTT          | main                  | Ecovacs Home                                                       |
@@ -81,50 +76,55 @@ or the Ecovacs Home Android/iOS app, but has only been reported to work on the b
 | Deebot Ozmo 930 | XMPP          | main                  | Ecovacs/Ecovacs Home                                               |
 | Deebot M81 Pro  | XMPP          | v0.1.0                | Ecovacs                                                            |
 
-Tested with:
+### Tested with:
 
 | Service                        | Version  | Bot         | Works | Info                                                                                                   |
 | :----------------------------- | :------- | :---------- | :---- | :----------------------------------------------------------------------------------------------------- |
 | Ecovacs Home                   | 2.2.1    | 930/950/T10 | Y     |                                                                                                        |
 | Ecovacs Home                   | 2.4.1    | 930/950/T10 | Y     | Works best                                                                                             |
 | Ecovacs Home                   | 2.4.3    | 930/950/T10 | Y     |                                                                                                        |
-| Ecovacs Home                   | >= 2.4.4 |             | N     | [Will possible not work](https://docs.mitmproxy.org/stable/concepts-certificates/#certificate-pinning) |
+| Ecovacs Home                   | >= 2.4.4 |             | N     | [Will possibly not work](https://docs.mitmproxy.org/stable/concepts-certificates/#certificate-pinning) |
 | Deebot 4 Home Assistant        | 2.1.2    | 950/T10     | Y     |                                                                                                        |
 | EcovacsBumper (Home Assistant) | 1.5.3    | 930         | Y     |                                                                                                        |
 
 ### Ecovacs Home `>= 2.4.4`
 
-Possible not work for url's `jmq-ngiot-eu.dc.robotww.ecouser.net` and `a2JaaxoKXLq.iot-as-mqtt.cn-shanghai.aliyuncs.com`
-as it seams they are [certificate-pinned](https://docs.mitmproxy.org/stable/concepts-certificates/#certificate-pinning).
+For versions `>= 2.4.4`, the following URLs may not work due to certificate pinning issues:
+
+- `jmq-ngiot-eu.dc.robotww.ecouser.net`
+- `a2JaaxoKXLq.iot-as-mqtt.cn-shanghai.aliyuncs.com`
+
+For more information on certificate pinning, refer to the [mitmproxy documentation](https://docs.mitmproxy.org/stable/concepts-certificates/#certificate-pinning).
 
 ## Documentation and Getting Started
 
-See the documentation on [Read the Docs](https://bumper.readthedocs.io)
+You can find the full documentation and getting started guide on [Read the Docs](https://bumper.readthedocs.io).
 
 ---
 
 ## Pre setup
 
-To run this application certificate is needed, which will not auto generated.
+To run this application, a certificate is required.
+This certificate will **not** be auto-generated.
 
-You can provide the certificated by following ways:
+You can provide the required certificates in two ways:
 
-Provide your own cert files and store them into:
+1. **Provide your own certificate files** and store them in the following locations:
 
-- `certs/ca.crt`
-- `certs/bumper.crt`
-- `certs/bumper.key`
+   - `certs/ca.crt`
+   - `certs/bumper.crt`
+   - `certs/bumper.key`
 
-or generate them over a script:
+2. **Generate the certificates** using the provided script:
+   ```sh
+   $./scripts/create_cert.sh
+   ```
 
-```sh
-$cd certs
-$. ../scripts/create_cert.sh
-```
-
-## Basic configs for docker
+## Basic Configuration for Docker
 
 ### Create `.env` file
+
+> In your project directory, create a `.env` file with the following configurations:
 
 ```env
 # GENERAL variables (mostly by default, change as needed)
@@ -142,78 +142,95 @@ RESOURCES_RESERVATIONS_MEMORY=32m
 # APPLICATION version for easy update
 # ______________________________________________________________________________
 VERSION_BUMPER=develop
-VERSION_NGNIX=1.25.2-alpine3.18-slim
 
 # APPLICATION general variable to adjust the apps
 # ______________________________________________________________________________
-PUID=1000
-PGID=1000
 TZ=Europe/Berlin
 BUMPER_ANNOUNCE_IP=<Insert your IP>
 BUMPER_LISTEN=0.0.0.0
+
 BUMPER_DEBUG_LEVEL=INFO
-BUMPER_DEBUG_VERBOSE=2
-DEBUG_LOGGING_API_REQUEST_ALL=false
+BUMPER_DEBUG_VERBOSE=1
+
 DEBUG_LOGGING_API_REQUEST=false
+DEBUG_LOGGING_API_REQUEST_MISSING=true
 DEBUG_LOGGING_XMPP_REQUEST=false
+DEBUG_LOGGING_XMPP_REQUEST_REFACTOR=false
+DEBUG_LOGGING_XMPP_RESPONSE=false
+DEBUG_LOGGING_API_ROUTE=false
 
 # BUILD variable
 # ______________________________________________________________________________
-PY_VERSION=3.12.2-alpine3.19
-ALPINE_VERSION=3.19
+PY_VERSION=3.13.1-alpine3.21
+UV_VERSION=python3.13-alpine
 ```
 
-#### Example short `.env`
+#### Example short `.env` File
 
 ```env
 NETWORK_MODE=overlay
-BUMPER_ANNOUNCE_IP=0.0.0.0 # replace with the server public ip
+BUMPER_ANNOUNCE_IP=0.0.0.0 # Replace with the server's public IP
+```
+
+### Run docker by
+
+> alias for [docker-swarm](https://github.com/MVladislav/.dotfiles/blob/a7cba1a36e1e97d669a70e32c4fa4f8405e9ee69/zsh/zshrc-append#L127)
+
+```sh
+# If using Docker Swarm (docker-swarm-compose is an alias)
+$docker-swarm-compose deebot
+
+# Default Mode
+$docker-compose up -d
 ```
 
 ## Development
 
-### Local run
+### Running the Project Locally
 
-> create with virtual env and run python project local
+1. Set up a virtual environment:
 
-```sh
-$python3 -m pip install virtualenv --break-system-packages
-$python3 -m venv venv
-$source ./venv/bin/activate
-$python3 -m pip install .
+   ```sh
+   $uv venv --python 3.13.0
+   $source .venv/bin/activate
+   ```
 
-$python3 -m bumper
-```
+2. Sync the project and install dependencies:
 
-### Code quality check
+   ```sh
+   $uv sync --all-groups --upgrade
+   ```
 
-```sh
-$python3 -m pip install virtualenv --break-system-packages
-$python3 -m venv venv
-$source ./venv/bin/activate
-$python3 -m pip install -e .
-$python3 -m pip install -e .[dev]
+3. Run the project:
+   ```sh
+   $uv run bumper
+   ```
 
-$clear && pre-commit run --all-files
-$clear && pytest
-```
+### Check Code Quality & Run Tests
 
-or
+1. Set up the virtual environment and install dependencies:
 
-```sh
-$docker-compose -f dev.docker-compose.yaml build
-$docker-compose -f dev.docker-compose.yaml run bumper
+   ```sh
+   $uv venv --python 3.13.0
+   $source .venv/bin/activate
+   $uv sync --all-groups --upgrade
+   ```
 
-$clear && pytest
-```
+2. Run the following checks:
+   ```sh
+   $clear && pre-commit run --all-files
+   $clear && uv run --frozen mypy bumper/
+   $clear && uv run --frozen pylint bumper/
+   $clear && uv run --frozen pytest tests --cov=./ --cov-report=xml --junitxml=pytest-report.xml
+   ```
 
 ---
 
 ## NOTES
 
-### clean logs
+### Clean logs
 
-clean logs are accessible without credentials by url:
+Clean logs are accessible without credentials by URL:
 
 `https://portal-eu.ecouser.net/api/lg/image/<DID>d@<REPLACED>@<RESOURCE>`
 
@@ -229,6 +246,6 @@ clean logs are accessible without credentials by url:
 
 ## Thanks
 
-A big thanks to the original project creator @torbjornaxelsson, without his work this project would have taken much longer to build.
+A big thanks to the original project creator @torbjornaxelsson; without his work, this project would have taken much longer to build.
 
-Bumper wouldn't exist without [Sucks](https://github.com/wpietri/sucks), an open source client for Ecovacs robots. Thanks to @wpietri and contributors!
+Bumper wouldn’t exist without [Sucks](https://github.com/wpietri/sucks), an open-source client for Ecovacs robots. Thanks to @wpietri and contributors!

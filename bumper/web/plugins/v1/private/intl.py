@@ -1,4 +1,5 @@
 """Intl plugin module."""
+
 from collections.abc import Iterable
 import logging
 
@@ -79,10 +80,10 @@ async def _handle_basic_info(request: Request) -> Response:
                     "signStatus": "SIGN",
                     "userHeadImg": None,
                     "userShowName": user.username,
-                }
+                },
             )
-    except Exception as e:
-        _LOGGER.exception(utils.default_exception_str_builder(e, "during handling request"))
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
 
 

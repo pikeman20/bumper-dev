@@ -15,15 +15,24 @@
 !.gitempty
 
 !CHANGELOG.md
+!CONTRIBUTING.md
+!CODE_OF_CONDUCT.md
 !LICENSE
-# !SECURITY.md
+!SECURITY.md
 
 !README.md
 
+!.pre-commit-config.yaml
+!.gitleaks.toml
 !.prettierrc.yml
 !.yamllint
 
 # PROJECT
+
+!mkdocs.yml
+!pyproject.toml
+!.python-version
+!uv.lock
 
 !bumper/
 !bumper/**
@@ -37,7 +46,8 @@
 !docs/
 !docs/**
 !scripts/
-!scripts/**
+scripts/*
+!scripts/*.sh
 
 !tests/
 !tests/_test_files/
@@ -61,22 +71,6 @@
 !docker-compose-ngnix.yaml
 !docker-compose-traefik.yaml
 !docker-compose.yaml
-
-!.pre-commit-config.yaml
-!bandit.yml
-!CODE_OF_CONDUCT.md
-!mkdocs.yml
-
-!mypy.ini
-!pylintrc
-!pyproject.toml
-!pytest.ini
-!setup.cfg
-!requirements-dev.txt
-!requirements.txt
-
-!CHANGELOG.md
-!README.md
 
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python

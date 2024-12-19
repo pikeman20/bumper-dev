@@ -1,9 +1,11 @@
 """Confi module."""
+
 import os
+from pathlib import Path
 import socket
 from typing import TYPE_CHECKING, Optional
 
-from bumper.utils import utils
+import pytz
 
 if TYPE_CHECKING:
     from bumper.mqtt.helper_bot import MQTTHelperBot
@@ -12,10 +14,17 @@ if TYPE_CHECKING:
     from bumper.xmpp.xmpp import XMPPServer
 
 
+def str_to_bool(value: str | int | bool | None) -> bool:
+    """Convert str to bool."""
+    return str(value).lower() in ["true", "1", "t", "y", "on", "yes"]
+
+
 class Config:
     """Config class."""
 
     ECOVACS_DEFAULT_COUNTRY: str = "us"
+
+    LOCAL_TIMEZONE = pytz.timezone(os.environ.get("TZ", "Europe/Berlin"))
 
     # ww: 52.53.84.66 | eu: 3.68.172.231
     ECOVACS_UPDATE_SERVER: str = "3.68.172.231"
@@ -23,19 +32,20 @@ class Config:
 
     # os.environ['PYTHONASYNCIODEBUG'] = '1' # Uncomment to enable ASYNCIODEBUG
     # bumper_dir: str = f"{os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))}/../../"
-    bumper_dir: str = os.getcwd()
+    bumper_dir = Path.cwd()
 
     # Set defaults from environment variables first
     # Folders
-    data_dir = os.environ.get("BUMPER_DATA") or os.path.join(bumper_dir, "data")
-    os.makedirs(data_dir, exist_ok=True)  # Ensure data directory exists or create
-    certs_dir = os.environ.get("BUMPER_CERTS") or os.path.join(bumper_dir, "certs")
-    os.makedirs(certs_dir, exist_ok=True)  # Ensure data directory exists or create
+    data_dir = Path(os.environ.get("BUMPER_DATA", bumper_dir / "data"))
+    data_dir.mkdir(parents=True, exist_ok=True)  # Ensure data directory exists or create
+
+    certs_dir = Path(os.environ.get("BUMPER_CERTS", bumper_dir / "certs"))
+    certs_dir.mkdir(parents=True, exist_ok=True)  # Ensure certs directory exists or create
 
     # Certs
-    ca_cert = os.environ.get("BUMPER_CA") or os.path.join(certs_dir, "ca.crt")
-    server_cert = os.environ.get("BUMPER_CERT") or os.path.join(certs_dir, "bumper.crt")
-    server_key = os.environ.get("BUMPER_KEY") or os.path.join(certs_dir, "bumper.key")
+    ca_cert = Path(os.environ.get("BUMPER_CA", certs_dir / "ca.crt"))
+    server_cert = Path(os.environ.get("BUMPER_CERT", certs_dir / "bumper.crt"))
+    server_key = Path(os.environ.get("BUMPER_KEY", certs_dir / "bumper.key"))
 
     # Listeners
     bumper_listen: str | None = os.environ.get("BUMPER_LISTEN", socket.gethostbyname(socket.gethostname()))
@@ -44,20 +54,20 @@ class Config:
     # Logging
     bumper_level: str = (os.environ.get("BUMPER_DEBUG_LEVEL") or "INFO").upper()
     bumper_verbose: int = int(os.environ.get("BUMPER_DEBUG_VERBOSE") or 1)
-    DEBUG_LOGGING_API_REQUEST: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_API_REQUEST")) or False
-    DEBUG_LOGGING_API_REQUEST_MISSING: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_API_REQUEST_MISSING")) or False
-    DEBUG_LOGGING_XMPP_REQUEST: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST")) or False
-    DEBUG_LOGGING_XMPP_REQUEST_REFACTOR: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST_REFACTOR")) or False
-    DEBUG_LOGGING_XMPP_RESPONSE: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_RESPONSE")) or False
-    DEBUG_LOGGING_API_ROUTE: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_API_ROUTE")) or False
-    DEBUG_LOGGING_SA_RESULT: bool = utils.str_to_bool(os.environ.get("DEBUG_LOGGING_SA_RESULT")) or False
+    DEBUG_LOGGING_API_REQUEST: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_API_REQUEST")) or False
+    DEBUG_LOGGING_API_REQUEST_MISSING: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_API_REQUEST_MISSING")) or False
+    DEBUG_LOGGING_XMPP_REQUEST: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST")) or False
+    DEBUG_LOGGING_XMPP_REQUEST_REFACTOR: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST_REFACTOR")) or False
+    DEBUG_LOGGING_XMPP_RESPONSE: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_RESPONSE")) or False
+    DEBUG_LOGGING_API_ROUTE: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_API_ROUTE")) or False
+    DEBUG_LOGGING_SA_RESULT: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_SA_RESULT")) or False
 
     # Other
     USE_AUTH: bool = False
     TOKEN_VALIDITY_SECONDS: int = 3600  # 1 hour
     OAUTH_VALIDITY_DAYS: int = 15
-    BUMPER_PROXY_MQTT: bool = utils.str_to_bool(os.environ.get("BUMPER_PROXY_MQTT")) or False
-    BUMPER_PROXY_WEB: bool = utils.str_to_bool(os.environ.get("BUMPER_PROXY_WEB")) or False
+    BUMPER_PROXY_MQTT: bool = str_to_bool(os.environ.get("BUMPER_PROXY_MQTT")) or False
+    BUMPER_PROXY_WEB: bool = str_to_bool(os.environ.get("BUMPER_PROXY_WEB")) or False
 
     # Proxy
     PROXY_NAMESERVER: list[str] = ["1.1.1.1", "8.8.8.8"]

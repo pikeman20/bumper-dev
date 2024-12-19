@@ -8,18 +8,18 @@ from bumper.utils import db
 from bumper.utils.settings import config as bumper_isc
 
 
-def test_db_file_with_custom_env_var():
+def test_db_file_with_custom_env_var() -> None:
     custom_path = "/custom/path/to/database.db"
     with mock.patch.dict(os.environ, {"DB_FILE": custom_path}, clear=True):
         assert db._db_file() == custom_path
 
 
-def test_db_file_with_empty_env_var():
+def test_db_file_with_empty_env_var() -> None:
     with mock.patch.dict(os.environ, {"DB_FILE": ""}, clear=True):
         assert db._db_file() == os.path.join(bumper_isc.data_dir, "bumper.db")
 
 
-def test_db_file_with_none_env_var():
+def test_db_file_with_none_env_var() -> None:
     env = os.environ.copy()
     env.pop("DB_FILE")
     with mock.patch.dict(os.environ, env, clear=True):
@@ -43,8 +43,8 @@ def test_db_file_with_none_env_var():
 #         assert db._db_file() == os.path.join("/default/data/dir", "bumper.db")
 
 
-@pytest.mark.asyncio()
-async def test_db_get(tmpdir):
+@pytest.mark.asyncio
+async def test_db_get(tmpdir) -> None:
     # Call the _db_get function
     with db._db_get() as result:
         # Verify that TinyDB was instantiated with the correct file path
@@ -72,7 +72,7 @@ async def test_db_get(tmpdir):
         assert len(result) == 0
 
 
-def test_logging_message_not_document():
+def test_logging_message_not_document() -> None:
     value_name = "test_value"
 
     # Case 1: None value

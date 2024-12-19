@@ -166,7 +166,7 @@ async def _handle_resources(request: Request) -> Response:
                 ],
                 "title": "",
                 "type": "svga",
-            }
+            },
         ]
     if len(data) <= 0:
         _LOGGER.error(f"locations is not know :: {locations}")

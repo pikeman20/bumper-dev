@@ -1,11 +1,13 @@
 """Web server module."""
+
 import asyncio
 import base64
 import dataclasses
 import gzip
+from importlib.resources import files
 import json
 import logging
-import os
+from pathlib import Path
 import ssl
 from typing import Any
 
@@ -39,7 +41,7 @@ class WebserverBinding:
 class WebServer:
     """Web server."""
 
-    def __init__(self, bindings: list[WebserverBinding] | WebserverBinding, proxy_mode: bool):
+    def __init__(self, bindings: list[WebserverBinding] | WebserverBinding, proxy_mode: bool) -> None:
         """Web Server init."""
         self._runners: list[web.AppRunner] = []
 
@@ -52,9 +54,14 @@ class WebServer:
                 middlewares.log_all_requests,
             ],
         )
+
+        templates_path = Path(bumper_isc.bumper_dir) / "bumper" / "web" / "templates"
+        if not templates_path.exists():
+            templates_path = Path(str(files("bumper.web").joinpath("templates")))
+
         aiohttp_jinja2.setup(
             self._app,
-            loader=jinja2.FileSystemLoader(os.path.join(bumper_isc.bumper_dir, "bumper", "web", "templates")),
+            loader=jinja2.FileSystemLoader(str(templates_path)),
         )
         self._add_routes(proxy_mode)
         self._app.freeze()  # no modification allowed anymore
@@ -65,14 +72,14 @@ class WebServer:
                 web.get("/bot/remove/{did}", self._handle_remove_bot),
                 web.get("/client/remove/{resource}", self._handle_remove_client),
                 web.get("/restart_{service}", self._handle_restart_service),
-            ]
+            ],
         )
 
         if proxy_mode is True:
             self._app.add_routes(
                 [
                     web.route("*", "/{path:.*}", self._handle_proxy),
-                ]
+                ],
             )
         else:
             self._app.add_routes(
@@ -84,13 +91,13 @@ class WebServer:
                     web.get("/config/Android.conf", self._handle_config_android_conf),
                     web.get("/data_collect/upload/generalData", self._handle_data_collect),
                     web.get("/list_routes", self._handle_list_routes),  # NOTE: for dev to check which api's are implemented
-                ]
+                ],
             )
             if bumper_isc.DEBUG_LOGGING_API_ROUTE is True:
                 self._app.add_routes(
                     [
                         web.post("/log", self._handle_log),
-                    ]
+                    ],
                 )
             plugins.add_plugins(self._app)
 
@@ -118,9 +125,9 @@ class WebServer:
                 )
 
                 await site.start()
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
-            raise e
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
+            raise
 
     async def shutdown(self) -> None:
         """Shutdown server."""
@@ -130,9 +137,9 @@ class WebServer:
                 await runner.shutdown()
             self._runners.clear()
             await self._app.shutdown()
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
-            raise e
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
+            raise
 
     async def _handle_base(self, request: Request) -> Response:
         try:
@@ -140,14 +147,14 @@ class WebServer:
             clients = db.client_get_all()
             mq_sessions = []
             if bumper_isc.mqtt_server is not None:
-                for session in bumper_isc.mqtt_server.sessions:
-                    mq_sessions.append(
-                        {
-                            "username": session.username,
-                            "client_id": session.client_id,
-                            "state": session.transitions.state,
-                        }
-                    )
+                mq_sessions = [
+                    {
+                        "username": session.username,
+                        "client_id": session.client_id,
+                        "state": session.transitions.state,
+                    }
+                    for session in bumper_isc.mqtt_server.sessions
+                ]
 
             helperbot_connected: bool = False
             if bumper_isc.mqtt_helperbot is not None:
@@ -170,8 +177,8 @@ class WebServer:
                 "xmpp_server": bumper_isc.xmpp_server,
             }
             return aiohttp_jinja2.render_template("home.jinja2", request, context=context)
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
         raise HTTPInternalServerError
 
     async def _restart_helper_bot(self) -> None:
@@ -201,8 +208,8 @@ class WebServer:
                 await bumper_isc.xmpp_server.start_async_server()
                 return web.json_response({"status": "complete"})
             return web.json_response({"status": "invalid service"})
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
         raise HTTPInternalServerError
 
     async def _handle_remove_bot(self, request: Request) -> Response:
@@ -212,8 +219,8 @@ class WebServer:
             if db.bot_get(did):
                 return web.json_response({"status": "failed to remove bot"})
             return web.json_response({"status": "successfully removed bot"})
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
         raise HTTPInternalServerError
 
     async def _handle_remove_client(self, request: Request) -> Response:
@@ -223,8 +230,8 @@ class WebServer:
             if db.client_get(resource):
                 return web.json_response({"status": "failed to remove client"})
             return web.json_response({"status": "successfully removed client"})
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
         raise HTTPInternalServerError
 
     async def _handle_lookup(self, request: Request) -> Response:
@@ -255,8 +262,8 @@ class WebServer:
 
             return web.json_response({})
 
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
         raise HTTPInternalServerError
 
     async def _handle_new_auth(self, request: Request) -> Response:
@@ -274,7 +281,7 @@ class WebServer:
                         "authCode": post_body.get("itToken"),
                         "result": "ok",
                         "todo": "result",
-                    }
+                    },
                 )
             return web.json_response(
                 {
@@ -282,10 +289,10 @@ class WebServer:
                     "result": "fail",
                     "error": "Error request, unknown todo",
                     "todo": "result",
-                }
+                },
             )
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
         raise HTTPInternalServerError
 
     async def _handle_sa(self, request: Request) -> Response:
@@ -303,8 +310,8 @@ class WebServer:
                     decompressed_data = gzip.decompress(decoded_data).decode("utf-8")
                     _LOGGER.info(decompressed_data)
             return web.json_response(None)
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
         raise HTTPInternalServerError
 
     async def _handle_config_android_conf(self, _: Request) -> Response:
@@ -315,10 +322,10 @@ class WebServer:
                 {
                     "v": "v1",
                     "configs": {"disableSDK": False, "disableDebugMode": False},
-                }
+                },
             )
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
         raise HTTPInternalServerError
 
     async def _handle_data_collect(self, _: Request) -> Response:
@@ -326,8 +333,8 @@ class WebServer:
         utils.default_log_warn_not_impl("_handle_data_collect")
         try:
             return web.json_response(None)
-        except Exception as e:
-            _LOGGER.exception(utils.default_exception_str_builder(e))
+        except Exception:
+            _LOGGER.exception(utils.default_exception_str_builder())
         raise HTTPInternalServerError
 
     async def _handle_proxy(self, request: Request) -> Response:
@@ -347,7 +354,7 @@ class WebServer:
                 if request.content.total_bytes > 0:
                     read_body = await request.read()
                     _LOGGER_PROXY.info(
-                        f"HTTP Proxy Request to EcoVacs (body=true) (URL:{request.url}) :: {read_body.decode('utf-8')}"
+                        f"HTTP Proxy Request to EcoVacs (body=true) (URL:{request.url}) :: {read_body.decode('utf-8')}",
                     )
                     if request.content_type == "application/x-www-form-urlencoded":
                         # android apps use form
@@ -365,20 +372,21 @@ class WebServer:
                 async with session.request(request.method, validated_url, data=data, json=json_data) as resp:
                     if resp.content_type == "application/octet-stream":
                         _LOGGER_PROXY.info(
-                            f"HTTP Proxy Response from EcoVacs (URL: {request.url}) :: (Status: {resp.status}) :: <BYTES CONTENT>"
+                            f"HTTP Proxy Response from EcoVacs (URL: {request.url})"
+                            f" :: (Status: {resp.status}) :: <BYTES CONTENT>",
                         )
                         return web.Response(body=await resp.read())
 
                     response = await resp.text()
                     _LOGGER_PROXY.info(
-                        f"HTTP Proxy Response from EcoVacs (URL: {request.url}) :: (Status: {resp.status}) :: {response}"
+                        f"HTTP Proxy Response from EcoVacs (URL: {request.url}) :: (Status: {resp.status}) :: {response}",
                     )
                     return web.Response(text=response)
-        except asyncio.CancelledError as c:
+        except asyncio.CancelledError:
             _LOGGER_PROXY.exception(f"Request cancelled or timeout :: {request.url}", exc_info=True)
-            raise c
-        except Exception as e:
-            _LOGGER_PROXY.exception(utils.default_exception_str_builder(e, "during proxy the request"), exc_info=True)
+            raise
+        except Exception:
+            _LOGGER_PROXY.exception(utils.default_exception_str_builder(info="during proxy the request"), exc_info=True)
         raise HTTPInternalServerError
 
     def _validate_and_sanitize_url(self, url: URL) -> str:
@@ -391,7 +399,8 @@ class WebServer:
 
         if url.host not in allowed_hosts:
             # You may raise an exception or handle it based on your requirements
-            raise ValueError("Invalid or unauthorized host")
+            msg = "Invalid or unauthorized host"
+            raise ValueError(msg)
 
         # You can also perform additional sanitization if needed
         # For example, remove any query parameters, fragments, etc.
@@ -404,12 +413,12 @@ class WebServer:
                 {
                     "query_string": request.query_string,
                     "headers": set(request.headers.items()),
-                }
+                },
             )
             if request.content_length:
                 to_log["body"] = set(await request.post())
-        except Exception as e:
-            _LOGGER_WEB_LOG.exception(utils.default_exception_str_builder(e, "during logging the request"), exc_info=True)
+        except Exception:
+            _LOGGER_WEB_LOG.exception(utils.default_exception_str_builder(info="during logging the request"), exc_info=True)
         finally:
             _LOGGER_WEB_LOG.info(json.dumps(to_log, cls=middlewares.CustomEncoder))
         return web.Response()
@@ -426,9 +435,9 @@ class WebServer:
                             {
                                 "method": route.method,
                                 "path": path,
-                            }
+                            },
                         )
             return web.json_response(routes)
-        except Exception as e:
-            _LOGGER_WEB_LOG.exception(utils.default_exception_str_builder(e, "during create api list"), exc_info=True)
+        except Exception:
+            _LOGGER_WEB_LOG.exception(utils.default_exception_str_builder(info="during create api list"), exc_info=True)
         return web.Response()

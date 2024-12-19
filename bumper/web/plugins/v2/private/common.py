@@ -1,4 +1,5 @@
 """Common plugin module."""
+
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -69,5 +70,5 @@ async def _handle_get_bottom_navigate_info_list(_: Request) -> Response:
                 "positionType": "Mine",
                 "tabItemActionUrl": None,
             },
-        ]
+        ],
     )

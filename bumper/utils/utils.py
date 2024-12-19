@@ -1,11 +1,14 @@
 """Utils module."""
+
 import datetime
 import json
 import logging
-import os
+from pathlib import Path
 import re
 
 import validators
+
+from bumper.utils.settings import config as bumper_isc
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -17,11 +20,15 @@ def default_log_warn_not_impl(func: str) -> None:
     _LOGGER.debug(f"!!! POSSIBLE THIS API IS NOT (FULL) IMPLEMENTED :: {func} !!!")
 
 
-def default_exception_str_builder(e: Exception, info: str | None = None) -> str:
+def default_exception_str_builder(e: Exception | None = None, info: str | None = None) -> str:
     """Build default exception message."""
-    if info is None:
-        return f"Unexpected exception occurred :: {e}"
-    return f"Unexpected exception occurred :: {info} :: {e}"
+    i_error = ""
+    i_info = ""
+    if e is not None:
+        i_error = f" :: {e}"
+    if info is not None:
+        i_info = f" :: {info}"
+    return f"Unexpected exception occurred{i_info}{i_error}"
 
 
 # ******************************************************************************
@@ -34,7 +41,7 @@ def convert_to_millis(seconds: float) -> int:
 
 def get_current_time_as_millis() -> int:
     """Get current time in millis."""
-    return convert_to_millis(datetime.datetime.now(tz=datetime.UTC).timestamp())
+    return convert_to_millis(datetime.datetime.now(bumper_isc.LOCAL_TIMEZONE).timestamp())
 
 
 def str_to_bool(value: str | int | bool | None) -> bool:
@@ -66,7 +73,7 @@ def get_dc_code(area_code: str) -> str:
 def get_area_code_map() -> dict[str, str]:
     """Return area code map."""
     try:
-        with open(os.path.join(os.path.dirname(__file__), "utils_area_code_mapping.json"), encoding="utf-8") as file:
+        with Path.open(Path(__file__).parent / "utils_area_code_mapping.json", encoding="utf-8") as file:
             res = json.load(file)
             if isinstance(res, dict):
                 return res

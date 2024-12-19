@@ -1,4 +1,5 @@
 """Rapp plugin module."""
+
 from collections.abc import Iterable
 
 from aiohttp import web
@@ -36,7 +37,7 @@ async def _handle_map_get(_: Request) -> Response:
         {
             "data": {"name": "My Home"},
             "tag": None,
-        }
+        },
     )
 
 
