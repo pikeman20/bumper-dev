@@ -10,7 +10,8 @@ from amqtt.broker import Broker, BrokerContext
 from amqtt.mqtt.protocol.broker_handler import BrokerProtocolHandler
 from amqtt.session import IncomingApplicationMessage, Session
 from passlib.apps import custom_app_context as pwd_context
-import pkg_resources
+
+# import pkg_resources
 from transitions import MachineError
 
 from bumper.mqtt import helper_bot, proxy as mqtt_proxy
@@ -57,7 +58,7 @@ class MQTTServer:
             if password_file is None:
                 password_file = str(Path(bumper_isc.data_dir) / "passwd")
 
-            self._add_entry_point()
+            # self._add_entry_point()
 
             config_bind = {"default": {"type": "tcp"}}
             listener_prefix = "mqtt"
@@ -91,27 +92,22 @@ class MQTTServer:
             _LOGGER.exception(utils.default_exception_str_builder(info="during initialize"))
             raise
 
-    def _add_entry_point(self) -> None:
-        dist_location = "amqtt.broker.plugins"
-        plugin_name = "bumper"
-        module_path = "bumper.mqtt.server"
-        function_name = "BumperMQTTServerPlugin"
+    # def _add_entry_point(self) -> None:
+    #     dist_location = "amqtt.broker.plugins"
+    #     plugin_name = "bumper"
+    #     module_path = "bumper.mqtt.server"
+    #     function_name = "BumperMQTTServerPlugin"
 
-        # ep = importlib.metadata.EntryPoint(plugin_name, f"{module_path}:{function_name}", dist_location)
-        # ExtensionManager.ENTRY_POINT_CACHE = {dist_location: [ep]}
-        # [print(f"{x.group} :: {x.name} :: {x.value}") for x in importlib.metadata.entry_points(group=dist_location)]
+    #     # The below adds a plugin to the amqtt.broker.plugins without having to futz with setup.py
+    #     distribution = pkg_resources.Distribution(dist_location)
+    #     bumper_plugin = pkg_resources.EntryPoint.parse(
+    #         f"{plugin_name} = {module_path}:{function_name}",
+    #         dist=distribution,
+    #     )
 
-        # The below adds a plugin to the amqtt.broker.plugins without having to futz with setup.py
-        distribution = pkg_resources.Distribution(dist_location)
-        bumper_plugin = pkg_resources.EntryPoint.parse(
-            f"{plugin_name} = {module_path}:{function_name}",
-            dist=distribution,
-        )
-
-        # pylint: disable-next=protected-access
-        distribution._ep_map = {dist_location: {plugin_name: bumper_plugin}}  # type: ignore # noqa: SLF001, PGH003
-        pkg_resources.working_set.add(distribution)
-        bumper_plugin.load()
+    #     distribution._ep_map = {dist_location: {plugin_name: bumper_plugin}}
+    #     pkg_resources.working_set.add(distribution)
+    #     bumper_plugin.load()
 
     @property
     def state(self) -> str:

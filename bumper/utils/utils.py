@@ -41,7 +41,7 @@ def convert_to_millis(seconds: float) -> int:
 
 def get_current_time_as_millis() -> int:
     """Get current time in millis."""
-    return convert_to_millis(datetime.datetime.now(bumper_isc.LOCAL_TIMEZONE).timestamp())
+    return convert_to_millis(datetime.datetime.now(tz=bumper_isc.LOCAL_TIMEZONE).timestamp())
 
 
 def str_to_bool(value: str | int | bool | None) -> bool:

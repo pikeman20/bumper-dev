@@ -7,6 +7,7 @@ from unittest.mock import mock_open, patch
 import pytest
 
 from bumper.utils import utils
+from bumper.utils.settings import config as bumper_isc
 
 # Assuming _LOGGER is a logger instance, you can use a test logger for capturing logs in tests
 test_logger = logging.getLogger("test_logger")
@@ -48,7 +49,10 @@ def test_default_exception_str_builder_no_info() -> None:
 
 
 def test_get_milli_time() -> None:
-    assert utils.convert_to_millis(datetime.datetime(2018, 1, 1, 1, 0, 0, 0, tzinfo=datetime.UTC).timestamp()) == 1514768400000
+    assert (
+        utils.convert_to_millis(datetime.datetime(2018, 1, 1, 1, 0, 0, 0, tzinfo=bumper_isc.LOCAL_TIMEZONE).timestamp())
+        == 1514768400000
+    )
 
 
 def test_get_current_time_as_millis() -> None:
@@ -56,7 +60,7 @@ def test_get_current_time_as_millis() -> None:
     current_time = utils.get_current_time_as_millis()
 
     # Get the current time using Python's datetime module
-    expected_time = int(datetime.datetime.now(datetime.UTC).timestamp() * 1000)
+    expected_time = int(datetime.datetime.now(tz=bumper_isc.LOCAL_TIMEZONE).timestamp() * 1000)
 
     # Assert that the current time obtained from the function is close to the expected time
     # This is to account for potential slight variations due to the time it takes to execute the test

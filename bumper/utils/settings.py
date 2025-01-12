@@ -4,8 +4,7 @@ import os
 from pathlib import Path
 import socket
 from typing import TYPE_CHECKING, Optional
-
-import pytz
+from zoneinfo import ZoneInfo
 
 if TYPE_CHECKING:
     from bumper.mqtt.helper_bot import MQTTHelperBot
@@ -24,7 +23,7 @@ class Config:
 
     ECOVACS_DEFAULT_COUNTRY: str = "us"
 
-    LOCAL_TIMEZONE = pytz.timezone(os.environ.get("TZ", "Europe/Berlin"))
+    LOCAL_TIMEZONE: ZoneInfo = ZoneInfo(os.environ.get("TZ", "UTC"))
 
     # ww: 52.53.84.66 | eu: 3.68.172.231
     ECOVACS_UPDATE_SERVER: str = "3.68.172.231"

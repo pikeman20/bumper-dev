@@ -6,11 +6,11 @@ from testfixtures import LogCapture
 from bumper.xmpp.xmpp import XMPPAsyncClient, XMPPServer
 
 
-def return_send_data(data):
+def return_send_data(data: bytes) -> bytes:
     return data
 
 
-def mock_transport_extra_info():
+def mock_transport_extra_info() -> tuple[str, int]:
     return ("127.0.0.1", 5223)
 
 
@@ -76,7 +76,7 @@ async def test_client_connect_no_starttls() -> None:
     # Reset mock calls
     mock_send.reset_mock()
 
-    # Client sendss auth - Ignoring the starttls, we don't force this with bumper
+    # Client sends auth - Ignoring the starttls, we don't force this with bumper
     test_data = (
         b'<auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="PLAIN">'
         b"AGZ1aWRfdG1wdXNlcgAwL0lPU0Y1M0QwN0JBL3VzXzg5ODgwMmZkYmM0NDQxYjBiYzgxNWIxZDFjNjgzMDJl</auth>"
