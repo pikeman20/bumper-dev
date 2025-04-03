@@ -45,51 +45,36 @@ class WebServer:
     def __init__(self, bindings: list[WebserverBinding] | WebserverBinding, proxy_mode: bool) -> None:
         """Web Server init."""
         self._runners: list[web.AppRunner] = []
+        self._bindings = [bindings] if isinstance(bindings, WebserverBinding) else bindings
+        self._app = web.Application(middlewares=[middlewares.log_all_requests])
 
-        if isinstance(bindings, WebserverBinding):
-            bindings = [bindings]
-        self._bindings = bindings
+        templates_path = self._resolve_path("templates")
+        static_path = self._resolve_path("static")
 
-        self._app = web.Application(
-            middlewares=[
-                middlewares.log_all_requests,
-            ],
-        )
-
-        templates_path = Path(bumper_isc.bumper_dir) / "bumper" / "web" / "templates"
-        if not templates_path.exists():
-            templates_path = Path(str(files("bumper.web").joinpath("templates")))
-        static_path = Path(bumper_isc.bumper_dir) / "bumper" / "web" / "static"
-        if not static_path.exists():
-            static_path = Path(str(files("bumper.web").joinpath("static")))
-
-        aiohttp_jinja2.setup(
-            self._app,
-            loader=jinja2.FileSystemLoader(str(templates_path)),
-        )
+        aiohttp_jinja2.setup(self._app, loader=jinja2.FileSystemLoader(str(templates_path)))
         self._add_routes(proxy_mode, static_path)
         self._app.freeze()  # no modification allowed anymore
 
-    def _add_routes(self, proxy_mode: bool, static_path: Path) -> None:
-        self._app.add_routes(
-            [
-                web.get("/bot/remove/{did}", self._handle_remove_entity("bot")),
-                web.get("/client/remove/{resource}", self._handle_remove_entity("client")),
-                web.get("/restart_{service}", self._handle_restart_service),
-                web.get("/server-status", self._handle_partial("server_status")),
-                web.get("/bots", self._handle_partial("bots")),
-                web.get("/clients", self._handle_partial("clients")),
-            ],
-        )
+    def _resolve_path(self, folder: str) -> Path:
+        """Resolve the path for templates or static files."""
+        path = Path(bumper_isc.bumper_dir) / "bumper" / "web" / folder
+        return path if path.exists() else Path(str(files("bumper.web").joinpath(folder)))
 
+    def _add_routes(self, proxy_mode: bool, static_path: Path) -> None:
+        """Add routes to the web application."""
+        routes: list[web.RouteDef | web.StaticDef] = [
+            web.get("/bot/remove/{did}", self._handle_remove_entity("bot")),
+            web.get("/client/remove/{resource}", self._handle_remove_entity("client")),
+            web.get("/restart_{service}", self._handle_restart_service),
+            web.get("/server-status", self._handle_partial("server_status")),
+            web.get("/bots", self._handle_partial("bots")),
+            web.get("/clients", self._handle_partial("clients")),
+            web.get("/favicon.ico", self._handle_favicon),
+        ]
         if proxy_mode is True:
-            self._app.add_routes(
-                [
-                    web.route("*", "/{path:.*}", self._handle_proxy),
-                ],
-            )
+            routes.append(web.route("*", "/{path:.*}", self._handle_proxy))
         else:
-            self._app.add_routes(
+            routes.extend(
                 [
                     web.get("", self._handle_base),
                     web.static("/static", str(static_path)),
@@ -102,12 +87,9 @@ class WebServer:
                 ],
             )
             if bumper_isc.DEBUG_LOGGING_API_ROUTE is True:
-                self._app.add_routes(
-                    [
-                        web.post("/log", self._handle_log),
-                    ],
-                )
+                routes.append(web.post("/log", self._handle_log))
             plugins.add_plugins(self._app)
+        self._app.add_routes(routes)
 
     async def start(self) -> None:
         """Start server."""
@@ -150,10 +132,13 @@ class WebServer:
             raise
 
     async def _handle_base(self, request: Request) -> Response:
+        """Handle the base route."""
         try:
-            context = await self._get_context("server_status")
-            context.update(await self._get_context("bots"))
-            context.update(await self._get_context("clients"))
+            context = {
+                **await self._get_context("server_status"),
+                **await self._get_context("bots"),
+                **await self._get_context("clients"),
+            }
             return aiohttp_jinja2.render_template("home.jinja2", request, context=context)
         except Exception:
             _LOGGER.exception(utils.default_exception_str_builder())
@@ -193,7 +178,7 @@ class WebServer:
                     "state": (
                         "running"
                         if bumper_isc.xmpp_server and bumper_isc.xmpp_server.server and bumper_isc.xmpp_server.server.is_serving()
-                        else "not running"
+                        else "stopped"
                     ),
                     "sessions": {
                         "count": len(bumper_isc.xmpp_server.clients) if bumper_isc.xmpp_server else 0,
@@ -203,7 +188,7 @@ class WebServer:
                     },
                 },
                 "helperbot": {
-                    "state": await bumper_isc.mqtt_helperbot.is_connected if bumper_isc.mqtt_helperbot else False,
+                    "state": await bumper_isc.mqtt_helperbot.is_connected if bumper_isc.mqtt_helperbot else "stopped",
                 },
             }
         if template_name == "bots":
@@ -472,3 +457,15 @@ class WebServer:
         except Exception:
             _LOGGER_WEB_LOG.exception(utils.default_exception_str_builder(info="during create api list"), exc_info=True)
         return web.Response()
+
+    async def _handle_favicon(self, _: Request) -> web.FileResponse:
+        """Serve the favicon.ico file."""
+        try:
+            favicon_path = Path(str(files("bumper.web").joinpath("static/favicon.ico")))
+            if not favicon_path.exists():
+                msg = f"Favicon not found at {favicon_path}"
+                raise FileNotFoundError(msg)
+            return web.FileResponse(path=favicon_path)
+        except Exception as e:
+            _LOGGER_WEB_LOG.exception("Failed to serve favicon.ico")
+            raise HTTPInternalServerError from e

@@ -575,6 +575,22 @@ async def _handle_app_config(request: Request) -> Response:
             },
         ]
 
+    # TODO: yiko_record_enabled
+    # elif code == "yiko_record_enabled":
+    #     data = [
+    #         {
+    #             "code": "yiko_record_enabled",
+    #             "content": {
+    #                 "enabled": False,
+    #                 "url": "",
+    #             },
+    #             "description": "",
+    #             "name": "YIKO recording function switch",
+    #             "resId": "61a055be6533d2e6d9d8f0f1",
+    #             "type": "json",
+    #         },
+    #     ]
+
     if len(data) <= 0:
         _LOGGER.error(f"code is not know :: {code}")
     return response_success_v3(data)

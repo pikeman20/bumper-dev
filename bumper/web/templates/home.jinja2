@@ -1,156 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bumper</title>
 
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/custom.css" />
     <script src="/static/js/htmx.min.js"></script>
-
-    <script>
-        function showToast(message, type = "info") {
-            const toastContainer = document.getElementById("toast-container");
-            const toast = document.createElement("div");
-            toast.className = `toast toast-${type}`;
-            toast.innerText = message;
-            toastContainer.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3000); // Remove after 3 seconds
-        }
-
-        function restartService(service) {
-            console.log("restart service", service);
-            fetch('restart_' + service)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Failed to restart ${service}: ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    showToast(`Restarting ${service}: ${data.status}`, data.status === "complete" ? "success" : "error");
-                    console.log(`restart ${service} - ${data.status}`);
-                })
-                .catch(error => {
-                    showToast(error.message, "error");
-                    console.error(error);
-                });
-        }
-
-        function removeEntity(type, id) {
-            console.log(`remove ${type}`, id);
-            fetch(`${type}/remove/${id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Failed to remove ${type} - ${id}: ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    showToast(`Removing ${type} - ${id} - ${data.status}`, data.status.includes("success") ? "success" : "error");
-                    console.log(`remove ${type}`, id, data.status);
-                })
-                .catch(error => {
-                    showToast(error.message, "error");
-                    console.error(error);
-                });
-        }
-    </script>
-
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            margin-bottom: 1rem;
-        }
-        .table {
-            margin-bottom: 0;
-        }
-        .table th, .table td {
-            vertical-align: middle;
-        }
-        .badge {
-            font-size: 0.9rem;
-        }
-        #toast-container {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 1050;
-        }
-        .toast {
-            margin-bottom: 0.5rem;
-            padding: 0.75rem 1.25rem;
-            border-radius: 0.25rem;
-            color: #fff;
-            font-size: 0.9rem;
-            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-            animation: fadeInOut 3s ease-in-out;
-        }
-        .toast-info {
-            background-color: #17a2b8;
-        }
-        .toast-success {
-            background-color: #28a745;
-        }
-        .toast-error {
-            background-color: #dc3545;
-        }
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(-10px); }
-            10%, 90% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-10px); }
-        }
-    </style>
-</head>
-<body>
-<div id="toast-container"></div>
-<div class="container my-4">
-    <header class="mb-4">
+    <script src="/static/js/main.js"></script>
+    <!-- Moved inline JS to an external file -->
+  </head>
+  <body>
+    <div
+      id="toast-container"
+      class="toast-container position-fixed top-0 end-0 p-3"
+    ></div>
+    <div class="container-fluid my-4">
+      <header class="mb-4">
         <h1 class="text-center">Bumper</h1>
-    </header>
+      </header>
 
-    <main>
+      <main class="grid-container">
         <!-- Section Stats -->
         <section>
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <h2 class="card-title mb-0">Server Status</h2>
-                </div>
-                <div class="card-body" hx-get="/server-status" hx-trigger="load, every 5s" hx-swap="innerHTML">
-                    {% include 'partials/server_status.jinja2' %}
-                </div>
+          <div class="card">
+            <div class="card-header bg-dark text-white">
+              <h2 class="card-title mb-0">Server Status</h2>
             </div>
+            <div
+              class="card-body"
+              hx-get="/server-status"
+              hx-trigger="load, every 5s"
+              hx-swap="innerHTML"
+            >
+              {% include 'partials/server_status.jinja2' %}
+            </div>
+          </div>
         </section>
 
-        <!-- Section Bots -->
         <section>
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <h2 class="card-title mb-0">Bots</h2>
-                </div>
-                <div class="card-body" hx-get="/bots" hx-trigger="load, every 5s" hx-swap="innerHTML">
-                    {% include 'partials/bots.jinja2' %}
-                </div>
+          <!-- Section Bots -->
+          <div class="card">
+            <div class="card-header bg-dark text-white">
+              <h2 class="card-title mb-0">Bots</h2>
             </div>
-        </section>
+            <div
+              class="card-body"
+              hx-get="/bots"
+              hx-trigger="load, every 5s"
+              hx-swap="innerHTML"
+            >
+              {% include 'partials/bots.jinja2' %}
+            </div>
+          </div>
 
-        <!-- Section Clients -->
-        <section>
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <h2 class="card-title mb-0">Clients</h2>
-                </div>
-                <div class="card-body" hx-get="/clients" hx-trigger="load, every 5s" hx-swap="innerHTML">
-                    {% include 'partials/clients.jinja2' %}
-                </div>
+          <!-- Section Clients -->
+          <div class="card">
+            <div class="card-header bg-dark text-white">
+              <h2 class="card-title mb-0">Clients</h2>
             </div>
+            <div
+              class="card-body"
+              hx-get="/clients"
+              hx-trigger="load, every 5s"
+              hx-swap="innerHTML"
+            >
+              {% include 'partials/clients.jinja2' %}
+            </div>
+          </div>
         </section>
-    </main>
-</div>
-</body>
+      </main>
+    </div>
+  </body>
 </html>

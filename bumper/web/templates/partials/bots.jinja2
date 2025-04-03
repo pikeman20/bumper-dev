@@ -15,21 +15,21 @@
         <tbody>
         {% for bot in bots %}
             <tr>
-                <td>{{ bot.name }}</td>
-                <td>{{ bot.nick }}</td>
-                <td>{{ bot.class }}</td>
-                <td>{{ bot.did }}</td>
-                <td>{{ bot.resource }}</td>
-                <td>{{ bot.company }}</td>
+                <td title="{{ bot.name }}">{{ bot.name }}</td>
+                <td title="{{ bot.nick }}">{{ bot.nick }}</td>
+                <td title="{{ bot.class }}">{{ bot.class }}</td>
+                <td title="{{ bot.did }}">{{ bot.did }}</td>
+                <td title="{{ bot.resource }}">{{ bot.resource }}</td>
+                <td title="{{ bot.company }}">{{ bot.company }}</td>
                 <td>
                     {% if bot.mqtt_connection and bot.xmpp_connection %}
-                        <span class="badge badge-success">MQTT & XMPP</span>
+                        <span class="badge bg-success" title="MQTT & XMPP">MQTT & XMPP</span>
                     {% elif bot.mqtt_connection %}
-                        <span class="badge badge-success">MQTT</span>
+                        <span class="badge bg-success" title="MQTT">MQTT</span>
                     {% elif bot.xmpp_connection %}
-                        <span class="badge badge-success">XMPP</span>
+                        <span class="badge bg-success" title="XMPP">XMPP</span>
                     {% else %}
-                        <span class="badge badge-danger">Disconnected</span>
+                        <span class="badge bg-danger" title="Disconnected">Disconnected</span>
                     {% endif %}
                 </td>
                 <td>

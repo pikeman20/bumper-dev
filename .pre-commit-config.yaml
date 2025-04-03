@@ -60,7 +60,7 @@ repos:
           - python
         # args:
         #   - --ignore-path=.prettierignore
-        files: (?<!\.min)\.(css|js)$
+        exclude: \.(css|js)$
 
   # Secret detection
   - repo: https://github.com/Yelp/detect-secrets
