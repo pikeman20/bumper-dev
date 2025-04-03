@@ -2,7 +2,7 @@
 set -eu
 
 # List of package names
-packages=(aiodns aiofiles aiohttp-jinja2 aiohttp cachetools coloredlogs cryptography defusedxml gmqtt Jinja2 passlib setuptools tinydb validators websockets)
+packages=(aiodns aiofiles aiohttp-jinja2 aiohttp aiomqtt cachetools coloredlogs cryptography defusedxml Jinja2 passlib tinydb validators websockets)
 
 echo "" >requirements.txt
 # Loop through the packages

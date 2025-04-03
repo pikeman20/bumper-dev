@@ -36,7 +36,7 @@ def default_exception_str_builder(e: Exception | None = None, info: str | None =
 
 def convert_to_millis(seconds: float) -> int:
     """Convert seconds to milliseconds."""
-    return int(round(seconds * 1000))
+    return round(seconds * 1000)
 
 
 def get_current_time_as_millis() -> int:
@@ -141,15 +141,21 @@ _FIND_NOT_USED_API_REQUEST = [
     r"/api/users/user.do",
     r"/app/dln/api/log/clean_result/del",
     r"/app/dln/api/log/clean_result/list",
+    r"/$",
     r"/bot/remove/(.*?)",
+    r"/bots$",
     r"/client/remove/(.*?)",
-    r"/config/Android.conf",
-    r"/data_collect/upload/generalData",
-    r"/list_routes",
-    r"/lookup.do",
-    r"/newauth.do",
+    r"/clients$",
+    r"/config/Android.conf$",
+    r"/data_collect/upload/generalData$",
+    r"/favicon.ico$",
+    r"/list_routes$",
+    r"/lookup.do$",
+    r"/newauth.do$",
     r"/restart_(.*?)",
-    r"/sa",
+    r"/sa$",
+    r"/server-status$",
+    r"/static/(.*?)",
     r"/upload/global/(.*?)/(.*?)/(.*?)/(.*?)",
     r"/v1/global/auth/getAuthCode",
     r"/v1/private/(.*?)//user/getMyUserMenuInfo",

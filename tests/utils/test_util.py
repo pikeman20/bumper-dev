@@ -207,10 +207,11 @@ def test_check_url_not_used_multiple_patterns() -> None:
         "/api/some_other_endpoint",
         "",
         "/api/appsvr/app[.]do",
+        "/",
     ]
 
     results = [utils.check_url_not_used(url) for url in urls]
-    assert results == [True, False, False, False, False]
+    assert results == [True, False, False, False, False, True]
 
 
 def test_check_url_not_used_none_url() -> None:

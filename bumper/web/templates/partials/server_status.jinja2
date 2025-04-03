@@ -1,0 +1,76 @@
+{% macro render_server(title, status, action, clients, headers, status_labels=None) %}
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-header bg-dark text-white">
+        <h3 class="card-title mb-0">{{ title }}</h3>
+        <button type="button" class="btn btn-outline-danger btn-sm float-end" onclick="{{ action }}">Restart</button>
+    </div>
+    <div class="card-body">
+        <p class="mb-2">
+            Status:
+            {% if status_labels %}
+                {% if status %}
+                    <span class="badge badge-success">{{ status_labels.success }}</span>
+                {% else %}
+                    <span class="badge badge-danger">{{ status_labels.failure }}</span>
+                {% endif %}
+            {% else %}
+                {% if status == "running" or status == "started" %}
+                    <span class="badge badge-success">{{ status }}</span>
+                {% else %}
+                    <span class="badge badge-danger">{{ status }}</span>
+                {% endif %}
+            {% endif %}
+        </p>
+
+        {% if clients and clients[0] is mapping %}
+            <p>Clients: {{ clients | length }}</p>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped table-hover">
+                    <thead class="table-dark">
+                    <tr>
+                        {% for header in headers %}
+                            <th>{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for client in clients %}
+                        <tr>
+                            {% for header in headers %}
+                                <td>{{ client[header] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% elif clients %}
+            <p>Clients: {{ clients | length }}</p>
+            <p class="text-muted">Client data is not in a dictionary-like format and cannot be displayed in a table.</p>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+{{ render_server(
+    "MQTT Server",
+    mqtt_server.state,
+    "restartService('MQTTServer')",
+    mqtt_server.sessions.clients,
+    ["username", "client_id", "state"]
+) }}
+{{ render_server(
+    "XMPP Server",
+    xmpp_server.state,
+    "restartService('XMPPServer')",
+    xmpp_server.sessions.clients,
+    ["uid", "bumper_jid", "state", "address", "type"]
+) }}
+{{ render_server(
+    "Helperbot",
+    helperbot.state,
+    "restartService('Helperbot')",
+    [],
+    [],
+    status_labels={"success": "Connected", "failure": "Disconnected"}
+) }}

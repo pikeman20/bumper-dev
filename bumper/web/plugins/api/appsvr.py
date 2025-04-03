@@ -683,7 +683,7 @@ def _include_product_iot_map_info(bot: dict[str, Any]) -> dict[str, Any]:
 
     result = copy.deepcopy(bot)
 
-    for botprod in get_product_iot_map()[0]:
+    for botprod in get_product_iot_map():
         if botprod["classid"] == result["class"]:
             result["UILogicId"] = botprod["product"]["UILogicId"]
             result["ota"] = botprod["product"]["ota"]

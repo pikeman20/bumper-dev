@@ -3,7 +3,7 @@
 import os
 from pathlib import Path
 import socket
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 from zoneinfo import ZoneInfo
 
 if TYPE_CHECKING:
@@ -22,7 +22,6 @@ class Config:
     """Config class."""
 
     ECOVACS_DEFAULT_COUNTRY: str = "us"
-
     LOCAL_TIMEZONE: ZoneInfo = ZoneInfo(os.environ.get("TZ", "UTC"))
 
     # ww: 52.53.84.66 | eu: 3.68.172.231
@@ -30,7 +29,6 @@ class Config:
     ECOVACS_UPDATE_SERVER_PORT: int = 8005
 
     # os.environ['PYTHONASYNCIODEBUG'] = '1' # Uncomment to enable ASYNCIODEBUG
-    # bumper_dir: str = f"{os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))}/../../"
     bumper_dir = Path.cwd()
 
     # Set defaults from environment variables first
@@ -61,6 +59,8 @@ class Config:
     DEBUG_LOGGING_API_ROUTE: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_API_ROUTE")) or False
     DEBUG_LOGGING_SA_RESULT: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_SA_RESULT")) or False
 
+    INFO_LOGGING_VERBOSE: bool = str_to_bool(os.environ.get("INFO_LOGGING_VERBOSE")) or True
+
     # Other
     USE_AUTH: bool = False
     TOKEN_VALIDITY_SECONDS: int = 3600  # 1 hour
@@ -81,10 +81,10 @@ class Config:
     XMPP_LISTEN_PORT_TLS: int = 5223
 
     # Servers
-    mqtt_server: Optional["MQTTServer"] = None
-    mqtt_helperbot: Optional["MQTTHelperBot"] = None
-    web_server: Optional["WebServer"] = None
-    xmpp_server: Optional["XMPPServer"] = None
+    mqtt_server: "MQTTServer | None" = None
+    mqtt_helperbot: "MQTTHelperBot | None" = None
+    web_server: "WebServer | None" = None
+    xmpp_server: "XMPPServer | None" = None
 
     # Used for maintenance loop stop
     shutting_down: bool = False

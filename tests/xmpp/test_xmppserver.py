@@ -1,6 +1,7 @@
 import asyncio
 from unittest import mock
 
+import pytest
 from testfixtures import LogCapture
 
 from bumper.xmpp.xmpp import XMPPAsyncClient, XMPPServer
@@ -12,6 +13,15 @@ def return_send_data(data: bytes) -> bytes:
 
 def mock_transport_extra_info() -> tuple[str, int]:
     return ("127.0.0.1", 5223)
+
+
+@pytest.fixture(autouse=True)
+def cleanup_clients():
+    """Ensure all XMPPAsyncClient instances are cleaned up after each test."""
+    yield
+    for client in XMPPServer.clients:
+        client.cleanup()
+    XMPPServer.clients.clear()
 
 
 async def test_xmpp_server() -> None:
@@ -43,7 +53,7 @@ async def test_xmpp_server() -> None:
 
         await asyncio.sleep(0.1)
 
-    xmpp_server.disconnect()
+    await xmpp_server.disconnect()
 
 
 async def test_client_connect_no_starttls() -> None:
