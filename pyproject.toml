@@ -34,7 +34,7 @@ dependencies = [
   "aiohttp-jinja2==1.6",                                # https://pypi.org/project/aiohttp-jinja2
   "aiohttp==3.11.16",                                   # https://pypi.org/project/aiohttp
   "aiomqtt==2.3.1",                                     # https://pypi.org/project/aiomqtt
-  "amqtt@git+https://github.com/MVladislav/amqtt@main", # => "amqtt@git+https://github.com/Yakifo/amqtt@main",
+  "amqtt@git+https://github.com/MVladislav/amqtt@main", # => "amqtt@git+https://github.com/Yakifo/amqtt@main", # "amqtt @ {root:uri}/../amqtt"
   "cachetools==5.5.2",                                  # https://pypi.org/project/cachetools
   "coloredlogs==15.0.1",                                # https://pypi.org/project/coloredlogs
   "cryptography==44.0.2",                               # https://pypi.org/project/cryptography
@@ -269,3 +269,12 @@ max-parents = 10
 max-positional-arguments = 10 # too-many-positional-arguments
 max-returns = 7
 max-statements = 60           # too-many-statements
+
+# ---------------------------------- COVERAGE ----------------------------------
+[tool.coverage.run]
+branch = true
+source = ["amqtt"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

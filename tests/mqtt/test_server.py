@@ -323,9 +323,11 @@ async def test_mqttserver_shutdown() -> None:
 
         finally:
             log.clear()
-            assert len(mqtt_server.handlers) > 0
+            handlers = [handler for (_, handler) in mqtt_server._broker._sessions.values()]
+            assert len(handlers) > 0
             await mqtt_server.shutdown()
-            assert len(mqtt_server.handlers) == 0
+            handlers = [handler for (_, handler) in mqtt_server._broker._sessions.values()]
+            assert len(handlers) == 0
 
             log.check_present(
                 (

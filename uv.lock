@@ -104,8 +104,8 @@ wheels = [
 
 [[package]]
 name = "amqtt"
-version = "0.11.0b3"
-source = { git = "https://github.com/MVladislav/amqtt?rev=main#7b8b949c4683c38ee833f2dd6ecde4eb5e344034" }
+version = "0.11.0b4"
+source = { git = "https://github.com/MVladislav/amqtt?rev=main#03979450ec17db55e385d1d6dd7c55e46914f284" }
 dependencies = [
     { name = "docopt" },
     { name = "passlib" },

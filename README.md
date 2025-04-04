@@ -17,6 +17,8 @@ This project enables you to take full control of your Ecovacs robots without rel
 
 By using Bumper, you ensure that your data stays within your home, maintaining both privacy and security while using your Ecovacs cleaning robots.
 
+![web-ui](docs/images/web-ui.png)
+
 **Note:** The current master branch is unstable and in active development.
 
 ![Bumper Diagram](./docs/images/BumperDiagram.png "Bumper Diagram")

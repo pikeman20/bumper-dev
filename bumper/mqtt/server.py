@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any, Literal
 
 from amqtt.broker import Broker, BrokerContext
-from amqtt.mqtt.protocol.broker_handler import BrokerProtocolHandler
 from amqtt.session import IncomingApplicationMessage, Session
 from passlib.apps import custom_app_context as pwd_context
 
@@ -96,11 +95,19 @@ class MQTTServer:
         # pylint: disable-next=protected-access
         return [session for (session, _) in self._broker._sessions.values()]  # noqa: SLF001
 
-    @property
-    def handlers(self) -> list[BrokerProtocolHandler]:
-        """Get handlers."""
-        # pylint: disable-next=protected-access
-        return [handler for (_, handler) in self._broker._sessions.values()]  # noqa: SLF001
+    async def _wait_for_state_change(self, target_states: list[str]) -> None:
+        """Wait for the broker to transition out of specific states."""
+        state_changed_event = asyncio.Event()
+
+        def state_change_callback() -> None:
+            if self.state not in target_states:
+                state_changed_event.set()
+
+        self._broker.transitions.add_callback(state_change_callback)
+        try:
+            await state_changed_event.wait()
+        finally:
+            self._broker.transitions.remove_callback(state_change_callback)
 
     async def start(self) -> None:
         """Start MQTT server."""
@@ -111,17 +118,7 @@ class MQTTServer:
                 await self._broker.start()
             elif self.state == "stopping":
                 _LOGGER.warning("MQTT Server is stopping. Waiting for it to stop before restarting...")
-                state_changed_event = asyncio.Event()
-
-                def state_change_callback() -> None:
-                    if self.state != "stopping":
-                        state_changed_event.set()
-
-                self._broker.transitions.add_callback(state_change_callback)
-                try:
-                    await state_changed_event.wait()
-                finally:
-                    self._broker.transitions.remove_callback(state_change_callback)
+                await self._wait_for_state_change(["stopping"])
                 await self._broker.start()
             else:
                 _LOGGER.info("MQTT Server is already running. Stop it first for a clean restart!")
@@ -134,19 +131,11 @@ class MQTTServer:
         try:
             if self.state == "started":
                 _LOGGER.info("Shutting down MQTT server...")
-                # Stop session handlers manually; handle exceptions more gracefully
-                for handler in self.handlers:
-                    try:
-                        await handler.stop()
-                    except Exception:
-                        _LOGGER.exception("Error stopping session handler")
-
                 await self._broker.shutdown()
                 _LOGGER_BROKER.info("Broker closed")
             elif self.state in ["stopping", "starting"]:
                 _LOGGER.warning(f"MQTT server is in '{self.state}' state. Waiting for it to stabilize...")
-                while self.state in ["stopping", "starting"]:  # noqa: ASYNC110
-                    await asyncio.sleep(0.1)
+                await self._wait_for_state_change(["stopping", "starting"])
                 if self.state == "started":
                     await self.shutdown()
             else:
@@ -272,6 +261,10 @@ class BumperMQTTServerPlugin:
             data_decoded = (
                 message.data.decode("utf-8", errors="replace") if isinstance(message.data, bytes | bytearray) else message.data
             )
+
+            if len(topic_split) < 7:
+                _LOGGER_PROXY.warning(f"Received message with invalid topic: {topic}")
+                return
 
             if topic_split[6] == "helperbot":
                 # Response to command
