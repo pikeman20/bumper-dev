@@ -135,6 +135,7 @@ class WebServer:
         """Handle the base route."""
         try:
             context = {
+                **await self._get_context(),
                 **await self._get_context("server_status"),
                 **await self._get_context("bots"),
                 **await self._get_context("clients"),
@@ -155,8 +156,8 @@ class WebServer:
 
         return handler
 
-    async def _get_context(self, template_name: str) -> dict[str, Any]:
-        if template_name == "server_status":
+    async def _get_context(self, template_name: str | None = None) -> dict[str, Any]:
+        if template_name and template_name == "server_status":
             return {
                 "mqtt_server": {
                     "state": bumper_isc.mqtt_server.state if bumper_isc.mqtt_server else "stopped",
@@ -191,11 +192,15 @@ class WebServer:
                     "state": await bumper_isc.mqtt_helperbot.is_connected if bumper_isc.mqtt_helperbot else "stopped",
                 },
             }
-        if template_name == "bots":
+        if template_name and template_name == "bots":
             return {"bots": db.bot_get_all()}
-        if template_name == "clients":
+        if template_name and template_name == "clients":
             return {"clients": db.client_get_all()}
-        return {}
+        return {
+            "app_version": bumper_isc.APP_VERSION,
+            "github_repo": bumper_isc.GITHUB_REPO,
+            "github_release": bumper_isc.GITHUB_RELEASE,
+        }
 
     async def _restart_helper_bot(self) -> None:
         if bumper_isc.mqtt_helperbot is not None:

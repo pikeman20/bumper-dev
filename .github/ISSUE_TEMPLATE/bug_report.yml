@@ -17,6 +17,8 @@ body:
           required: true
         - label: I have installed the latest version
           required: true
+        - label: I have provided clear steps to reproduce the issue
+          required: true
 
   - type: textarea
     validations:
@@ -32,7 +34,25 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Environment
+        ## Environment Details
+        Note: This project runs by default inside Docker. Please provide details about your Docker setup.
+
+  - type: input
+    id: docker_version
+    validations:
+      required: true
+    attributes:
+      label: Docker Version
+      placeholder: e.g., 20.10.7
+
+  - type: input
+    id: host_os
+    validations:
+      required: true
+    attributes:
+      label: Host Operating System
+      placeholder: e.g., Ubuntu 20.04
+
   - type: input
     id: device
     validations:
@@ -45,30 +65,20 @@ body:
     validations:
       required: true
     attributes:
-      label: Which version of the deebot-client are you using?
+      label: Which version of bumper are you using?
       placeholder: X.X.X
+  - type: checkboxes
+    id: related_to
+    attributes:
+      label: Is the bug related to any of the following?
+      options:
+        - label: MQTT
+        - label: XAMPP
+        - label: Web Server
   - type: markdown
     attributes:
       value: |
         # Configuration
-  - type: input
-    id: country
-    validations:
-      required: true
-    attributes:
-      label: Country
-      placeholder: de
-      description: >
-        Which country did you input during the setup of the integration?
-  - type: input
-    id: continent
-    validations:
-      required: true
-    attributes:
-      label: Continent
-      placeholder: ww
-      description: >
-        Which continent did you input during the setup of the integration?
 
   - type: markdown
     attributes:
@@ -79,7 +89,6 @@ body:
       label: Anything in the logs that might be useful for us?
       description: >
         For example, error message, or stack traces.
-      render: txt
   - type: textarea
     attributes:
       label: Additional information

@@ -25,6 +25,9 @@ categories:
       - "pr: dependency-update"
       - "dependencies"
 
+  - title: ":memo: Documentation Updates"
+    label: "pr: documentation"
+
 include-labels:
   - "pr: Breaking Change"
   - "pr: enhancement"
@@ -32,6 +35,7 @@ include-labels:
   - "pr: new-feature"
   - "pr: bugfix"
   - "pr: refactor"
+  - "pr: documentation"
 
 version-resolver:
   major:
@@ -42,6 +46,7 @@ version-resolver:
       - "pr: enhancement"
       - "pr: dependency-update"
       - "pr: new-feature"
+      - "pr: documentation"
   patch:
     labels:
       - "pr: bugfix"

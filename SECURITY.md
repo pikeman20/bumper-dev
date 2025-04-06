@@ -2,4 +2,4 @@
 
 ## Reporting a Vulnerability
 
-Please use the **issues tracker** to report any security vulnerabilities found in this repository.
+Please use the **[Security Advisories](https://github.com/MVladislav/bumper/security/advisories)** to report any security vulnerabilities found in this repository.

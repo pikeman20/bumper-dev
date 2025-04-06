@@ -5,6 +5,8 @@
 [![CodeQL](https://github.com/MVladislav/bumper/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MVladislav/bumper/actions/workflows/codeql-analysis.yml)
 [![codecov](https://codecov.io/gh/MVladislav/bumper/graph/badge.svg?token=8N89730Z1S)](https://codecov.io/gh/MVladislav/bumper)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/MVladislav/bumper/dev.svg)](https://results.pre-commit.ci/latest/github/MVladislav/bumper/dev)
+[![Release Docker](https://github.com/MVladislav/bumper/actions/workflows/docker-release.yml/badge.svg)](https://github.com/MVladislav/bumper/actions/workflows/docker-release.yml)
+[![Release Drafter](https://github.com/MVladislav/bumper/actions/workflows/release-drafter.yml/badge.svg)](https://github.com/MVladislav/bumper/actions/workflows/release-drafter.yml)
 
 ---
 
@@ -176,7 +178,7 @@ BUMPER_ANNOUNCE_IP=0.0.0.0 # Replace with the server's public IP
 
 ### Run docker by
 
-> alias for [docker-swarm](https://github.com/MVladislav/.dotfiles/blob/a7cba1a36e1e97d669a70e32c4fa4f8405e9ee69/zsh/zshrc-append#L127)
+> alias for [docker-swarm](https://github.com/MVladislav/.dotfiles/blob/5ef5f836f1e997fb5a194b28a5b003342fbfa5db/zsh/profile-append#L132)
 
 ```sh
 # If using Docker Swarm (docker-swarm-compose is an alias)

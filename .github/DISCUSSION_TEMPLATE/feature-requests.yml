@@ -5,10 +5,27 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Description
-      description: A clear and concise description of what you would like to see.
+      label: Description and Expected Outcome
+      description: A clear and concise description of the feature request, including the desired result or behavior.
     validations:
       required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this feature needed? What problem does it solve?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Are there any existing solutions or workarounds?
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: How will this feature benefit the project or users?
   - type: textarea
     id: other
     attributes:

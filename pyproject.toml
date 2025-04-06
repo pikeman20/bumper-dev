@@ -17,7 +17,7 @@ keywords = [
   "server",
 ]
 
-version = "0.0.2"
+version = "0.1.0"
 requires-python = ">=3.13.0"
 readme = "README.md"
 license = { text = "GPL-3.0" }
@@ -95,9 +95,9 @@ bumper = "bumper.mqtt.server:BumperMQTTServerPlugin"
 [tool.ruff]
 line-length = 130
 fix = true
+extend-exclude = ["docs/"]
 
 [tool.ruff.format]
-# quote-style = "single"
 indent-style = "space"
 docstring-code-format = true
 
@@ -178,9 +178,12 @@ max-returns = 10
 
 # ----------------------------------- PYTEST -----------------------------------
 [tool.pytest.ini_options]
-addopts = ["--cov=./", "--cov-report=xml"]
+addopts = ["--cov=bumper", "--cov-report=term-missing", "--cov-report=xml"]
 testpaths = ["tests"]
-pythonpath = "bumper"
+asyncio_mode = "auto"
+timeout = 10
+# log_cli = true
+# log_level = "INFO"
 env = [
   "D:BUMPER_CA=tests/_test_files/certs/ca.crt",
   "D:BUMPER_CERT=tests/_test_files/certs/bumper.crt",
@@ -189,13 +192,9 @@ env = [
   "DB_FILE=tests/_test_files/tmp.db",
 ]
 
-asyncio_mode = "auto"
-timeout = 10
-# log_cli = true
-# log_level = "INFO"
-
 # ------------------------------------ MYPY ------------------------------------
 [tool.mypy]
+exclude = ["^tests/.*", "^docs/.*"]
 follow_imports = "silent"
 show_error_codes = true
 ignore_missing_imports = true
@@ -243,12 +242,6 @@ disable = [
   "fixme",
   "import-error",
 ]
-# enable useless-suppression temporarily every now and then to clean them up
-enable = [
-  "useless-suppression",
-  "use-symbolic-message-instead",
-  "c-extension-no-member",
-]
 
 [tool.pylint.REPORTS]
 score = false
@@ -273,7 +266,7 @@ max-statements = 60           # too-many-statements
 # ---------------------------------- COVERAGE ----------------------------------
 [tool.coverage.run]
 branch = true
-source = ["amqtt"]
+source = ["bumper"]
 
 [tool.coverage.report]
 show_missing = true

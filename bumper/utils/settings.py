@@ -1,5 +1,6 @@
 """Confi module."""
 
+from importlib.metadata import version
 import os
 from pathlib import Path
 import socket
@@ -90,6 +91,11 @@ class Config:
     shutting_down: bool = False
 
     HOME_ID: str = "781a0733923f2240cf304757"
+
+    # Dynamically load the application version from pyproject.toml
+    APP_VERSION: str = version("bumper")
+    GITHUB_REPO: str = "https://github.com/MVladislav/bumper"
+    GITHUB_RELEASE: str = "https://github.com/MVladislav/bumper/pkgs/container/bumper"
 
 
 config: Config = Config()

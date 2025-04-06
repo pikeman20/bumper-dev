@@ -41,8 +41,8 @@ async def test_restartService(webserver_client) -> None:
     resp = await webserver_client.get("/restart_Helperbot")
     assert resp.status == 200
 
-    # resp = await webserver_client.get("/restart_MQTTServer")
-    # assert resp.status == 200
+    resp = await webserver_client.get("/restart_MQTTServer")
+    assert resp.status == 200
 
     resp = await webserver_client.get("/restart_XMPPServer")
     assert resp.status == 200

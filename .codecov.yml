@@ -1,6 +1,17 @@
 ---
 coverage:
   status:
+    project:
+      default:
+        target: auto
+      python:
+        target: auto
+        paths:
+          - bumper/*
     patch:
       default:
-        target: 80%
+        target: auto
+      python:
+        target: auto
+        paths:
+          - bumper/*
