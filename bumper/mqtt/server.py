@@ -95,20 +95,6 @@ class MQTTServer:
         # pylint: disable-next=protected-access
         return [session for (session, _) in self._broker._sessions.values()]  # noqa: SLF001
 
-    async def _wait_for_state_change(self, target_states: list[str]) -> None:
-        """Wait for the broker to transition out of specific states."""
-        state_changed_event = asyncio.Event()
-
-        def state_change_callback() -> None:
-            if self.state not in target_states:
-                state_changed_event.set()
-
-        self._broker.transitions.add_callback(state_change_callback)
-        try:
-            await state_changed_event.wait()
-        finally:
-            self._broker.transitions.remove_callback(state_change_callback)
-
     async def start(self) -> None:
         """Start MQTT server."""
         try:
@@ -137,12 +123,32 @@ class MQTTServer:
                 _LOGGER.warning(f"MQTT server is in '{self.state}' state. Waiting for it to stabilize...")
                 await self._wait_for_state_change(["stopping", "starting"])
                 if self.state == "started":
-                    await self.shutdown()
+                    await self._broker.shutdown()
             else:
                 _LOGGER.warning(f"MQTT server is not in a valid state for shutdown. Current state: {self.state}")
         except Exception:
             _LOGGER.exception(utils.default_exception_str_builder(info="during shutdown"))
             raise
+
+    async def _wait_for_state_change(self, target_states: list[str]) -> None:
+        """Wait for the broker to transition out of specific states."""
+        if self.state not in target_states:
+            return
+
+        state_changed_event = asyncio.Event()
+
+        def state_change_callback() -> None:
+            if self.state not in target_states:
+                state_changed_event.set()
+
+        self._broker.transitions.before_state_change.append(state_change_callback)
+        self._broker.transitions.after_state_change.append(state_change_callback)
+
+        try:
+            await state_changed_event.wait()
+        finally:
+            self._broker.transitions.before_state_change.remove(state_change_callback)
+            self._broker.transitions.after_state_change.remove(state_change_callback)
 
 
 class BumperMQTTServerPlugin:
