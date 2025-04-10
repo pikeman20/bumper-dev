@@ -40,12 +40,12 @@ function restartService(service) {
     .then((data) => {
       showToast(
         `Restarting ${service}: ${data.status}`,
-        data.status === "complete" ? "success" : "error"
+        data.status === "complete" ? "success" : "danger"
       );
       console.log(`restart ${service} - ${data.status}`);
     })
     .catch((error) => {
-      showToast(error.message, "error");
+      showToast(error.message, "danger");
       console.error(error);
     });
 }
@@ -64,12 +64,12 @@ function removeEntity(type, id) {
     .then((data) => {
       showToast(
         `Removing ${type} - ${id} - ${data.status}`,
-        data.status.includes("success") ? "success" : "error"
+        data.status.includes("success") ? "success" : "danger"
       );
       console.log(`remove ${type}`, id, data.status);
     })
     .catch((error) => {
-      showToast(error.message, "error");
+      showToast(error.message, "danger");
       console.error(error);
     });
 }

@@ -207,15 +207,22 @@ class WebServer:
             await bumper_isc.mqtt_helperbot.disconnect()
             asyncio.Task(bumper_isc.mqtt_helperbot.start())
 
-    async def _restart_mqtt_server(self) -> None:
+    async def _restart_mqtt_server(self) -> bool:
         if bumper_isc.mqtt_server is not None:
             _LOGGER.info("Restarting MQTT Server...")
             await bumper_isc.mqtt_server.shutdown()
-            while bumper_isc.mqtt_server.state != "stopped":
-                _LOGGER.info("Waiting for MQTT Server to stop before restarting...")
-                await asyncio.sleep(0.1)
+            await bumper_isc.mqtt_server.wait_for_state_change(["stopped"], reverse=True)
+            if bumper_isc.mqtt_server.state != "stopped":
+                _LOGGER.warning("MQTT Server failed to stop")
+                return False
             await bumper_isc.mqtt_server.start()
-            _LOGGER.info("MQTT Server restarted successfully")
+            await bumper_isc.mqtt_server.wait_for_state_change(["started"], reverse=True)
+
+            if bumper_isc.mqtt_server.state == "started":
+                _LOGGER.info("MQTT Server restarted successfully")
+                return True
+        _LOGGER.warning("MQTT Server failed to restart")
+        return False
 
     async def _handle_restart_service(self, request: Request) -> Response:
         try:
@@ -224,11 +231,10 @@ class WebServer:
                 await self._restart_helper_bot()
                 return web.json_response({"status": "complete"})
             if service == "MQTTServer":
-                await self._restart_mqtt_server()
-                # In 5 seconds restart Helperbot
-                # await asyncio.sleep(5)
-                await self._restart_helper_bot()
-                return web.json_response({"status": "complete"})
+                if await self._restart_mqtt_server():
+                    await self._restart_helper_bot()
+                    return web.json_response({"status": "complete"})
+                return web.json_response({"status": "failed"})
             if service == "XMPPServer" and bumper_isc.xmpp_server is not None:
                 await bumper_isc.xmpp_server.disconnect()
                 await bumper_isc.xmpp_server.start_async_server()
