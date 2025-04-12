@@ -4,7 +4,7 @@
         <div class="d-flex justify-content-between align-items-center">
             {% for entry in entries %}
                 {% set is_running = entry.status == 'running' or entry.status == 'started' or entry.status == True %}
-                {% set is_not_running = 'stopped' if not is_running or entry.status == True else entry.status %}
+                {% set is_not_running = 'stopped' if entry.status == False else entry.status %}
                 <div class="text-start me-3">
                     <h3 class="card-title mb-1 card-title-with-badge">
                         <span>{{ entry.title }}</span>

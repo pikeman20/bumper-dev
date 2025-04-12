@@ -160,7 +160,7 @@ class WebServer:
         if template_name and template_name == "server_status":
             return {
                 "mqtt_server": {
-                    "state": bumper_isc.mqtt_server.state if bumper_isc.mqtt_server else "stopped",
+                    "state": bumper_isc.mqtt_server.state if bumper_isc.mqtt_server else "offline",
                     "sessions": {
                         "count": len(bumper_isc.mqtt_server.sessions) if bumper_isc.mqtt_server else 0,
                         "clients": [
@@ -177,9 +177,9 @@ class WebServer:
                 },
                 "xmpp_server": {
                     "state": (
-                        "running"
-                        if bumper_isc.xmpp_server and bumper_isc.xmpp_server.server and bumper_isc.xmpp_server.server.is_serving()
-                        else "stopped"
+                        ("running" if bumper_isc.xmpp_server.server and bumper_isc.xmpp_server.server.is_serving() else "stopped")
+                        if bumper_isc.xmpp_server
+                        else "offline"
                     ),
                     "sessions": {
                         "count": len(bumper_isc.xmpp_server.clients) if bumper_isc.xmpp_server else 0,
@@ -189,7 +189,7 @@ class WebServer:
                     },
                 },
                 "helperbot": {
-                    "state": await bumper_isc.mqtt_helperbot.is_connected if bumper_isc.mqtt_helperbot else "stopped",
+                    "state": await bumper_isc.mqtt_helperbot.is_connected if bumper_isc.mqtt_helperbot else "offline",
                 },
             }
         if template_name and template_name == "bots":

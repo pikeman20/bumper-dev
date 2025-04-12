@@ -64,7 +64,7 @@ class Config:
 
     # Other
     USE_AUTH: bool = False
-    TOKEN_VALIDITY_SECONDS: int = 3600  # 1 hour
+    TOKEN_VALIDITY_SECONDS: int = 1800  # 30 minutes
     OAUTH_VALIDITY_DAYS: int = 15
     BUMPER_PROXY_MQTT: bool = str_to_bool(os.environ.get("BUMPER_PROXY_MQTT")) or False
     BUMPER_PROXY_WEB: bool = str_to_bool(os.environ.get("BUMPER_PROXY_WEB")) or False
