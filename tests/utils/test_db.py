@@ -1,46 +1,38 @@
+import importlib
 import os
-from unittest import mock
 
 import pytest
 from tinydb.table import Document
 
 from bumper.utils import db
-from bumper.utils.settings import config as bumper_isc
 
 
-def test_db_file_with_custom_env_var() -> None:
+def test_db_file_with_custom_env_var(monkeypatch) -> None:
     custom_path = "/custom/path/to/database.db"
-    with mock.patch.dict(os.environ, {"DB_FILE": custom_path}, clear=True):
-        assert db._db_file() == custom_path
+    monkeypatch.setenv("DB_FILE", custom_path)
+    settings_module = importlib.import_module("bumper.utils.settings")
+    importlib.reload(settings_module)
+    config = settings_module.config
+
+    assert config.db_file == custom_path
 
 
-def test_db_file_with_empty_env_var() -> None:
-    with mock.patch.dict(os.environ, {"DB_FILE": ""}, clear=True):
-        assert db._db_file() == os.path.join(bumper_isc.data_dir, "bumper.db")
+def test_db_file_with_empty_env_var(monkeypatch) -> None:
+    monkeypatch.setenv("DB_FILE", "")
+    settings_module = importlib.import_module("bumper.utils.settings")
+    importlib.reload(settings_module)
+    config = settings_module.config
+
+    assert config.db_file == os.path.join(config.data_dir, "bumper.db")
 
 
-def test_db_file_with_none_env_var() -> None:
-    env = os.environ.copy()
-    env.pop("DB_FILE")
-    with mock.patch.dict(os.environ, env, clear=True):
-        assert db._db_file() == os.path.join(bumper_isc.data_dir, "bumper.db")
+def test_db_file_with_none_env_var(monkeypatch) -> None:
+    monkeypatch.delenv("DB_FILE", raising=False)
+    settings_module = importlib.import_module("bumper.utils.settings")
+    importlib.reload(settings_module)
+    config = settings_module.config
 
-
-# def test_db_file_with_existing_custom_path():
-#     custom_path = "/custom/path/to/database.db"
-#     with mock.patch("os.path.exists", return_value=True), mock.patch("os.path.isfile", return_value=True):
-#         assert db._db_file() == custom_path
-
-
-# def test_db_file_with_nonexistent_custom_path():
-#     custom_path = "/custom/nonexistent/path/database.db"
-#     with mock.patch("os.path.exists", return_value=False):
-#         assert db._db_file() == custom_path
-
-
-# def test_db_file_with_default_data_dir():
-#     with mock.patch("bumper.utils.settings.config.data_dir", "/default/data/dir"):
-#         assert db._db_file() == os.path.join("/default/data/dir", "bumper.db")
+    assert config.db_file == os.path.join(config.data_dir, "bumper.db")
 
 
 @pytest.mark.asyncio
@@ -48,7 +40,7 @@ async def test_db_get(tmpdir) -> None:
     # Call the _db_get function
     with db._db_get() as result:
         # Verify that TinyDB was instantiated with the correct file path
-        # assert result == db._db_file()
+        # assert result == bumper_isc.db_file
 
         result.drop_tables()
 

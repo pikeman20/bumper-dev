@@ -1,0 +1,117 @@
+---
+x-basic-deploy: &basic-deploy
+  mode: replicated
+  replicas: 1
+  placement:
+    max_replicas_per_node: 1
+    constraints:
+      - "node.role==${NODE_ROLE:-manager}"
+      - node.platform.os == linux
+  update_config:
+    order: stop-first
+  restart_policy:
+    condition: any
+  resources:
+    limits:
+      cpus: ${RESOURCES_LIMITS_CPUS:-1}
+      memory: ${RESOURCES_LIMITS_MEMORY:-1g}
+    reservations:
+      cpus: ${RESOURCES_RESERVATIONS_CPUS:-0.001}
+      memory: ${RESOURCES_RESERVATIONS_MEMORY:-32m}
+
+x-basic: &basic
+  env_file: .env
+  cap_drop: ["ALL"]
+  security_opt:
+    - no-new-privileges:true
+  ulimits:
+    memlock:
+      soft: -1
+      hard: -1
+    nofile:
+      soft: 655360
+      hard: 655360
+    fsize: -1
+    as: -1
+  networks:
+    default: {}
+  healthcheck:
+    disable: true
+  restart: always
+
+################################################################################
+################################################################################
+################################################################################
+services:
+  # ##############################################################################
+  # ##############################################################################
+  # ##############################################################################
+  mitmproxy:
+    image: mitmproxy/mitmproxy:${version_mitmproxy:-latest}
+    <<: *basic
+    deploy:
+      <<: *basic-deploy
+    cap_add: ["ALL"]
+    ports:
+      - target: 8081
+        published: 8081
+        protocol: tcp
+        mode: host
+      - target: 1080 # SOCKS v5 proxy :: socks5
+        published: 1080
+        protocol: tcp
+        mode: host
+      - target: 8080 # http(s) proxy :: regular
+        published: 8080
+        protocol: tcp
+        mode: host
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${MITM_PATH:-/tmp}:/mitm
+    configs:
+      - source: mitm_pem_config
+        target: /tmp/ca.pem
+        mode: "0444"
+      - source: mitm_script_config
+        target: /tmp/mitm.py
+        mode: "0555"
+    command:
+      - "mitmweb"
+      - "-vv"
+      - "--ssl-insecure"
+      - "--web-host"
+      - "0.0.0.0"
+      - "--set"
+      - "web_password=mitm"
+      - "--set"
+      - "connection_strategy=lazy"
+      - "--mode"
+      - "socks5"
+      - "--mode"
+      - "regular"
+      - "--rawtcp"
+      - "--showhost"
+      - "--certs"
+      - "*=/tmp/ca.pem"
+      - "-s"
+      - "/tmp/mitm.py"
+
+################################################################################
+################################################################################
+################################################################################
+networks:
+  default:
+    driver: ${NETWORK_MODE:-bridge}
+    attachable: true
+    driver_opts:
+      encrypted: "true"
+
+volumes:
+  mitm: {}
+
+configs:
+  mitm_pem_config:
+    file: $PWD/certs/ca.pem
+  mitm_script_config:
+    file: $PWD/configs/mitm.py

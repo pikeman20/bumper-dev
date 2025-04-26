@@ -4,7 +4,6 @@ from collections.abc import Iterable
 import logging
 
 from aiohttp import web
-from aiohttp.web_exceptions import HTTPInternalServerError
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
@@ -34,10 +33,6 @@ class OtaPlugin(WebserverPlugin):
 async def _handle_products_firmware_latest(_: Request) -> Response:
     # TODO: check what's needed to be implemented
     utils.default_log_warn_not_impl("_handle_products_firmware_latest")
-    try:
-        # device_class = request.match_info.get("class")
-        # did = request.query.get("did")
-        return response_success_v6(None)
-    except Exception:
-        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
-    raise HTTPInternalServerError
+    # device_class = request.match_info.get("class")
+    # did = request.query.get("did")
+    return response_success_v6(None)

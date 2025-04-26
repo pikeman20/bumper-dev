@@ -22,7 +22,7 @@ _LOGGER_CLIENT = logging.getLogger(f"{__name__}.client")
 class XMPPServer:
     """XMPP server."""
 
-    server_id: str = "ecouser.net"
+    server_id: str = bumper_isc.DOMAIN_MAIN
     clients: list["XMPPAsyncClient"] = []
     exit_flag: bool = False
     server: asyncio.Server | None = None

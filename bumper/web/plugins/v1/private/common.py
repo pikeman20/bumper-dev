@@ -70,6 +70,11 @@ class CommonPlugin(WebserverPlugin):
             ),
             web.route(
                 "*",
+                f"{BASE_URL}common/getAreaSupportService",
+                _handle_common_get_area_support_service,
+            ),
+            web.route(
+                "*",
                 f"{BASE_URL}common/getAgreementURLBatch",
                 _handle_get_agreement_url_batch,
             ),
@@ -91,7 +96,7 @@ class CommonPlugin(WebserverPlugin):
             web.route(
                 "*",
                 f"{BASE_URL}common/getCurrentAreaSupportServiceInfo",
-                _handle_get_current_area_support_service_info,
+                handle_get_current_area_support_service_info,
             ),
         ]
 
@@ -153,8 +158,6 @@ async def _handle_get_config(request: Request) -> Response:
         data: list[dict[str, str]] = []
         for key in request.query["keys"].split(","):
             if key == "PUBLIC.KEY.CONFIG":
-                # TODO: check what's needed to be implemented, not sure if this is what is needed
-                utils.default_log_warn_not_impl("_handle_get_config/PUBLIC.KEY.CONFIG")
                 async with aiofiles.open(bumper_isc.server_cert, "rb") as cert_file:
                     cert_data = await cert_file.read()
                 cert = x509.load_pem_x509_certificate(cert_data, default_backend())
@@ -163,15 +166,27 @@ async def _handle_get_config(request: Request) -> Response:
                 data.append({"key": key, "value": json.dumps({"publicKey": base64_encoded_public_key})})
 
             elif key == "EMAIL.REGISTER.CONFIG":
-                data.append({"key": key, "value": '{"needVerify":"N"}'})
-
+                data.append({"key": key, "value": json.dumps({"needVerify": "N"})})
             elif key == "OPEN.APP.CERTIFICATE.CONFIG":
-                # data.append({"key": key, "value": '{"ISO27001":"ENABLED","TUV":"ENABLED"}'})
-                data.append({"key": key, "value": '{"ISO27001":"DISABLED","TUV":"DISABLED"}'})
-
+                # data.append({"key": key, "value": json.dumps({"ISO27001": "ENABLED", "TUV": "ENABLED"})})
+                data.append({"key": key, "value": json.dumps({"ISO27001": "DISABLED", "TUV": "DISABLED"})})
             elif key == "USER.DATA.COLLECTION":
                 data.append({"key": key, "value": "N"})
-
+            elif key == "USER.DEVICE.LIST.CONFIG":
+                data.append({"key": key, "value": json.dumps({"showFlag": "N"})})
+            elif key == "PRIVACY.CONFIG":
+                data.append(
+                    {
+                        "key": key,
+                        "value": json.dumps(
+                            [
+                                {"key": "PERSONAL_INFO_SHARING", "status": "DISABLED", "url": ""},
+                                {"key": "THIRD_PARTY_SDK", "status": "DISABLED", "url": ""},
+                            ],
+                        ),
+                    },
+                )
+            # TODO: elif key == "FIND.PASSWORD.FAQ.CONF":
             else:
                 _LOGGER.warning(f"NEW CONFIG KEY :: {key} :: needs further investigation")
                 data.append({"key": key, "value": "Y"})
@@ -193,10 +208,10 @@ async def _handle_get_user_config(request: Request) -> Response:
             return get_success_response(
                 {
                     "saTraceConfig": {
-                        "collectionStatus": "ENABLED",
-                        "isTrace": "Y",
+                        "collectionStatus": "DISABLED",
+                        "isTrace": "N",
                         "saUserId": user.userid,
-                        "serverUrl": "https://sa-eu-datasink.ecovacs.com/sa?project=production",
+                        "serverUrl": f"https://{bumper_isc.DOMAIN_SEC5}/sa?project=production",
                     },
                 },
             )
@@ -216,26 +231,37 @@ async def _handle_get_areas(_: Request) -> Response:
     raise HTTPInternalServerError
 
 
+async def _handle_common_get_area_support_service(_: Request) -> Response:
+    """Get Area Support Service."""
+    return get_success_response({"isSelfHelpRepair": "N"})
+
+
 async def _handle_get_agreement_url_batch(_: Request) -> Response:
     """Get agreement url batch."""
-    domain = "https://gl-eu-wap.ecovacs.com/content/agreement"
+    domain = f"https://{bumper_isc.DOMAIN_SEC3}/content/agreement"
     return get_success_response(
         [
             {
-                "acceptTime": None,
-                "force": None,
-                "id": "20180804040641_7d746faf18b8cb22a50d145598fe4c90",
+                "id": "20250123112347_96bf8aa2fe1f6e2659999dd5873b000a",
                 "type": "USER",
-                "url": f"{domain}?id=20180804040641_7d746faf18b8cb22a50d145598fe4c90&language=EN",
-                "version": "1.03",
+                "version": "1.10",
+                "url": f"{domain}?id=20250123112347_96bf8aa2fe1f6e2659999dd5873b000a&language=EN",
+                "force": None,
+                "acceptTime": None,
+                "updateDesc": "      ",
             },
             {
-                "acceptTime": None,
-                "force": None,
-                "id": "20180804040245_4e7c56dfb7ebd3b81b1f2747d0859fac",
+                "id": "20250220115739_f6ae49bb83f9de656b0d458f1820580c",
                 "type": "PRIVACY",
-                "url": f"{domain}?id=20180804040245_4e7c56dfb7ebd3b81b1f2747d0859fac&language=EN",
-                "version": "1.03",
+                "version": "1.10",
+                "url": f"{domain}?id=20250220115739_f6ae49bb83f9de656b0d458f1820580c&language=EN",
+                "force": None,
+                "acceptTime": None,
+                "updateDesc": (
+                    "This is a modified (bumper) version of the original application.\n"
+                    " Use at your own risk. No guarantees are made regarding data security,\n"
+                    " functionality, or privacy. By using this version, you accept full responsibility for any outcomes."
+                ),
             },
         ],
     )
@@ -243,7 +269,8 @@ async def _handle_get_agreement_url_batch(_: Request) -> Response:
 
 async def _handle_get_timestamp(_: Request) -> Response:
     """Get timestamp."""
-    return get_success_response({"timestamp": utils.get_current_time_as_millis()})
+    time = utils.get_current_time_as_millis()
+    return get_success_response({"timestamp": time}, time)
 
 
 async def _handle_get_about_brief_item(_: Request) -> Response:
@@ -253,8 +280,8 @@ async def _handle_get_about_brief_item(_: Request) -> Response:
 
 async def _handle_get_bottom_navigate_info_list(_: Request) -> Response:
     """Get bottom navigation info list."""
-    domain_01 = "https://gl-us-pub.ecovacs.com/upload/global"
-    domain_02 = "https://www.ecovacs.com/us"
+    domain_01 = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
+    domain_02 = f"https://{bumper_isc.DOMAIN_SEC1}/us"
     return get_success_response(
         [
             {
@@ -300,7 +327,7 @@ async def _handle_get_bottom_navigate_info_list(_: Request) -> Response:
     )
 
 
-async def _handle_get_current_area_support_service_info(_: Request) -> Response:
+async def handle_get_current_area_support_service_info(_: Request) -> Response:
     """Get current area support service info."""
     return get_success_response(
         {
@@ -330,7 +357,14 @@ async def _handle_get_current_area_support_service_info(_: Request) -> Response:
                 "startTime": "00:00",
             },
             "officialWebSite": None,
-            "phoneServiceInfo": None,
+            "phoneServiceInfo": {
+                "email": "bumper@home.local",
+                "phone": "0000-0000000",
+                "phoneAvailableTime": "Monday-Friday 9 AM - 6 PM\r\n(Public holidays excepted)",
+                "phoneAvailable": "N",
+                "url": f"https://{bumper_isc.DOMAIN_SEC}",
+            },
             "salesforceLiveChat": None,
+            "emailInfo": {"isSupport": "N", "email": "bumper@home.local"},
         },
     )

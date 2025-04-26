@@ -7,6 +7,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
+from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import get_success_response
 
@@ -54,6 +55,16 @@ class OsMallPlugin(WebserverPlugin):
                 "*",
                 f"{BASE_URL}osmall/proxy/my/get-user-center-coupon-list",
                 _handle_get_user_center_coupon_list,
+            ),
+            web.route(
+                "*",
+                f"{BASE_URL}osmall/proxy/my/get-my-coupon",
+                _handle_get_my_coupon,
+            ),
+            web.route(
+                "*",
+                f"{BASE_URL}osmall/proxy/coupon-send-activity/get-customer-coupon-send-activity-coupon",
+                _handle_get_customer_coupon_send_activity_coupon,
             ),
             web.route(
                 "*",
@@ -117,7 +128,7 @@ async def _handle_get_layout(_: Request) -> Response:
 
 async def _handle_get_banner_list(_: Request) -> Response:
     """Get banner list."""
-    domain = "https://gl-us-pub.ecovacs.com/upload/global"
+    domain = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
     return get_success_response(
         {
             "bannerInfoList": [
@@ -170,7 +181,7 @@ async def _handle_get_banner_list(_: Request) -> Response:
 
 async def _handle_get_goods_category(_: Request) -> Response:
     """Get goods category."""
-    domain = "https://gl-us-pub.ecovacs.com/upload/global"
+    domain = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
     return get_success_response(
         {
             "categoryList": [
@@ -226,6 +237,16 @@ async def _handle_get_recommend_goods(_: Request) -> Response:
 
 async def _handle_get_user_center_coupon_list(_: Request) -> Response:
     """Get user center coupon list."""
+    return get_success_response([])
+
+
+async def _handle_get_my_coupon(_: Request) -> Response:
+    """Get my coupon."""
+    return get_success_response({"available": [], "used": [], "invalidated": []})
+
+
+async def _handle_get_customer_coupon_send_activity_coupon(_: Request) -> Response:
+    """Get customer coupon send activity coupon."""
     return get_success_response([])
 
 

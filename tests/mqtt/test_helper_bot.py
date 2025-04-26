@@ -4,7 +4,7 @@ import time
 from aiomqtt import Client
 from testfixtures import LogCapture
 
-from bumper.mqtt.helper_bot import MQTTHelperBot
+from bumper.mqtt.helper_bot import MQTTCommandModel, MQTTHelperBot
 from tests import HOST, MQTT_PORT
 
 
@@ -193,13 +193,15 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
             "realm": "ecouser.net",
         },
     }
-    commandresult = await helper_bot.send_command(cmdjson, "testfail")
+    cmd = MQTTCommandModel(cmdjson)
+    cmd.request_id = "testfail"
+    commandresult = await helper_bot.send_command(cmd)
     # Don't send a response, ensure timeout
     assert commandresult == {
-        "debug": "wait for response timed out",
-        "errno": 500,
         "id": "testfail",
+        "errno": 500,
         "ret": "fail",
+        "debug": "wait for response timed out",
     }  # Check timeout
 
     # Send response beforehand
@@ -208,11 +210,14 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
     loop = asyncio.get_event_loop()
     loop.call_soon_threadsafe(asyncio.create_task, mqtt_client.publish(msg_topic_name, msg_payload.encode()))
 
-    commandresult = await helper_bot.send_command(cmdjson, "testgood")
+    cmd = MQTTCommandModel(cmdjson)
+    cmd.request_id = "testgood"
+    commandresult = await helper_bot.send_command(cmd)
     assert commandresult == {
         "id": "testgood",
         "resp": {"ret": "ok", "ver": "0.13.5"},
         "ret": "ok",
+        "payloadType": "j",
     }
 
     # await mqtt_helperbot.Client.disconnect()
@@ -240,11 +245,14 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
     msg_topic_name = "iot/p2p/GetLifeSpan/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/testx/q"
     await mqtt_client.publish(msg_topic_name, msg_payload.encode())
 
-    commandresult = await helper_bot.send_command(cmdjson, "testx")
+    cmd = MQTTCommandModel(cmdjson)
+    cmd.request_id = "testx"
+    commandresult = await helper_bot.send_command(cmd)
     assert commandresult == {
         "id": "testx",
         "resp": "<ctl ret='ok' type='Brush' left='4142' total='18000'/>",
         "ret": "ok",
+        "payloadType": "x",
     }
 
     # Test json payload (OZMO950)
@@ -274,10 +282,12 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
     msg_topic_name = "iot/p2p/getStats/bot_serial/ls1ok3/wC3g/helperbot/bumper/helperbot/p/testj/j"
     await mqtt_client.publish(msg_topic_name, msg_payload.encode())
 
-    commandresult = await helper_bot.send_command(cmdjson, "testj")
-
+    cmd = MQTTCommandModel(cmdjson)
+    cmd.request_id = "testj"
+    commandresult = await helper_bot.send_command(cmd)
     assert commandresult == {
         "id": "testj",
+        "payloadType": "j",
         "resp": {
             "body": {
                 "code": 0,

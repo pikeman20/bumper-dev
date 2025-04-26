@@ -1,32 +1,33 @@
 """Web server module."""
 
 import asyncio
-import base64
 from collections.abc import Awaitable, Callable
 import dataclasses
-import gzip
 from importlib.resources import files
 import json
 import logging
 from pathlib import Path
 import ssl
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from aiohttp import ClientSession, TCPConnector, web
 from aiohttp.web_exceptions import HTTPInternalServerError
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
-from aiohttp.web_urldispatcher import ResourceRoute
 import aiohttp_jinja2
 import jinja2
 from yarl import URL
 
-from bumper.utils import db, dns, utils
+from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
-from bumper.web import middlewares, models, plugins
+from bumper.web import middlewares, plugins, single_paths
+
+if TYPE_CHECKING:
+    from tinydb.table import Document
+
+    from bumper.web.models import BumperUser
 
 _LOGGER = logging.getLogger(__name__)
-_LOGGER_WEB_LOG = logging.getLogger(f"{__name__}.log")
 _LOGGER_PROXY = logging.getLogger(f"{__name__}.proxy")
 
 
@@ -63,13 +64,16 @@ class WebServer:
     def _add_routes(self, proxy_mode: bool, static_path: Path) -> None:
         """Add routes to the web application."""
         routes: list[web.RouteDef | web.StaticDef] = [
-            web.get("/bot/remove/{did}", self._handle_remove_entity("bot")),
-            web.get("/client/remove/{resource}", self._handle_remove_entity("client")),
+            web.static("/static", str(static_path)),
+            web.get("/favicon.ico", self._handle_favicon),
             web.get("/restart_{service}", self._handle_restart_service),
             web.get("/server-status", self._handle_partial("server_status")),
             web.get("/bots", self._handle_partial("bots")),
+            web.get("/bot/remove/{did}", self._handle_remove_entity("bot")),
             web.get("/clients", self._handle_partial("clients")),
-            web.get("/favicon.ico", self._handle_favicon),
+            web.get("/client/remove/{resource}", self._handle_remove_entity("client")),
+            web.get("/users", self._handle_partial("users")),
+            web.get("/user/remove/{userid}", self._handle_remove_entity("user")),
         ]
         if proxy_mode is True:
             routes.append(web.route("*", "/{path:.*}", self._handle_proxy))
@@ -77,13 +81,16 @@ class WebServer:
             routes.extend(
                 [
                     web.get("", self._handle_base),
-                    web.static("/static", str(static_path)),
-                    web.post("/lookup.do", self._handle_lookup),
-                    web.post("/newauth.do", self._handle_new_auth),
-                    web.post("/sa", self._handle_sa),
-                    web.get("/config/Android.conf", self._handle_config_android_conf),
-                    web.get("/data_collect/upload/generalData", self._handle_data_collect),
-                    web.get("/list_routes", self._handle_list_routes),  # NOTE: for dev to check which api's are implemented
+                    web.post("/newauth.do", single_paths.handle_new_auth),
+                    web.post("/lookup.do", single_paths.handle_lookup),
+                    web.get("/config/Android.conf", single_paths.handle_config_android_conf),
+                    web.get("/data_collect/upload/generalData", single_paths.handle_data_collect),
+                    web.post("/sa", single_paths.handle_sa),
+                    web.post("/v0.1/public/codepush/report_status/deploy", single_paths.handle_codepush_report_status_deploy),
+                    web.get("/v0.1/public/codepush/update_check", single_paths.handle_codepush_update_check),
+                    web.post("/Global_APP_BuryPoint/api", single_paths.handle_global_app_bury_point_api),
+                    web.post("/biz-app-config/api/v2/chat_bot_id/config", single_paths.handle_chat_bot_id_config),
+                    web.get("/content/agreement", single_paths.handle_content_agreement),
                 ],
             )
             if bumper_isc.DEBUG_LOGGING_API_ROUTE is True:
@@ -139,6 +146,7 @@ class WebServer:
                 **await self._get_context("server_status"),
                 **await self._get_context("bots"),
                 **await self._get_context("clients"),
+                **await self._get_context("users"),
             }
             return aiohttp_jinja2.render_template("home.jinja2", request, context=context)
         except Exception:
@@ -162,7 +170,6 @@ class WebServer:
                 "mqtt_server": {
                     "state": bumper_isc.mqtt_server.state if bumper_isc.mqtt_server else "offline",
                     "sessions": {
-                        "count": len(bumper_isc.mqtt_server.sessions) if bumper_isc.mqtt_server else 0,
                         "clients": [
                             {
                                 "username": session.username,
@@ -182,7 +189,6 @@ class WebServer:
                         else "offline"
                     ),
                     "sessions": {
-                        "count": len(bumper_isc.xmpp_server.clients) if bumper_isc.xmpp_server else 0,
                         "clients": [client.to_dict() for client in bumper_isc.xmpp_server.clients]
                         if bumper_isc.xmpp_server
                         else [],
@@ -196,33 +202,34 @@ class WebServer:
             return {"bots": db.bot_get_all()}
         if template_name and template_name == "clients":
             return {"clients": db.client_get_all()}
+        if template_name and template_name == "users":
+            return {
+                "users": [
+                    {
+                        "userid": users.userid,
+                        "username": users.username,
+                        "devices": users.devices,
+                    }
+                    for users in db.get_all_users()
+                ],
+            }
         return {
             "app_version": bumper_isc.APP_VERSION,
             "github_repo": bumper_isc.GITHUB_REPO,
             "github_release": bumper_isc.GITHUB_RELEASE,
         }
 
-    async def _restart_helper_bot(self) -> None:
-        if bumper_isc.mqtt_helperbot is not None:
-            await bumper_isc.mqtt_helperbot.disconnect()
-            asyncio.Task(bumper_isc.mqtt_helperbot.start())
-
-    async def _restart_mqtt_server(self) -> bool:
-        if bumper_isc.mqtt_server is not None:
-            _LOGGER.info("Restarting MQTT Server...")
-            await bumper_isc.mqtt_server.shutdown()
-            await bumper_isc.mqtt_server.wait_for_state_change(["stopped"], reverse=True)
-            if bumper_isc.mqtt_server.state != "stopped":
-                _LOGGER.warning("MQTT Server failed to stop")
-                return False
-            await bumper_isc.mqtt_server.start()
-            await bumper_isc.mqtt_server.wait_for_state_change(["started"], reverse=True)
-
-            if bumper_isc.mqtt_server.state == "started":
-                _LOGGER.info("MQTT Server restarted successfully")
-                return True
-        _LOGGER.warning("MQTT Server failed to restart")
-        return False
+    async def _handle_favicon(self, _: Request) -> web.FileResponse:
+        """Serve the favicon.ico file."""
+        try:
+            favicon_path = Path(str(files("bumper.web").joinpath("static/favicon.ico")))
+            if not favicon_path.exists():
+                msg = f"Favicon not found at {favicon_path}"
+                raise FileNotFoundError(msg)
+            return web.FileResponse(path=favicon_path)
+        except Exception as e:
+            _LOGGER.exception("Failed to serve favicon.ico")
+            raise HTTPInternalServerError from e
 
     async def _handle_restart_service(self, request: Request) -> Response:
         try:
@@ -244,137 +251,70 @@ class WebServer:
             _LOGGER.exception(utils.default_exception_str_builder())
         raise HTTPInternalServerError
 
+    async def _restart_mqtt_server(self) -> bool:
+        if bumper_isc.mqtt_server is not None:
+            _LOGGER.info("Restarting MQTT Server...")
+            await bumper_isc.mqtt_server.shutdown()
+            await bumper_isc.mqtt_server.wait_for_state_change(["stopped"], reverse=True)
+            if bumper_isc.mqtt_server.state != "stopped":
+                _LOGGER.warning("MQTT Server failed to stop")
+                return False
+            await bumper_isc.mqtt_server.start()
+            await bumper_isc.mqtt_server.wait_for_state_change(["started"], reverse=True)
+
+            if bumper_isc.mqtt_server.state == "started":
+                _LOGGER.info("MQTT Server restarted successfully")
+                return True
+        _LOGGER.warning("MQTT Server failed to restart")
+        return False
+
+    async def _restart_helper_bot(self) -> None:
+        if bumper_isc.mqtt_helperbot is not None:
+            await bumper_isc.mqtt_helperbot.disconnect()
+            asyncio.Task(bumper_isc.mqtt_helperbot.start())
+
     def _handle_remove_entity(self, entity_type: str) -> Callable[[Request], Awaitable[Response]]:
         async def handler(request: Request) -> Response:
             try:
-                entity_id = request.match_info.get("did" if entity_type == "bot" else "resource", "")
-                remove_func = db.bot_remove if entity_type == "bot" else db.client_remove
-                get_func = db.bot_get if entity_type == "bot" else db.client_get
+                remove_func: Callable[[str], None] | None = None
+                get_func: Callable[[str], Document | BumperUser | None] | None = None
+                entity_id: str | None = None
+                if entity_type == "bot":
+                    entity_id = request.match_info.get("did")
+                    remove_func = db.bot_remove
+                    get_func = db.bot_get
+                elif entity_type == "client":
+                    entity_id = request.match_info.get("resource")
+                    remove_func = db.client_remove
+                    get_func = db.client_get
+                elif entity_type == "user":
+                    entity_id = request.match_info.get("userid")
+                    remove_func = db.user_remove
+                    get_func = db.user_by_user_id
 
-                remove_func(entity_id)
-                if get_func(entity_id):
-                    return web.json_response({"status": f"failed to remove {entity_type}"})
-                return web.json_response({"status": f"successfully removed {entity_type}"})
+                if entity_id and remove_func and get_func:
+                    remove_func(entity_id)
+                    if get_func(entity_id):
+                        return web.json_response({"status": f"failed to remove {entity_type}"})
+                    return web.json_response({"status": f"successfully removed {entity_type}"})
+                return web.json_response({"status": f"not implemented for {entity_type}"})
             except Exception:
                 _LOGGER.exception(utils.default_exception_str_builder())
             raise HTTPInternalServerError
 
         return handler
 
-    async def _handle_lookup(self, request: Request) -> Response:
-        try:
-            if request.content_type == "application/x-www-form-urlencoded":
-                body = await request.post()
-            else:
-                body = json.loads(await request.text())
-
-            _LOGGER.debug(body)
-
-            if body["todo"] == "FindBest":
-                service = body["service"]
-                if service == "EcoMsgNew":
-                    srv_ip = bumper_isc.bumper_announce_ip
-                    srv_port = bumper_isc.XMPP_LISTEN_PORT_TLS
-                    _LOGGER.info(f"Announcing EcoMsgNew Server to bot as: {srv_ip}:{srv_port}")
-                    server = json.dumps({"ip": srv_ip, "port": srv_port, "result": "ok"})
-                    # NOTE: bot seems to be very picky about having no spaces, only way was with text
-                    server = server.replace(" ", "")
-                    return web.json_response(text=server)
-
-                if service == "EcoUpdate":
-                    srv_ip = bumper_isc.ECOVACS_UPDATE_SERVER
-                    srv_port = bumper_isc.ECOVACS_UPDATE_SERVER_PORT
-                    _LOGGER.info(f"Announcing EcoUpdate Server to bot as: {srv_ip}:{srv_port}")
-                    return web.json_response({"result": "ok", "ip": srv_ip, "port": srv_port})
-
-            return web.json_response({})
-
-        except Exception:
-            _LOGGER.exception(utils.default_exception_str_builder())
-        raise HTTPInternalServerError
-
-    async def _handle_new_auth(self, request: Request) -> Response:
-        try:
-            if request.content_type == "application/x-www-form-urlencoded":
-                post_body = await request.post()
-            else:
-                post_body = json.loads(await request.text())
-            _LOGGER.debug(post_body)
-            todo = post_body.get("todo", "")
-            if todo == "OLoginByITToken":
-                # NOTE: Bumper is only returning the submitted token. No reason yet to create another new token
-                return web.json_response(
-                    {
-                        "authCode": post_body.get("itToken"),
-                        "result": "ok",
-                        "todo": "result",
-                    },
-                )
-            return web.json_response(
-                {
-                    "errno": models.ERR_UNKOWN_TODO,
-                    "result": "fail",
-                    "error": "Error request, unknown todo",
-                    "todo": "result",
-                },
-            )
-        except Exception:
-            _LOGGER.exception(utils.default_exception_str_builder())
-        raise HTTPInternalServerError
-
-    async def _handle_sa(self, request: Request) -> Response:
-        try:
-            if bumper_isc.DEBUG_LOGGING_SA_RESULT is True:
-                if request.content_type == "application/x-www-form-urlencoded":
-                    post_body = await request.post()
-                else:
-                    post_body = json.loads(await request.text())
-
-                post_body_gzip = str(post_body.get("gzip", 0))
-                data_list = post_body.get("data_list")
-                if post_body_gzip == "1" and isinstance(data_list, str):
-                    decoded_data = base64.b64decode(data_list)
-                    decompressed_data = gzip.decompress(decoded_data).decode("utf-8")
-                    _LOGGER.info(decompressed_data)
-            return web.json_response(None)
-        except Exception:
-            _LOGGER.exception(utils.default_exception_str_builder())
-        raise HTTPInternalServerError
-
-    async def _handle_config_android_conf(self, _: Request) -> Response:
-        # TODO: check what's needed to be implemented
-        utils.default_log_warn_not_impl("_handle_config_android_conf")
-        try:
-            return web.json_response(
-                {
-                    "v": "v1",
-                    "configs": {"disableSDK": False, "disableDebugMode": False},
-                },
-            )
-        except Exception:
-            _LOGGER.exception(utils.default_exception_str_builder())
-        raise HTTPInternalServerError
-
-    async def _handle_data_collect(self, _: Request) -> Response:
-        # TODO: check what's needed to be implemented
-        utils.default_log_warn_not_impl("_handle_data_collect")
-        try:
-            return web.json_response(None)
-        except Exception:
-            _LOGGER.exception(utils.default_exception_str_builder())
-        raise HTTPInternalServerError
-
     async def _handle_proxy(self, request: Request) -> Response:
         try:
             if request.raw_path == "/":
                 return await self._handle_base(request)
             if request.raw_path == "/lookup.do":
-                return await self._handle_lookup(request)
+                return await single_paths.handle_lookup(request)
                 # use bumper to handle lookup so bot gets Bumper IP and not Ecovacs
 
             async with ClientSession(
                 headers=request.headers,
-                connector=TCPConnector(verify_ssl=False, resolver=dns.get_resolver_with_public_nameserver()),
+                connector=TCPConnector(verify_ssl=False, resolver=utils.get_resolver_with_public_nameserver()),
             ) as session:
                 data: Any = None
                 json_data: Any = None
@@ -445,38 +385,7 @@ class WebServer:
             if request.content_length:
                 to_log["body"] = set(await request.post())
         except Exception:
-            _LOGGER_WEB_LOG.exception(utils.default_exception_str_builder(info="during logging the request"), exc_info=True)
+            _LOGGER.exception(utils.default_exception_str_builder(info="during logging the request"))
         finally:
-            _LOGGER_WEB_LOG.info(json.dumps(to_log, cls=middlewares.CustomEncoder))
+            _LOGGER.info(json.dumps(to_log, cls=middlewares.CustomEncoder))
         return web.Response()
-
-    async def _handle_list_routes(self, _: Request) -> Response:
-        try:
-            routes = []
-            for route in self._app.router.routes():
-                if isinstance(route, ResourceRoute):
-                    resource = route.resource
-                    if resource is not None:
-                        path: Any | None = resource.get_info().get("formatter") or resource.get_info().get("path")
-                        routes.append(
-                            {
-                                "method": route.method,
-                                "path": path,
-                            },
-                        )
-            return web.json_response(routes)
-        except Exception:
-            _LOGGER_WEB_LOG.exception(utils.default_exception_str_builder(info="during create api list"), exc_info=True)
-        return web.Response()
-
-    async def _handle_favicon(self, _: Request) -> web.FileResponse:
-        """Serve the favicon.ico file."""
-        try:
-            favicon_path = Path(str(files("bumper.web").joinpath("static/favicon.ico")))
-            if not favicon_path.exists():
-                msg = f"Favicon not found at {favicon_path}"
-                raise FileNotFoundError(msg)
-            return web.FileResponse(path=favicon_path)
-        except Exception as e:
-            _LOGGER_WEB_LOG.exception("Failed to serve favicon.ico")
-            raise HTTPInternalServerError from e

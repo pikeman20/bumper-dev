@@ -2,27 +2,34 @@ import logging
 
 import pytest
 
-from bumper.utils.log_helper import AioHttpFilter, LogHelper, SanitizeFilter
+from bumper.utils.log_helper import AioHttpFilter, AmqttFilter, LogHelper, SanitizeFilter
 
 
-@pytest.mark.parametrize("level", ["INFO"])
-def test_log_helper_init(log_helper, caplog: pytest.LogCaptureFixture) -> None:
+@pytest.mark.parametrize("level", [logging.INFO, logging.DEBUG])
+def test_log_helper_init(level: str, log_helper, caplog: pytest.LogCaptureFixture) -> None:
     assert isinstance(log_helper, LogHelper)
 
     # Check that log level is set correctly
-    assert logging.getLogger("root").getEffectiveLevel() == logging.getLevelName("INFO")
+    assert logging.getLogger("root").getEffectiveLevel() == level
 
     # Ensure that SanitizeFilter is added to the root handler
+    sanitizeFilter_added = False
     for handler in logging.getLogger("root").handlers:
-        if len(handler.filters) > 0:
-            assert isinstance(handler.filters[0], SanitizeFilter)
+        if len(handler.filters) > 0 and isinstance(handler.filters[0], SanitizeFilter):
+            sanitizeFilter_added = True
+            break
+    assert sanitizeFilter_added
 
     # Check that AioHttpFilter is added to the aiohttp.access logger
     aiohttp_access_logger = logging.getLogger("aiohttp.access")
     assert isinstance(aiohttp_access_logger.filters[0], AioHttpFilter)
 
+    # Check that AmqttFilter is added to the amqtt.broker logger
+    amqtt_broker_logger = logging.getLogger("amqtt.broker")
+    assert isinstance(amqtt_broker_logger.filters[0], AmqttFilter)
+
     # Test log message
-    logging.getLogger().info("Test log message")
+    logging.getLogger().log(level, "Test log message")
     assert "Test log message" in caplog.text
 
 
@@ -31,11 +38,11 @@ def test_log_helper_clean_logs() -> None:
     assert logger_name_size > 0
 
 
-@pytest.mark.parametrize("level", ["DEBUG"])
-def test_aiohttp_filter(log_helper) -> None:
+@pytest.mark.parametrize("level", [logging.INFO, logging.DEBUG])
+def test_aiohttp_filter(level: int, log_helper) -> None:
     aiohttp_filter = AioHttpFilter()
 
-    # Test that it switches INFO to DEBUG
+    # Test suppress 'aiohttp.access'
     record = logging.LogRecord(
         name="aiohttp.access",
         level=logging.INFO,
@@ -45,10 +52,13 @@ def test_aiohttp_filter(log_helper) -> None:
         args=None,
         exc_info=None,
     )
-    assert aiohttp_filter.filter(record)
-    assert record.levelno == logging.DEBUG
+    if level == logging.DEBUG:
+        assert aiohttp_filter.filter(record)
+    if level == logging.INFO:
+        assert not aiohttp_filter.filter(record)
+    assert record.levelno == logging.INFO
 
-    # Test that it doesn't change other log levels
+    # Test other loggers not affected
     record = logging.LogRecord(
         name="some_other_logger",
         level=logging.INFO,
@@ -58,8 +68,84 @@ def test_aiohttp_filter(log_helper) -> None:
         args=None,
         exc_info=None,
     )
-    assert not aiohttp_filter.filter(record)
+    assert aiohttp_filter.filter(record)
     assert record.levelno == logging.INFO
+
+
+@pytest.mark.parametrize("level", [logging.INFO, logging.DEBUG])
+def test_amqtt_filter(level: int, log_helper) -> None:
+    amqtt_filter = AmqttFilter()
+
+    # Test suppress 'amqtt.broker' for "No more data"
+    record = logging.LogRecord(
+        name="amqtt.broker",
+        level=logging.WARNING,
+        pathname="",
+        lineno=0,
+        msg="No more data",
+        args=None,
+        exc_info=None,
+    )
+    if level == logging.DEBUG:
+        assert amqtt_filter.filter(record)
+    if level == logging.INFO:
+        assert not amqtt_filter.filter(record)
+    assert record.levelno == logging.WARNING
+
+    # Test suppress 'amqtt.broker' for "No more data"
+    record = logging.LogRecord(
+        name="amqtt.broker",
+        level=logging.ERROR,
+        pathname="",
+        lineno=0,
+        msg="No more data",
+        args=None,
+        exc_info=None,
+    )
+    if level == logging.DEBUG:
+        assert amqtt_filter.filter(record)
+    if level == logging.INFO:
+        assert not amqtt_filter.filter(record)
+    assert record.levelno == logging.ERROR
+
+    # Test not suppress 'amqtt' for others
+    record = logging.LogRecord(
+        name="amqtt",
+        level=logging.WARNING,
+        pathname="",
+        lineno=0,
+        msg="No more data",
+        args=None,
+        exc_info=None,
+    )
+    assert amqtt_filter.filter(record)
+    assert record.levelno == logging.WARNING
+
+    # Test not suppress 'amqtt.broker' for others
+    record = logging.LogRecord(
+        name="amqtt.broker",
+        level=logging.WARNING,
+        pathname="",
+        lineno=0,
+        msg="No more test data",
+        args=None,
+        exc_info=None,
+    )
+    assert amqtt_filter.filter(record)
+    assert record.levelno == logging.WARNING
+
+    # Test not suppress 'amqtt.broker' for others
+    record = logging.LogRecord(
+        name="amqtt.broker",
+        level=logging.ERROR,
+        pathname="",
+        lineno=0,
+        msg="No more test data",
+        args=None,
+        exc_info=None,
+    )
+    assert amqtt_filter.filter(record)
+    assert record.levelno == logging.ERROR
 
 
 def test_sanitize_filter() -> None:

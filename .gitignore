@@ -48,6 +48,7 @@
 !scripts/
 scripts/*
 !scripts/*.sh
+!scripts/*.py
 
 !tests/
 !tests/_test_files/
@@ -68,8 +69,7 @@ scripts/*
 !tests/test*.py
 
 !Dockerfile
-!docker-compose-ngnix.yaml
-!docker-compose-traefik.yaml
+!docker-compose-mitm.yaml
 !docker-compose.yaml
 
 # Created by https://www.toptal.com/developers/gitignore/api/python

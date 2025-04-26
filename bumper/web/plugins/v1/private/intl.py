@@ -10,6 +10,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import db, utils
+from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import get_success_response
 
@@ -63,14 +64,14 @@ async def _handle_basic_info(request: Request) -> Response:
                     "frozenIntegralDesc": frozen_integral_desc,
                     "goodsDetailIntegralDesc": "Redeem points for discounts!",
                     "integral": 9999,
-                    "integralDescWapUrl": "https://gl-de-wap.ecovacs.com/web/page?no=jusapxaw",
+                    "integralDescWapUrl": f"https://{bumper_isc.DOMAIN_SEC3}/web/page?no=jusapxaw",
                     "isCountryOpen": "Y",
                     "isLimitedIntegralOpen": "N",
                     "isMember": "Y",
                     "level": 1,
-                    "levelIconUrl": "https://gl-us-pub.ecovacs.com/public/221027/f187b4b72f434fcc9eae655dbb389ac7.png",
+                    "levelIconUrl": f"https://{bumper_isc.DOMAIN_SEC2}/public/221027/f187b4b72f434fcc9eae655dbb389ac7.png",
                     "levelName": "VIP1",
-                    "memberDescWapUrl": "https://club-eu-wap.ecovacs.com/DE/EN/content/description",
+                    "memberDescWapUrl": f"https://{bumper_isc.DOMAIN_SEC4}/DE/EN/content/description",
                     "remainingDay": None,
                     "shoppingGetIntegralShowDesc": None,
                     "shoppingGetIntegraltimes": None,

@@ -75,7 +75,7 @@ services:
         mode: "0444"
     environment:
       TZ: ${TZ:-Europe/Berlin}
-      BUMPER_ANNOUNCE_IP: ${BUMPER_ANNOUNCE_IP}
+      BUMPER_ANNOUNCE_IP: ${BUMPER_ANNOUNCE_IP?Server Announce IP not set}
       BUMPER_LISTEN: ${BUMPER_LISTEN:-0.0.0.0}
       BUMPER_DEBUG_LEVEL: ${BUMPER_DEBUG_LEVEL:-INFO}
       BUMPER_DEBUG_VERBOSE: ${BUMPER_DEBUG_VERBOSE:-1}
@@ -94,17 +94,22 @@ services:
     deploy:
       <<: *basic-deploy
     ports:
-      # MQTT HTTPS
+      # HTTP Server (TLS)
       - target: 443
         published: 443
         protocol: tcp
         mode: host
-      # MQTT HTTP
+      # HTTP Server (non TLS)
       - target: 8007
         published: 8007
         protocol: tcp
         mode: host
-      # MQTT Server
+      # MQTT Server (non TLS)
+      - target: 1883
+        published: 1883
+        protocol: tcp
+        mode: host
+      # MQTT Server (TLS)
       - target: 8883
         published: 8883
         protocol: tcp
@@ -114,13 +119,13 @@ services:
         published: 5223
         protocol: tcp
         mode: host
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
     configs:
       - source: nginx_config
         target: /etc/nginx/nginx.conf
         mode: "0444"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
 
 ################################################################################
 ################################################################################
@@ -143,4 +148,4 @@ configs:
   server_key_config:
     file: $PWD/certs/bumper.key
   nginx_config:
-    file: $PWD/configs/nginx/nginx.conf
+    file: $PWD/configs/nginx.conf

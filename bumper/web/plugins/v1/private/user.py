@@ -10,6 +10,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import db, utils
+from bumper.utils.settings import config as bumper_isc
 from bumper.web import auth_util
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import get_success_response
@@ -54,7 +55,7 @@ class UserPlugin(WebserverPlugin):
             web.route(
                 "*",
                 f"{BASE_URL}user/checkAgreementBatch",
-                _handle_check_agreement_batch,
+                handle_check_agreement_batch,
             ),
             web.route(
                 "*",
@@ -133,19 +134,19 @@ async def _handle_get_user_account_info(request: Request) -> Response:
                 "frozenIntegralTips": "Points will be issued 20 days after order payment. Please wait.",
                 "goodsDetailIntegralDesc": "Points will be issued 20 days after order payment. Please wait.",
                 "integral": 0,
-                "integralDescWapUrl": "https://gl-us-wap.ecovacs.com/web/page?no=hh3yxg4g",
-                "intlMemberMallUrl": "https://www.ecovacs.com/us",
+                "integralDescWapUrl": f"https://{bumper_isc.DOMAIN_SEC3}/web/page?no=hh3yxg4g",
+                "intlMemberMallUrl": f"https://{bumper_isc.DOMAIN_SEC1}/us",
                 "isCountryOpen": "Y",
                 "isLimitedIntegralOpen": "N",
                 "isMember": "Y",
                 "levelName": "VIP1",
                 "remainingDay": None,
-                "vipLevelIconUrl": "https://gl-us-pub.ecovacs.com/public/220628/d01e939518354ee0af5c88a5269e27d8.png",
+                "vipLevelIconUrl": f"https://{bumper_isc.DOMAIN_SEC2}/public/220628/d01e939518354ee0af5c88a5269e27d8.png",
             }
 
             return get_success_response(
                 {
-                    "email": "null@null.com",
+                    "email": bumper_isc.USER_MAIL_DEFAULT,
                     "hasMobile": "N",
                     "hasPassword": "Y",
                     "headIco": "",
@@ -170,7 +171,7 @@ async def _handle_check_agreement(request: Request) -> Response:
     """Check agreement."""
     app_type = request.match_info.get("apptype", "")
     data = []
-    domain = "https://gl-us-wap.ecovacs.com/content/agreement"
+    domain = f"https://{bumper_isc.DOMAIN_SEC3}/content/agreement"
     if "global_" in app_type:
         data = [
             {
@@ -191,7 +192,7 @@ async def _handle_check_agreement(request: Request) -> Response:
     return get_success_response(data)
 
 
-async def _handle_check_agreement_batch(_: Request) -> Response:
+async def handle_check_agreement_batch(_: Request) -> Response:
     """Check agreement batch."""
     return get_success_response(
         {
@@ -223,7 +224,7 @@ async def _handle_check_agreement_batch(_: Request) -> Response:
 
 async def _handle_get_user_menu_info(_: Request) -> Response:
     """Get user menu info."""
-    domain = "https://gl-us-pub.ecovacs.com/upload/global"
+    domain = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
     return get_success_response(
         [
             {
@@ -269,7 +270,7 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
                 "menuItems": [
                     {
                         "clickAction": 1,
-                        "clickUri": "https://bumper.ecovacs.com/",
+                        "clickUri": f"https://{bumper_isc.DOMAIN_SEC6}/",
                         "menuIconUrl": f"{domain}/2019/12/16/201912160325324068da4e4a09b8c3973db162e84784d5.png",
                         "menuId": "20191216032545_ebea0fbb4cb02d9c2fec5bdf3371bc2c",
                         "menuName": "Bumper Status",
@@ -284,7 +285,7 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
 
 async def _handle_get_my_user_menu_info(_: Request) -> Response:
     """Get my user menu info."""
-    domain = "https://gl-us-pub.ecovacs.com/upload/global"
+    domain = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
     return get_success_response(
         {
             "menuList": [
@@ -302,7 +303,10 @@ async def _handle_get_my_user_menu_info(_: Request) -> Response:
                         },
                         {
                             "clickAction": 1,
-                            "clickUri": "https://adv-app.dc-na.ww.ecouser.net/pim/third_party_voice_control.html",
+                            "clickUri": (
+                                f"https://adv-app.{bumper_isc.DOM_SUB_1}{bumper_isc.DOMAIN_MAIN}"
+                                "/pim/third_party_voice_control.html"
+                            ),
                             "menuIconUrl": f"{domain}/2022/12/14/20221214024053_10124672980fdcd4828fd5cbdf5c87ef.png",
                             "menuId": "20221214024100_207b336dcbcd6b96fb6b2c57fc14f095",
                             "menuName": "Third-party Voice Control",

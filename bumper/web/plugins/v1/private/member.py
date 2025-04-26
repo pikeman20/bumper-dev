@@ -7,7 +7,6 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.utils import utils
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import get_success_response
 
@@ -24,41 +23,40 @@ class MemberPlugin(WebserverPlugin):
             web.route(
                 "*",
                 f"{BASE_URL}member/getExpByScene",
-                _handle_get_exp_by_scene,
+                handle_get_exp_by_scene,
             ),
         ]
 
 
-async def _handle_get_exp_by_scene(request: Request) -> Response:
+async def handle_get_exp_by_scene(request: Request) -> Response:
     """Get exp by scene."""
-    # TODO: check what's needed to be implemented
-    utils.default_log_warn_not_impl("_handle_get_exp_by_scene")
-    scene = request.query.get("scene")
-    mid = request.query.get("mid", "")
-    did = request.query.get("did", "")
+    scene = request.query.get("scene", "")
 
-    # GLOBALAPP_MACHINE_RENAME
-    # GLOBALAPP_AREA_CATE_RENAME
-    # GLOBALAPP_FIRST_SET_PERSONAL_CLEAN_MODULE
-    # GLOBALAPP_SHOW_CLEAN_LOG
-    # GLOBALAPP_USE_HELP_CENTER
-    # GLOBALAPP_USE_SIDE_FILTER
     get_point = None
     prompt = None
 
-    if mid == "" and did == "":
-        if scene in ["GLOBALAPP_REGULATE_DEEBOT_SUCTION"]:
-            get_point = 100
-            prompt = "Task DEEBOT Perform suction power setting, +100"
-        elif scene in ["GLOBALAPP_REGULATE_DEEBOT_WATER"]:
-            get_point = 100
-            prompt = "Perform task DEEBOT water flow rate, +100"
-        elif scene in ["GLOBALAPP_TIMING_OF_CONSUMABLES"]:
-            get_point = 50
-            prompt = "Perform Display accessory usage task, +50"
-        elif scene in ["GLOBALAPP_VIRTUAL_WALL_MANAGEMENT"]:
-            get_point = 100
-            prompt = "Perform task Manage DEEBOT Virtual Walls, +100"
+    if scene in ["GLOBALAPP_REGULATE_DEEBOT_SUCTION"]:
+        get_point = 0
+        prompt = "Task DEEBOT Perform suction power setting, +0"
+    elif scene in ["GLOBALAPP_REGULATE_DEEBOT_WATER"]:
+        get_point = 0
+        prompt = "Perform task DEEBOT water flow rate, +0"
+    elif scene in ["GLOBALAPP_TIMING_OF_CONSUMABLES"]:
+        get_point = 0
+        prompt = "Perform Display accessory usage task, +0"
+    elif scene in ["GLOBALAPP_VIRTUAL_WALL_MANAGEMENT"]:
+        get_point = 0
+        prompt = "Perform task Manage DEEBOT Virtual Walls, +0"
+    elif scene in [
+        "GLOBALAPP_MACHINE_RENAME",
+        "GLOBALAPP_AREA_CATE_RENAME",
+        "GLOBALAPP_FIRST_SET_PERSONAL_CLEAN_MODULE",
+        "GLOBALAPP_SHOW_CLEAN_LOG",
+        "GLOBALAPP_USE_HELP_CENTER",
+        "GLOBALAPP_USE_SIDE_FILTER",
+    ]:
+        get_point = 0
+        prompt = ":P, +0"
 
     key_only_once1 = "only"  # only because
     key_only_once2 = "Once"  # of code spell :D

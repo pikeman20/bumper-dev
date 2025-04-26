@@ -1,49 +1,71 @@
-# Requirements
+# Welcome to Bumper 🤖
 
-- An Ecovacs wifi-enabled robot
-- A computer on your local network to run the Bumper server
-- Python 3.7 and pipenv OR Docker
-- A network router that has functionality for overriding DNS queries
-- A client that can connect to Bumper and talk to the robot over the Ecovacs protocol.
-  - The "Ecovacs" or "Ecovacs Home" Android or iOS apps can be used if configured properly.
-    - See the docs on [Using Bumper with the official Android/iOS App](Use_With_App.md).
-  - [Sucks](https://github.com/wpietri/sucks) can also be used, which can act as a client and control the robots via command-line.
-    - See the doc on [Using Bumper with Sucks](Use_With_Sucks.md)
+Bumper is a local replacement for Ecovacs cloud services,
+allowing your robots and apps to connect entirely within your home network —
+without needing access to the original cloud.
 
-# Quick Start Usage
+It supports both XMPP and MQTT-based models transparently.
 
-- Configure your Ecovacs vacuum using the official mobile app (if you haven't done this already)
-- Configure your DNS server as described in the [DNS Setup](DNS_Setup.md) doc.
+> **Disclaimer:** This project is a work in progress and may contain errors or missing parts.
+> Please refer to the documentation and source code for complete details.
 
-## Choose Installation Type
+---
 
-- Docker - [See Docker Details](Docker.md)
-- Manual/Python
+## ⚙️ Requirements
 
-  - Download bumper then run `pipenv install` to install dependencies
-  - Start bumper - see the [Starting Bumper](#starting-bumper) section.
+-   A Wi-Fi enabled Ecovacs robot
+-   A server in your local network to run the Bumper services
+-   Python (latest version) with [uv](https://pypi.org/project/uv/) **or** Docker
+-   A DNS server capable of overriding specific domain queries
+-   A client that can connect and control the robot:
+    -   The official "Ecovacs" or "Ecovacs Home" Android/iOS apps (when configured correctly)
+        -   See [Using Bumper with the official App](configs/Use_With_App.md) for mobile setup details.
+    -   [DeebotUniverse/client.py](https://github.com/DeebotUniverse/client.py) for command-line control
 
-- Control your robots like normal
-  - [Using Bumper with the official Android/iOS App](Use_With_App.md)
-  - [Using Bumper with Sucks](Use_With_Sucks.md)
+---
 
-# Starting Bumper
+## 🚀 Quick Start
 
-Bumper requires certificates to function. If certificates aren't found it will prompt to generate them for you.
+### 1. 🤖 Prepare your Robot
 
-For more information on generating certificates manually, see the [Creating Certs](Create_Certs.md) doc
+-   Set up your robot using the official Ecovacs app (initial Wi-Fi configuration, registration, etc.)
 
-- Start Bumper with `pipenv run python -m bumper`
+### 2. 🌐 Set up DNS
 
-  - If prompted to generate certificates choose yes or no
+-   Configure your local DNS server to override specific Ecovacs domains.
+-   Detailed setup instructions: [DNS Setup](configs/DNS_Setup.md)
 
-- Reboot your robot
-  - **Note:** Some models may require removing and re-inserting the battery pack.
-  - This doesn't seem to be required for models that don't have easily accessible batteries such as the 900/901.
-- If your configuration is correct, the robot will connect to Bumper within about 30 seconds. Bumper will output information about the connection status.
+### 3. 🛠️ Install and Run Bumper
 
-# Troubleshooting
+-   Follow the installation and usage instructions in the [README.md](https://github.com/MVladislav/bumper/blob/main/README.md)  
+    or refer to [Docker Setup](configs/Docker.md) if using Docker.
 
-Logs are output in the /logs directory.
+### 4. 🔒 Certificates
 
-If there is an issue, enable debug logging with the `--debug` switch for additional detail.
+-   Bumper requires valid certificates to operate.
+-   Instructions for manually creating certificates are available here: [Create Certificates](configs/Create_Certs.md)
+
+---
+
+## 📋 Logs and Troubleshooting
+
+Bumper writes log files into the `/logs` directory by default.  
+You can also monitor real-time output:
+
+-   **If running manually**: logs appear directly in the terminal.
+-   **If running via Docker**: use `docker logs <container-name>` to view logs.
+
+For more detailed output and debugging:
+
+-   Additional debugging can be enabled using environment variables.  
+    See [Environment Variables](infos/Env_Var.md) for a list of available debug options.
+
+---
+
+# 📚 Next Steps
+
+-   [How Bumper Works](infos/How_It_Works.md)
+    <!-- - [Configuration Examples](configs/Examples.md) -->
+    <!-- - [Frequently Asked Questions](infos/FAQ.md) -->
+
+Happy cleaning! 🧹

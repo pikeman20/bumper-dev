@@ -11,15 +11,15 @@ from bumper.web import models
 # ******************************************************************************
 
 
-def response_success_v1(data: Any) -> Response:
-    """Response success v1."""
+def get_success_response(data: Any, time: int = utils.get_current_time_as_millis()) -> Response:
+    """Get success response with provided data."""
     return web.json_response(
         {
             "code": models.RETURN_API_SUCCESS,
             "data": data,
-            "msg": "The operation was successful.",
+            "msg": "The operation was successful",  # 操作成功
             "success": True,
-            "time": utils.get_current_time_as_millis(),
+            "time": time,
         },
     )
 
@@ -28,32 +28,42 @@ def response_success_v2(data: Any, data_key: str = "data") -> Response:
     """Response success v2."""
     return web.json_response(
         {
-            data_key: data,
-            "ret": "ok",
             "todo": "result",
+            "result": "ok",
+            data_key: data,
         },
     )
 
 
-def response_success_v3(data: Any, code: int = 0, data_key: str = "data") -> Response:
+def response_success_v3(
+    data: Any,
+    code: int = 0,
+    data_key: str = "data",  # data | voices
+    msg_key: str = "message",  # message | msg
+    msg: str = "success",
+) -> Response:
     """Response success v3."""
     return web.json_response(
         {
             "code": code,
+            "ret": "ok",
+            msg_key: msg,
             data_key: data,
-            "message": "success",
         },
     )
 
 
-def response_success_v4(data: Any, data_key: str = "data") -> Response:
+def response_success_v4(
+    data: Any,
+    data_key: str = "data",  # data | devices
+) -> Response:
     """Response success v4."""
     return web.json_response(
         {
             "code": 0,
-            data_key: data,
             "ret": "ok",
             "todo": "result",
+            data_key: data,
         },
     )
 
@@ -80,25 +90,24 @@ def response_success_v6(data: Any, code: int = 0) -> Response:
     )
 
 
-def response_success_v7(data: Any, code: int = 0) -> Response:
-    """Response success v7."""
+def response_success_v8(msg_type: str = "message") -> Response:
+    """Response success v8."""
     return web.json_response(
         {
-            "code": code,
-            "data": data,
-            "msg": "success",
+            "code": 0,
+            msg_type: "success",
         },
     )
 
 
-def response_success_v8() -> Response:
-    """Response success v8."""
-    return web.json_response({"code": 0, "message": "success"})
-
-
 def response_success_v9() -> Response:
     """Response success v9."""
-    return web.json_response({"result": "ok", "todo": "result"})
+    return web.json_response(
+        {
+            "result": "ok",
+            "todo": "result",
+        },
+    )
 
 
 # ******************************************************************************
@@ -187,20 +196,30 @@ def response_error_v7(errno: int = 1, error: str = "unknown") -> Response:
     )
 
 
-# ******************************************************************************
+def response_error_v8(request_id: str, error: str) -> dict[str, Any]:
+    """Response error v8."""
+    return {
+        "id": request_id,
+        "errno": 500,
+        "ret": "fail",
+        "debug": error,
+    }
 
 
-def get_success_response(data: Any) -> Response:
-    """Get success response with provided data."""
+def response_error_v9(msg: str = "Expired user login", code: str = models.ERR_TOKEN_INVALID) -> Response:
+    """Response error v9."""
     return web.json_response(
         {
-            "code": models.RETURN_API_SUCCESS,
-            "data": data,
-            "msg": "The operation was successful",
-            "success": True,
+            "code": code,
+            "msg": msg,
             "time": utils.get_current_time_as_millis(),
+            "data": None,
+            "success": False,
         },
     )
+
+
+# ******************************************************************************
 
 
 # def get_error_response_v2() -> Response:

@@ -5,6 +5,21 @@
 body {
   background-color: var(--background-color);
   color: var(--text-color);
+  font-family: Inter, InterVariable, sans-serif;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h2,
+h3 {
+  letter-spacing: -.025em;
+  font-weight: 600;
 }
 
 .grid-container {
@@ -34,7 +49,7 @@ body {
 
 .badge {
   font-size: var(--bade-size);
-  padding: 0.3rem 0.6rem;
+  padding: 0.3rem 0.5rem;
 }
 
 .table {
@@ -132,6 +147,10 @@ footer {
   background-color: #dc3545;
 }
 
+.table-responsive {
+  border-radius: calc(var(--radius) - 6px);
+}
+
 @keyframes fadeInOut {
   0% {
     opacity: 0;
@@ -174,17 +193,51 @@ footer {
 }
 
 :root {
-  --text-color: hsl(210, 17%, 16%);
-  --background-color: hsl(210, 36%, 96%);
-  --bade-size: 0.85rem;
-  --card-border-color: hsl(210, 31%, 90%);
-  --card-box-shadow: 0 4px 6px hsla(0, 0%, 0%, 0.1);
-  --muted-color: hsl(210, 17%, 60%);
+  --text-color: hsl(210 17% 16%);
+  --background-color: hsl(210 36% 96%);
+  --bade-size: .675rem;
+  --card-border-color: hsl(210 3% 29%);
+  --card-box-shadow: 0 4px 6px hsla(0 0% 0% 0.1);
+  --muted-color: hsl(210 17% 60%);
+
+  --radius: .8rem;
+  --bs-body-font-size: .875rem;
 }
 
 
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
+    --text-color: hsl(210 17% 96%);
+    --background-color: hsl(220 5.5% 9%);
+    --card-border-color: hsl(220 3% 16%);
+    --card-box-shadow: 0 0 0;
+    /*0 4px 6px hsla(0 0% 71% 0.1);*/
 
+    --bs-dark-rgb: 33, 37, 41;
+    --bs-body-bg: hsl(220 5.5% 10.5%);
+    --muted: 220 6% 16%;
+    --muted-foreground: 220 4% 67%;
+    --accent-foreground: 220 2% 98%;
+    --border: 220 3% 16%;
+    --bs-border-color: hsl(var(--border) / .6);
   }
-} */
+
+  .bg-dark {
+    background-color: hsl(var(--muted) / .3) !important;
+  }
+
+  .table-dark {
+    --bs-table-bg: hsl(var(--muted) / .3) !important;
+    --bs-table-color: hsl(var(--muted-foreground));
+    --bs-table-border-color: hsl(var(--border) / .6);
+  }
+
+  .table> :not(caption)>*>* {
+    color: hsl(var(--accent-foreground));
+  }
+
+  .border-0 {
+    border: 1px solid var(--card-border-color) !important;
+  }
+
+}

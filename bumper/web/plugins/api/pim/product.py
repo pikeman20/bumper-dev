@@ -14,6 +14,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
+from bumper.web.images import get_bot_image
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_success_v3, response_success_v5
 
@@ -53,6 +54,11 @@ class ProductPlugin(WebserverPlugin):
                 "POST",
                 "/product/getShareInfo",
                 _handle_get_share_info,
+            ),
+            web.route(
+                "GET",
+                "/product/image",
+                get_bot_image,
             ),
         ]
 
@@ -108,7 +114,7 @@ async def _handle_config_batch(request: Request) -> Response:
             # some devices don't have any product configuration
             data.append({"cfg": {}, "pid": pid})
 
-        return response_success_v3(data, 200)
+        return response_success_v3(data=data, code=200)
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
@@ -116,8 +122,6 @@ async def _handle_config_batch(request: Request) -> Response:
 
 async def _handle_get_share_info(request: Request) -> Response:
     """Get share info."""
-    # TODO: check what's needed to be implemented
-    utils.default_log_warn_not_impl("_handle_get_exp_by_scene")
     try:
         json_body = json.loads(await request.text())
         scene = json_body.get("scene")

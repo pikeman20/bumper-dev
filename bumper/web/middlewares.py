@@ -28,9 +28,15 @@ class CustomEncoder(json.JSONEncoder):
 
 _EXCLUDE_FROM_LOGGING = [
     "/",
-    "/bot/remove/{did}",
-    "/client/remove/{resource}",
+    "/static",
     "/restart_{service}",
+    "/server-status",
+    "/bots",
+    "/bot/remove/{did}",
+    "/clients",
+    "/client/remove/{resource}",
+    "/users",
+    "/user/remove/{userid}",
 ]
 
 

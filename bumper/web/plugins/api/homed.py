@@ -141,9 +141,9 @@ async def _handle_member_list(request: Request) -> Response:
                         "createTime": utils.get_current_time_as_millis(),
                         "id": user.userid,
                         "isAdmin": 2,
-                        "name": "null@null.com",
-                        "roleId": "",
-                        "roleName": "",
+                        "name": bumper_isc.USER_NICKNAME_DEFAULT,  # TODO: improve as non static
+                        "roleId": "xxx",  # TODO: improve as non static
+                        "roleName": "Fraternal grandpa",  # TODO: improve as non static
                         "status": 1,
                         "uid": user.userid,
                     },

@@ -9,7 +9,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.utils import utils
+from bumper.utils.settings import config as bumper_isc
 from bumper.web.images import get_bot_image
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_success_v6
@@ -42,6 +42,11 @@ class EcmsPlugin(WebserverPlugin):
             ),
             web.route(
                 "*",
+                "/ecms/app/ad/res/v3",
+                _handle_ad_res,
+            ),
+            web.route(
+                "*",
                 "/ecms/app/element/hint",
                 _handle_hint,
             ),
@@ -60,75 +65,15 @@ class EcmsPlugin(WebserverPlugin):
 
 async def _handle_ad_res(_: Request) -> Response:
     """Ad res."""
-    # REQUEST EXAMPLES
-    # => V1
-    # {
-    #     "appVer": "2.4.1",
-    #     "channel": "google_play",
-    #     "country": "DE",
-    #     "lang": "EN",
-    #     "notReceive": ["INTRODUCTION", "MARKETING", "QUESTIONNAIRE"],
-    #     "platform": "android",
-    #     "record": [],
-    #     "scode": "robotui_config",
-    #     "tags": [],
-    #     "timeZone": "GMT+8",
-    #     "uid": "REPLACED_UID",
-    #     "ver": "2.4.1",
-    #
-    #     # opt 1:
-    #     "location": ["robot_device_list_first"],
-    #     # opt 2:
-    #     "location": ["robot_home_winbot", "robot_home_deebot", "robot_home_airbot"]
-    # }
-    #
-    # => v2
-    # {
-    #     "notReceive": ["MARKETING", "QUESTIONNAIRE", "INTRODUCTION"],
-    #     "uid": "ckiqxr4cfb062946",
-    #
-    #     opt 1:
-    #     "tags": [],
-    #     "location": ["ad_launch"],
-    #     "timeZone": "GMT+2",
-    #
-    #     opt 2:
-    #     "tags": [],
-    #     "location": ["ad_main_pop"],
-    #     "timeZone": "GMT+2",
-    #
-    #     opt 3:
-    #     "tags": ["yna5xi"],
-    #     "location": ["ad_controler_pop"],
-    #     "timeZone": "GMT+2",
-    #
-    #     opt 3 (two different opt for loc):
-    #     "location": [
-    #       "robot_control_index_func_ops",
-    #       "robot_contorl_main_promotion",
-    #       "robot_contorl_main_promotion_pop",
-    #       "robot_contorl_silver_ion",
-    #       "robot_control_aes_buy",
-    #       "ad_card_control_pop"
-    #     ],
-    #     "location": ["ad_main_bottom_control_popover"],
-    #     "tags": ["mid:p95mgv", "sn:E09C15674D1FP7DF0304"],
-    #     "auth": {},
-    #     "channel": "google_play",
-    #     "timeZone": 60
-    # }
-
     return response_success_v6([])
 
 
 async def _handle_hint(request: Request) -> Response:
     """Hint."""
-    # TODO: check what's needed to be implemented
-    utils.default_log_warn_not_impl("_handle_hint")
     codes = request.query.get("codes", "").split(",")
     data = {}
     for code in codes:
-        data[code] = True  # DEBUG: default saw only False
+        data[code] = False
     return response_success_v6(data)
 
 
@@ -141,13 +86,15 @@ async def _handle_resources(request: Request) -> Response:
     if locations == "home_manage_intro":
         data = []
     elif locations == "robotui_func_ops":
+        domain1 = f"adv-app.{bumper_isc.DOM_SUB_1}{bumper_isc.DOMAIN_MAIN}"
+        domain2 = f"api-app.{bumper_isc.DOM_SUB_1}{bumper_isc.DOMAIN_MAIN}"
         data = [
             {
                 "action": {
                     "clickAction": "1",
-                    "clickURL": f"https://adv-app.dc-na.ww.ecouser.net/pim/yiko_scene_newton.html?lang={lang}&defaultLang={lang}",
+                    "clickURL": f"https://{domain1}/pim/yiko_scene_newton.html?lang={lang}&defaultLang={lang}",
                 },
-                "content": "https://api-app.dc-as.ww.ecouser.net/api/ecms/file/get/62206001e50121388401de95",
+                "content": f"https://{domain2}/api/ecms/file/get/62206001e50121388401de95",
                 "description": "",
                 "location": "robotui_func_ops",
                 "resId": "622060a8e5012100b501e004",

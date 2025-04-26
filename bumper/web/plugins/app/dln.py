@@ -66,8 +66,4 @@ async def _handle_clean_result_del(_: Request) -> Response:
     """Clean result delete."""
     # TODO: check what's needed to be implemented
     utils.default_log_warn_not_impl("_handle_clean_result_del")
-    try:
-        return response_success_v3(None)
-    except Exception:
-        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
-    raise HTTPInternalServerError
+    return response_success_v3(None)

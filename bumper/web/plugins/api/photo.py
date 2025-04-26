@@ -4,7 +4,6 @@ from collections.abc import Iterable
 import logging
 
 from aiohttp import web
-from aiohttp.web_exceptions import HTTPInternalServerError
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
@@ -26,16 +25,12 @@ class PhotoPlugin(WebserverPlugin):
             web.route(
                 "*",
                 "/photo/list",
-                _handle,
+                _handle_photo_list,
             ),
         ]
 
 
-async def _handle(_: Request) -> Response:
-    # TODO: check what's needed to be implemented, which token is really needed and how to get correct
-    utils.default_log_warn_not_impl("photo/list")
-    try:
-        return response_success_v6(None)
-    except Exception:
-        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
-    raise HTTPInternalServerError
+async def _handle_photo_list(_: Request) -> Response:
+    # TODO: check what's needed to be implemented
+    utils.default_log_warn_not_impl("_handle_photo_list")
+    return response_success_v6(None)

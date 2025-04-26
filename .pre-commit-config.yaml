@@ -78,7 +78,7 @@ repos:
           # - --exclude-files=home.jinja2
           - --exclude-files=tests/*
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.24.2
+    rev: v8.24.3
     hooks:
       - id: gitleaks
 
@@ -97,7 +97,7 @@ repos:
 
   # Python-specific hooks ######################################################
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.2
+    rev: v0.11.7
     hooks:
       - id: ruff
         args:
@@ -121,11 +121,11 @@ repos:
         language: script
         types: [python]
         require_serial: true
-        exclude: ^tests/.+
+        exclude: (^tests/.+)|(^scripts/.+)|(^configs/.+)
       - id: pylint
         name: Run Pylint in Virtualenv
         entry: scripts/run-in-env.sh python3 -m pylint
         language: script
         types: [python]
         require_serial: true
-        exclude: ^tests/.+
+        exclude: (^tests/.+)|(^scripts/.+)|(^configs/.+)

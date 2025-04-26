@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- general code cleanup/refactor
+
+### Added
+
+- extended api
+  - `/public/(.*)/(.*)`
+  - **biz-app-config**
+    - `api/v2/chat_bot_id/config`
+  - **v0.1**
+    - `public/codepush/update_check`
+  - **api**
+    - `new-perm/token/sst/issue`
+    - `iot/endpoint/control`
+    - `pim/product/image`
+    - `appsvr/notice/list`
+    - `appsvr/akvs/start_watch`
+  - **v1**
+    - `osmall/proxy/my/get-my-coupon`
+    - `osmall/proxy/coupon-send-activity/get-customer-coupon-send-activity-coupon`
+  - **v2**
+    - `common/YIKOBasicSetting`
+    - `user/login`
+
+## [v0.1.1]
+
 ### Broken
 
 - `tests` are not full updated and could be wrong
@@ -99,7 +126,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - conf adds
   - add this `CHANGELOG.md`
   - add `pyproject.toml`
-  - add `create_cert.sh`
+  - add `create-cert.sh`
     - for create example cert for bumper
   - add `requirements-update.sh`
     - for fast create new `requirements.txt` and `requirements-dev.txt` with newest versions
@@ -113,6 +140,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- amqtt use from own refactored version
+  - use: <https://github.com/MVladislav/amqtt>
+  - not: <https://github.com/Yakifo/amqtt>
+  - refactored to use newer websocket version and be up-to-date with newer version
 - update for `project.toml`
   - move specific tool setup files into `project.toml`
 - bumper updates
@@ -177,4 +208,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - .github removes
     - remove `md` files from `ISSUE_TEMPLATE`, replaced with new `yaml` templates
 
-[unreleased]: https://github.com/edenhaus/bumper/compare/dev...MVladislav:bumper:dev
+[Unreleased]: https://github.com/MVladislav/bumper/compare/dev...MVladislav:bumper:v0.1.1
+[v0.1.1]: https://github.com/edenhaus/bumper/compare/dev...MVladislav:bumper:v0.1.1

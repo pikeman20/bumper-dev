@@ -7,6 +7,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
+from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import get_success_response
 
@@ -50,7 +51,7 @@ async def _handle_waterfall_flow(_: Request) -> Response:
 
 async def _handle_module_configuration(_: Request) -> Response:
     """Message module configuration."""
-    domain = "https://gl-us-pub.ecovacs.com/upload/global"
+    domain = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
     return get_success_response(
         {
             "list": [

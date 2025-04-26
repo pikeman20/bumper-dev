@@ -4,7 +4,6 @@ from collections.abc import Iterable
 import logging
 
 from aiohttp import web
-from aiohttp.web_exceptions import HTTPInternalServerError
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
@@ -26,14 +25,12 @@ class SdsPlugin(WebserverPlugin):
             web.route(
                 "*",
                 "/sds/baidu/audio/getcred",
-                _handle,  # TODO: check how to handle correct
+                _handle_baidu_audio_getcred,
             ),
         ]
 
 
-async def _handle(_: Request) -> Response:
-    try:
-        return response_success_v6(None)
-    except Exception:
-        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
-    raise HTTPInternalServerError
+async def _handle_baidu_audio_getcred(_: Request) -> Response:
+    # TODO: check what's needed to be implemented
+    utils.default_log_warn_not_impl("_handle_baidu_audio_getcred")
+    return response_success_v6(None)

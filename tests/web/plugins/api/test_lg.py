@@ -1,6 +1,5 @@
 import asyncio
 import json
-from unittest import mock
 
 import pytest
 
@@ -19,16 +18,9 @@ def async_return(result):
 
 @pytest.mark.usefixtures("clean_database", "create_webserver")
 async def test_lg_logs(webserver_client, helper_bot: MQTTHelperBot) -> None:
-    db.bot_add("sn_1234", "did_1234", "ls1ok3", "res_1234", "eco-ng")
-    db.bot_set_mqtt("did_1234", True)
-
-    # Test return get status
-    command_getstatus_resp = {
-        "id": "resp_1234",
-        "resp": "<ctl ret='ok' status='idle'/>",
-        "ret": "ok",
-    }
-    helper_bot.send_command = mock.MagicMock(return_value=async_return(command_getstatus_resp))
+    test_did = "did_1234"
+    db.bot_add("sn_1234", test_did, "ls1ok3", "res_1234", "eco-ng")
+    db.bot_set_mqtt(test_did, True)
 
     # Test GetGlobalDeviceList
     postbody = {
@@ -39,7 +31,7 @@ async def test_lg_logs(webserver_client, helper_bot: MQTTHelperBot) -> None:
             "userid": USER_ID,
             "with": "users",
         },
-        "did": "did_1234",
+        "did": test_did,
         "resource": "res_1234",
         "td": "GetCleanLogs",
     }
@@ -48,3 +40,4 @@ async def test_lg_logs(webserver_client, helper_bot: MQTTHelperBot) -> None:
     text = await resp.text()
     jsonresp = json.loads(text)
     assert jsonresp["ret"] == "ok"
+    assert len(jsonresp["logs"]) == 0

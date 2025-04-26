@@ -1,20 +1,34 @@
 ---
 site_name: Bumper Docs
+repo_url: https://github.com/MVladislav/bumper
+edit_uri: edit/main/docs/
 nav:
   - Home: index.md
   - Using:
-      - "Command-Line": CmdLine.md
-      - "Docker": Docker.md
-      - "Using with Apps": Use_With_App.md
-      - "Using with Sucks": Use_With_Sucks.md
-  - Certs: Create_Certs.md
-  - DNS: DNS_Setup.md
-  - Configuration:
-      - "Environment Variables": Env_Var.md
+      - "Command-Line": configs/CmdLine.md
+      - "Docker": configs/Docker.md
+      - "Using with Apps": configs/Use_With_App.md
+  - Certs: configs/Create_Certs.md
+  - DNS: configs/DNS_Setup.md
+  - Configs:
+      - "Environment Variables": infos/Env_Var.md
   - Developing:
-      - "Reversing The Protocols": Sniffing.md
-      - "Developing and Testing": Develop.md
-      - "How It Works": How_It_Works.md
+      - "Reversing The Protocols": reverse/Sniffing.md
+      - "Defeating Certificate Pinning": reverse/Certificate_Unpinning.md
+      - "Developing and Testing": dev/Develop.md
+      - "How It Works": infos/How_It_Works.md
   - Origins: origins.md
 
-theme: readthedocs
+theme:
+  name: material
+  palette:
+    scheme: slate
+  # features:
+  #   - content.action.edit
+  logo: images/favicon.ico
+  favicon: images/favicon.ico
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/MVladislav/bumper

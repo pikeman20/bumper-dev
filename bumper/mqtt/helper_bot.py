@@ -4,7 +4,9 @@ import asyncio
 import contextlib
 import json
 import logging
+import random
 import ssl
+import string
 from typing import TYPE_CHECKING, Any
 
 from aiomqtt import Client as MQTTClient, MqttError, Topic
@@ -12,6 +14,7 @@ from cachetools import TTLCache
 
 from bumper.mqtt.handle_atr import clean_log
 from bumper.utils import utils
+from bumper.web.response_utils import response_error_v8
 
 if TYPE_CHECKING:
     from collections.abc import MutableMapping
@@ -19,6 +22,83 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 HELPER_BOT_CLIENT_ID = "helperbot@bumper/helperbot"
 RECONNECT_INTERVAL = 5  # seconds
+
+
+class MQTTCommandModel:
+    """MQTT Command Model."""
+
+    VERSION_OLD = "1"
+    VERSION_NEW = "2"
+    VERSION_P2P = "p2p"
+
+    request_id: str
+    version: str = VERSION_OLD
+
+    payload_type: str
+    payload: str
+    cmd_name: str | None
+    did: str | None
+    to_type: str | None
+    to_res: str | None
+    td: str | None
+
+    def __init__(self, cmdjson: dict[str, Any], version: str = VERSION_OLD) -> None:
+        """MQTT Command Model init."""
+        self.request_id = "".join(random.sample(string.ascii_letters, 4))
+        self.version = version
+        if version == self.VERSION_OLD:
+            self.from_version_1(cmdjson)
+        elif version == self.VERSION_NEW:
+            self.from_version_2(cmdjson)
+        elif version == self.VERSION_P2P:
+            self.from_version_p2p(cmdjson)
+        else:
+            msg = f"Unsupported version: {version}"
+            _LOGGER.error(msg)
+            raise ValueError(msg)
+
+    def from_version_1(self, cmdjson: dict[str, Any]) -> None:
+        """Parse command information from version 1."""
+        self.payload_type = cmdjson.get("payloadType", "j")
+        self.cmd_name = cmdjson.get("cmdName")
+        self.did = cmdjson.get("toId")
+        self.to_type = cmdjson.get("toType")
+        self.to_res = cmdjson.get("toRes")
+        self.td = cmdjson.get("td")
+
+        payload_j = cmdjson.get("payload")
+        self.payload = json.dumps(payload_j) if self.payload_type == "j" else str(payload_j)
+
+    def from_version_2(self, cmdjson: dict[str, Any]) -> None:
+        """Parse command information from version 2."""
+        self.payload_type = cmdjson.get("fmt", "j")
+        self.cmd_name = cmdjson.get("apn")
+        self.did = cmdjson.get("eid")
+        self.to_type = cmdjson.get("et")
+        self.to_res = cmdjson.get("er")
+        self.td = cmdjson.get("ct")
+
+        payload_j = cmdjson.get("payload")
+        self.payload = json.dumps(payload_j) if self.payload_type == "j" else str(payload_j)
+
+    def from_version_p2p(self, cmdjson: dict[str, Any]) -> None:
+        """Parse command information from version p2p."""
+        self.payload_type = "j"
+        self.cmd_name = cmdjson.get("cmd")
+        self.did = cmdjson.get("did")
+        self.to_type = cmdjson.get("mid")
+        self.to_res = cmdjson.get("res")
+        # self.td = cmdjson.get("")
+
+        payload_j = cmdjson.get("data")
+        self.payload = json.dumps(payload_j) if self.payload_type == "j" else str(payload_j)
+
+    def create_topic(self) -> str:
+        """Create the MQTT topic for the command."""
+        return (
+            f"iot/p2p/{self.cmd_name}/helperbot/bumper/helperbot/{self.did}/"
+            f"{self.to_type}/{self.to_res}/q/{self.request_id}/{self.payload_type}"
+        )
 
 
 class MQTTHelperBot:
@@ -94,39 +174,39 @@ class MQTTHelperBot:
                 _LOGGER.exception("Unexpected error in MQTT loop")
                 await asyncio.sleep(RECONNECT_INTERVAL)
 
-    async def send_command(self, cmdjson: dict[str, Any], request_id: str) -> dict[str, Any]:
+    async def send_command(self, cmd: MQTTCommandModel) -> str | dict[str, Any]:
         """Send command over MQTT."""
         try:
             if not await self.is_connected:
                 await self.start()
 
-            payload_type = cmdjson.get("payloadType", "x")
-            payload = cmdjson.get("payload")
+            topic = cmd.create_topic()
+            command_dto = CommandDto(cmd.payload_type)
+            self._commands[cmd.request_id] = command_dto
 
-            topic = (
-                f"iot/p2p/{cmdjson['cmdName']}/helperbot/bumper/helperbot/{cmdjson['toId']}/"
-                f"{cmdjson['toType']}/{cmdjson['toRes']}/q/{request_id}/{payload_type}"
-            )
+            _LOGGER.debug(f"Sending message :: topic={topic} :: payload={cmd.payload}")
+            await self.publish(topic, cmd.payload)
 
-            payload = json.dumps(payload) if payload_type == "j" else str(payload)
-
-            command_dto = CommandDto(payload_type)
-            self._commands[request_id] = command_dto
-
-            _LOGGER.debug(f"Sending message :: topic={topic} :: payload={payload}")
-            await self.publish(topic, payload)
-
-            return await self._wait_for_resp(command_dto, request_id)
+            cmd_response = await self._wait_for_resp(command_dto)
+            if cmd_response is None:
+                return response_error_v8(cmd.request_id, "wait for response timed out")
+            if cmd.version == cmd.VERSION_OLD:
+                return {
+                    "id": cmd.request_id,
+                    "ret": "ok",
+                    "resp": cmd_response,
+                    "payloadType": cmd.payload_type,
+                }
+            if cmd.version == cmd.VERSION_NEW:
+                return cmd_response
+            msg = f"Unsupported version :: '{cmd.version}' :: {cmd_response}"
+            _LOGGER.error(msg)
+            raise ValueError(msg)
         except Exception:
             _LOGGER.exception("Could not send command")
-            return {
-                "id": request_id,
-                "errno": 500,
-                "ret": "fail",
-                "debug": "exception occurred please check bumper logs",
-            }
+            return response_error_v8(cmd.request_id, "exception occurred please check bumper logs")
         finally:
-            self._commands.pop(request_id, None)
+            self._commands.pop(cmd.request_id, None)
 
     async def publish(self, topic: str, payload: str) -> None:
         """Publish message."""
@@ -135,26 +215,17 @@ class MQTTHelperBot:
             raise MqttError(error_message)
         await self._client.publish(topic, payload.encode())
 
-    async def _wait_for_resp(self, command_dto: "CommandDto", request_id: str) -> dict[str, Any]:
+    async def _wait_for_resp(self, command_dto: "CommandDto") -> str | dict[str, Any] | None:
         """Wait for response."""
         try:
-            return {
-                "id": request_id,
-                "ret": "ok",
-                "resp": await asyncio.wait_for(command_dto.wait_for_response(), timeout=self._timeout),
-            }
+            return await asyncio.wait_for(command_dto.wait_for_response(), timeout=self._timeout)
         except TimeoutError:
             _LOGGER.debug("wait_for_resp timeout reached")
         except asyncio.CancelledError:
             _LOGGER.debug("wait_for_resp cancelled by asyncio", exc_info=True)
         except Exception:
             _LOGGER.exception(utils.default_exception_str_builder(info="during wait for response"))
-        return {
-            "id": request_id,
-            "errno": 500,
-            "ret": "fail",
-            "debug": "wait for response timed out",
-        }
+        return None
 
     async def _subscribe_topics(self) -> None:
         """Subscribe to required topics."""

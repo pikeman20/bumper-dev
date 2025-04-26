@@ -63,7 +63,7 @@ class BumperUser:
     def __init__(self, userid: str = "") -> None:
         """Bumper user init."""
         self.userid: str = userid
-        self.username: str = "bumper"
+        self.username: str = bumper_isc.USER_USERNAME_DEFAULT
         self.homeids: list[str] = []
         self.devices: list[str] = []
         self.bots: list[str] = []
@@ -82,7 +82,7 @@ class BumperUser:
     def from_dict(cls, data: dict[str, Any]) -> "BumperUser":
         """Create a BumperUser instance from a dictionary."""
         user = cls(userid=data.get("userid", ""))
-        user.username = data.get("username", "bumper")
+        user.username = data.get("username", bumper_isc.USER_USERNAME_DEFAULT)
         user.homeids = data.get("homeids", [])
         user.devices = data.get("devices", [])
         user.bots = data.get("bots", [])

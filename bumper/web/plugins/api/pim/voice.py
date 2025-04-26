@@ -8,6 +8,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
+from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_success_v3
 
@@ -42,18 +43,19 @@ async def _handle_get(request: Request) -> Response:
             break
 
     return response_success_v3(
-        [
+        data_key="voices",
+        data=[
             {
                 "advertisementPhotoUrl": "",
                 "desc": "",
                 "downloadTimes": 65,
-                "iconUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61a8912cd302838d8898df9b",
+                "iconUrl": f"https://{bumper_isc.DOM_SUB_PORT}/api/pim/file/get/61a8912cd302838d8898df9b",
                 "id": "default",
                 "isDefault": True,
                 "languageName": language_name,
                 "name": language_name,
                 "needActive": False,
-                "sampleVoiceUrl": "https://portal-ww.ecouser.net/api/pim/file/get/61a8913a72e305f1cac11617",
+                "sampleVoiceUrl": f"https://{bumper_isc.DOM_SUB_PORT}/api/pim/file/get/61a8913a72e305f1cac11617",
                 "sort": 401,
                 "status": "valid",
                 "support": ["yiko"],
@@ -62,16 +64,15 @@ async def _handle_get(request: Request) -> Response:
                 "voiceLang": voice_lang,
                 "voiceMd5": "27a816e229a0e0471703a244a7763f09",  # pragma: allowlist secret
                 "voiceSize": 3823807,
-                "voiceUrl": "https://portal-ww.ecouser.net/api/pim/voice/download/61a89146d30283475c98df9d",
+                "voiceUrl": f"https://{bumper_isc.DOM_SUB_PORT}/api/pim/voice/download/61a89146d30283475c98df9d",
             },
         ],
-        data_key="voices",
     )
 
 
 async def _handle_get_lanuages(_: Request) -> Response:
     """Get languages."""
-    return response_success_v3(_get_voice_list(), data_key="voices")
+    return response_success_v3(data_key="voices", data=_get_voice_list())
 
 
 def _get_voice_list() -> list[dict[str, str | list[str]]]:

@@ -215,5 +215,4 @@ def test_check_url_not_used_multiple_patterns() -> None:
 
 
 def test_check_url_not_used_none_url() -> None:
-    with pytest.raises(TypeError):
-        utils.check_url_not_used(None)
+    assert not utils.check_url_not_used(None)

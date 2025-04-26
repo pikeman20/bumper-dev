@@ -1,41 +1,109 @@
-# Developing
+# Development Guide
 
-To start developing and contributing, install in dev mode.
+This guide covers setting up a local development environment, running the application, and maintaining code quality.
+
+---
+
+## 🔧 Prerequisites
+
+-   Python 3.13.x installed
+-   Git
+
+---
+
+## 🛠️ Setup Local Environment
+
+**Step 1 – Clone the repository**
 
 ```sh
-$python3 -m venv venv
-$source ./venv/bin/activate
-
-$python3 -m pip install -r requirements.txt
-$python3 -m pip install -r requirements-dev.txt
+$git clone https://github.com/MVladislav/bumper.git
+$cd bumper
 ```
 
-Review the [How It Works](How_It_Works.md) doc to understand the basics and then dive into the code.
+**Step 2 – Create and activate virtual environment, install uv**
 
-As features and functions are added, be sure to add tests to keep the test coverage high.
+```sh
+$python3 -m venv .venv
+$source .venv/bin/activate
+$python3 -m pip install uv
+```
 
-## Testing
+**Step 3 – Install project dependencies**
 
-Bumper uses pytest for the majority of test cases, review current tests in the /tests directory.
+```sh
+$uv sync --all-groups --upgrade
+```
 
-### Running tests
+---
+
+## 🚀 Running the Application
+
+```sh
+$./scripts/create_cert.sh
+$WEB_SERVER_HTTPS_PORT=8443 uv run bumper
+```
+
+The web UI will be available at `https://127.0.1.1:8443` by default.
+
+---
+
+## ✅ Code Quality and Testing
+
+### Linting & Static Analysis
+
+**Run pre-commit hooks**
+
+```sh
+$pre-commit run --all-files
+```
+
+**Type checking with mypy**
+
+```sh
+$uv run --frozen mypy bumper/
+```
+
+**Linting with pylint**
+
+```sh
+$uv run --frozen pylint bumper/
+```
+
+### Unit Tests
 
 **Run tests**
 
 ```sh
-$python -m pytest tests
+$uv run pytest tests
 ```
 
-**Run tests with coverage**
+**Tests with coverage report**
 
 ```sh
-$python -m pytest --cov=./ tests
+$uv run pytest --cov=./ tests --cov-report xml --junitxml=pytest-report.xml
 ```
 
-**Run tests with coverage html report**
-
-The report will be output into tests/report/index.html for further analysis.
+**Generate HTML coverage report**
 
 ```sh
-$python -m pytest --cov=./ tests --cov-report html:tests/report
+$uv run pytest --cov=./ tests --cov-report html:tests/report
 ```
+
+The HTML report is located at `tests/report/index.html`.
+
+---
+
+## 📖 Understanding the Code
+
+Refer to the [How It Works](../infos/How_It_Works.md) guide for an overview of the core architecture and data flows.
+
+---
+
+## 🤝 Contributing Changes
+
+1. Fork the repo and create a feature branch.
+2. Follow the setup and testing steps above.
+3. Commit changes with clear messages and update tests.
+4. Open a pull request against `main`, ensuring all checks pass.
+
+See [CONTRIBUTING.md](https://github.com/MVladislav/bumper/blob/main/CONTRIBUTING.md) for detailed contribution guidelines.

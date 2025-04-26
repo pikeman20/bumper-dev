@@ -15,6 +15,7 @@ from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import auth_util
 from bumper.web.plugins import WebserverPlugin
+from bumper.web.plugins.api.appsvr import create_device_list
 from bumper.web.response_utils import response_error_v6, response_success_v9
 
 _LOGGER = logging.getLogger(__name__)
@@ -87,12 +88,10 @@ async def _handle_user(request: Request) -> Response:
                     )
 
         if todo == "GetAuthCode":
-            # TODO: check what's needed to be implemented, which token is really needed and how to get correct
-            utils.default_log_warn_not_impl("_handle_user/GetAuthCode")
             body = await auth_util.get_auth_code_v2(request)
 
         if todo == "GetDeviceList":
-            body = web.json_response({"devices": db.bot_get_all(), "result": "ok", "todo": "result"})
+            body = web.json_response({"devices": create_device_list(), "result": "ok", "todo": "result"})
 
         if todo == "SetDeviceNick":
             db.bot_set_nick(post_body.get("did"), post_body.get("nick"))
@@ -107,7 +106,7 @@ async def _handle_user(request: Request) -> Response:
             body = response_success_v9()
 
         if body is None:
-            _LOGGER.error(f"todo is not know :: {todo}")
+            _LOGGER.warning(f"todo is not know :: {todo}")
             body = response_error_v6(todo)
         return body
     except Exception:

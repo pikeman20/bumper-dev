@@ -2,8 +2,6 @@
 
 from datetime import datetime, timedelta
 import logging
-import os
-from pathlib import Path
 from typing import Any
 
 from tinydb import Query, TinyDB, where
@@ -28,7 +26,7 @@ User_Query = Query()
 
 def _db_get() -> TinyDB:
     # Will create the database if it doesn't exist
-    db = TinyDB(_db_file())
+    db = TinyDB(bumper_isc.db_file)
 
     # Will create the tables if they don't exist
     db.table(TABLE_USERS, cache_size=0)
@@ -39,14 +37,6 @@ def _db_get() -> TinyDB:
     db.table(TABLE_CLEAN_LOGS, cache_size=0)
 
     return db
-
-
-def _db_file() -> str:
-    return os.environ.get("DB_FILE") or _os_db_path()
-
-
-def _os_db_path() -> str:  # createdir=True):
-    return str(Path(bumper_isc.data_dir) / "bumper.db")
 
 
 def _logging_message_not_document(value: Document | list[Document] | None, value_name: str) -> str:
@@ -128,7 +118,7 @@ def _clean_logs_add(did: str, cid: str) -> None:
         t_clean_log = clean_logs.get(User_Query.did == did and User_Query.cid == cid)
 
         if t_clean_log is None:
-            _LOGGER.info(f"Adding new clean log with did: {did} and cid: {cid}")
+            _LOGGER.debug(f"Adding new clean log with did: {did} and cid: {cid}")
             clean_logs.upsert(new_clean_log.to_db(), User_Query.did == did and User_Query.cid == cid)
 
 
@@ -182,6 +172,21 @@ def user_by_home_id(home_id: str) -> models.BumperUser | None:
     return _get_user(User_Query.homeids.any([home_id]))
 
 
+def get_all_users() -> list[models.BumperUser]:
+    """Get all users."""
+    bumper_users = []
+    with _db_get() as db:
+        users = db.table(TABLE_USERS)
+        all_user_data = users.all()
+
+        for user_data in all_user_data:
+            if isinstance(user_data, Document):
+                bumper_users.append(models.BumperUser.from_dict(user_data))
+            else:
+                _LOGGER.warning(_logging_message_not_document(user_data, "user_data"))
+    return bumper_users
+
+
 def _get_user(query: QueryInstance) -> models.BumperUser | None:
     """Help function to get an user."""
     with _db_get() as db:
@@ -192,6 +197,15 @@ def _get_user(query: QueryInstance) -> models.BumperUser | None:
         if user_data is not None:
             _LOGGER.warning(_logging_message_not_document(user_data, "user_data"))
     return None
+
+
+def user_remove(user_id: str) -> None:
+    """Remove user."""
+    with _db_get() as db:
+        users = db.table(TABLE_USERS)
+        t_user = users.get(User_Query.userid == user_id)
+        if t_user is not None:
+            users.remove(doc_ids=[t_user.doc_id])
 
 
 # ==> ADD/REMOVE DEVICE|BOT|HOME

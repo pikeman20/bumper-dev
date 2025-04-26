@@ -3,12 +3,10 @@
 from collections.abc import Iterable
 
 from aiohttp import web
-from aiohttp.web_request import Request
-from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.plugins.v1.private.user_setting import handle_get_msg_receive_setting
 
 from . import BASE_URL
 
@@ -23,31 +21,6 @@ class UserSettingPlugin(WebserverPlugin):
             web.route(
                 "*",
                 f"{BASE_URL}userSetting/getMsgReceiveSetting",
-                _handle_get_msg_receive_setting,
+                handle_get_msg_receive_setting,
             ),
         ]
-
-
-async def _handle_get_msg_receive_setting(_: Request) -> Response:
-    """Get msg receive setting."""
-    return get_success_response(
-        {
-            "list": [
-                {
-                    "name": "Promotion messages",
-                    "openOrClose": "Y",
-                    "settingType": "ACTIVITY",
-                },
-                {
-                    "name": "Service notifications",
-                    "openOrClose": "Y",
-                    "settingType": "SERVICE_NOTIFICATION",
-                },
-                {
-                    "name": "Customer service messages",
-                    "openOrClose": "Y",
-                    "settingType": "CUSTOMER_SERVICE",
-                },
-            ],
-        },
-    )

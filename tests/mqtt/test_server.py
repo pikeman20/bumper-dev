@@ -8,7 +8,7 @@ import pytest
 from testfixtures import LogCapture
 
 from bumper.mqtt.server import MQTTBinding, MQTTServer, _log__helperbot_message, mqtt_proxy
-from bumper.utils import db, dns
+from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
 from tests import HOST, MQTT_PORT
 
@@ -158,7 +158,7 @@ async def test_mqttserver(proxy: bool) -> None:
 
             # Test proxy
             if proxy:
-                dns.resolve = mock.MagicMock(return_value=async_return("127.0.0.1"))
+                utils.resolve = mock.MagicMock(return_value=async_return("127.0.0.1"))
                 mqtt_proxy.ProxyClient.connect = mock.MagicMock(return_value=async_return(True))
                 mqtt_proxy.ProxyClient.disconnect = mock.MagicMock(return_value=async_return(True))
 
@@ -210,7 +210,7 @@ async def test_mqttserver_subscribe(proxy: bool) -> None:
     with LogCapture() as log:
         bumper_isc.BUMPER_PROXY_MQTT = proxy
         if proxy:
-            dns.resolve = mock.MagicMock(return_value=async_return("127.0.0.1"))
+            utils.resolve = mock.MagicMock(return_value=async_return("127.0.0.1"))
 
         mqtt_server = MQTTServer(
             MQTTBinding(HOST, MQTT_PORT, True),

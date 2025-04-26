@@ -29,7 +29,7 @@ class UserSettingPlugin(WebserverPlugin):
             web.route(
                 "*",
                 f"{BASE_URL}userSetting/getMsgReceiveSetting",
-                _handle_get_msg_receive_setting,
+                handle_get_msg_receive_setting,
             ),
             web.route(
                 "*",
@@ -87,7 +87,7 @@ async def _handle_get_suggestion_setting(_: Request) -> Response:
     )
 
 
-async def _handle_get_msg_receive_setting(_: Request) -> Response:
+async def handle_get_msg_receive_setting(_: Request) -> Response:
     """Get msg receive setting."""
     return get_success_response(
         {

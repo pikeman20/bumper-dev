@@ -1,6 +1,7 @@
 """MQTT Server module."""
 
 import asyncio
+import base64
 import dataclasses
 import logging
 from pathlib import Path
@@ -11,7 +12,7 @@ from amqtt.session import IncomingApplicationMessage, Session
 from passlib.apps import custom_app_context as pwd_context
 
 from bumper.mqtt import helper_bot, proxy as mqtt_proxy
-from bumper.utils import db, dns, utils
+from bumper.utils import db, utils
 from bumper.utils.settings import config as bumper_isc
 
 _LOGGER = logging.getLogger(__name__)
@@ -56,12 +57,12 @@ class MQTTServer:
 
             # self._add_entry_point()
 
-            config_bind = {"default": {"type": "tcp"}}
+            config_bind: dict[str, Any] = {"default": {"type": "tcp"}}
             listener_prefix = "mqtt"
             for index, binding in enumerate(self._bindings):
                 config_bind[f"{listener_prefix}{index}"] = {
                     "bind": f"{binding.host}:{binding.port}",
-                    "ssl": "on" if binding.use_ssl is True else "off",
+                    "ssl": binding.use_ssl,
                 }
                 if binding.use_ssl is True:
                     config_bind[f"{listener_prefix}{index}"]["cafile"] = str(bumper_isc.ca_cert)
@@ -185,13 +186,19 @@ class BumperMQTTServerPlugin:
             if client_id and "@" in client_id:
                 client_id_split = client_id.split("@")
                 client_details_split = client_id_split[1].split("/")
-                tmp_bot_client_info: str = client_id_split[1]
                 tmp_did: str = client_id_split[0]
                 tmp_dev_class: str = client_details_split[0]
                 tmp_resource: str = client_details_split[1]
 
-                # if ecouser or bumper aren't in details it is a bot
-                if username is not None and "ecouser" not in tmp_bot_client_info and "bumper" not in tmp_bot_client_info:
+                if tmp_dev_class == "USER" and username and (user_split := username.split("`")) and len(user_split) >= 3:
+                    user_info_1 = base64.b64decode(user_split[1].replace("\n", ""))
+                    user_info_2 = base64.b64decode(user_split[2].replace("\n", ""))
+                    username = user_split[0]
+                    session.username = username
+                    _LOGGER.debug(f"Bumper USER info :: {user_info_1!s} :: {user_info_2!s}")
+
+                # if ecouser, bumper or USER aren't in client_id, it is a bot
+                if username is not None and tmp_dev_class not in {"ecouser", "bumper", "USER"}:
                     db.bot_add(username, tmp_did, tmp_dev_class, tmp_resource, "eco-ng")
                     if bumper_isc.INFO_LOGGING_VERBOSE:
                         _LOGGER.info(
@@ -199,7 +206,7 @@ class BumperMQTTServerPlugin:
                         )
 
                     if bumper_isc.BUMPER_PROXY_MQTT and password is not None:
-                        mqtt_server = await dns.resolve(bumper_isc.PROXY_MQTT_DOMAIN)
+                        mqtt_server = await utils.resolve(bumper_isc.PROXY_MQTT_DOMAIN)
                         _LOGGER_PROXY.info(f"MQTT Proxy Mode :: Using server {mqtt_server} for client {client_id}")
                         proxy = mqtt_proxy.ProxyClient(client_id, mqtt_server, config={"check_hostname": False})
                         self._proxy_clients[client_id] = proxy

@@ -45,6 +45,9 @@ class Config:
     server_cert = Path(os.environ.get("BUMPER_CERT", certs_dir / "bumper.crt"))
     server_key = Path(os.environ.get("BUMPER_KEY", certs_dir / "bumper.key"))
 
+    # Data Files
+    db_file = str(Path(os.environ.get("DB_FILE") or data_dir / "bumper.db"))
+
     # Listeners
     bumper_listen: str | None = os.environ.get("BUMPER_LISTEN", socket.gethostbyname(socket.gethostname()))
     bumper_announce_ip: str | None = os.environ.get("BUMPER_ANNOUNCE_IP", bumper_listen)
@@ -73,6 +76,23 @@ class Config:
     PROXY_NAMESERVER: list[str] = ["1.1.1.1", "8.8.8.8"]
     PROXY_MQTT_DOMAIN: str = "mq-ww.ecouser.net"
 
+    # Domains
+    DOMAIN_ALI: str = "globalapp-eu.oss-eu-central-1.aliyuncs.com"
+
+    DOMAIN_MAIN: str = "ecouser.net"
+    DOM_SUB_PORT: str = DOMAIN_MAIN  # f"portal-ww.{DOMAIN_MAIN}"
+    DOM_SUB_1: str = ""  # "dc-eu.ww."
+    DOM_SUB_2: str = ""  # "dc.ww."
+    DOM_SUB_3: str = ""  # "area.ww."
+
+    DOMAIN_SEC: str = "ecovacs.com"
+    DOMAIN_SEC1 = DOMAIN_SEC  # f"www.{DOMAIN_SEC}"
+    DOMAIN_SEC2 = DOMAIN_SEC  # f"gl-us-pub.{DOMAIN_SEC}"
+    DOMAIN_SEC3 = DOMAIN_SEC  # f"gl-us-wap.{DOMAIN_SEC}"
+    DOMAIN_SEC4 = DOMAIN_SEC  # f"club-eu-wap.{DOMAIN_SEC}"
+    DOMAIN_SEC5 = DOMAIN_SEC  # f"sa-us-datasink.{DOMAIN_SEC}"
+    DOMAIN_SEC6 = DOMAIN_SEC  # f"bumper.{DOMAIN_SEC}"
+
     # Ports
     WEB_SERVER_TLS_LISTEN_PORT: int = int(os.environ.get("WEB_SERVER_HTTPS_PORT") or 443)
     WEB_SERVER_LISTEN_PORT: int = 8007
@@ -91,6 +111,9 @@ class Config:
     shutting_down: bool = False
 
     HOME_ID: str = "781a0733923f2240cf304757"
+    USER_USERNAME_DEFAULT: str = "bumper"
+    USER_NICKNAME_DEFAULT: str = "bumper"
+    USER_MAIL_DEFAULT: str = f"{USER_USERNAME_DEFAULT}@home.local"
 
     # Dynamically load the application version from pyproject.toml
     APP_VERSION: str = version("bumper")

@@ -99,17 +99,23 @@ async def _handle_v2_message_push(_: Request) -> Response:
     return response_success_v3("")
 
 
-async def _handle_v3_message_push_status(_: Request) -> Response:
+async def _handle_v3_message_push_status(request: Request) -> Response:
     # EcoVacs Home
     # TODO: check what's needed to be implemented
     utils.default_log_warn_not_impl("_handle_v3_message_push_status")
-    # NOTE: devices has a list with dict of did,msgPushStatus,nickName
-    # NOTE: uid is as userid in header. not implemented
+    userid = request.headers.get("userid", "")
+    # token = request.headers.get("token", "")
     return response_success_v3(
         {
-            "devices": [],
+            "devices": [
+                # {
+                #     "did": "...",
+                #     "msgPushStatus": True,
+                #     "nickName": "DEEBOT T10 PLUS",
+                # },
+            ],
             "msgPushStatus": {"DEVICE": True, "SHARE": True},
-            "uid": "",
+            "uid": userid,
         },
     )
 
