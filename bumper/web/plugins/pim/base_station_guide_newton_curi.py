@@ -41,21 +41,24 @@ async def _handle_base_station_guide_newton_curi(_: Request) -> Response:
     <html lang="en">
     <head>
     <meta charset="UTF-8" />
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title>Base Station Guide</title>
     <style>
-        body {
-        font-family: Arial, sans-serif;
-        background-color: #fff;
+        html, body {
+        height: 100%;
         margin: 0;
         padding: 0;
+        overflow: auto;
+        font-family: Arial, sans-serif;
+        background-color: #fff;
         }
 
         .container {
         width: 90%;
-        max-width: 600px;
-        margin: 2em auto;
-        padding: 1em;
+        max-width: 52rem;
+        margin: 0 auto;
+        padding: 1.5em 1em 4em;
+        box-sizing: border-box;
         }
 
         h1 {
@@ -103,15 +106,14 @@ async def _handle_base_station_guide_newton_curi(_: Request) -> Response:
         max-width: 100%;
         height: auto;
         margin: 20px 0;
+        display: block;
         }
     </style>
     </head>
     <body>
     <div class="container">
         <h1>1. Empty Station</h1>
-        <div style="text-align: center;">
-        <img class="img-fit" src="/pim/images/base_station_introduction_newton_curi_en.png" alt="Base Station Overview">
-        </div>
+        <img class="img-fit" src="/pim/images/base_station_introduction_newton_curi_en.png" alt="Base Station Overview" />
 
         <hr />
 
@@ -124,26 +126,20 @@ async def _handle_base_station_guide_newton_curi(_: Request) -> Response:
         <p class="illustration-second">
         Hold the Handle to lift out the Dust Bag, which can effectively prevent dust leakage.
         </p>
-        <div style="text-align: center;">
-        <img class="img-fit" src="/pim/images/dust_bag1_newton_curi.png" alt="Dispose Dust Bag">
-        </div>
+        <img class="img-fit" src="/pim/images/dust_bag1_newton_curi.png" alt="Dispose Dust Bag" />
 
         <div class="subheading">
         <div class="seq">2</div>
         <span class="illustration">Clean the Dust Bag Cabin with a dry cloth</span>
         </div>
         <p class="illustration-second">and put a new Dust Bag in</p>
-        <div style="text-align: center;">
-        <img class="img-fit" src="/pim/images/dust_bag2_newton_curi.png" alt="Clean and Replace Bag">
-        </div>
+        <img class="img-fit" src="/pim/images/dust_bag2_newton_curi.png" alt="Clean and Replace Bag" />
 
         <div class="subheading">
         <div class="seq">3</div>
         <span class="illustration">Close the Dust Bag Cabin</span>
         </div>
-        <div style="text-align: center;">
-        <img class="img-fit" src="/pim/images/dust_bag3_newton_curi.png" alt="Close the Cabin">
-        </div>
+        <img class="img-fit" src="/pim/images/dust_bag3_newton_curi.png" alt="Close the Cabin" />
     </div>
     </body>
     </html>
