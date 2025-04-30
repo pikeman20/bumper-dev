@@ -11,7 +11,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.plugins.v1.private.common import handle_get_current_area_support_service_info
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 from . import BASE_URL
 
@@ -46,7 +46,7 @@ class CommonPlugin(WebserverPlugin):
 async def handle_get_bottom_navigate_info_list(_: Request) -> Response:
     """Get bottom navigation info list."""
     domain = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
-    return get_success_response(
+    return response_success_v1(
         {
             "bgImgUrl": None,
             "navigateInfoResponseList": [
@@ -121,4 +121,4 @@ async def handle_get_bottom_navigate_info_list(_: Request) -> Response:
 
 
 async def _handle_yiko_basic_setting(_: Request) -> Response:
-    return get_success_response(None)
+    return response_success_v1(None)

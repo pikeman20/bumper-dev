@@ -8,7 +8,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 from . import BASE_URL
 
@@ -60,7 +60,7 @@ async def handle_get_exp_by_scene(request: Request) -> Response:
 
     key_only_once1 = "only"  # only because
     key_only_once2 = "Once"  # of code spell :D
-    return get_success_response(
+    return response_success_v1(
         {
             "completeList": [
                 {

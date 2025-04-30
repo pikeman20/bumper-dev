@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from bumper.web.models import ERR_TOKEN_INVALID
+from bumper.web.response_utils import ERR_TOKEN_INVALID
 
 
 @pytest.mark.usefixtures("clean_database")

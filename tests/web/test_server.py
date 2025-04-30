@@ -2,9 +2,7 @@ import json
 
 import pytest
 
-from bumper.utils.settings import config as bumper_isc
 from bumper.web.server import WebServer, WebserverBinding
-from bumper.xmpp.xmpp import XMPPServer
 from tests import HOST, WEBSERVER_PORT
 
 
@@ -18,26 +16,14 @@ async def test_webserver_no_ssl() -> None:
     await webserver.start()
 
 
-@pytest.mark.usefixtures("helper_bot", "clean_database")
+@pytest.mark.usefixtures("helper_bot", "clean_database", "xmpp_server")
 async def test_base(webserver_client) -> None:
-    # Start XMPP
-    xmpp_server = XMPPServer(HOST, 5223)
-    bumper_isc.xmpp_server = xmpp_server
-    await xmpp_server.start_async_server()
-
     resp = await webserver_client.get("/")
     assert resp.status == 200
 
-    await bumper_isc.xmpp_server.disconnect()
 
-
-@pytest.mark.usefixtures("helper_bot", "clean_database")
+@pytest.mark.usefixtures("helper_bot", "clean_database", "xmpp_server")
 async def test_restartService(webserver_client) -> None:
-    # Start XMPP
-    xmpp_server = XMPPServer(HOST, 5223)
-    bumper_isc.xmpp_server = xmpp_server
-    await xmpp_server.start_async_server()
-
     resp = await webserver_client.get("/restart_Helperbot")
     assert resp.status == 200
 
@@ -46,8 +32,6 @@ async def test_restartService(webserver_client) -> None:
 
     resp = await webserver_client.get("/restart_XMPPServer")
     assert resp.status == 200
-
-    await xmpp_server.disconnect()
 
 
 async def test_RemoveBot(webserver_client) -> None:

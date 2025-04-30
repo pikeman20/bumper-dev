@@ -73,8 +73,11 @@ services:
       - source: mitm_pem_config
         target: /tmp/ca.pem
         mode: "0444"
-      - source: mitm_script_config
-        target: /tmp/mitm.py
+      - source: mitm_cmd_script_config
+        target: /tmp/mitm-cmd.py
+        mode: "0555"
+      - source: mitm_mqtt_script_config
+        target: /tmp/mitm-mqtt.py
         mode: "0555"
     command:
       - "mitmweb"
@@ -95,7 +98,9 @@ services:
       - "--certs"
       - "*=/tmp/ca.pem"
       - "-s"
-      - "/tmp/mitm.py"
+      - "/tmp/mitm-cmd.py"
+      # - "-s"
+      # - "/tmp/mitm-mqtt.py"
 
 ################################################################################
 ################################################################################
@@ -113,5 +118,7 @@ volumes:
 configs:
   mitm_pem_config:
     file: $PWD/certs/ca.pem
-  mitm_script_config:
-    file: $PWD/configs/mitm.py
+  mitm_cmd_script_config:
+    file: $PWD/configs/mitm-cmd.py
+  mitm_mqtt_script_config:
+    file: $PWD/configs/mitm-mqtt.py

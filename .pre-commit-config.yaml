@@ -68,17 +68,17 @@ repos:
     hooks:
       - id: detect-secrets
         args:
-          - --exclude-files=bumper/web/plugins/api/pim/configGroupsResponse.json
-          - --exclude-files=bumper/web/plugins/api/pim/productIotMap.json
-          - --exclude-files=bumper/web/plugins/api/pim/productConfigBatch.json
-          - --exclude-files=bumper/web/plugins/api/pim/configNetAllResponse.json
           - --exclude-files=bumper/web/plugins/api/appsvr.py
-          - --exclude-files=bumper/web/plugins/api/pim/consumable.py
           - --exclude-files=bumper/web/plugins/api/homed.py
-          # - --exclude-files=home.jinja2
+          - --exclude-files=bumper/web/plugins/api/pim/codePushConfig.json
+          - --exclude-files=bumper/web/plugins/api/pim/configGroupsResponse.json
+          - --exclude-files=bumper/web/plugins/api/pim/configNetAllResponse.json
+          - --exclude-files=bumper/web/plugins/api/pim/consumable.py
+          - --exclude-files=bumper/web/plugins/api/pim/productConfigBatch.json
+          - --exclude-files=bumper/web/plugins/api/pim/productIotMap.json
           - --exclude-files=tests/*
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.24.3
+    rev: v8.25.1
     hooks:
       - id: gitleaks
 

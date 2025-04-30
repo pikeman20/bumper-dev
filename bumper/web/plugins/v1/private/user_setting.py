@@ -9,7 +9,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 from . import BASE_URL
 
@@ -42,7 +42,7 @@ class UserSettingPlugin(WebserverPlugin):
 async def _handle_get_suggestion_setting(_: Request) -> Response:
     """Get suggestion setting."""
     activity_sub_title = "Allow to receive notification including membership benefits, product and consumable recommendations."
-    return get_success_response(
+    return response_success_v1(
         {
             "acceptSuggestion": "N",
             "itemList": [
@@ -89,7 +89,7 @@ async def _handle_get_suggestion_setting(_: Request) -> Response:
 
 async def handle_get_msg_receive_setting(_: Request) -> Response:
     """Get msg receive setting."""
-    return get_success_response(
+    return response_success_v1(
         {
             "list": [
                 {
@@ -116,4 +116,4 @@ async def _handle_save_user_setting(_: Request) -> Response:
     """Save user setting."""
     # TODO: check what's needed to be implemented
     utils.default_log_warn_not_impl("_handle_save_user_setting")
-    return get_success_response(None)
+    return response_success_v1(None)

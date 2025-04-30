@@ -1,24 +1,30 @@
 """Auth util module."""
 
+import datetime
 import hashlib
 import json
 import logging
 from typing import Any
 import uuid
 
+import aiofiles
 from aiohttp.web_exceptions import HTTPInternalServerError
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
+import jwt
 
-from bumper.utils import db, utils
+from bumper.db import bot_repo, client_repo, token_repo, user_repo
+from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import models
 from bumper.web.response_utils import (
-    get_success_response,
+    ERR_TOKEN_INVALID,
+    ERR_USER_DISABLE,
     response_error_v1,
     response_error_v2,
     response_error_v4,
     response_error_v9,
+    response_success_v1,
     response_success_v2,
     response_success_v3,
 )
@@ -30,7 +36,7 @@ GENERATE_AUTH_CODE_V2 = 2
 
 # ******************************************************************************
 #
-# AUTH UTILS
+# LOGIN UTILS
 #
 # ******************************************************************************
 
@@ -58,106 +64,22 @@ async def login(request: Request) -> Response:
             _LOGGER.info(f"Client with devid {device_id} attempting login")
             if device_id is not None and app_type is not None:
                 # Performing basic "auth" using devid, super insecure
-                user = db.user_by_device_id(device_id)
+                user = user_repo.get_by_device_id(device_id)
                 if user is None:
                     _LOGGER.warning(f"No user found for {device_id}")
                 else:
                     if "checkLogin" in request.path:
-                        return _check_token(app_type, country_code, user, request.query["accessToken"])[1]
+                        return _check_token(app_type, country_code, user, request.query.get("accessToken", ""))[1]
                     # Deactivate old tokens and authcodes
-                    db.user_revoke_expired_tokens(user.userid)
-                    return get_success_response(_get_login_details(app_type, country_code, user, _generate_token(user.userid)))
-            return response_error_v1(msg="Parameter error. Please try again later.", code=models.ERR_TOKEN_INVALID)
+                    token_repo.revoke_user_expired(user.userid)
+                    return response_success_v1(_get_login_details(app_type, country_code, user, _generate_token(user.userid)))
+            return response_error_v1(msg="Parameter error. Please try again later.", code=ERR_TOKEN_INVALID)
 
         if device_id is not None and app_type is not None:
             return _auth_any(uid, access_token, device_id, app_type, country_code, check)
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder(info="during login"))
     raise HTTPInternalServerError
-
-
-async def get_auth_code(request: Request) -> Response:
-    """Get auth code."""
-    try:
-        device_id = request.match_info.get("devid")  # Ecovacs
-        if device_id is None:
-            device_id = request.query.get("deviceId")  # Ecovacs Home
-        access_token = request.query.get("accessToken")
-
-        if device_id is not None and access_token is not None:
-            user = db.user_by_device_id(device_id)
-            if user is None:
-                _LOGGER.warning(f"No user found for {device_id}")
-            else:
-                auth_code = _get_auth_code(
-                    user.userid,
-                    access_token,
-                    request.match_info.get("country", bumper_isc.ECOVACS_DEFAULT_COUNTRY),
-                )
-                if auth_code is not None:
-                    return get_success_response({"authCode": auth_code, "ecovacsUid": user.userid})
-
-        return response_error_v9(msg="Interface Authentication Failure", code=models.ERR_TOKEN_INVALID)
-    except Exception:
-        _LOGGER.exception(utils.default_exception_str_builder(info="during get auth code"))
-    raise HTTPInternalServerError
-
-
-async def get_auth_code_v2(request: Request) -> Response:
-    """Get auth code v2."""
-    try:
-        post_body = json.loads(await request.text())
-        user_id = post_body.get("auth", {}).get("userid")
-        access_token = post_body.get("auth", {}).get("token")
-
-        if user_id is not None and access_token is not None:
-            user = db.user_by_user_id(user_id)
-            if user is None:
-                _LOGGER.warning(f"No user found for {user_id}")
-            else:
-                auth_code = _get_auth_code(
-                    user.userid,
-                    access_token,
-                    request.match_info.get("country", bumper_isc.ECOVACS_DEFAULT_COUNTRY),
-                    2,
-                )
-                if auth_code is not None:
-                    return response_success_v2(auth_code, "code")
-
-        return response_error_v2(msg="auth error", code="1004")
-    except Exception:
-        _LOGGER.exception(utils.default_exception_str_builder(info="during get auth code v2"))
-    raise HTTPInternalServerError
-
-
-def _get_auth_code(
-    user_id: str,
-    access_token: str,
-    country: str = bumper_isc.ECOVACS_DEFAULT_COUNTRY,
-    version: int = GENERATE_AUTH_CODE_V1,
-) -> str | None:
-    """Get auth code."""
-    auth_code: str | None = None
-
-    # version 2 ignore the access_token, because current it was the easiest workaround ^^
-    if version == GENERATE_AUTH_CODE_V2:
-        if (token := db.user_get_token_v2(user_id)) is not None:
-            if (auth_code := token.get("authcode")) is None:
-                auth_code = _generate_auth_code(user_id, country, access_token, GENERATE_AUTH_CODE_V2)
-            return auth_code
-
-    elif (token := db.user_get_token(user_id, access_token)) is not None:
-        if (auth_code := token.get("authcode")) is None:
-            auth_code = _generate_auth_code(user_id, country, access_token, GENERATE_AUTH_CODE_V1)
-        return auth_code
-
-    return None
-
-
-def _check_token(apptype: str, country_code: str, user: models.BumperUser, token: str) -> tuple[bool, Response]:
-    if db.check_token(user.userid, token):
-        return (True, get_success_response(_get_login_details(apptype, country_code, user, token)))
-    return (False, response_error_v1(msg="Parameter error. Please try again later.", code=models.ERR_TOKEN_INVALID))
 
 
 def _auth_any(
@@ -171,20 +93,20 @@ def _auth_any(
     if uid is None:
         uid = _generate_uid("tmpuser")
 
-    body = response_error_v1(msg="Parameter error. Please try again later.", code=models.ERR_TOKEN_INVALID)
-    user = db.user_by_user_id(uid)
+    body = response_error_v1(msg="Parameter error. Please try again later.", code=ERR_TOKEN_INVALID)
+    user = user_repo.get_by_id(uid)
 
     # anyway if it is a login or only checklogin
     # we will create a user if not exists and generated always a token, to be always authenticated
     if user is None:
         # Add a new user
-        db.user_add(uid)
-        user = db.user_by_user_id(uid)
+        user_repo.add(uid)
+        user = user_repo.get_by_id(uid)
 
     if user is not None:
         _auth_any_clean(user, device_id)
         token = _generate_token(user.userid)
-        body = get_success_response(_get_login_details(apptype, country_code, user, token))
+        body = response_success_v1(_get_login_details(apptype, country_code, user, token))
 
         # If request was to check a token
         if check is True and access_token is not None:
@@ -198,17 +120,200 @@ def _auth_any(
 
 def _auth_any_clean(user: models.BumperUser, device_id: str) -> None:
     # Add current used device to user
-    db.user_add_device(user.userid, device_id)
+    user_repo.add_device(user.userid, device_id)
     # Add all known bots to the user
-    bots = db.bot_get_all()
+    bots = bot_repo.list_all()
     for bot in bots:
-        if "did" in bot:
-            db.user_add_bot(user.userid, bot["did"])
+        if bot.did is not None and bot.did != "":
+            user_repo.add_bot(user.userid, bot.did)
         else:
             _LOGGER.error(f"No DID for bot :: {bot}")
 
     # Deactivate old tokens and authcodes
-    db.user_revoke_expired_tokens(user.userid)
+    token_repo.revoke_user_expired(user.userid)
+
+
+# ******************************************************************************
+#
+# AUTH UTILS :: IT Token
+#
+# ******************************************************************************
+
+
+async def get_auth_code(request: Request) -> Response:
+    """Get auth code."""
+    try:
+        user_id = request.query.get("uid")
+        # access_token = request.query.get("accessToken")
+
+        user: models.BumperUser | None = None
+        if user_id is not None:
+            user = user_repo.get_by_id(user_id)
+        if user is None:
+            user = _fallback_user_by_device_id(request)
+        if user is None:
+            _LOGGER.warning(f"No user found for {user_id}")
+            return response_error_v9(msg=f"No user found for {user_id}", code=ERR_TOKEN_INVALID)
+
+        if (auth_code := _generate_it_token(user.userid)) is not None:
+            return response_success_v1(
+                {
+                    "authCode": auth_code,
+                    "ecovacsUid": user.userid,  # TODO: change, this is not my userid | ucid | ucuid
+                },
+            )
+
+        _LOGGER.warning(f"Expired user login {user_id}")
+        return response_error_v9(msg="Expired user login", code=ERR_TOKEN_INVALID)
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during 'get_auth_code'"))
+    raise HTTPInternalServerError
+
+
+def _fallback_user_by_device_id(request: Request) -> models.BumperUser | None:
+    device_id = request.match_info.get("devid")  # Ecovacs
+    if device_id is None:
+        device_id = request.query.get("deviceId")  # Ecovacs Home
+    if device_id is not None:
+        return user_repo.get_by_device_id(device_id)
+    return None
+
+
+def _generate_it_token(user_id: str) -> str | None:
+    """Generate it token."""
+    # Generate new it_token and update to existing token entry
+    new_it_token = f"GLOBAL_APP_ECOVACS_IOT_{uuid.uuid4().hex}"
+    if token_repo.add_it_token(user_id, new_it_token):
+        return new_it_token
+    _LOGGER.warning("Failed to create it_token")
+    return None
+
+
+# ******************************************************************************
+#
+# AUTH UTILS :: New Auth
+#
+# ******************************************************************************
+
+
+async def get_new_auth(request: Request) -> Response:
+    """Get new auth do."""
+    try:
+        post_body = json.loads(await request.text())
+        it_token: str | None = post_body.get("itToken")  # NOTE: created with `/v1/global/auth/getAuthCode`
+
+        if it_token is None:
+            _LOGGER.warning("New auth failed, 'itToken' not provided")
+            return response_error_v2(msg="New auth failed, 'itToken' not provided", code=ERR_TOKEN_INVALID)
+        if (token := token_repo.login_by_it_token(it_token)) is None:
+            _LOGGER.warning("New auth failed, no token found for it-token")
+            return response_error_v2(msg="New auth failed, no token found for it-token", code=ERR_TOKEN_INVALID)
+
+        if (auth_code := _generate_auth_code(token.userid)) is not None:
+            return response_success_v2(data=auth_code, data_key="authCode", code=None, result_key="result")
+
+        _LOGGER.warning(f"Expired client login {token.userid}")
+        return response_error_v2(msg="Expired client login", code=ERR_TOKEN_INVALID)
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during 'get_new_auth'"))
+    raise HTTPInternalServerError
+
+
+# ******************************************************************************
+#
+# AUTH UTILS :: ...
+#
+# ******************************************************************************
+
+
+async def get_auth_code_v2(request: Request) -> Response:
+    """Get auth code v2."""
+    try:
+        post_body = json.loads(await request.text())
+        user_id = post_body.get("auth", {}).get("userid")
+        # TODO: possible change to JWT, see oauth_callback, inside will be ac as authcode
+        # access_token = post_body.get("auth", {}).get("token")
+
+        user: models.BumperUser | None = None
+        if user_id is not None:
+            user = user_repo.get_by_id(user_id)
+        if user is None:
+            _LOGGER.warning(f"No user found for {user_id}")
+            return response_error_v2(msg=f"No user found for {user_id}", code=ERR_USER_DISABLE)
+
+        if (auth_code := _generate_auth_code(user.userid)) is not None:
+            return response_success_v2(data=auth_code, data_key="code", code=None, result_key="result")
+
+        _LOGGER.warning(f"Auth error for {user_id}")
+        return response_error_v2(msg="Auth error", code=ERR_USER_DISABLE)
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during 'get_auth_code_v2'"))
+    raise HTTPInternalServerError
+
+
+# ******************************************************************************
+#
+# OAUTH UTILS
+#
+# ******************************************************************************
+
+
+async def oauth_callback(request: Request) -> Response:
+    """Oauth callback."""
+    try:
+        if (auth_code := request.query.get("code")) is None:
+            return response_error_v4()
+        if (token := token_repo.get_by_auth_code(auth_code)) is None:
+            return response_error_v4()
+
+        client = client_repo.get(token.userid)
+
+        client_id = client.userid if client is not None else None
+        client_resource = client.resource if client is not None else None
+
+        access_token, _ = await generate_jwt_helper(
+            data={
+                "c": client_id,
+                "u": token.userid,
+                "r": client_resource,
+                "ac": auth_code,
+            },
+            t="a",
+        )
+        refresh_token, expire_at = await generate_jwt_helper(
+            data={
+                "c": client_id,
+                "u": token.userid,
+                "r": client_resource,
+                "ac": auth_code,
+            },
+            t="r",
+        )
+        return response_success_v3(
+            data={
+                "userId": token.userid,
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "expire_at": expire_at,
+            },
+        )
+
+    except Exception:
+        _LOGGER.exception(utils.default_exception_str_builder(info="during 'oauth_callback'"))
+    raise HTTPInternalServerError
+
+
+# ******************************************************************************
+#
+# HELPER UTILS
+#
+# ******************************************************************************
+
+
+def _check_token(apptype: str, country_code: str, user: models.BumperUser, token: str) -> tuple[bool, Response]:
+    if token_repo.verify(user.userid, token):
+        return (True, response_success_v1(_get_login_details(apptype, country_code, user, token)))
+    return (False, response_error_v1(msg="Parameter error. Please try again later.", code=ERR_TOKEN_INVALID))
 
 
 def _get_login_details(apptype: str, country_code: str, user: models.BumperUser, token: str) -> dict[str, Any]:
@@ -231,38 +336,6 @@ def _get_login_details(apptype: str, country_code: str, user: models.BumperUser,
     return details
 
 
-# ******************************************************************************
-#
-# OAUTH UTILS
-#
-# ******************************************************************************
-
-
-def oauth_callback(request: Request) -> Response:
-    """Oauth callback."""
-    try:
-        if (auth_code := request.query.get("code")) is None:
-            return response_error_v4()
-        if (token := db.token_by_auth_code(auth_code)) is None:
-            return response_error_v4()
-        if (user := token.get("userid")) is None:
-            return response_error_v4()
-        if (oauth := db.user_add_oauth(user)) is None:
-            return response_error_v4()
-
-        return response_success_v3(oauth.to_response())
-    except Exception:
-        _LOGGER.exception(utils.default_exception_str_builder(info="during handling oauth callback"))
-    raise HTTPInternalServerError
-
-
-# ******************************************************************************
-#
-# HELPER UTILS
-#
-# ******************************************************************************
-
-
 def _generate_uid(email: str) -> str:
     """Generate an uid from a given E-Mail."""
     hash_object = hashlib.sha256()
@@ -273,67 +346,74 @@ def _generate_uid(email: str) -> str:
 def _generate_token(user_id: str) -> str:
     """Generate new token and add to DB."""
     token = uuid.uuid4().hex
-    db.user_add_token(user_id, token)
+    token_repo.add(user_id, token)
     return token
 
 
-def _generate_auth_code(user_id: str, country_code: str, token: str, version: int = GENERATE_AUTH_CODE_V1) -> str:
-    """Generate new auth token and add to DB."""
-    tmp_auth_code = f"{country_code}_{uuid.uuid4().hex}"
-    if version == GENERATE_AUTH_CODE_V1:
-        db.user_add_auth_code(user_id, token, tmp_auth_code)
-    elif version == GENERATE_AUTH_CODE_V2:
-        db.user_add_auth_code_v2(user_id, tmp_auth_code)
-    return tmp_auth_code
+def _generate_auth_code(user_id: str) -> str | None:
+    """Generate auth code."""
+    # Generate new auth_code and update to existing token entry
+    new_auth_code = uuid.uuid4().hex
+    if token_repo.add_auth_code(user_id, new_auth_code):
+        return new_auth_code
+    _LOGGER.warning("Failed to create auth_code")
+    return None
 
 
-# async def get_auth_info(request: Request) -> tuple[tuple | None, tuple | None]:
-#     """Get auth info from requests."""
-#     try:
-#         auth_keys = ["accessToken", "token", "user_token"]
-#         user_keys = ["uid", "userid"]
+async def generate_jwt_helper(
+    data: dict[str, Any] | None = None,
+    t: str = "r",
+    exp_seconds: int = bumper_isc.TOKEN_VALIDITY_SECONDS,
+    algorithm: str = bumper_isc.TOKEN_JWT_ALG,
+) -> tuple[str, int]:
+    """Generate JWT."""
+    if data is None:
+        data = {}
+    now_dt = datetime.datetime.now(tz=bumper_isc.LOCAL_TIMEZONE)
+    exp_dt = now_dt + datetime.timedelta(seconds=int(exp_seconds))
 
-#         token: tuple | None = None
-#         user: tuple | None = None
+    headers = {
+        "alg": algorithm,
+        "typ": "JWT",
+    }
+    payload = {
+        "t": t,
+        "iat": int(now_dt.timestamp()),
+        "exp": int(exp_dt.timestamp()) if t != "a" else int(now_dt.timestamp()),
+    }
+    if data:
+        payload.update(data)
 
-#         # Search in headers or query for credentials
-#         for key in auth_keys:
-#             auth_value = request.headers.get(key) or request.query.get(key)
-#             if auth_value:
-#                 token = (key, auth_value)
+    async with aiofiles.open(bumper_isc.server_key) as cert_file:
+        private_key = await cert_file.read()
 
-#         # Search in headers or query for user info
-#         for key in user_keys:
-#             user_value = request.headers.get(key) or request.query.get(key)
-#             if user_value:
-#                 user = (key, user_value)
-
-#         # Search in JSON body
-#         try:
-#             if token is None and user is None:
-#                 token = _find_keys_in_json(await request.json(), auth_keys)
-#                 user = _find_keys_in_json(await request.json(), user_keys)
-#         except Exception as e:
-#             _LOGGER.warning(utils.default_exception_str_builder(info="during handle json decoding"))
-
-#         return (user, token)
-#     except Exception as e:
-#         _LOGGER.warning(utils.default_exception_str_builder(info="during auth info gather"))
-#     return (None, None)
+    return (
+        jwt.encode(
+            payload,
+            private_key,
+            algorithm=algorithm,
+            headers=headers,
+        ),
+        int(exp_dt.timestamp()),
+    )
 
 
-# def _find_keys_in_json(data: dict | list | None, keys_to_find: list[str]) -> tuple | None:
-#     if isinstance(data, dict):
-#         for key, value in data.items():
-#             if key in keys_to_find:
-#                 return (key, value)
-#             if isinstance(value, (dict, list)):
-#                 result = _find_keys_in_json(value, keys_to_find)
-#                 if result:
-#                     return result
-#     elif isinstance(data, list):
-#         for item in data:
-#             result = _find_keys_in_json(item, keys_to_find)
-#             if result:
-#                 return result
-#     return None
+def get_jwt_details(auth_header: str | None) -> dict[str, Any] | None:
+    """Extract JWT helper."""
+    if not auth_header or not auth_header.lower().startswith("bearer "):
+        return None
+
+    token = auth_header.split(" ")[1]
+
+    try:
+        payload = jwt.decode(token, options={"verify_signature": False})
+        return {
+            "issued_at": payload.get("iat"),
+            "expires_at": payload.get("exp"),
+            "client_id": payload.get("c"),
+            "user_id": payload.get("u"),
+            "client_resource": payload.get("r"),
+            "auth_code": payload.get("ac"),
+        }
+    except jwt.DecodeError:
+        return None

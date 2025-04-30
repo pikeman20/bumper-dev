@@ -64,11 +64,12 @@ $apktool d com.eco.global.app.apk --frame-path /tmp/apktool-framework
 # $vim com.eco.global.app/res/raw/yiko_ca.cert
 
 $apktool b com.eco.global.app --frame-path /tmp/apktool-framework
+$cp com.eco.global.app/dist/com.eco.global.app.apk com.eco.global.app.apk
 
-$zipalign -v 4 com.eco.global.app com.eco.global.app
+# $zipalign -v 4 com.eco.global.app com.eco.global.app
 
 $keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias mykey
-$~/.android/Sdk/build-tools/36.0.0/apksigner sign --ks my-release-key.jks --v1-signing-enabled true --v2-signing-enabled true *.apk
+$~/.android/Sdk/build-tools/36.0.0/apksigner sign --ks my-release-key.jks --v1-signing-enabled true --v2-signing-enabled true com.eco.global.app.apk
 ```
 
 ## \\\\ Resources

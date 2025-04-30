@@ -13,7 +13,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import response_success_v5
+from bumper.web.response_utils import response_success_v4
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ async def _handle_get_by_area(request: Request) -> Response:
             msg_list = '", "'.join(utils.get_area_code_map().keys())
             data = f'area: area must be one of the following: "{msg_list}"'
 
-        return response_success_v5(data, code, data_str)
+        return response_success_v4(data, code, data_str)
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError

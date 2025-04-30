@@ -8,7 +8,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 
 class DimPlugin(WebserverPlugin):
@@ -28,4 +28,4 @@ class DimPlugin(WebserverPlugin):
 
 async def _handle_content_agreement(_: Request) -> Response:
     """Content agreement."""
-    return get_success_response(None)
+    return response_success_v1(None)

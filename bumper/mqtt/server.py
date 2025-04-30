@@ -11,8 +11,9 @@ from amqtt.broker import Broker, BrokerContext
 from amqtt.session import IncomingApplicationMessage, Session
 from passlib.apps import custom_app_context as pwd_context
 
+from bumper.db import bot_repo, client_repo, token_repo
 from bumper.mqtt import helper_bot, proxy as mqtt_proxy
-from bumper.utils import db, utils
+from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 
 _LOGGER = logging.getLogger(__name__)
@@ -173,72 +174,83 @@ class BumperMQTTServerPlugin:
     async def authenticate(self, session: Session, **kwargs: dict[str, Any]) -> bool:
         """Authenticate session."""
         username: str | None = session.username
-        password: str | None = session.password
-        client_id: str | None = session.client_id
+        password: str | None = session.password  # Format: JWT
+        client_id: str | None = session.client_id  # Format: <DID/USER_ID>@<CLASSID>/RESOURCE
+
+        error_msg = "File Authentication Failed :: Default access not grant - last try anonymous auth if allowed!"
 
         try:
-            # Auth the HelperBot
+            if client_id is None:
+                _LOGGER.warning("Bumper Authentication Failed :: No client_id provided")
+                raise Exception(error_msg)
+
+            # Authenticate the HelperBot
             if client_id == helper_bot.HELPER_BOT_CLIENT_ID:
-                if bumper_isc.INFO_LOGGING_VERBOSE:
-                    _LOGGER.info(f"Bumper Authentication Success :: Helperbot :: {client_id}")
+                _LOGGER.info(f"Bumper Authentication Success :: Helperbot :: ClientID: {client_id}")
                 return True
 
-            if client_id and "@" in client_id:
-                client_id_split = client_id.split("@")
-                client_details_split = client_id_split[1].split("/")
-                tmp_did: str = client_id_split[0]
-                tmp_dev_class: str = client_details_split[0]
-                tmp_resource: str = client_details_split[1]
-
-                if tmp_dev_class == "USER" and username and (user_split := username.split("`")) and len(user_split) >= 3:
-                    user_info_1 = base64.b64decode(user_split[1].replace("\n", ""))
-                    user_info_2 = base64.b64decode(user_split[2].replace("\n", ""))
-                    username = user_split[0]
-                    session.username = username
-                    _LOGGER.debug(f"Bumper USER info :: {user_info_1!s} :: {user_info_2!s}")
-
-                # if ecouser, bumper or USER aren't in client_id, it is a bot
-                if username is not None and tmp_dev_class not in {"ecouser", "bumper", "USER"}:
-                    db.bot_add(username, tmp_did, tmp_dev_class, tmp_resource, "eco-ng")
-                    if bumper_isc.INFO_LOGGING_VERBOSE:
-                        _LOGGER.info(
-                            f"Bumper Authentication Success :: Bot :: SN: {username} :: DID: {tmp_did} :: Class: {tmp_dev_class}",
-                        )
-
-                    if bumper_isc.BUMPER_PROXY_MQTT and password is not None:
-                        mqtt_server = await utils.resolve(bumper_isc.PROXY_MQTT_DOMAIN)
-                        _LOGGER_PROXY.info(f"MQTT Proxy Mode :: Using server {mqtt_server} for client {client_id}")
-                        proxy = mqtt_proxy.ProxyClient(client_id, mqtt_server, config={"check_hostname": False})
-                        self._proxy_clients[client_id] = proxy
-                        await proxy.connect(username, password)
-                    return True
-
-                if (password is not None and db.check_auth_code(tmp_did, password)) or not bumper_isc.USE_AUTH:
-                    db.client_add(tmp_did, tmp_dev_class, tmp_resource)
-                    if bumper_isc.INFO_LOGGING_VERBOSE:
-                        _LOGGER.info(f"Bumper Authentication Success :: Client :: Username: {username} :: ClientID: {client_id}")
-                    return True
-
             # Check for File Auth
-            if username is not None and password is not None:
-                # If there is a username and it isn't already authenticated
+            if "@" not in client_id and username is not None and password is not None:
                 password_hash = self._users.get(username)
                 message_suffix = f"Username: {username} - ClientID: {client_id}"
-
-                if password_hash is None:  # If there is a matching entry in passwd, check hash
+                if password_hash is None:
                     _LOGGER.info(f"File Authentication Failed :: No Entry for :: {message_suffix}")
-
+                    raise Exception(error_msg)
                 if pwd_context.verify(password, password_hash):
                     _LOGGER.info(f"File Authentication Success :: {message_suffix}")
                     return True
-
                 _LOGGER.info(f"File Authentication Failed :: {message_suffix}")
+                raise Exception(error_msg)
+
+            if (result := self._client_id_split_helper(client_id)) is None:
+                raise Exception(error_msg)
+            did, class_id, resource, client_type = result
+
+            # username has more information included
+            if username and class_id == "USER" and (username_info := username.split("`")) and len(username_info) >= 3:
+                # {"fv":"1.0.0","wv":"v2.1.0"}
+                user_header: str = base64.b64decode(username_info[1].replace("\n", "")).decode("utf-8")
+                # {"app":"user","st":10}
+                user_body: str = base64.b64decode(username_info[2].replace("\n", "")).decode("utf-8")
+                session.username = username_info[0]
+                username = session.username
+                _LOGGER.debug(f"Bumper USER info :: {user_header!s} :: {user_body!s}")
+
+            # Check when Password authentication is enabled
+            if bumper_isc.USE_AUTH:
+                if password is None:
+                    _LOGGER.warning(
+                        "Bumper Authentication Failed :: "
+                        "No password provided and password authentication is enabled ('USE_AUTH')",
+                    )
+                    raise Exception(error_msg)
+                if not token_repo.verify_auth_code(did, password):
+                    _LOGGER.warning("Bumper Authentication Failed :: Wrong password")
+                    raise Exception(error_msg)
+
+            if username and client_type == "bot":
+                bot_repo.add(username, did, class_id, resource, "eco-ng")
+                _LOGGER.info(f"Bumper Authentication Success :: Bot :: Username: {username} :: ClientID: {client_id}")
+
+                if bumper_isc.BUMPER_PROXY_MQTT and username is not None and password is not None:
+                    mqtt_server = await utils.resolve(bumper_isc.PROXY_MQTT_DOMAIN)
+                    _LOGGER_PROXY.info(f"MQTT Proxy Mode :: Using server {mqtt_server} for client {client_id}")
+                    proxy = mqtt_proxy.ProxyClient(client_id, mqtt_server, config={"check_hostname": False})
+                    self._proxy_clients[client_id] = proxy
+                    await proxy.connect(username, password)
+
+                return True
+
+            # all other will add as a client
+            client_repo.add(username, did, class_id, resource)
+            _LOGGER.info(f"Bumper Authentication Success :: Client :: Username: {username} :: ClientID: {client_id}")
+            return True
         except Exception:
             _LOGGER.exception(f"Session: {kwargs.get('session', '')}")
 
         # Check for allow anonymous
         if self.auth_config.get("allow-anonymous", True):
-            _LOGGER.info(f"Anonymous Authentication Success: config allows anonymous :: Username: {username}")
+            _LOGGER.info(f"Anonymous Authentication Success :: config allows anonymous :: Username: {username}")
             return True
 
         return False
@@ -342,15 +354,33 @@ class BumperMQTTServerPlugin:
 
     def _set_client_connected(self, client_id: str, connected: bool) -> None:
         try:
-            didsplit = client_id.split("@")
-            bot = db.bot_get(didsplit[0])
-            if bot is not None:
-                db.bot_set_mqtt(bot.get("did"), connected)
+            # Skip the HelperBot
+            if client_id == helper_bot.HELPER_BOT_CLIENT_ID:
                 return
 
-            clientresource = didsplit[1].split("/")[1]
-            client = db.client_get(clientresource)
-            if client:
-                db.client_set_mqtt(client["resource"], connected)
+            if (result := self._client_id_split_helper(client_id)) is None:
+                return
+            did, _, __, client_type = result
+
+            if client_type == "bot":
+                if bot := bot_repo.get(did):
+                    bot_repo.set_mqtt(bot.did, connected)
+                return
+            if client_type == "user":
+                if client := client_repo.get(did):
+                    client_repo.set_mqtt(client.userid, connected)
+                return
         except Exception:
             _LOGGER.exception("Failed to connect client")
+
+    def _client_id_split_helper(self, client_id: str) -> tuple[str, str, str, Literal["bot", "user"]] | None:
+        try:
+            did, rest = client_id.split("@", 1)
+            class_id, resource = rest.split("/", 1)
+        except ValueError:
+            _LOGGER.warning(f"Failed to connect client :: Wrong formatted client_id '{client_id}'")
+            return None
+
+        # if not identified with a user class_id, we mark as bot
+        client_type: Literal["bot", "user"] = "user" if class_id in bumper_isc.USER_REALMS else "bot"
+        return did, class_id, resource, client_type

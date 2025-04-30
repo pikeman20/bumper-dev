@@ -2,9 +2,9 @@ import json
 
 import pytest
 
-from bumper.utils import db
+from bumper.db import bot_repo, token_repo, user_repo
 from bumper.web.auth_util import _generate_uid
-from bumper.web.models import ERR_TOKEN_INVALID, RETURN_API_SUCCESS
+from bumper.web.response_utils import ERR_TOKEN_INVALID, RETURN_API_SUCCESS
 
 USER_ID = _generate_uid("tmpuser")
 
@@ -23,7 +23,7 @@ async def test_checkLogin(webserver_client) -> None:
     assert "username" in jsonresp["data"]
 
     # Add a user to db and test with existing users
-    db.user_add(USER_ID)
+    user_repo.add(USER_ID)
     resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={None}")
     assert resp.status == 200
     text = await resp.text()
@@ -35,7 +35,7 @@ async def test_checkLogin(webserver_client) -> None:
     assert "username" in jsonresp["data"]
 
     # Test again using global_e app
-    db.user_add(USER_ID)
+    user_repo.add(USER_ID)
     resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/global_e/1/0/0/user/checkLogin?accessToken={None}")
     assert resp.status == 200
     text = await resp.text()
@@ -47,12 +47,12 @@ async def test_checkLogin(webserver_client) -> None:
     assert "username" in jsonresp["data"]
 
     # Remove dev from tmpuser
-    db.user_remove_device(USER_ID, "dev_1234")
+    user_repo.remove_device(USER_ID, "dev_1234")
 
     # Add a token to user and test
-    db.user_add(USER_ID)
-    db.user_add_device(USER_ID, "dev_1234")
-    db.user_add_token(USER_ID, "token_1234")
+    user_repo.add(USER_ID)
+    user_repo.add_device(USER_ID, "dev_1234")
+    token_repo.add(USER_ID, "token_1234")
     resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/ios/1/0/0/user/checkLogin?accessToken={'token_1234'}")
     assert resp.status == 200
     text = await resp.text()
@@ -64,7 +64,7 @@ async def test_checkLogin(webserver_client) -> None:
     assert "username" in jsonresp["data"]
 
     # Test again using global_e app
-    db.user_add(USER_ID)
+    user_repo.add(USER_ID)
     resp = await webserver_client.get(f"/v1/private/us/en/dev_1234/global_e/1/0/0/user/checkLogin?accessToken={'token_1234'}")
     assert resp.status == 200
     text = await resp.text()
@@ -93,9 +93,9 @@ async def test_getAuthCode(webserver_client) -> None:
     # assert jsonresp["code"] == ERR_TOKEN_INVALID
 
     # Add a token to user and test
-    db.user_add(USER_ID)
-    db.user_add_device(USER_ID, "dev_1234")
-    db.user_add_token(USER_ID, "token_1234")
+    user_repo.add(USER_ID)
+    user_repo.add_device(USER_ID, "dev_1234")
+    token_repo.add(USER_ID, "token_1234")
     resp = await webserver_client.get("/v1/private/us/en/dev_1234/ios/1/0/0/user/getAuthCode?uid=testuser&accessToken=token_1234")
     assert resp.status == 200
     text = await resp.text()
@@ -132,12 +132,12 @@ async def test_checkAgreement(webserver_client) -> None:
 
 @pytest.mark.usefixtures("clean_database")
 async def test_getUserAccountInfo(webserver_client) -> None:
-    db.user_add(USER_ID)
-    db.user_add_device(USER_ID, "dev_1234")
-    db.user_add_token(USER_ID, "token_1234")
-    db.user_add_auth_code(USER_ID, "token_1234", "auth_1234")
-    db.user_add_bot(USER_ID, "did_1234")
-    db.bot_add("sn_1234", "did_1234", "class_1234", "res_1234", "com_1234")
+    user_repo.add(USER_ID)
+    user_repo.add_device(USER_ID, "dev_1234")
+    token_repo.add(USER_ID, "token_1234")
+    token_repo.add_auth_code(USER_ID, "auth_1234")
+    user_repo.add_bot(USER_ID, "did_1234")
+    bot_repo.add("sn_1234", "did_1234", "class_1234", "res_1234", "com_1234")
 
     resp = await webserver_client.get("/v1/private/us/en/dev_1234/global_e/1/0/0/user/getUserAccountInfo")
     assert resp.status == 200

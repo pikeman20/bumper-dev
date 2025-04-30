@@ -16,7 +16,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 from bumper.utils import utils
 from bumper.web.images import get_bot_image
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import response_success_v3, response_success_v5
+from bumper.web.response_utils import response_success_v3, response_success_v4
 
 from . import get_product_iot_map
 
@@ -66,7 +66,7 @@ class ProductPlugin(WebserverPlugin):
 async def _handle_get_product_iot_map(_: Request) -> Response:
     """Get product iot map."""
     try:
-        return response_success_v5(get_product_iot_map())
+        return response_success_v4(get_product_iot_map())
 
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
@@ -126,7 +126,7 @@ async def _handle_get_share_info(request: Request) -> Response:
         json_body = json.loads(await request.text())
         scene = json_body.get("scene")
         _LOGGER.debug(f"Share info :: {scene}")
-        return response_success_v5([])
+        return response_success_v4([])
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError

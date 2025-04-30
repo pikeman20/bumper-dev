@@ -7,8 +7,9 @@ import logging
 from pathlib import Path
 import sys
 
+from bumper.db import bot_repo, client_repo, token_repo
 from bumper.mqtt import helper_bot, server as server_mqtt
-from bumper.utils import db, utils
+from bumper.utils import utils
 from bumper.utils.log_helper import LogHelper
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import server as server_web
@@ -33,7 +34,7 @@ async def start() -> None:
 
 async def start_configuration() -> None:
     """Initialize Bumper configuration."""
-    if bumper_isc.bumper_level == "DEBUG":
+    if bumper_isc.debug_bumper_level == "DEBUG":
         asyncio.get_event_loop().set_debug(True)
 
     if not bumper_isc.bumper_listen:
@@ -41,8 +42,8 @@ async def start_configuration() -> None:
         _LOGGER.error(error_message)
         raise ValueError(error_message)
 
-    db.bot_reset_connection_status()
-    db.client_reset_connection_status()
+    bot_repo.reset_all_connections()
+    client_repo.reset_all_connections()
 
     if bumper_isc.BUMPER_PROXY_MQTT is True:
         _LOGGER.info("Proxy MQTT Enabled")
@@ -96,8 +97,7 @@ async def maintenance() -> None:
     """Run periodic maintenance tasks."""
     try:
         while not bumper_isc.shutting_down:
-            db.revoke_expired_tokens()
-            db.revoke_expired_oauths()
+            token_repo.revoke_expired()
             await asyncio.sleep(5)
     except asyncio.CancelledError:
         pass
@@ -109,11 +109,9 @@ async def shutdown() -> None:
     bumper_isc.shutting_down = True
 
     if bumper_isc.mqtt_helperbot is not None:
-        # _LOGGER.info("Disconnecting HelperBot...")
         await bumper_isc.mqtt_helperbot.disconnect()
 
     if bumper_isc.web_server is not None:
-        # _LOGGER.info("Shutting down Web Server...")
         await bumper_isc.web_server.shutdown()
 
     if bumper_isc.mqtt_server is not None:
@@ -121,11 +119,9 @@ async def shutdown() -> None:
             _LOGGER.info("Waiting for MQTT Server to stabilize before shutdown...")
             await asyncio.sleep(0.1)
         if bumper_isc.mqtt_server.state == "started":
-            # _LOGGER.info("Shutting down MQTT Server...")
             await bumper_isc.mqtt_server.shutdown()
 
     if bumper_isc.xmpp_server is not None and bumper_isc.xmpp_server.server:
-        # _LOGGER.info("Shutting down XMPP Server...")
         await bumper_isc.xmpp_server.disconnect()
 
     tasks = [task for task in asyncio.all_tasks() if task is not asyncio.current_task()]
@@ -149,9 +145,9 @@ def read_args(argv: list[str] | None) -> None:
     args = parser.parse_args(argv)
 
     if args.debug_level:
-        bumper_isc.bumper_level = args.debug_level
+        bumper_isc.debug_bumper_level = args.debug_level  # debug_bumper_level
     if args.debug_verbose:
-        bumper_isc.bumper_verbose = args.debug_verbose
+        bumper_isc.debug_bumper_verbose = args.debug_verbose  # debug_bumper_verbose
     if args.listen:
         bumper_isc.bumper_listen = args.listen
     if args.announce:
@@ -180,6 +176,8 @@ def main(argv: list[str] | None = None) -> None:
     except Exception:
         _LOGGER.critical(utils.default_exception_str_builder())
     finally:
-        loop.run_until_complete(shutdown())
+        if not loop.is_closed():
+            loop.run_until_complete(shutdown())
+            loop.run_until_complete(loop.shutdown_asyncgens())
         if loop.is_running():
             loop.close()

@@ -5,20 +5,28 @@ import ssl
 from aiomqtt import Client
 import pytest
 
+from bumper.db import db
 from bumper.mqtt.helper_bot import MQTTHelperBot
 from bumper.mqtt.server import MQTTBinding, MQTTServer
-from bumper.utils import db
 from bumper.utils.log_helper import LogHelper
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.server import WebServer, WebserverBinding
+from bumper.xmpp.xmpp import XMPPServer
 from tests import HOST, MQTT_PORT, WEBSERVER_PORT
+
+# import tracemalloc
+# @pytest.fixture(scope="session", autouse=True)
+# def enable_tracemalloc():
+#     tracemalloc.start()
+#     yield
+#     tracemalloc.stop()
 
 
 # NOTE: use with:
 # @pytest.mark.usefixtures("clean_database")
 @pytest.fixture(name="clean_database")
 def _clean_database() -> None:
-    db._db_get().drop_tables()
+    db.get_db().drop_tables()
     if os.path.exists("tests/_test_files/tmp.db"):
         os.remove("tests/_test_files/tmp.db")  # Remove existing db
 
@@ -28,8 +36,8 @@ def _clean_database() -> None:
 # @pytest.mark.usefixtures("log_helper")
 @pytest.fixture
 def log_helper(level: str):
-    bumper_isc.bumper_level = level
-    bumper_isc.bumper_verbose = 2
+    bumper_isc.debug_bumper_level = level
+    bumper_isc.debug_bumper_verbose = 2
     return LogHelper()
 
 
@@ -56,17 +64,54 @@ def configure_logging():
 
 
 @pytest.fixture
+async def xmpp_server():
+    """Fixture to start and stop the XMPP server."""
+    bumper_isc.xmpp_server = XMPPServer(HOST, 5223)
+
+    try:
+        await bumper_isc.xmpp_server.start_async_server()
+        yield bumper_isc.xmpp_server
+
+    finally:
+        await bumper_isc.xmpp_server.disconnect()
+
+
+@pytest.fixture
+async def mqtt_server_anonymous():
+    """Fixture to start and stop the MQTT server."""
+    bumper_isc.mqtt_server = MQTTServer(
+        MQTTBinding(HOST, MQTT_PORT, True),
+        password_file="tests/_test_files/passwd",
+        allow_anonymous=True,
+    )
+
+    try:
+        await bumper_isc.mqtt_server.start()
+        while bumper_isc.mqtt_server.state != "started":
+            await asyncio.sleep(0.1)
+
+        yield bumper_isc.mqtt_server
+
+    finally:
+        if bumper_isc.mqtt_server.state == "started":
+            await bumper_isc.mqtt_server.shutdown()
+
+
+@pytest.fixture
 async def mqtt_server():
     """Fixture to start and stop the MQTT server."""
     bumper_isc.mqtt_server = MQTTServer(MQTTBinding(HOST, MQTT_PORT, True), password_file="tests/_test_files/passwd")
 
-    await bumper_isc.mqtt_server.start()
-    while bumper_isc.mqtt_server.state != "started":
-        await asyncio.sleep(0.1)
+    try:
+        await bumper_isc.mqtt_server.start()
+        while bumper_isc.mqtt_server.state != "started":
+            await asyncio.sleep(0.1)
 
-    yield bumper_isc.mqtt_server
+        yield bumper_isc.mqtt_server
 
-    await bumper_isc.mqtt_server.shutdown()
+    finally:
+        if bumper_isc.mqtt_server.state == "started":
+            await bumper_isc.mqtt_server.shutdown()
 
 
 @pytest.fixture
@@ -105,11 +150,13 @@ async def helper_bot(mqtt_server: MQTTServer):
 async def webserver_client(aiohttp_client):
     """Fixture to create a web server client."""
     bumper_isc.web_server = WebServer(WebserverBinding(HOST, WEBSERVER_PORT, False), False)
-    client = await aiohttp_client(bumper_isc.web_server._app)
 
-    yield client
+    try:
+        client = await aiohttp_client(bumper_isc.web_server._app)
+        yield client
 
-    await client.close()
+    finally:
+        await client.close()
 
 
 @pytest.fixture

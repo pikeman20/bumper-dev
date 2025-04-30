@@ -27,6 +27,14 @@ Variables not listed here are hardcoded or not configurable via environment.
 
 ---
 
+## 🔒 Authentication
+
+| Variable        | Default | Description                                                             |
+| --------------- | ------- | ----------------------------------------------------------------------- |
+| `TOKEN_JWT_ALG` | `ES256` | JWT algorithm to be used, depends on the bumper certificate you create. |
+
+---
+
 ## 🌐 Networking
 
 | Variable                | Default                      | Description                                                            |
@@ -39,18 +47,16 @@ Variables not listed here are hardcoded or not configurable via environment.
 
 ## 🚦 Logging & Debugging
 
-| Variable                              | Default | Description                                                       |
-| ------------------------------------- | ------- | ----------------------------------------------------------------- |
-| `BUMPER_DEBUG_LEVEL`                  | `INFO`  | Log level (`NOTSET`,`DEBUG`,`INFO`,`WARNING`,`ERROR`,`CRITICAL`). |
-| `BUMPER_DEBUG_VERBOSE`                | `1`     | Verbose output per log line (integer).                            |
-| `INFO_LOGGING_VERBOSE`                | `True`  | Add context to info-level logs.                                   |
-| `DEBUG_LOGGING_API_REQUEST`           | `False` | Log incoming HTTP API requests.                                   |
-| `DEBUG_LOGGING_API_REQUEST_MISSING`   | `False` | Log missing API parameters/details.                               |
-| `DEBUG_LOGGING_XMPP_REQUEST`          | `False` | Log raw XMPP request payloads.                                    |
-| `DEBUG_LOGGING_XMPP_REQUEST_REFACTOR` | `False` | Enable experimental XMPP request logging.                         |
-| `DEBUG_LOGGING_XMPP_RESPONSE`         | `False` | Log XMPP server responses.                                        |
-| `DEBUG_LOGGING_API_ROUTE`             | `False` | Log HTTP route resolution details.                                |
-| `DEBUG_LOGGING_SA_RESULT`             | `False` | Log service-autonomy plugin outputs.                              |
+| Variable                                | Default | Description                                                       |
+| --------------------------------------- | ------- | ----------------------------------------------------------------- |
+| `DEBUG_BUMPER_LEVEL`                    | `INFO`  | Log level (`NOTSET`,`DEBUG`,`INFO`,`WARNING`,`ERROR`,`CRITICAL`). |
+| `DEBUG_BUMPER_VERBOSE`                  | `1`     | Verbose output per log line (integer `0`,`1`,`2`).                |
+| `DEBUG_LOGGING_API_REQUEST`             | `False` | Log incoming API requests.                                        |
+| `DEBUG_LOGGING_API_REQUEST_MISSING`     | `False` | Log missing API parameters/details.                               |
+| `DEBUG_LOGGING_XMPP_REQUEST_ORIGINAL`   | `False` | Log XMPP request before internal changed.                         |
+| `DEBUG_LOGGING_XMPP_REQUEST_REFACTORED` | `False` | Log XMPP request after internal changed.                          |
+| `DEBUG_LOGGING_XMPP_RESPONSE`           | `False` | Log XMPP server responses.                                        |
+| `DEBUG_LOGGING_SA_RESULT`               | `False` | Log service-autonomy outputs from API requests by `/sa`.          |
 
 ---
 

@@ -14,9 +14,9 @@ async def test_start_stop(debug: bool, proxy: bool) -> None:
         if proxy:
             bumper_isc.BUMPER_PROXY_MQTT = True
             bumper_isc.BUMPER_PROXY_WEB = True
-        bumper_isc.bumper_verbose = 2
+        bumper_isc.debug_bumper_verbose = 2
         if debug:
-            bumper_isc.bumper_level = "DEBUG"
+            bumper_isc.debug_bumper_level = "DEBUG"
 
         if os.path.exists("tests/_test_files/tmp.db"):
             os.remove("tests/_test_files/tmp.db")  # Remove existing db
@@ -62,7 +62,7 @@ async def test_start_stop(debug: bool, proxy: bool) -> None:
 
 async def test_start_missing_listen() -> None:
     with LogCapture() as log:
-        bumper_isc.bumper_verbose = 2
+        bumper_isc.debug_bumper_verbose = 2
         bumper_isc.bumper_listen = None
 
         if os.path.exists("tests/_test_files/tmp.db"):

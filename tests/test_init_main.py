@@ -36,13 +36,13 @@ def test_argparse(
     bumper.main(cmd_args)
 
     if expected_level is not None:
-        assert bumper_isc.bumper_level == expected_level
+        assert expected_level == bumper_isc.debug_bumper_level
     if expected_verbose is not None:
-        assert bumper_isc.bumper_verbose == expected_verbose
+        assert expected_verbose == bumper_isc.debug_bumper_verbose
     if expected_listen is not None:
-        assert bumper_isc.bumper_listen == expected_listen
+        assert expected_listen == bumper_isc.bumper_listen
     if expected_announce is not None:
-        assert bumper_isc.bumper_announce_ip == expected_announce
+        assert expected_announce == bumper_isc.bumper_announce_ip
 
     mock_start.assert_called()
     mock_shutdown.assert_called()

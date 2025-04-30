@@ -10,7 +10,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import response_success_v6
+from bumper.web.response_utils import response_success_v3
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,4 +35,4 @@ async def _handle_products_firmware_latest(_: Request) -> Response:
     utils.default_log_warn_not_impl("_handle_products_firmware_latest")
     # device_class = request.match_info.get("class")
     # did = request.query.get("did")
-    return response_success_v6(None)
+    return response_success_v3(data=None, result_key=None, include_success=True)

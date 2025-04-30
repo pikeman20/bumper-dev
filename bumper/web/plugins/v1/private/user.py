@@ -9,11 +9,12 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.utils import db, utils
+from bumper.db import token_repo, user_repo
+from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import auth_util
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 from . import BASE_URL
 
@@ -101,13 +102,13 @@ async def _logout(request: Request) -> Response:
         device_id = request.match_info.get("devid")
         access_token = request.query.get("accessToken")
         if device_id is not None and access_token is not None:
-            user = db.user_by_device_id(device_id)
+            user = user_repo.get_by_device_id(device_id)
             if user is None:
                 _LOGGER.warning(f"No user found for {device_id}")
-            elif db.check_token(user.userid, access_token):
+            elif token_repo.verify(user.userid, access_token):
                 # Deactivate old tokens and authcodes
-                db.user_revoke_token(user.userid, access_token)
-        return get_success_response(None)
+                token_repo.revoke_token(user.userid, access_token)
+        return response_success_v1(None)
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder())
     raise HTTPInternalServerError
@@ -117,7 +118,7 @@ async def _handle_get_user_account_info(request: Request) -> Response:
     """Get user account info."""
     try:
         user_device_id = request.match_info.get("devid", "")
-        user = db.user_by_device_id(user_device_id)
+        user = user_repo.get_by_device_id(user_device_id)
         if user is None:
             _LOGGER.warning(f"No user found for {user_device_id}")
         else:
@@ -144,7 +145,7 @@ async def _handle_get_user_account_info(request: Request) -> Response:
                 "vipLevelIconUrl": f"https://{bumper_isc.DOMAIN_SEC2}/public/220628/d01e939518354ee0af5c88a5269e27d8.png",
             }
 
-            return get_success_response(
+            return response_success_v1(
                 {
                     "email": bumper_isc.USER_MAIL_DEFAULT,
                     "hasMobile": "N",
@@ -189,12 +190,12 @@ async def _handle_check_agreement(request: Request) -> Response:
                 "version": "1.01",
             },
         ]
-    return get_success_response(data)
+    return response_success_v1(data)
 
 
 async def handle_check_agreement_batch(_: Request) -> Response:
     """Check agreement batch."""
-    return get_success_response(
+    return response_success_v1(
         {
             "agreementList": [],
             "reAcceptFlag": None,
@@ -225,7 +226,7 @@ async def handle_check_agreement_batch(_: Request) -> Response:
 async def _handle_get_user_menu_info(_: Request) -> Response:
     """Get user menu info."""
     domain = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
-    return get_success_response(
+    return response_success_v1(
         [
             {
                 "menuItems": [
@@ -286,7 +287,7 @@ async def _handle_get_user_menu_info(_: Request) -> Response:
 async def _handle_get_my_user_menu_info(_: Request) -> Response:
     """Get my user menu info."""
     domain = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
-    return get_success_response(
+    return response_success_v1(
         {
             "menuList": [
                 {
@@ -344,9 +345,9 @@ async def _handle_get_my_user_menu_info(_: Request) -> Response:
 
 async def _handle_change_area(_: Request) -> Response:
     """Change area."""
-    return get_success_response({"isNeedReLogin": "N"})
+    return response_success_v1({"isNeedReLogin": "N"})
 
 
 async def _handle_accept_agreement_batch(_: Request) -> Response:
     """Accept agreement batch."""
-    return get_success_response(None)
+    return response_success_v1(None)

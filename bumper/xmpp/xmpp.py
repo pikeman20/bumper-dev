@@ -12,7 +12,8 @@ from xml.etree.ElementTree import Element
 
 import defusedxml.ElementTree as ET  # noqa: N817
 
-from bumper.utils import db, utils
+from bumper.db import bot_repo, client_repo, token_repo
+from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 
 _LOGGER = logging.getLogger(__name__)
@@ -140,13 +141,18 @@ class XMPPAsyncClient:
     def send(self, command: str) -> None:
         """Send command."""
         try:
+            if not isinstance(self.transport, transports.WriteTransport):
+                return
+
             command = command.replace('"', "'")
             if self.log_sent_message:
                 _LOGGER_CLIENT.debug(f"send to ({self.address[0]}:{self.address[1]} | {self.bumper_jid}) - {command}")
-            if isinstance(self.transport, transports.WriteTransport):
-                if bumper_isc.DEBUG_LOGGING_XMPP_RESPONSE is True:
-                    _LOGGER_CLIENT.info(f"SENDING  :: {command}")
-                self.transport.write(command.encode())
+
+            if bumper_isc.DEBUG_LOGGING_XMPP_RESPONSE is True:
+                _LOGGER_CLIENT.info(f"XMPP SENDING to  :: ({self.address[0]}:{self.address[1]} | {self.bumper_jid})")
+                _LOGGER_CLIENT.info(f"XMPP SENDING cmd :: {command}")
+
+            self.transport.write(command.encode())
         except Exception:
             _LOGGER_CLIENT.exception(utils.default_exception_str_builder(), exc_info=True)
 
@@ -155,13 +161,14 @@ class XMPPAsyncClient:
         _LOGGER.info("Disconnect XMPP Client...")
         try:
             self.cleanup()  # Ensure the ping task is cleaned up
-            bot = db.bot_get(self.uid)
-            if bot:
-                db.bot_set_xmpp(bot.get("did"), False)
-            if self.clientresource is not None:
-                client = db.client_get(self.clientresource)
+            if self.devclass:
+                bot = bot_repo.get(self.uid)
+                if bot:
+                    bot_repo.set_xmpp(bot.did, False)
+            else:
+                client = client_repo.get(self.uid)
                 if client:
-                    db.client_set_xmpp(client.get("resource"), False)
+                    client_repo.set_xmpp(client.userid, False)
             self.transport.close()
         except Exception:
             _LOGGER_CLIENT.error(utils.default_exception_str_builder(), exc_info=True)
@@ -240,9 +247,7 @@ class XMPPAsyncClient:
                     rxmlstring = self._xml_replacer(xml, "query", "com:ctl")
 
                     if client.type == self.BOT and ctl_to is not None and client.uid.lower() in ctl_to.lower():
-                        _LOGGER_CLIENT.debug(
-                            f"Sending ctl to bot: {rxmlstring}",
-                        )
+                        _LOGGER_CLIENT.debug(f"Sending ctl to bot: {rxmlstring}")
                         client.send(rxmlstring)
 
         except Exception:
@@ -487,9 +492,9 @@ class XMPPAsyncClient:
                 authcode = saslauth[2]
 
             if self.devclass:  # if there is a devclass it is a bot
-                db.bot_add(self.uid, self.uid, self.devclass, "atom", "eco-legacy")
+                bot_repo.add(self.uid, self.uid, self.devclass, "atom", "eco-legacy")
                 self.type = self.BOT
-                _LOGGER_CLIENT.info(f"bot authenticated SN :: {self.uid}")
+                _LOGGER_CLIENT.info(f"XMPP Authentication Success :: Bot :: ClientID: {self.uid}")
                 # Send response
                 self.send('<success xmlns="urn:ietf:params:xml:ns:xmpp-sasl"/>')  # Success
                 # Client authenticated, move to next state
@@ -497,13 +502,13 @@ class XMPPAsyncClient:
 
             else:
                 auth = False
-                if db.check_auth_code(self.uid, authcode) or bumper_isc.USE_AUTH is False:
+                if token_repo.verify_auth_code(self.uid, authcode) or bumper_isc.USE_AUTH is False:
                     auth = True
 
                 if auth and self.clientresource is not None:
                     self.type = self.CONTROLLER
-                    db.client_add(self.uid, "bumper", self.clientresource)
-                    _LOGGER_CLIENT.info(f"client authenticated :: {self.uid}")
+                    client_repo.add(self.uid, self.uid, "USER", self.clientresource)
+                    _LOGGER_CLIENT.info(f"XMPP Authentication Success :: Client :: ClientID: {self.uid}")
                     # Client authenticated, move to next state
                     self.set_state("INIT")
                     # Send response
@@ -517,14 +522,14 @@ class XMPPAsyncClient:
 
     def _handle_bind(self, xml: Element) -> None:
         try:
-            bot = db.bot_get(self.uid)
-            if bot:
-                db.bot_set_xmpp(bot.get("did"), True)
-
-            if self.clientresource is not None:
-                client = db.client_get(self.clientresource)
+            if self.devclass:
+                bot = bot_repo.get(self.uid)
+                if bot:
+                    bot_repo.set_xmpp(bot.did, True)
+            else:
+                client = client_repo.get(self.uid)
                 if client is not None:
-                    db.client_set_xmpp(client["resource"], True)
+                    client_repo.set_xmpp(client.userid, True)
 
             type_added = "client"
             clientresourcexml = list(next(iter(xml)))
@@ -599,8 +604,8 @@ class XMPPAsyncClient:
         """Parse data."""
         xml_str: str = data.decode("utf-8")
 
-        if bumper_isc.DEBUG_LOGGING_XMPP_REQUEST is True:
-            _LOGGER_CLIENT.info(f"ORIGINAL :: {xml_str}")
+        if bumper_isc.DEBUG_LOGGING_XMPP_REQUEST_ORIGINAL is True:
+            _LOGGER_CLIENT.info(f"XMPP ORIGINAL :: {xml_str}")
 
         newdata: str | None = None
         if xml_str.startswith("<?xml"):
@@ -627,8 +632,8 @@ class XMPPAsyncClient:
             self.set_state("DISCONNECT")
             return
 
-        if bumper_isc.DEBUG_LOGGING_XMPP_REQUEST_REFACTOR is True:
-            _LOGGER_CLIENT.info(f"REFACTOR :: {newdata}")
+        if bumper_isc.DEBUG_LOGGING_XMPP_REQUEST_REFACTORED is True:
+            _LOGGER_CLIENT.info(f"XMPP REFACTORED :: {newdata}")
 
         try:
             root = ET.fromstring(newdata)

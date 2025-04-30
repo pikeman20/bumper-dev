@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from bumper.utils import db
+from bumper.db import bot_repo, token_repo, user_repo
 from bumper.web.auth_util import _generate_uid
 
 USER_ID = _generate_uid("tmpuser")
@@ -36,12 +36,12 @@ async def test_postUsersAPI(webserver_client) -> None:
     assert jsonresp["result"] == "ok"
 
     # Test loginByItToken - Uses the authcode
-    db.user_add(USER_ID)
-    db.user_add_device(USER_ID, "dev_1234")
-    db.user_add_token(USER_ID, "token_1234")
-    db.user_add_auth_code(USER_ID, "token_1234", "auth_1234")
-    db.user_add_bot(USER_ID, "did_1234")
-    db.bot_add("sn_1234", "did_1234", "class_1234", "res_1234", "com_1234")
+    user_repo.add(USER_ID)
+    user_repo.add_device(USER_ID, "dev_1234")
+    token_repo.add(USER_ID, "token_1234")
+    token_repo.add_it_token(USER_ID, "auth_1234")
+    user_repo.add_bot(USER_ID, "did_1234")
+    bot_repo.add("sn_1234", "did_1234", "class_1234", "res_1234", "com_1234")
     # Test
     postbody = {
         "country": "US",

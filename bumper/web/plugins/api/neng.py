@@ -9,7 +9,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import response_success_v3, response_success_v5, response_success_v8
+from bumper.web.response_utils import response_success_v3, response_success_v4
 
 
 class NengPlugin(WebserverPlugin):
@@ -74,29 +74,29 @@ class NengPlugin(WebserverPlugin):
 
 async def _handle_has_unread_message(_: Request) -> Response:
     # EcoVacs Home
-    return response_success_v5({"hasUnRead": False, "shareMsgUnRead": False})
+    return response_success_v4({"hasUnRead": False, "shareMsgUnRead": False})
 
 
 async def _handle_get_share_msgs(_: Request) -> Response:
     # EcoVacs Home
-    return response_success_v5({"hasNext": False, "msgs": []})
+    return response_success_v4({"hasNext": False, "msgs": []})
 
 
 async def _handle_get_list(_: Request) -> Response:
     # EcoVacs Home
-    return response_success_v5({"hasNext": False, "msgs": []})
+    return response_success_v4({"hasNext": False, "msgs": []})
 
 
 async def _handle_read(_: Request) -> Response:
     # EcoVacs Home
-    return response_success_v8()
+    return response_success_v3(result_key=None)
 
 
 async def _handle_v2_message_push(_: Request) -> Response:
     # EcoVacs Home
     # TODO: check what's needed to be implemented
     utils.default_log_warn_not_impl("_handle_v2_message_push")
-    return response_success_v3("")
+    return response_success_v3(data="")
 
 
 async def _handle_v3_message_push_status(request: Request) -> Response:
@@ -106,7 +106,7 @@ async def _handle_v3_message_push_status(request: Request) -> Response:
     userid = request.headers.get("userid", "")
     # token = request.headers.get("token", "")
     return response_success_v3(
-        {
+        data={
             "devices": [
                 # {
                 #     "did": "...",
@@ -122,18 +122,18 @@ async def _handle_v3_message_push_status(request: Request) -> Response:
 
 async def _handle_v3_latest_by_did(_: Request) -> Response:
     # EcoVacs Home
-    return response_success_v3([])
+    return response_success_v3(data=[])
 
 
 async def _handle_v3_message_list(_: Request) -> Response:
     # EcoVacs Home
-    return response_success_v3([])
+    return response_success_v3(data=[])
 
 
 async def _handle_v3_product_msg_tabs(_: Request) -> Response:
     # EcoVacs Home
     return response_success_v3(
-        [
+        data=[
             {
                 "code": "evt",
                 "name": "Work messages",
@@ -148,4 +148,4 @@ async def _handle_v3_product_msg_tabs(_: Request) -> Response:
 
 async def _handle_v3_share_msg_has_unread_msg(_: Request) -> Response:
     # EcoVacs Home
-    return response_success_v3({"count": 0, "unRead": False})
+    return response_success_v3(data={"count": 0, "unRead": False})

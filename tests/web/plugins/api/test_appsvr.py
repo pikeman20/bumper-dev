@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from bumper.utils import db
+from bumper.db import bot_repo
 from bumper.web.auth_util import _generate_uid
 
 USER_ID = _generate_uid("tmpuser")
@@ -34,7 +34,7 @@ async def test_appsvr_api(webserver_client) -> None:
     jsonresp = json.loads(text)
     assert jsonresp["ret"] == "ok"
 
-    db.bot_add("sn_1234", "did_1234", "ls1ok3", "res_1234", "eco-ng")
+    bot_repo.add("sn_1234", "did_1234", "ls1ok3", "res_1234", "eco-ng")
 
     # Test again with bot added
     resp = await webserver_client.post("/api/appsvr/app.do", json=postbody)

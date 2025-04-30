@@ -9,18 +9,21 @@ import ssl
 import string
 from typing import TYPE_CHECKING, Any
 
+from aiohttp import web
+from aiohttp.web_response import Response
 from aiomqtt import Client as MQTTClient, MqttError, Topic
 from cachetools import TTLCache
 
 from bumper.mqtt.handle_atr import clean_log
 from bumper.utils import utils
-from bumper.web.response_utils import response_error_v8
+from bumper.web.response_utils import response_error_v8, response_success_v2
 
 if TYPE_CHECKING:
     from collections.abc import MutableMapping
 
 _LOGGER = logging.getLogger(__name__)
 HELPER_BOT_CLIENT_ID = "helperbot@bumper/helperbot"
+HELPER_BOT_CLIENT_ID_MQTT = HELPER_BOT_CLIENT_ID.replace("@", "/")
 RECONNECT_INTERVAL = 5  # seconds
 
 
@@ -84,19 +87,37 @@ class MQTTCommandModel:
     def from_version_p2p(self, cmdjson: dict[str, Any]) -> None:
         """Parse command information from version p2p."""
         self.payload_type = "j"
+
         self.cmd_name = cmdjson.get("cmd")
+        self.cmd_name_orig = cmdjson.get("cmd")
+        self.cmd_name = self.cmd_name[0].lower() + self.cmd_name[1:] if self.cmd_name else None
+        if self.cmd_name == "getBatteryInfo":
+            self.cmd_name = "getBattery"
+
         self.did = cmdjson.get("did")
         self.to_type = cmdjson.get("mid")
         self.to_res = cmdjson.get("res")
         # self.td = cmdjson.get("")
 
-        payload_j = cmdjson.get("data")
+        payload_j: dict[str, Any] | None = cmdjson.get("data")
+        if payload_j and self.cmd_name == "clean":
+            act_translation = {
+                "s": "start",
+                "p": "pause",
+                "r": "resume",
+                "t": "stop",
+            }
+            if act := payload_j.get("act"):
+                payload_j["act"] = act_translation.get(act, act)
+        if payload_j:
+            payload_j = {"body": {"data": payload_j}}
+
         self.payload = json.dumps(payload_j) if self.payload_type == "j" else str(payload_j)
 
     def create_topic(self) -> str:
         """Create the MQTT topic for the command."""
         return (
-            f"iot/p2p/{self.cmd_name}/helperbot/bumper/helperbot/{self.did}/"
+            f"iot/p2p/{self.cmd_name}/{HELPER_BOT_CLIENT_ID_MQTT}/{self.did}/"
             f"{self.to_type}/{self.to_res}/q/{self.request_id}/{self.payload_type}"
         )
 
@@ -174,7 +195,7 @@ class MQTTHelperBot:
                 _LOGGER.exception("Unexpected error in MQTT loop")
                 await asyncio.sleep(RECONNECT_INTERVAL)
 
-    async def send_command(self, cmd: MQTTCommandModel) -> str | dict[str, Any]:
+    async def send_command(self, cmd: MQTTCommandModel) -> Response:
         """Send command over MQTT."""
         try:
             if not await self.is_connected:
@@ -188,20 +209,67 @@ class MQTTHelperBot:
             await self.publish(topic, cmd.payload)
 
             cmd_response = await self._wait_for_resp(command_dto)
+            _LOGGER.debug(f"To   Bot  Request :: {cmd.__dict__}")
+            _LOGGER.debug(f"From Bot Response :: {cmd_response}")
+
+            # try:
+            #     if cmd_response.get("header", {}).get("fwVer"):
+            #         cmd_response["header"]["fwVer"] = "1.7.5"
+            #     if cmd_response.get("header", {}).get("tzm"):
+            #         cmd_response["header"]["tzm"] = 120
+            #     if cmd_response.get("body", {}).get("data", {}).get("ver"):
+            #         cmd_response["body"]["data"]["ver"] = "1.7.5"
+            # except Exception:
+            #     pass
+
             if cmd_response is None:
                 return response_error_v8(cmd.request_id, "wait for response timed out")
+
+            # Calls by '/iot/devmanager.do'
             if cmd.version == cmd.VERSION_OLD:
-                return {
-                    "id": cmd.request_id,
-                    "ret": "ok",
-                    "resp": cmd_response,
-                    "payloadType": cmd.payload_type,
-                }
+                return web.json_response(
+                    {
+                        "id": cmd.request_id,
+                        "ret": "ok",
+                        "resp": cmd_response,
+                        "payloadType": cmd.payload_type,
+                    },
+                )
+
+            # Calls by 'iot/endpoint/control'
             if cmd.version == cmd.VERSION_NEW:
-                return cmd_response
+                return web.Response(
+                    body=json.dumps(cmd_response, separators=(",", ":")).encode("utf-8"),
+                    content_type="application/octet-stream",
+                    charset="utf-8",
+                    headers={
+                        "x-ngiot-fmt": "b",
+                        "x-ngiot-ret": "ok",
+                    },
+                )
+
+            # Calls by 'appsvr/app.do' with 'RobotControl'
+            if cmd.version == cmd.VERSION_P2P and isinstance(cmd_response, dict):
+                ret_type: dict[str, Any] | None = None
+                if cmd.cmd_name == "getBattery":
+                    ret_type = {"key": "power", "value": cmd_response.get("body", {}).get("data", {}).get("value")}
+                elif cmd.cmd_name == "getChargeState":
+                    is_charging: int = cmd_response.get("body", {}).get("data", {}).get("isCharging")
+                    mode = "SlotCharging" if is_charging == 1 else "SlotIdle"
+                    ret_type = {"key": "type", "value": mode}
+                elif cmd.cmd_name in {"charge", "clean"}:
+                    return response_success_v2(
+                        data={cmd.cmd_name_orig: {"did": cmd.did, "ret": cmd_response.get("body", {}).get("msg", "error")}},
+                    )
+                if ret_type is not None:
+                    return response_success_v2(
+                        data={cmd.cmd_name_orig: {"ret": "ok", "did": cmd.did, ret_type["key"]: ret_type["value"]}},
+                    )
+                return response_success_v2(data={cmd.cmd_name_orig: {"ret": "ok", "did": cmd.did}})
+
             msg = f"Unsupported version :: '{cmd.version}' :: {cmd_response}"
             _LOGGER.error(msg)
-            raise ValueError(msg)
+            return response_error_v8(cmd.request_id, msg)
         except Exception:
             _LOGGER.exception("Could not send command")
             return response_error_v8(cmd.request_id, "exception occurred please check bumper logs")
@@ -232,7 +300,7 @@ class MQTTHelperBot:
         if not self._client:
             error_message = "MQTT client is not connected."
             raise MqttError(error_message)
-        await self._client.subscribe("iot/p2p/+/+/+/+/helperbot/bumper/helperbot/+/+/+")
+        await self._client.subscribe(f"iot/p2p/+/+/+/+/{HELPER_BOT_CLIENT_ID_MQTT}/+/+/+")
         await self._client.subscribe("iot/atr/+/+/+/+/+")
 
     async def _on_message(self, topic: Topic, payload: Any) -> None:
@@ -247,17 +315,29 @@ class MQTTHelperBot:
             elif topic_split[1] == "atr" and topic_split[2] in ("onStats", "reportStats"):
                 clean_log(did=topic_split[3], rid=topic_split[5], payload=decoded_payload)
             elif topic_split[1] == "atr":
-                pass  # NOTE: check later to use for some server side information to display
-            elif topic_split[1] == "p2p":
-                _LOGGER.warning(
+                # pass  # NOTE: check later to use for some server side information to display
+                _LOGGER.debug(
                     {
-                        "info": "Provided message is not implemented to be processed",
+                        "info": "ATR :: Provided message is not implemented to be processed",
                         "type": topic_split[1],
                         "function": topic_split[2],
                         "did": topic_split[3],
                         "class": topic_split[4],
                         "rid": topic_split[5],
-                        "other2": topic_split[6],
+                        "payloadType": topic_split[6],
+                        "payload": decoded_payload,
+                    },
+                )
+            elif topic_split[1] == "p2p":
+                _LOGGER.debug(
+                    {
+                        "info": "P2P :: Provided message is not implemented to be processed",
+                        "type": topic_split[1],
+                        "function": topic_split[2],
+                        "did": topic_split[3],
+                        "class": topic_split[4],
+                        "rid": topic_split[5],
+                        "payloadType": topic_split[6],
                         "payload": decoded_payload,
                     },
                 )

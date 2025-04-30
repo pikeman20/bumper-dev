@@ -9,7 +9,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 from . import BASE_URL
 
@@ -32,7 +32,7 @@ class AgreementPlugin(WebserverPlugin):
 async def _handle_get_user_accept_info(_: Request) -> Response:
     """Get user accept info."""
     domain = f"https://{bumper_isc.DOMAIN_SEC3}/content/agreement"
-    return get_success_response(
+    return response_success_v1(
         {
             "acceptList": [
                 {

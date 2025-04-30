@@ -41,6 +41,7 @@ dependencies = [
   "defusedxml==0.8.0rc2",                               # https://pypi.org/project/defusedxml
   "Jinja2==3.1.6",                                      # https://pypi.org/project/Jinja2
   "passlib==1.7.4",                                     # https://pypi.org/project/passlib
+  "PyJWT==2.10.1",                                      # https://pypi.org/project/PyJWT
   "tinydb==4.8.2",                                      # https://pypi.org/project/tinydb
   "validators==0.34.0",                                 # https://pypi.org/project/validators
   "websockets==15.0.1",                                 # https://pypi.org/project/websockets
@@ -196,6 +197,8 @@ env = [
   "DB_FILE=tests/_test_files/tmp.db",
 ]
 
+asyncio_default_fixture_loop_scope = "function"
+
 # ------------------------------------ MYPY ------------------------------------
 [tool.mypy]
 exclude = ["^tests/.*", "^docs/.*"]
@@ -265,7 +268,7 @@ max-branches = 20             # too-many-branches
 max-parents = 10
 max-positional-arguments = 10 # too-many-positional-arguments
 max-returns = 8               # too-many-return-statements
-max-statements = 60           # too-many-statements
+max-statements = 62           # too-many-statements
 max-module-lines = 1128       # too-many-lines
 
 # ---------------------------------- COVERAGE ----------------------------------

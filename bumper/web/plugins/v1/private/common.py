@@ -16,10 +16,11 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
-from bumper.utils import db, utils
+from bumper.db import user_repo
+from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 from . import BASE_URL
 
@@ -103,7 +104,7 @@ class CommonPlugin(WebserverPlugin):
 
 async def _handle_check_version(_: Request) -> Response:
     """Check version."""
-    return get_success_response(
+    return response_success_v1(
         {
             "c": None,
             "img": None,
@@ -118,7 +119,7 @@ async def _handle_check_version(_: Request) -> Response:
 
 async def _handle_check_app_version(_: Request) -> Response:
     """Check app version."""
-    return get_success_response(
+    return response_success_v1(
         {
             "c": None,
             "downPageUrl": None,
@@ -135,12 +136,12 @@ async def _handle_check_app_version(_: Request) -> Response:
 
 async def _handle_upload_device_info(_: Request) -> Response:
     """Upload device info."""
-    return get_success_response({"devicePushRegisterResult": "N"})
+    return response_success_v1({"devicePushRegisterResult": "N"})
 
 
 async def _handle_get_system_reminder(_: Request) -> Response:
     """Get system reminder."""
-    return get_success_response(
+    return response_success_v1(
         {
             "iosGradeTime": {"iodGradeFlag": "N"},
             "openNotification": {
@@ -168,8 +169,8 @@ async def _handle_get_config(request: Request) -> Response:
             elif key == "EMAIL.REGISTER.CONFIG":
                 data.append({"key": key, "value": json.dumps({"needVerify": "N"})})
             elif key == "OPEN.APP.CERTIFICATE.CONFIG":
-                # data.append({"key": key, "value": json.dumps({"ISO27001": "ENABLED", "TUV": "ENABLED"})})
-                data.append({"key": key, "value": json.dumps({"ISO27001": "DISABLED", "TUV": "DISABLED"})})
+                data.append({"key": key, "value": json.dumps({"ISO27001": "ENABLED", "TUV": "ENABLED"})})
+                # data.append({"key": key, "value": json.dumps({"ISO27001": "DISABLED", "TUV": "DISABLED"})})
             elif key == "USER.DATA.COLLECTION":
                 data.append({"key": key, "value": "N"})
             elif key == "USER.DEVICE.LIST.CONFIG":
@@ -191,7 +192,7 @@ async def _handle_get_config(request: Request) -> Response:
                 _LOGGER.warning(f"NEW CONFIG KEY :: {key} :: needs further investigation")
                 data.append({"key": key, "value": "Y"})
 
-        return get_success_response(data)
+        return response_success_v1(data)
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
@@ -201,11 +202,11 @@ async def _handle_get_user_config(request: Request) -> Response:
     """Get user config."""
     try:
         user_dev_id = request.match_info.get("devid", "")
-        user = db.user_by_device_id(user_dev_id)
+        user = user_repo.get_by_device_id(user_dev_id)
         if user is None:
             _LOGGER.warning(f"No user found for {user_dev_id}")
         else:
-            return get_success_response(
+            return response_success_v1(
                 {
                     "saTraceConfig": {
                         "collectionStatus": "DISABLED",
@@ -225,7 +226,7 @@ async def _handle_get_areas(_: Request) -> Response:
     try:
         async with aiofiles.open(Path(__file__).parent / "common_area.json", encoding="utf-8") as file:
             file_content = await file.read()
-            return get_success_response(json.loads(file_content))
+            return response_success_v1(json.loads(file_content))
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
@@ -233,13 +234,13 @@ async def _handle_get_areas(_: Request) -> Response:
 
 async def _handle_common_get_area_support_service(_: Request) -> Response:
     """Get Area Support Service."""
-    return get_success_response({"isSelfHelpRepair": "N"})
+    return response_success_v1({"isSelfHelpRepair": "N"})
 
 
 async def _handle_get_agreement_url_batch(_: Request) -> Response:
     """Get agreement url batch."""
     domain = f"https://{bumper_isc.DOMAIN_SEC3}/content/agreement"
-    return get_success_response(
+    return response_success_v1(
         [
             {
                 "id": "20250123112347_96bf8aa2fe1f6e2659999dd5873b000a",
@@ -270,19 +271,19 @@ async def _handle_get_agreement_url_batch(_: Request) -> Response:
 async def _handle_get_timestamp(_: Request) -> Response:
     """Get timestamp."""
     time = utils.get_current_time_as_millis()
-    return get_success_response({"timestamp": time}, time)
+    return response_success_v1({"timestamp": time}, time)
 
 
 async def _handle_get_about_brief_item(_: Request) -> Response:
     """Get about brief item."""
-    return get_success_response([])
+    return response_success_v1([])
 
 
 async def _handle_get_bottom_navigate_info_list(_: Request) -> Response:
     """Get bottom navigation info list."""
     domain_01 = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
     domain_02 = f"https://{bumper_isc.DOMAIN_SEC1}/us"
-    return get_success_response(
+    return response_success_v1(
         [
             {
                 "bgImgUrl": None,
@@ -329,7 +330,7 @@ async def _handle_get_bottom_navigate_info_list(_: Request) -> Response:
 
 async def handle_get_current_area_support_service_info(_: Request) -> Response:
     """Get current area support service info."""
-    return get_success_response(
+    return response_success_v1(
         {
             "intlFeedbackStartInfo": {
                 "emailStartInfo": None,

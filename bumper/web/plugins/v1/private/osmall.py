@@ -9,7 +9,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 from . import BASE_URL
 
@@ -96,7 +96,7 @@ class OsMallPlugin(WebserverPlugin):
 
 async def _handle_get_country_config(request: Request) -> Response:
     """Get country config."""
-    return get_success_response(
+    return response_success_v1(
         {
             "defaultLang": request.match_info.get("country", "EN").upper(),
             "openNative": "Y",
@@ -107,7 +107,7 @@ async def _handle_get_country_config(request: Request) -> Response:
 
 async def _handle_get_layout(_: Request) -> Response:
     """Get layout."""
-    return get_success_response(
+    return response_success_v1(
         {
             "bgColorNo": "",
             "bgImgUrlBenefit": "",
@@ -129,7 +129,7 @@ async def _handle_get_layout(_: Request) -> Response:
 async def _handle_get_banner_list(_: Request) -> Response:
     """Get banner list."""
     domain = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
-    return get_success_response(
+    return response_success_v1(
         {
             "bannerInfoList": [
                 {
@@ -182,7 +182,7 @@ async def _handle_get_banner_list(_: Request) -> Response:
 async def _handle_get_goods_category(_: Request) -> Response:
     """Get goods category."""
     domain = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
-    return get_success_response(
+    return response_success_v1(
         {
             "categoryList": [
                 {
@@ -227,37 +227,37 @@ async def _handle_get_goods_category(_: Request) -> Response:
 
 async def _handle_get_conf_net_robot_parts_goods(_: Request) -> Response:
     """Get conf net robot pars goods."""
-    return get_success_response({})
+    return response_success_v1({})
 
 
 async def _handle_get_recommend_goods(_: Request) -> Response:
     """Get recommend goods."""
-    return get_success_response({"goodsList": [], "materialNo": None, "mid": None, "nickName": None})
+    return response_success_v1({"goodsList": [], "materialNo": None, "mid": None, "nickName": None})
 
 
 async def _handle_get_user_center_coupon_list(_: Request) -> Response:
     """Get user center coupon list."""
-    return get_success_response([])
+    return response_success_v1([])
 
 
 async def _handle_get_my_coupon(_: Request) -> Response:
     """Get my coupon."""
-    return get_success_response({"available": [], "used": [], "invalidated": []})
+    return response_success_v1({"available": [], "used": [], "invalidated": []})
 
 
 async def _handle_get_customer_coupon_send_activity_coupon(_: Request) -> Response:
     """Get customer coupon send activity coupon."""
-    return get_success_response([])
+    return response_success_v1([])
 
 
 async def _handle_get_count(_: Request) -> Response:
     """Get count."""
-    return get_success_response({"item_count": 0.0})
+    return response_success_v1({"item_count": 0.0})
 
 
 async def _handle_order_list(_: Request) -> Response:
     """Order list."""
-    return get_success_response(
+    return response_success_v1(
         {
             "list": [],
             "page_data": {
@@ -272,14 +272,14 @@ async def _handle_order_list(_: Request) -> Response:
 
 async def _handle_material_accessory_list(_: Request) -> Response:
     """Material accessory list."""
-    return get_success_response([])
+    return response_success_v1([])
 
 
 async def _handle_v2_get_benefits(_: Request) -> Response:
     """Get benefits."""
-    return get_success_response([])
+    return response_success_v1([])
 
 
 async def _handle_v2_payment_icon_index(_: Request) -> Response:
     """Payment icon index."""
-    return get_success_response([])
+    return response_success_v1([])

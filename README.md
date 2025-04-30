@@ -22,7 +22,7 @@
 - **Docker Swarm & Compose**: One-command startup with turnkey NGINX configuration.
 - **Modular**: Easily extend protocols and add integrations.
 
-> **⚠️ Warning**: Branches `main`/`develop` are under active development and may be unstable. Use at your own risk.
+> **⚠️ Warning**: Branches `main`/`dev` are under active development and may be unstable. Use at your own risk.
 
 ---
 

@@ -10,8 +10,9 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
+from bumper.db import bot_repo
 from bumper.mqtt.helper_bot import MQTTCommandModel
-from bumper.utils import db, utils
+from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_error_v7, response_error_v8
@@ -72,25 +73,29 @@ async def handle_commands(
 
         # Its a command
         if cmd_request.did is not None:
-            if (bot := db.bot_get(cmd_request.did)) is None:
+            if (bot := bot_repo.get(cmd_request.did)) is None:
                 _LOGGER.warning(f"No bots with DID :: {cmd_request.did} :: connected to MQTT")
-                return web.json_response(response_error_v8(cmd_request.request_id, "requested bot is not supported"))
-            if bot.get("company", "") != "eco-ng":
+                return response_error_v8(cmd_request.request_id, "requested bot is not supported")
+            if bot.company != "eco-ng":
                 _LOGGER.warning(f"No bots with DID :: {cmd_request.did} :: connected to MQTT")
-                return web.json_response(response_error_v8(cmd_request.request_id, "requested bot is not supported"))
-            if extended_check and (bot.get("company", "") != "eco-ng" or not bot["mqtt_connection"]):
+                return response_error_v8(cmd_request.request_id, "requested bot is not supported")
+            if extended_check and (bot.company != "eco-ng" or not bot.mqtt_connection):
                 _LOGGER.warning(f"No bots with DID :: {cmd_request.did} :: connected to MQTT")
-                return web.json_response(response_error_v8(cmd_request.request_id, "requested bot is not supported"))
+                return response_error_v8(cmd_request.request_id, "requested bot is not supported")
 
-            body = await bumper_isc.mqtt_helperbot.send_command(cmd_request)
-            _LOGGER.debug(f"To   Bot  Request :: {cmd_request.__dict__}")
-            _LOGGER.debug(f"From Bot Response :: {body}")
-
-            return web.json_response(body)
+            return await bumper_isc.mqtt_helperbot.send_command(cmd_request)
 
         if cmd_request.td is not None:
             if cmd_request.td == "PollSCResult":  # Seen when doing initial wifi config
-                return web.json_response({"ret": "ok"})
+                return web.json_response(
+                    {
+                        "ret": "ok",
+                        # "did": "DID",
+                        # "type": "Class",
+                        # "resource": "rljY",
+                        # "name": "SN",
+                    },
+                )
             if cmd_request.td == "HasUnreadMsg":  # EcoVacs Home
                 return web.json_response({"ret": "ok", "unRead": False})
             if cmd_request.td == "PreWifiConfig":  # EcoVacs Home

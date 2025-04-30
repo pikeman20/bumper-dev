@@ -3,8 +3,8 @@ import json
 
 import pytest
 
+from bumper.db import bot_repo
 from bumper.mqtt.helper_bot import MQTTHelperBot
-from bumper.utils import db
 from bumper.web.auth_util import _generate_uid
 
 USER_ID = _generate_uid("tmpuser")
@@ -19,8 +19,8 @@ def async_return(result):
 @pytest.mark.usefixtures("clean_database", "create_webserver")
 async def test_lg_logs(webserver_client, helper_bot: MQTTHelperBot) -> None:
     test_did = "did_1234"
-    db.bot_add("sn_1234", test_did, "ls1ok3", "res_1234", "eco-ng")
-    db.bot_set_mqtt(test_did, True)
+    bot_repo.add("sn_1234", test_did, "ls1ok3", "res_1234", "eco-ng")
+    bot_repo.set_mqtt(test_did, True)
 
     # Test GetGlobalDeviceList
     postbody = {

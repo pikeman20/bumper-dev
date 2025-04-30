@@ -12,10 +12,12 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.utils import db, utils
+from bumper.db import token_repo, user_repo
+from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
+from bumper.web.auth_util import get_jwt_details
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import response_success_v3, response_success_v8
+from bumper.web.response_utils import response_error_v2, response_success_v3
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -66,7 +68,7 @@ async def _handle_home_list(request: Request) -> Response:
         user_id = request.query.get("userid")
         data = []
         if user_id is not None:
-            user = db.user_by_user_id(user_id)
+            user = user_repo.get_by_id(user_id)
             if user is not None:
                 for index, home_id in enumerate(user.homeids):
                     data.append(
@@ -80,7 +82,7 @@ async def _handle_home_list(request: Request) -> Response:
                             "type": "own",
                         },
                     )
-        return response_success_v3(data)
+        return response_success_v3(data=data)
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
@@ -91,14 +93,17 @@ async def _handle_home_create(request: Request) -> Response:
     # TODO: check what's needed to be implemented
     utils.default_log_warn_not_impl("_handle_home_create")
     json_body: dict[str, Any] = json.loads(await request.text())
-    token = request.headers.get("authorization")
+    authorization = request.headers.get("authorization")
+    jwt_info = get_jwt_details(authorization)
+    if jwt_info is None:
+        return response_error_v2()
+
     name = json_body.get("name")
-    if token is not None:
-        user_id = db.user_id_by_token(token.split(" ")[1])
-        if user_id is not None:
-            db.user_add_home(user_id, uuid.uuid4().hex)
-            _LOGGER.debug(f"Create :: {name}")
-    return response_success_v8()
+    token = token_repo.get_by_auth_code(jwt_info.get("auth_code", ""))
+    if token and token.userid is not None:
+        user_repo.add_home_id(token.userid, uuid.uuid4().hex)
+        _LOGGER.debug(f"Create :: {name}")
+    return response_success_v3(result_key=None)
 
 
 async def _handle_home_update(request: Request) -> Response:
@@ -109,7 +114,7 @@ async def _handle_home_update(request: Request) -> Response:
     home_id = json_body.get("homeId")
     name = json_body.get("name")
     _LOGGER.debug(f"Update :: homeId: {home_id} - name: {name}")
-    return response_success_v8()
+    return response_success_v3(result_key=None)
 
 
 async def _handle_home_delete(request: Request) -> Response:
@@ -118,11 +123,11 @@ async def _handle_home_delete(request: Request) -> Response:
     utils.default_log_warn_not_impl("_handle_home_delete")
     json_body = json.loads(await request.text())
     home_id = json_body.get("homeId")
-    user = db.user_by_home_id(home_id)
+    user = user_repo.get_by_home_id(home_id)
     if user is not None:
-        db.user_remove_home(user.userid, home_id)
+        user_repo.remove_home_id(user.userid, home_id)
     _LOGGER.debug(f"Delete :: {home_id}")
-    return response_success_v8()
+    return response_success_v3(result_key=None)
 
 
 async def _handle_member_list(request: Request) -> Response:
@@ -131,12 +136,12 @@ async def _handle_member_list(request: Request) -> Response:
     utils.default_log_warn_not_impl("_handle_member_list")
     try:
         home_id = request.query.get("homeId", bumper_isc.HOME_ID)
-        user = db.user_by_home_id(home_id)
+        user = user_repo.get_by_home_id(home_id)
         if user is None:
             _LOGGER.warning(f"No user found for {home_id}")
         else:
             return response_success_v3(
-                [
+                data=[
                     {
                         "createTime": utils.get_current_time_as_millis(),
                         "id": user.userid,
@@ -157,13 +162,10 @@ async def _handle_member_list(request: Request) -> Response:
 
 async def _handle_device_move(request: Request) -> Response:
     """Device move."""
-    # TODO: check what's needed to be implemented
-    utils.default_log_warn_not_impl("_handle_device_move")
     post_body = json.loads(await request.text())
     did = post_body.get("did")
     mid = post_body.get("mid")
-    res = post_body.get("res")
-    to = post_body.get("to")
-    _LOGGER.debug(f"Move :: did: {did} - mid: {mid} - res: {res} - to: {to}")
+    to = post_body.get("to")  # NOTE: possible home id
+    _LOGGER.debug(f"Move :: did: {did} - mid: {mid} - to: {to}")
 
-    return response_success_v8()
+    return response_success_v3(result_key=None)

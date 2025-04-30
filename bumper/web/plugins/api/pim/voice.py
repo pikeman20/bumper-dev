@@ -30,6 +30,11 @@ class VoicePlugin(WebserverPlugin):
                 "/voice/getLanuages",
                 _handle_get_lanuages,
             ),
+            web.route(
+                "*",
+                "/v2/voice/getLanuages",
+                _handle_get_lanuages,
+            ),
         ]
 
 
@@ -77,17 +82,17 @@ async def _handle_get_lanuages(_: Request) -> Response:
 
 def _get_voice_list() -> list[dict[str, str | list[str]]]:
     return [
-        {"languageName": "English", "support": ["yiko"], "voiceLang": "en"},
-        {"languageName": "English(Australian)", "support": ["yiko"], "voiceLang": "en-au"},
-        {"languageName": "English(Canadian)", "support": ["yiko"], "voiceLang": "en-ca"},
-        {"languageName": "English(United Kingdom)", "support": ["yiko"], "voiceLang": "en-gb"},
-        {"languageName": "English(Indian)", "support": ["yiko"], "voiceLang": "en-in"},
-        {"languageName": "English(American)", "support": ["yiko"], "voiceLang": "en-us"},
-        {"languageName": "한국어", "support": ["yiko"], "voiceLang": "ko"},
-        {"languageName": "日本語", "support": ["yiko"], "voiceLang": "ja"},
-        {"languageName": "Le français", "support": ["yiko"], "voiceLang": "fr"},
-        {"languageName": "國語", "support": ["yiko"], "voiceLang": "tw"},
-        {"languageName": "Deutsch", "support": ["yiko"], "voiceLang": "de"},
-        {"languageName": "Italiano", "support": ["yiko"], "voiceLang": "it"},
-        {"languageName": "Indonesia", "support": ["yiko"], "voiceLang": "id"},
+        {"voiceLang": "en", "languageName": "English", "support": ["yiko"]},
+        {"voiceLang": "en-au", "languageName": "English(Australian)", "support": ["yiko"]},
+        {"voiceLang": "en-ca", "languageName": "English(Canadian)", "support": ["yiko"]},
+        {"voiceLang": "en-gb", "languageName": "English(United Kingdom)", "support": ["yiko"]},
+        {"voiceLang": "en-in", "languageName": "English(Indian)", "support": ["yiko"]},
+        {"voiceLang": "en-us", "languageName": "English(American)", "support": ["yiko"]},
+        {"voiceLang": "ko", "languageName": "한국어", "support": ["yiko"]},
+        {"voiceLang": "ja", "languageName": "日本語", "support": ["yiko"]},
+        {"voiceLang": "fr", "languageName": "Le français", "support": ["yiko"]},
+        {"voiceLang": "tw", "languageName": "國語", "support": ["yiko"]},
+        {"voiceLang": "de", "languageName": "Deutsch", "support": ["yiko"]},
+        {"voiceLang": "it", "languageName": "Italiano", "support": ["yiko"]},
+        {"voiceLang": "id", "languageName": "Indonesia", "support": ["yiko"]},
     ]

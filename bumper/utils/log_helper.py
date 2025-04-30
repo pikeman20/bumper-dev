@@ -18,14 +18,14 @@ class LogHelper:
         logger_name_size = self._clean_logs()
 
         log_format: str = "%(message)s"
-        if bumper_isc.bumper_verbose == 2:
+        if bumper_isc.debug_bumper_verbose == 2:
             log_format = f"[%(asctime)s] %(levelname)-7s :: %(name)-{logger_name_size}s - %(message)s"
-        elif bumper_isc.bumper_verbose == 1:
+        elif bumper_isc.debug_bumper_verbose == 1:
             log_format = "[%(asctime)s] - %(message)s"
 
         # Set root logger level
         root_logger = logging.getLogger("root")
-        root_logger.setLevel(logging.getLevelName(bumper_isc.bumper_level))
+        root_logger.setLevel(logging.getLevelName(bumper_isc.debug_bumper_level))
 
         # Add the stream handler with log formatting
         root_handler = logging.StreamHandler(sys.stdout)
@@ -37,7 +37,7 @@ class LogHelper:
 
         # Use colored logs
         coloredlogs.install(
-            level=logging.getLevelName(bumper_isc.bumper_level),
+            level=logging.getLevelName(bumper_isc.debug_bumper_level),
             fmt=log_format,
             logger=root_logger,
             stream=sys.stdout,
@@ -53,14 +53,14 @@ class LogHelper:
             for handler in logger_name.handlers:
                 logger_name.removeHandler(handler)
 
-            if bumper_isc.bumper_level == "INFO" and (
+            if bumper_isc.debug_bumper_level == "INFO" and (
                 logger_name.name.startswith("httpx")
                 or logger_name.name.startswith("transitions.core")
                 or logger_name.name.startswith("amqtt")
             ):
                 logger_name.setLevel(logging.WARNING)
 
-            if logger_name.name.startswith("aiohttp.access") and bumper_isc.bumper_level == "INFO":
+            if logger_name.name.startswith("aiohttp.access") and bumper_isc.debug_bumper_level == "INFO":
                 logger_name.setLevel(logging.DEBUG)
 
             if logger_name.name.startswith("asyncio"):
@@ -86,7 +86,7 @@ class AioHttpFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         """AioHttpFilter filter."""
         if record.name == "aiohttp.access":
-            return bool(logging.getLevelName(bumper_isc.bumper_level) == logging.getLevelName(logging.DEBUG))
+            return bool(logging.getLevelName(bumper_isc.debug_bumper_level) == logging.getLevelName(logging.DEBUG))
         return True
 
 
@@ -97,7 +97,7 @@ class AmqttFilter(logging.Filter):
         """Filter amqtt log record."""
         if record.name == "amqtt.broker" and "No more data" in record.msg and record.levelno in (logging.WARNING, logging.ERROR):
             # NOTE: disabled this log on non DEBUG, as it spams when bot has cert pinning error
-            return bool(logging.getLevelName(bumper_isc.bumper_level) == logging.getLevelName(logging.DEBUG))
+            return bool(logging.getLevelName(bumper_isc.debug_bumper_level) == logging.getLevelName(logging.DEBUG))
         return True
 
 

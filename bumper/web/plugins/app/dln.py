@@ -9,7 +9,8 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.utils import db, utils
+from bumper.db import bot_repo, clean_log_repo
+from bumper.utils import utils
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_success_v3
 
@@ -46,17 +47,17 @@ async def _handle_clean_result_list(request: Request) -> Response:
         if did is None:
             _LOGGER.error("No DID specified :: connected to MQTT")
         elif log_type == "clean":
-            bot = db.bot_get(did)
-            if bot is None or bot.get("company", "") != "eco-ng":
+            bot = bot_repo.get(did)
+            if bot is None or bot.company != "eco-ng":
                 _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
             else:
-                clean_logs = db.clean_log_by_id(did)
+                clean_logs = clean_log_repo.list_by_did(did)
                 for clean_log in clean_logs:
                     log = clean_log.as_dict()
                     log.update({"did": did})
                     data.append(log)
 
-        return response_success_v3(sorted(data, key=lambda x: x["ts"], reverse=True))
+        return response_success_v3(data=sorted(data, key=lambda x: x["ts"], reverse=True))
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
     raise HTTPInternalServerError
@@ -66,4 +67,4 @@ async def _handle_clean_result_del(_: Request) -> Response:
     """Clean result delete."""
     # TODO: check what's needed to be implemented
     utils.default_log_warn_not_impl("_handle_clean_result_del")
-    return response_success_v3(None)
+    return response_success_v3(data=None)

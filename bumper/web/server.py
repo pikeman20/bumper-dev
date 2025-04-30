@@ -4,7 +4,6 @@ import asyncio
 from collections.abc import Awaitable, Callable
 import dataclasses
 from importlib.resources import files
-import json
 import logging
 from pathlib import Path
 import ssl
@@ -18,14 +17,13 @@ import aiohttp_jinja2
 import jinja2
 from yarl import URL
 
-from bumper.utils import db, utils
+from bumper.db import bot_repo, client_repo, user_repo
+from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import middlewares, plugins, single_paths
 
 if TYPE_CHECKING:
-    from tinydb.table import Document
-
-    from bumper.web.models import BumperUser
+    from bumper.web.models import BumperUser, VacBotClient, VacBotDevice
 
 _LOGGER = logging.getLogger(__name__)
 _LOGGER_PROXY = logging.getLogger(f"{__name__}.proxy")
@@ -71,7 +69,7 @@ class WebServer:
             web.get("/bots", self._handle_partial("bots")),
             web.get("/bot/remove/{did}", self._handle_remove_entity("bot")),
             web.get("/clients", self._handle_partial("clients")),
-            web.get("/client/remove/{resource}", self._handle_remove_entity("client")),
+            web.get("/client/remove/{userid}", self._handle_remove_entity("client")),
             web.get("/users", self._handle_partial("users")),
             web.get("/user/remove/{userid}", self._handle_remove_entity("user")),
         ]
@@ -93,8 +91,6 @@ class WebServer:
                     web.get("/content/agreement", single_paths.handle_content_agreement),
                 ],
             )
-            if bumper_isc.DEBUG_LOGGING_API_ROUTE is True:
-                routes.append(web.post("/log", self._handle_log))
             plugins.add_plugins(self._app)
         self._app.add_routes(routes)
 
@@ -199,18 +195,44 @@ class WebServer:
                 },
             }
         if template_name and template_name == "bots":
-            return {"bots": db.bot_get_all()}
+            return {
+                "bots": [
+                    {
+                        "name": bot.name,
+                        "nick": bot.nick,
+                        "did": bot.did,
+                        "class_id": bot.class_id,
+                        "resource": bot.resource,
+                        "company": bot.company,
+                        "mqtt_connection": bot.mqtt_connection,
+                        "xmpp_connection": bot.xmpp_connection,
+                    }
+                    for bot in bot_repo.list_all()
+                ],
+            }
         if template_name and template_name == "clients":
-            return {"clients": db.client_get_all()}
+            return {
+                "clients": [
+                    {
+                        "name": client.name,
+                        "userid": client.userid,
+                        "realm": client.realm,
+                        "resource": client.resource,
+                        "mqtt_connection": client.mqtt_connection,
+                        "xmpp_connection": client.xmpp_connection,
+                    }
+                    for client in client_repo.list_all()
+                ],
+            }
         if template_name and template_name == "users":
             return {
                 "users": [
                     {
-                        "userid": users.userid,
-                        "username": users.username,
-                        "devices": users.devices,
+                        "username": user.username,
+                        "userid": user.userid,
+                        "devices": user.devices,
                     }
-                    for users in db.get_all_users()
+                    for user in user_repo.list_all()
                 ],
             }
         return {
@@ -277,20 +299,20 @@ class WebServer:
         async def handler(request: Request) -> Response:
             try:
                 remove_func: Callable[[str], None] | None = None
-                get_func: Callable[[str], Document | BumperUser | None] | None = None
+                get_func: Callable[[str], VacBotClient | VacBotDevice | BumperUser | None] | None = None
                 entity_id: str | None = None
                 if entity_type == "bot":
                     entity_id = request.match_info.get("did")
-                    remove_func = db.bot_remove
-                    get_func = db.bot_get
+                    remove_func = bot_repo.remove
+                    get_func = bot_repo.get
                 elif entity_type == "client":
-                    entity_id = request.match_info.get("resource")
-                    remove_func = db.client_remove
-                    get_func = db.client_get
+                    entity_id = request.match_info.get("userid")
+                    remove_func = client_repo.remove
+                    get_func = client_repo.get
                 elif entity_type == "user":
                     entity_id = request.match_info.get("userid")
-                    remove_func = db.user_remove
-                    get_func = db.user_by_user_id
+                    remove_func = user_repo.remove
+                    get_func = user_repo.get_by_id
 
                 if entity_id and remove_func and get_func:
                     remove_func(entity_id)
@@ -372,20 +394,3 @@ class WebServer:
         # You can also perform additional sanitization if needed
         # For example, remove any query parameters, fragments, etc.
         return str(url.with_query(None).with_fragment(None))
-
-    async def _handle_log(self, request: Request) -> Response:
-        to_log = {}
-        try:
-            to_log.update(
-                {
-                    "query_string": request.query_string,
-                    "headers": set(request.headers.items()),
-                },
-            )
-            if request.content_length:
-                to_log["body"] = set(await request.post())
-        except Exception:
-            _LOGGER.exception(utils.default_exception_str_builder(info="during logging the request"))
-        finally:
-            _LOGGER.info(json.dumps(to_log, cls=middlewares.CustomEncoder))
-        return web.Response()

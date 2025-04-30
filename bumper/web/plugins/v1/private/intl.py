@@ -9,10 +9,11 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.utils import db, utils
+from bumper.db import user_repo
+from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 from . import BASE_URL
 
@@ -43,13 +44,13 @@ async def _handle_basic_info(request: Request) -> Response:
     """Get basic info."""
     try:
         user_dev_id = request.match_info.get("devid", "")
-        user = db.user_by_device_id(user_dev_id)
+        user = user_repo.get_by_device_id(user_dev_id)
         if user is None:
             _LOGGER.warning(f"No user found for {user_dev_id}")
         else:
             frozen_integral_desc = "The points will be credited to your member account 20 days after the payment of the order."
 
-            return get_success_response(
+            return response_success_v1(
                 {
                     "availableGeneralIntegral": 9999,
                     "availableLimitedIntegral": 0,
@@ -90,4 +91,4 @@ async def _handle_basic_info(request: Request) -> Response:
 
 async def _handle_sign_status(_: Request) -> Response:
     """Sign. status."""
-    return get_success_response({"signStatus": "SIGN"})
+    return response_success_v1({"signStatus": "SIGN"})

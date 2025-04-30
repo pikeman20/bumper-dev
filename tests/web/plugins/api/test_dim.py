@@ -2,10 +2,11 @@ import asyncio
 import json
 from unittest import mock
 
+from aiohttp import web
 import pytest
 
+from bumper.db import bot_repo
 from bumper.mqtt.helper_bot import MQTTHelperBot
-from bumper.utils import db
 
 
 def async_return(result):
@@ -34,8 +35,8 @@ async def test_dim_devmanager(webserver_client, helper_bot: MQTTHelperBot) -> No
     assert test_resp["unRead"] is False
 
     # Test BotCommand
-    db.bot_add("sn_1234", "did_1234", "dev_1234", "res_1234", "eco-ng")
-    db.bot_set_mqtt("did_1234", True)
+    bot_repo.add("sn_1234", "did_1234", "dev_1234", "res_1234", "eco-ng")
+    bot_repo.set_mqtt("did_1234", True)
     postbody = {"toId": "did_1234"}
 
     # Test return fail timeout
@@ -48,7 +49,7 @@ async def test_dim_devmanager(webserver_client, helper_bot: MQTTHelperBot) -> No
     assert test_resp["debug"] == "wait for response timed out"
 
     # Set bot not on mqtt
-    db.bot_set_mqtt("did_1234", False)
+    bot_repo.set_mqtt("did_1234", False)
     resp = await webserver_client.post("/api/dim/devmanager.do", json=postbody)
     assert resp.status == 200
     text = await resp.text()
@@ -77,8 +78,8 @@ async def test_dim_devmanager_faked(webserver_client, helper_bot: MQTTHelperBot)
     assert test_resp["unRead"] is False
 
     # Test BotCommand
-    db.bot_add("sn_1234", "did_1234", "dev_1234", "res_1234", "eco-ng")
-    db.bot_set_mqtt("did_1234", True)
+    bot_repo.add("sn_1234", "did_1234", "dev_1234", "res_1234", "eco-ng")
+    bot_repo.set_mqtt("did_1234", True)
     postbody = {"toId": "did_1234"}
 
     # Test return get status
@@ -87,7 +88,7 @@ async def test_dim_devmanager_faked(webserver_client, helper_bot: MQTTHelperBot)
         "resp": "<ctl ret='ok' status='idle'/>",
         "ret": "ok",
     }
-    helper_bot.send_command = mock.MagicMock(return_value=async_return(command_getstatus_resp))
+    helper_bot.send_command = mock.MagicMock(return_value=async_return(web.json_response(command_getstatus_resp)))
     resp = await webserver_client.post("/api/dim/devmanager.do", json=postbody)
     assert resp.status == 200
     text = await resp.text()

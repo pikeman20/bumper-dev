@@ -12,8 +12,8 @@ from aiohttp.web_response import Response
 
 from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
-from bumper.web import models
-from bumper.web.response_utils import response_error_v2, response_success_v2, response_success_v3, response_success_v8
+from bumper.web.auth_util import get_new_auth
+from bumper.web.response_utils import ERR_UNKNOWN_TODO, response_error_v2, response_success_v3
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,17 +21,14 @@ _LOGGER = logging.getLogger(__name__)
 async def handle_new_auth(request: Request) -> Response:
     """Handle new auth (/newauth.do)."""
     try:
-        if request.content_type == "application/x-www-form-urlencoded":
-            post_body = await request.post()
-        else:
-            post_body = json.loads(await request.text())
+        post_body = json.loads(await request.text())
 
         todo = post_body.get("todo", "")
         if todo == "OLoginByITToken":
-            # NOTE: Bumper is only returning the submitted token. No reason yet to create another new token
-            return response_success_v2(data=post_body.get("itToken"), data_key="authCode")
+            return await get_new_auth(request)
+
         _LOGGER.warning(f"todo is not know :: {todo!s}")
-        return response_error_v2(msg="Error request, unknown todo", code=models.ERR_UNKOWN_TODO)
+        return response_error_v2(msg="Error request, unknown todo", code=ERR_UNKNOWN_TODO)
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder())
     raise HTTPInternalServerError
@@ -116,7 +113,7 @@ async def handle_sa(request: Request) -> Response:
 
 async def handle_codepush_report_status_deploy(_: Request) -> Response:
     """Codepush Report Status Deploy (/v0.1/public/codepush/report_status/deploy)."""
-    return response_success_v8(msg_type="msg")
+    return response_success_v3(result_key=None, msg_key="msg")
 
 
 async def handle_codepush_update_check(_: Request) -> Response:
@@ -171,8 +168,38 @@ async def handle_chat_bot_id_config(_: Request) -> Response:
     )
 
 
-async def handle_content_agreement(_: Request) -> Response:
+async def handle_content_agreement(_: web.Request) -> web.Response:
     """Content Agreement (/content/agreement)."""
-    # TODO: check what's needed to be implemented
-    utils.default_log_warn_not_impl("handle_content_agreement")
-    return response_success_v8(msg_type="msg")
+    html_content = """
+    <div style="font-family: Arial, sans-serif; margin: 2rem auto; padding: 1em;
+    border: 2px dashed #ccc; border-radius: 10px; background-color: #f9f9f9; font-size: 2rem; max-width: 52rem;">
+      <h2 style="text-align: center;">Welcome to Bumper 🚗💨</h2>
+      <p><strong>Mini User-ish Agreement</strong></p>
+      <ul>
+        <li>
+            <strong>You break it, you fix it.</strong>
+            We built it, you run it. If it breaks, blame your last caffeine-fueled update.
+        </li>
+        <li>
+            <strong>Your data is yours.</strong>
+            We can't see it. We don't want it. Bumper runs at home. It's antisocial like that.
+        </li>
+        <li>
+            <strong>No cloud, no cry.</strong>
+            If things go wrong, check your Wi-Fi, cat, or moon phase. Probably not our fault.
+        </li>
+        <li>
+            <strong>Support not included.</strong>
+            Ask your future self or consult the ancient scrolls (aka README.md).
+        </li>
+        <li>
+            <strong>No evil bots.</strong>
+            Don't use Bumper for villainy. Floors, yes. World domination, no.
+        </li>
+      </ul>
+      <p style="text-align: center; font-style: italic;">
+        By using Bumper, you accept responsibility and the eternal right to brag about your local setup. 🍕
+      </p>
+    </div>
+    """
+    return web.Response(text=html_content, content_type="text/html")

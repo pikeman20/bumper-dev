@@ -9,7 +9,8 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.utils import db, utils
+from bumper.utils import utils
+from bumper.web.auth_util import generate_jwt_helper
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_success_v3
 
@@ -32,30 +33,26 @@ class NewPermPlugin(WebserverPlugin):
 
 
 async def _handle_sst_issue(request: Request) -> Response:
-    # TODO: check what's needed to be implemented
-    utils.default_log_warn_not_impl("_handle_sst_issue")
     try:
-        token: str | None = None
-        access_token = _extract_bearer_token(request)
-        if (user_id := db.user_id_by_token(access_token)) and (token_doc := db.user_get_token_v2(user_id)):
-            token = token_doc.get("token")
+        body = await request.json()
+        acl = body.get("acl")
+        exp_seconds = body.get("exp")
+        sub = body.get("sub")
 
-        return response_success_v3(
-            msg_key="msg",
-            msg="ok",
-            data={"data": {"token": token}},
+        if not acl or not exp_seconds or not sub:
+            raise web.HTTPBadRequest(text="Missing required fields: acl, exp, sub")
+
+        token, _ = await generate_jwt_helper(
+            data={
+                "acl": acl,
+                "sub": sub,
+                "grant": sub,
+            },
+            t="SST",
+            exp_seconds=exp_seconds,
         )
+
+        return response_success_v3(data={"data": {"token": f"SST.{token}"}}, msg="ok", msg_key="msg", result_key=None)
     except Exception:
-        _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
+        _LOGGER.exception(utils.default_exception_str_builder(info="during handling SST token request"))
     raise HTTPInternalServerError
-
-
-def _extract_bearer_token(request: Request) -> str:
-    """Pull a token out of 'Authorization: Bearer <token>'.
-
-    Raises HTTPUnauthorized if missing or malformed.
-    """
-    auth = request.headers.get("Authorization", "")
-    if not auth.startswith("Bearer "):
-        raise web.HTTPUnauthorized(text="Missing or invalid Authorization header")
-    return auth.split(" ", 1)[1].strip()

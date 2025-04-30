@@ -10,7 +10,8 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.utils import db, utils
+from bumper.db import bot_repo, clean_log_repo
+from bumper.utils import utils
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_error_v7
 
@@ -43,11 +44,11 @@ async def _handle_lg_log(request: Request) -> Response:
         if did is None:
             _LOGGER.error("No DID specified :: connected to MQTT")
         elif td == "GetCleanLogs":
-            bot = db.bot_get(did)
-            if bot is None or bot.get("company", "") != "eco-ng":
+            bot = bot_repo.get(did)
+            if bot is None or bot.company != "eco-ng":
                 _LOGGER.error(f"No bots with DID :: {did} :: connected to MQTT")
             else:
-                clean_logs = db.clean_log_by_id(did)
+                clean_logs = clean_log_repo.list_by_did(did)
                 logs.extend(clean_log.as_dict() for clean_log in clean_logs)
 
         return web.json_response(

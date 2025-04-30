@@ -8,7 +8,7 @@ from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 from . import BASE_URL
 
@@ -35,9 +35,9 @@ class MessagePlugin(WebserverPlugin):
 
 async def _handle_has_unread_message(_: Request) -> Response:
     """Has unread message."""
-    return get_success_response("N")
+    return response_success_v1("N")
 
 
 async def _handle_get_msg_list(_: Request) -> Response:
     """Get msg list."""
-    return get_success_response({"hasNextPage": 0, "items": []})
+    return response_success_v1({"hasNextPage": 0, "items": []})

@@ -24,10 +24,8 @@ def cleanup_clients():
     XMPPServer.clients.clear()
 
 
-async def test_xmpp_server() -> None:
-    xmpp_server = XMPPServer("127.0.0.1", 5223)
-    await xmpp_server.start_async_server()
-
+@pytest.mark.asyncio
+async def test_xmpp_server(xmpp_server) -> None:
     with LogCapture("xmppserver") as _:
         _, writer = await asyncio.open_connection("127.0.0.1", 5223)
 
@@ -52,8 +50,6 @@ async def test_xmpp_server() -> None:
         await writer.drain()
 
         await asyncio.sleep(0.1)
-
-    await xmpp_server.disconnect()
 
 
 async def test_client_connect_no_starttls() -> None:

@@ -10,7 +10,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils import utils
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import response_success_v6
+from bumper.web.response_utils import response_success_v3
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -33,4 +33,4 @@ class PhotoPlugin(WebserverPlugin):
 async def _handle_photo_list(_: Request) -> Response:
     # TODO: check what's needed to be implemented
     utils.default_log_warn_not_impl("_handle_photo_list")
-    return response_success_v6(None)
+    return response_success_v3(data=None, result_key=None, include_success=True)

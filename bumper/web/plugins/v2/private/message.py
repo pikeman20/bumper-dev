@@ -9,7 +9,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 from . import BASE_URL
 
@@ -41,18 +41,18 @@ class MessagePlugin(WebserverPlugin):
 
 async def _handle_has_more_unread_message(_: Request) -> Response:
     """Has more unread message."""
-    return get_success_response({"moreUnReadMsg": "N"})
+    return response_success_v1({"moreUnReadMsg": "N"})
 
 
 async def _handle_waterfall_flow(_: Request) -> Response:
     """Message waterfall flow."""
-    return get_success_response({"list": []})
+    return response_success_v1({"list": []})
 
 
 async def _handle_module_configuration(_: Request) -> Response:
     """Message module configuration."""
     domain = f"https://{bumper_isc.DOMAIN_SEC2}/upload/global"
-    return get_success_response(
+    return response_success_v1(
         {
             "list": [
                 {

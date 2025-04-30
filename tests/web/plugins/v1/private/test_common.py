@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from bumper.web.models import RETURN_API_SUCCESS
+from bumper.web.response_utils import RETURN_API_SUCCESS
 
 
 @pytest.mark.usefixtures("clean_database")

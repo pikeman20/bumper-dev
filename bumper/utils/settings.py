@@ -53,22 +53,19 @@ class Config:
     bumper_announce_ip: str | None = os.environ.get("BUMPER_ANNOUNCE_IP", bumper_listen)
 
     # Logging
-    bumper_level: str = (os.environ.get("BUMPER_DEBUG_LEVEL") or "INFO").upper()
-    bumper_verbose: int = int(os.environ.get("BUMPER_DEBUG_VERBOSE") or 1)
+    debug_bumper_level: str = (os.environ.get("DEBUG_BUMPER_LEVEL") or "INFO").upper()
+    debug_bumper_verbose: int = int(os.environ.get("DEBUG_BUMPER_VERBOSE") or 1)
     DEBUG_LOGGING_API_REQUEST: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_API_REQUEST")) or False
     DEBUG_LOGGING_API_REQUEST_MISSING: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_API_REQUEST_MISSING")) or False
-    DEBUG_LOGGING_XMPP_REQUEST: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST")) or False
-    DEBUG_LOGGING_XMPP_REQUEST_REFACTOR: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST_REFACTOR")) or False
+    DEBUG_LOGGING_XMPP_REQUEST_ORIGINAL: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST")) or False
+    DEBUG_LOGGING_XMPP_REQUEST_REFACTORED: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_REQUEST_REFACTOR")) or False
     DEBUG_LOGGING_XMPP_RESPONSE: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_XMPP_RESPONSE")) or False
-    DEBUG_LOGGING_API_ROUTE: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_API_ROUTE")) or False
     DEBUG_LOGGING_SA_RESULT: bool = str_to_bool(os.environ.get("DEBUG_LOGGING_SA_RESULT")) or False
-
-    INFO_LOGGING_VERBOSE: bool = str_to_bool(os.environ.get("INFO_LOGGING_VERBOSE")) or True
 
     # Other
     USE_AUTH: bool = False
     TOKEN_VALIDITY_SECONDS: int = 1800  # 30 minutes
-    OAUTH_VALIDITY_DAYS: int = 15
+    TOKEN_JWT_ALG: str = os.environ.get("TOKEN_JWT_ALG") or "ES256"
     BUMPER_PROXY_MQTT: bool = str_to_bool(os.environ.get("BUMPER_PROXY_MQTT")) or False
     BUMPER_PROXY_WEB: bool = str_to_bool(os.environ.get("BUMPER_PROXY_WEB")) or False
 
@@ -114,6 +111,8 @@ class Config:
     USER_USERNAME_DEFAULT: str = "bumper"
     USER_NICKNAME_DEFAULT: str = "bumper"
     USER_MAIL_DEFAULT: str = f"{USER_USERNAME_DEFAULT}@home.local"
+
+    USER_REALMS: set[str] = {"ecouser", "bumper", "USER"}
 
     # Dynamically load the application version from pyproject.toml
     APP_VERSION: str = version("bumper")

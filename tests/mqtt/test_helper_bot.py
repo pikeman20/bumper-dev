@@ -1,4 +1,5 @@
 import asyncio
+import json
 import time
 
 from aiomqtt import Client
@@ -197,7 +198,7 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
     cmd.request_id = "testfail"
     commandresult = await helper_bot.send_command(cmd)
     # Don't send a response, ensure timeout
-    assert commandresult == {
+    assert json.loads(commandresult.body.decode("utf-8")) == {
         "id": "testfail",
         "errno": 500,
         "ret": "fail",
@@ -213,7 +214,7 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
     cmd = MQTTCommandModel(cmdjson)
     cmd.request_id = "testgood"
     commandresult = await helper_bot.send_command(cmd)
-    assert commandresult == {
+    assert json.loads(commandresult.body.decode("utf-8")) == {
         "id": "testgood",
         "resp": {"ret": "ok", "ver": "0.13.5"},
         "ret": "ok",
@@ -248,7 +249,7 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
     cmd = MQTTCommandModel(cmdjson)
     cmd.request_id = "testx"
     commandresult = await helper_bot.send_command(cmd)
-    assert commandresult == {
+    assert json.loads(commandresult.body.decode("utf-8")) == {
         "id": "testx",
         "resp": "<ctl ret='ok' type='Brush' left='4142' total='18000'/>",
         "ret": "ok",
@@ -285,7 +286,7 @@ async def test_helperbot_sendcommand(mqtt_client: Client, helper_bot: MQTTHelper
     cmd = MQTTCommandModel(cmdjson)
     cmd.request_id = "testj"
     commandresult = await helper_bot.send_command(cmd)
-    assert commandresult == {
+    assert json.loads(commandresult.body.decode("utf-8")) == {
         "id": "testj",
         "payloadType": "j",
         "resp": {

@@ -12,7 +12,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.images import get_bot_image
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import response_success_v6
+from bumper.web.response_utils import response_success_v3
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -65,7 +65,7 @@ class EcmsPlugin(WebserverPlugin):
 
 async def _handle_ad_res(_: Request) -> Response:
     """Ad res."""
-    return response_success_v6([])
+    return response_success_v3(data=[], result_key=None, include_success=True)
 
 
 async def _handle_hint(request: Request) -> Response:
@@ -74,7 +74,7 @@ async def _handle_hint(request: Request) -> Response:
     data = {}
     for code in codes:
         data[code] = False
-    return response_success_v6(data)
+    return response_success_v3(data=data, result_key=None, include_success=True)
 
 
 async def _handle_resources(request: Request) -> Response:
@@ -117,11 +117,11 @@ async def _handle_resources(request: Request) -> Response:
         ]
     if len(data) <= 0:
         _LOGGER.error(f"locations is not know :: {locations}")
-    return response_success_v6(data)
+    return response_success_v3(data=data, result_key=None, include_success=True)
 
 
 async def _handle_push_event(_: Request) -> Response:
     """Ad res."""
     # dataCategory = request.query.get("dataCategory", "Discover-Hint")
     # resourceId = request.query.get("resourceId", "Robot")
-    return response_success_v6("ok")
+    return response_success_v3(data="ok", result_key=None, include_success=True)

@@ -3,7 +3,7 @@
 import json
 import logging
 
-from bumper.utils import db
+from bumper.db import clean_log_repo
 from bumper.web.models import CleanLog
 
 _LOGGER = logging.getLogger(__name__)
@@ -44,4 +44,4 @@ def clean_log(did: str, rid: str, payload: str) -> None:
     # map_count = body.get("mapCount")
     # content = body.get("content")
 
-    db.clean_log_add(did, cid, t_clean_log)
+    clean_log_repo.add(did, cid, t_clean_log)

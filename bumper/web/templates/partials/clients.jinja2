@@ -2,7 +2,8 @@
     <table class="table table-sm table-striped table-hover">
         <thead class="table-dark">
         <tr>
-            <th>User ID</th>
+            <th>Username</th>
+            <th>DID</th>
             <th>Realm</th>
             <th>Resource</th>
             <th>Connected</th>
@@ -12,6 +13,7 @@
         <tbody>
         {% for client in clients %}
             <tr>
+                <td title="{{ client.name }}">{{ client.name }}</td>
                 <td title="{{ client.userid }}">{{ client.userid }}</td>
                 <td title="{{ client.realm }}">{{ client.realm }}</td>
                 <td title="{{ client.resource }}">{{ client.resource }}</td>
@@ -27,7 +29,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeEntity('client', '{{ client.resource }}')">Remove</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeEntity('client', '{{ client.userid }}')">Remove</button>
                 </td>
             </tr>
         {% endfor %}

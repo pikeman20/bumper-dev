@@ -9,7 +9,7 @@ from aiohttp.web_routedef import AbstractRouteDef
 
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
-from bumper.web.response_utils import get_success_response
+from bumper.web.response_utils import response_success_v1
 
 from . import BASE_URL
 
@@ -36,7 +36,7 @@ class HelpPlugin(WebserverPlugin):
 
 async def _handle_get_help_index(_: Request) -> Response:
     """Get help index."""
-    return get_success_response(
+    return response_success_v1(
         {
             "indexProductList": [
                 {
@@ -136,7 +136,7 @@ async def _handle_get_product_help_index(_: Request) -> Response:
         " but when I click “Forgot password” I don't receive an authentication email. What should I do?"
     )
 
-    return get_success_response(
+    return response_success_v1(
         {
             "faqResponse": {
                 "faqList": [
