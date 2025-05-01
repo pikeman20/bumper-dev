@@ -4,7 +4,7 @@ This guide walks you through setting up an Android emulator on Ubuntu, installin
 
 ---
 
-## \\\\ Prerequisites
+## 📋 Prerequisites
 
 -   **Ubuntu 22.04+**
 -   **Docker** (for running mitmproxy)
@@ -14,7 +14,7 @@ This guide walks you through setting up an Android emulator on Ubuntu, installin
 
 ---
 
-## \\\\ Install Android Studio & SDK
+## 🚀 Install Android Studio & SDK
 
 Install Android Studio via Snap:
 
@@ -24,19 +24,23 @@ $sudo snap install android-studio --classic
 
 Launch Android Studio and follow the initial setup to install the SDK and platform-tools.
 
-> NOTE: _I also change to **install** the **SDK** under `~/.android/Sdk`_
+> _Tip:_ Install the SDK under `~/.android/Sdk` for consistency.
 
-## \\\\ Create an Emulator
+---
+
+## 🖥️ Create an Emulator
 
 1. Open **AVD Manager** (Virtual Device Manager).
 2. Click **Create Virtual Device**.
 3. Choose a device (e.g., Pixel 6 Pro) **without** Google Play Store.
-4. Select a system image with **API 28 (Android 9 Pie)** or lower — required to install a system CA.
+4. Select a system image with **API 28 (Android 9 Pie)** or lower to allow system CA installation.
 
-## \\\\ Prepare the Emulator
+---
 
-_(Optional)_ Apply emulator fix to disable Quickboot file-backed feature
-[Reddit Source](https://www.reddit.com/r/btrfs/comments/l8qu3l/comment/gowtd55/?utm_source=share&utm_medium=web2x&context=3):
+## 🔧 Prepare the Emulator
+
+_(Optional)_ Disable Quickboot file-backed feature
+[Reddit Source - fixes BTRFS issues](https://www.reddit.com/r/btrfs/comments/l8qu3l/comment/gowtd55/?utm_source=share&utm_medium=web2x&context=3):
 
 ```sh
 $echo "QuickbootFileBacked = off" >> ~/.android/advancedFeatures.ini
@@ -54,22 +58,24 @@ Start the emulator with root access and writable system:
 
 ```sh
 $~/.android/Sdk/emulator/emulator \
-  -avd <AVD_NAME> \
-  -writable-system \
-  -no-boot-anim \
-  -gpu host \
-  -cores 4 \
-  -memory 4096
+    -avd <AVD_NAME> \
+    -writable-system \
+    -no-boot-anim \
+    -gpu host \
+    -cores 4 \
+    -memory 4096
 ```
 
-Restart ADB as root and remount the system:
+Restart ADB as root and remount:
 
 ```sh
 $~/.android/Sdk/platform-tools/adb root
 $~/.android/Sdk/platform-tools/adb remount
 ```
 
-## \\\\ Install the CA Certificate
+---
+
+## 🔒 Install the CA Certificate
 
 Push your custom CA into the emulator’s system trust store:
 
@@ -80,15 +86,17 @@ $~/.android/Sdk/platform-tools/adb reboot
 $~/.android/Sdk/platform-tools/adb wait-for-device
 ```
 
-## \\\\ Install the Target App and Proxy App
+---
 
-### // Install Ecovacs Home App
+## 📱 Install the Target App and Proxy App
+
+### 1️⃣ Install Ecovacs Home App
 
 Download and install version `2.4.1` of the Ecovacs Home APK:
 
 > If you want to try reversing newer app versions,
 > you'll need to unpin the certificate.
-> See **[Defeating Certificate Pinning](Certificate_Unpinning.md)** for instructions.
+> See **[Defeating Certificate Pinning](../internals/certificate-unpinning.md)** for instructions.
 
 -   [Ecovacs Home on APKPure](https://apkpure.net/ecovacs-home/com.eco.global.app/download/2.4.1)
 -   [Ecovacs Home on Aptoide](https://ecovacs-home.en.aptoide.com/app)
@@ -97,18 +105,20 @@ Download and install version `2.4.1` of the Ecovacs Home APK:
 $~/.android/Sdk/platform-tools/adb install <path/to/Ecovacs_Home_2.4.1.apk>
 ```
 
-_(Or drag-and-drop the APK onto the emulator window.)_
+> _Tip:_ Drag-and-drop the APK onto the emulator window.
 
-### // Install SOCKS5 Proxy App
+### 2️⃣ Install SOCKS5 Proxy App
 
-Install a simple SOCKS5 proxy client (e.g., Super Proxy), or configure your own:
+Install a SOCKS5 proxy client (e.g., Super Proxy):
 
 -   [Super Proxy on APKPure](https://apkpure.net/super-proxy/com.scheler.superproxy)
 -   [Super Proxy on Aptoide](https://super-proxy-scheler-software.en.aptoide.com/app)
 
-## \\\\ Configure Proxy on Android
+---
 
-In your emulator’s network settings or proxy app, set the following:
+## 🌐 Configure Proxy on Android
+
+In the emulator’s network or proxy app settings:
 
 -   **Protocol**: SOCKS5
 -   **Host**: `<YOUR_SERVER_IP>`
@@ -116,7 +126,9 @@ In your emulator’s network settings or proxy app, set the following:
 
 This routes all emulator traffic through mitmproxy.
 
-## \\\\ Run mitmproxy in Docker
+---
+
+## ⚙️ Run mitmproxy in Docker-Swarm
 
 From your project root:
 
@@ -125,16 +137,18 @@ From your project root:
 
 ```sh
 $docker compose -f docker-compose-mitm.yaml --compatibility config | \
-sed 's|cpus: \([0-9]\+\(\.[0-9]\+\)*\)|cpus: "\1"|' | \
-sed '1{/^name:/d}' | \
-sed 's/published: "\(.*\)"/published: \1/' | \
-sed 's|mode: "\([0-9]\+\)"|mode: \1|' | \
-docker stack deploy --resolve-image=never --with-registry-auth --detach=false --compose-file - mitm
+  sed 's|cpus: \([0-9]\+\(\.[0-9]\+\)*\)|cpus: "\1"|' | \
+  sed '1{/^name:/d}' | \
+  sed 's/published: "\(.*\)"/published: \1/' | \
+  sed 's|mode: "\([0-9]\+\)"|mode: \1|' | \
+  docker stack deploy --resolve-image=never --with-registry-auth --detach=false --compose-file - mitm
 ```
 
-Access the Web UI at [http://localhost:8081](http://localhost:8081) to inspect traffic.
+Access [http://localhost:8081](http://localhost:8081) to inspect traffic.
 
-### // Optional: Run mitmproxy in Docker
+---
+
+## 🐳 Alternative: Local mitmproxy Docker Run
 
 From your project root (where `./certs/ca.pem` lives):
 
@@ -152,13 +166,13 @@ $docker run --rm -it --network host \
     --set connection_strategy=lazy
 ```
 
-Access the Web UI at [http://localhost:8081](http://localhost:8081) to inspect traffic.
+Access [http://localhost:8081](http://localhost:8081) to inspect traffic.
 
-#### // Optional: Clean Output with Python Script
+---
 
-Use a Python addon (see `./configs/mitm.py`) to filter or transform traffic flows.
+## 🐍 Optional: Python Script Filter
 
-Launch mitmproxy with the addon:
+Use the Python addon at `./configs/mitm.py` to filter or transform flows:
 
 ```sh
 $docker run --rm -it --network host \
@@ -176,20 +190,20 @@ $docker run --rm -it --network host \
     -s /tmp/mitm.py
 ```
 
-Access the Web UI at [http://localhost:8081](http://localhost:8081) to inspect traffic.
+Access [http://localhost:8081](http://localhost:8081) to inspect traffic.
 
 ---
 
-## \\\\ Troubleshooting
+## 🛠️ Troubleshooting
 
--   **SSL errors**: Make sure your CA is correctly hashed and installed.
--   **Emulator won’t root**: Use an API 28 or lower image and ensure `-writable-system` is used.
--   **2003 errors in app**: Launch the app once without a proxy so it can fetch initial data.
+-   **SSL errors**: Verify the CA hash and placement.
+-   **Emulator won’t root**: Use API 28 or lower with `-writable-system`.
+-   **App 2003 errors**: Launch the app once without proxy to fetch initial data.
 
-## \\\\ Resources
+---
 
--   [mitmproxy MQTT message example](https://github.com/nikitastupin/mitmproxy-mqtt-script/blob/master/mqtt_message.py)
--   [Using a custom mitmproxy CA](https://docs.mitmproxy.org/stable/concepts-certificates/#using-a-custom-certificate-authority)
--   [Super Proxy on APKPure](https://apkpure.net/super-proxy/com.scheler.superproxy)
--   [Ecovacs Home APK on APKPure](https://apkpure.net/ecovacs-home/com.eco.global.app)
--   [mitmproxy API Documentation](https://docs.mitmproxy.org/stable/api/)
+## 📚 Resources
+
+-   [mitmproxy MQTT script example](https://github.com/nikitastupin/mitmproxy-mqtt-script)
+-   [Custom CA usage](https://docs.mitmproxy.org/stable/concepts-certificates/#using-a-custom-certificate-authority)
+-   [mitmproxy API docs](https://docs.mitmproxy.org/stable/api/)

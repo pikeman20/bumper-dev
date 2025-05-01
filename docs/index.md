@@ -19,7 +19,7 @@ It supports both XMPP and MQTT-based models transparently.
 -   A DNS server capable of overriding specific domain queries
 -   A client that can connect and control the robot:
     -   The official "Ecovacs" or "Ecovacs Home" Android/iOS apps (when configured correctly)
-        -   See [Using Bumper with the official App](configs/Use_With_App.md) for mobile setup details.
+        -   See [Using Bumper with the official App](usage/mobile_app.md) for mobile setup details.
     -   [DeebotUniverse/client.py](https://github.com/DeebotUniverse/client.py) for command-line control
 
 ---
@@ -33,17 +33,17 @@ It supports both XMPP and MQTT-based models transparently.
 ### 2. 🌐 Set up DNS
 
 -   Configure your local DNS server to override specific Ecovacs domains.
--   Detailed setup instructions: [DNS Setup](configs/DNS_Setup.md)
+-   Detailed setup instructions: [DNS Setup](getting_started/dns.md)
 
 ### 3. 🛠️ Install and Run Bumper
 
 -   Follow the installation and usage instructions in the [README.md](https://github.com/MVladislav/bumper/blob/main/README.md)  
-    or refer to [Docker Setup](configs/Docker.md) if using Docker.
+    or refer to [Docker Setup](usage/docker.md) if using Docker.
 
 ### 4. 🔒 Certificates
 
 -   Bumper requires valid certificates to operate.
--   Instructions for manually creating certificates are available here: [Create Certificates](configs/Create_Certs.md)
+-   Instructions for manually creating certificates are available here: [Create Certificates](getting_started/certificates.md)
 
 ---
 
@@ -58,13 +58,13 @@ You can also monitor real-time output:
 For more detailed output and debugging:
 
 -   Additional debugging can be enabled using environment variables.  
-    See [Environment Variables](infos/Env_Var.md) for a list of available debug options.
+    See [Environment Variables](configuration/environment.md) for a list of available debug options.
 
 ---
 
 # 📚 Next Steps
 
--   [How Bumper Works](infos/How_It_Works.md)
+-   [How Bumper Works](internals/architecture.md)
     <!-- - [Configuration Examples](configs/Examples.md) -->
     <!-- - [Frequently Asked Questions](infos/FAQ.md) -->
 

@@ -128,29 +128,27 @@ In-depth guides and architecture details are available in the `docs/` folder or 
 >
 > However, it has only been reported to work on the following models:
 
-| Model           | Protocol | Version Tested | App Tested                                                                |
-| :-------------- | :------- | :------------- | :------------------------------------------------------------------------ |
-| Deebot 900/901  | MQTT     | main           | Ecovacs / Ecovacs Home                                                    |
-| Deebot 600      | MQTT     | main           | Ecovacs Home                                                              |
-| Deebot Ozmo 950 | MQTT     | main           | Ecovacs Home                                                              |
-| Deebot T10      | MQTT     | main           | Ecovacs Home                                                              |
-| Deebot X1 Omni  | MQTT     | main           | See [Discussion #51](https://github.com/MVladislav/bumper/discussions/51) |
-| Deebot Ozmo 601 | XMPP     | main           | Ecovacs                                                                   |
-| Deebot Ozmo 930 | XMPP     | main           | Ecovacs / Ecovacs Home                                                    |
-| Deebot M81 Pro  | XMPP     | v0.1.0         | Ecovacs                                                                   |
+| Model           | Protocol | Version | App Tested                                                                |
+| :-------------- | :------- | :------ | :------------------------------------------------------------------------ |
+| Deebot 900/901  | MQTT     |         | Ecovacs / Ecovacs Home                                                    |
+| Deebot 600      | MQTT     |         | Ecovacs Home                                                              |
+| Deebot Ozmo 950 | MQTT     |         | Ecovacs Home                                                              |
+| Deebot T10      | MQTT     | 1.7.2   | Ecovacs Home                                                              |
+| Deebot X1 Omni  | MQTT     |         | See [Discussion #51](https://github.com/MVladislav/bumper/discussions/51) |
+| Deebot Ozmo 601 | XMPP     |         | Ecovacs                                                                   |
+| Deebot Ozmo 930 | XMPP     |         | Ecovacs / Ecovacs Home                                                    |
+| Deebot M81 Pro  | XMPP     |         | Ecovacs                                                                   |
 
 ### 📱 Supported Apps
 
-| Service                        | Version  | Works | Notes                                                                                                                             |
-| :----------------------------- | :------- | :---- | :-------------------------------------------------------------------------------------------------------------------------------- |
-| Ecovacs Home                   | 2.2.1    | ✅    |                                                                                                                                   |
-| Ecovacs Home                   | 2.4.1    | ✅    | Works best                                                                                                                        |
-| Ecovacs Home                   | 2.4.3    | ✅    |                                                                                                                                   |
-| Ecovacs Home                   | >= 2.4.4 | ❌    | Certificate pinning may block; see [mitmproxy docs](https://docs.mitmproxy.org/stable/concepts-certificates/#certificate-pinning) |
-| Deebot 4 Home Assistant        | 2.1.2    | ✅    |                                                                                                                                   |
-| EcovacsBumper (HA integration) | 1.5.3    | ✅    |                                                                                                                                   |
-
-For unpinning beyond v2.4.4, see `docs/reverse/Certificate_Unpinning.md`.
+| Service                        | Version  | Works | Notes                                                                                           |
+| :----------------------------- | :------- | :---- | :---------------------------------------------------------------------------------------------- |
+| Ecovacs Home                   | 2.2.1    | ✅    |                                                                                                 |
+| Ecovacs Home                   | 2.4.1    | ✅    | Works best                                                                                      |
+| Ecovacs Home                   | 2.4.3    | ✅    |                                                                                                 |
+| Ecovacs Home                   | >= 2.4.4 | 🛠️    | [Defeating Certificate Pinning](https://bumper.mvladislav.online/reverse/Certificate_Unpinning) |
+| Deebot 4 Home Assistant        | 2.1.2    | ✅    |                                                                                                 |
+| EcovacsBumper (HA integration) | 1.5.3    | ✅    |                                                                                                 |
 
 ---
 

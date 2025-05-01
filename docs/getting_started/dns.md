@@ -1,59 +1,58 @@
 # DNS Configuration for Bumper
 
-To intercept and redirect traffic from EcoVacs devices to your local **Bumper** instance,
-you need to configure your network’s DNS to resolve specific domains to your Bumper server's local IP.
-
-## \\\\ Recommended Setup: OPNsense with Unbound DNS
-
-If you're using OPNsense as your router/firewall, Unbound DNS is the default DNS resolver.
-You can override domain resolution by adding custom host overrides in the Unbound configuration.
-
-### // Steps:
-
-1.  Log in to the OPNsense web interface.
-2.  Navigate to:  
-    **Services → Unbound DNS → Overrides**
-3.  Under **Host Overrides**, click **Add**:
-    -   **Host:** `*`
-    -   **Domain:** `ecouser.net`
-    -   **IP:** Your Bumper server’s local IP (e.g. `192.168.1.100`)
-4.  Repeat for each relevant domain:
-    -   `*.ecouser.com`
-    -   `*.ecovacs.com`
-    -   `*.ecouser.net`
-    -   `*.ecovacs.net`
-5.  Click **Apply Changes** to reload Unbound.
+To intercept and redirect traffic from Ecovacs robots and the official app to
+your local **Bumper** server, configure your network’s DNS resolver to override
+specific Ecovacs domains to your server’s IP.
 
 ---
 
-## \\\\ Alternative Setup: DNSMasq / Pi-hole
+## 🔧 Recommended: OPNsense + Unbound DNS
 
-If you're using DNSMasq directly or via Pi-hole:
+If you're using OPNsense as your router/firewall, Unbound DNS is the default resolver.
+Override domain resolution by adding Host Overrides:
 
-### // Create a Custom Config:
+1. **Login** to the OPNsense web interface.
+2. Navigate to **Services → Unbound DNS → Overrides**.
+3. Under **Host Overrides**, click **Add** and set:
+    - **Host**: `*`
+    - **Domain**: `ecouser.net`
+    - **IP**: `<BUMPER_SERVER_IP>` (e.g. `192.168.1.100`)
+4. Repeat for each domain pattern:
+    - `*.ecouser.com`
+    - `*.ecovacs.com`
+    - `*.ecouser.net`
+    - `*.ecovacs.net`
+5. Click **Apply** to reload Unbound.
 
-**File:** `/etc/dnsmasq.d/02-bumper.conf`
+> These wildcard entries catch all subdomains under the specified domain.
+
+---
+
+## 📦 Alternative: dnsmasq / Pi-hole
+
+If you're using DNSMasq directly or via Pi-hole, create a custom config file:
 
 ```txt
-address=/ecouser.com/<bumper server ip (e.g. `192.168.1.100`)>
-address=/ecouser.net/<bumper server ip (e.g. `192.168.1.100`)>
-address=/ecovacs.com/<bumper server ip (e.g. `192.168.1.100`)>
-address=/ecovacs.net/<bumper server ip (e.g. `192.168.1.100`)>
+/etc/dnsmasq.d/02-bumper.conf
 ```
 
-> Replace `<bumper server ip (e.g. `192.168.1.100`)>` with your actual Bumper server IP.
-
-### // Apply Changes
-
-For Pi-hole:
-
-```sh
-$sudo service pihole-FTL reload
+```txt
+address=/ecouser.com/<BUMPER_SERVER_IP>
+address=/ecouser.net/<BUMPER_SERVER_IP>
+address=/ecovacs.com/<BUMPER_SERVER_IP>
+address=/ecovacs.net/<BUMPER_SERVER_IP>
 ```
+
+Replace `<BUMPER_SERVER_IP>` with your server’s local IP (e.g. `192.168.1.100`).
+
+**Apply changes:**
+
+-   **dnsmasq**: `sudo systemctl reload dnsmasq`
+-   **Pi-hole**: `pihole restartdns` or via the web UI
 
 ---
 
-## \\\\ Notes on Domain Usage
+## 📋 Notes on Domain Patterns
 
 If overriding DNS for top-level domains (like `*.ecovacs.com`) isn’t supported in your DNS setup,
 you’ll need to manually configure your router or DNS resolver to forward each relevant subdomain used by the app or robot to your **Bumper** server.
@@ -65,7 +64,7 @@ The Bumper project doesn’t care which exact domain is used—as long as the re
 > `https://{region}.ecouser.net/api/appsvr/service/list`  
 > This means the required domains may vary across models, regions, and firmware versions.
 
-### // Replacement Examples
+### Replacement Examples
 
 Most domains follow patterns based on country or region codes:
 
@@ -78,14 +77,14 @@ Most domains follow patterns based on country or region codes:
         `portal-na.ecouser.net`
     -   **Note:** `{region}` values may also include `eu`, `cn`, or `ww`.
 
-### // Summary
+### Summary
 
 -   ✅ **If your DNS supports wildcard or full-domain overrides**, use them to catch all subdomains at once.
 -   ❌ **If it does not**, you must manually define each used domain/subdomain to ensure proper redirection.
 
 ---
 
-### // Known Domains
+## 💡 Known Domains
 
 | Address                                  | Description                            |
 | :--------------------------------------- | :------------------------------------- |
@@ -118,9 +117,7 @@ Most domains follow patterns based on country or region codes:
 | `api-rop.dc-{region}.ww.ecouser.net`     | App v2+ API                            |
 | `jmq-ngiot-{region}.area.ww.ecouser.net` | App v2+ MQTT                           |
 
----
-
-### // Domains with Known IPs
+### Domains with Known IPs
 
 | Domain                                   | IP             | Port |
 | :--------------------------------------- | :------------- | :--- |
@@ -149,9 +146,7 @@ Most domains follow patterns based on country or region codes:
 | living-account.eu-central-1.aliyuncs.com | 8.211.2.91     | 443  |
 | sgp-sdk.openaccount.aliyun.com           | 8.219.176.88   | 443  |
 
----
-
-### // Current Domains with TLS Errors
+### Current Domains with TLS Errors
 
 | Domain                                           | IP             | Port |
 | :----------------------------------------------- | :------------- | :--- |
@@ -162,3 +157,19 @@ Most domains follow patterns based on country or region codes:
 
 > 🧩 This list will grow as more regions and device behaviors are observed.  
 > Monitor DNS traffic if your robot or app isn’t connecting as expected.
+
+---
+
+## 🔍 Troubleshooting
+
+-   **App won’t connect**: Test overrides with `dig` or `nslookup` against your DNS server.
+-   **Partial redirects**: Clear device DNS cache or reboot.
+-   **IPv6 issues**: If your network uses IPv6, add AAAA records as well.
+
+---
+
+## 📚 Resources
+
+-   [OPNsense Unbound Host Overrides](https://docs.opnsense.org/manual/unbound.html)
+-   [dnsmasq address configuration](http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html#address)
+-   [Pi-hole documentation](https://docs.pi-hole.net/)

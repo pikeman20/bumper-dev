@@ -95,7 +95,7 @@ The HTML report is located at `tests/report/index.html`.
 
 ## 📖 Understanding the Code
 
-Refer to the [How It Works](../infos/How_It_Works.md) guide for an overview of the core architecture and data flows.
+Refer to the [How It Works](../internals/architecture.md) guide for an overview of the core architecture and data flows.
 
 ---
 

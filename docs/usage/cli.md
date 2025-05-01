@@ -2,7 +2,7 @@
 
 **Bumper** supports several command-line arguments, which you can view by using the `-h` flag.
 
-> **Note:** For more detailed configuration, use environment variables. See [Environment Variables](../infos/Env_Var.md).
+> **Note:** For more detailed configuration, use environment variables. See [Environment Variables](../configuration/environment.md).
 
 ```sh
 usage: bumper [-h] [--listen LISTEN] [--announce ANNOUNCE] [--debug_level DEBUG_LEVEL] [--debug_verbose DEBUG_VERBOSE]

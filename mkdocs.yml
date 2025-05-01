@@ -2,22 +2,26 @@
 site_name: Bumper Docs
 repo_url: https://github.com/MVladislav/bumper
 edit_uri: edit/main/docs/
+
 nav:
   - Home: index.md
-  - Using:
-      - "Command-Line": configs/CmdLine.md
-      - "Docker": configs/Docker.md
-      - "Using with Apps": configs/Use_With_App.md
-  - Certs: configs/Create_Certs.md
-  - DNS: configs/DNS_Setup.md
-  - Configs:
-      - "Environment Variables": infos/Env_Var.md
-  - Developing:
-      - "Reversing The Protocols": reverse/Sniffing.md
-      - "Defeating Certificate Pinning": reverse/Certificate_Unpinning.md
-      - "Developing and Testing": dev/Develop.md
-      - "How It Works": infos/How_It_Works.md
-  - Origins: origins.md
+  - Getting Started:
+      - DNS Setup: getting_started/dns.md
+      - Certificate Setup: getting_started/certificates.md
+  - Usage:
+      - Command-Line Usage: usage/cli.md
+      - Docker Usage: usage/docker.md
+      - Mobile App Integration: usage/mobile_app.md
+  - Configuration:
+      - Environment Variables: configuration/environment.md
+  - Internals:
+      - Architecture: internals/architecture.md
+      - Sniffing & Reverse Engineering: internals/sniffing.md
+      - Certificate Pinning Bypass: internals/certificate-unpinning.md
+  - Development:
+      - Development Guide: development/dev-guide.md
+      - Testing & CI: https://github.com/MVladislav/bumper/actions
+  - Origins & Credits: origins.md
 
 theme:
   name: material
