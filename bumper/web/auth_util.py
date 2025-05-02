@@ -52,9 +52,13 @@ async def login(request: Request) -> Response:
             access_token = request.query.get("accessToken")
             check = True
         else:
-            if (account := request.query.get("account")) is not None:
-                uid = _generate_uid(account)
+            uid = _generate_uid(request.query.get("account"))
+            if uid is None or uid == "":
+                uid = _generate_uid(request.query.get("encryptAccount"))
+            if uid is None or uid == "":
+                uid = _generate_uid(request.query.get("authAppkey"))
             _ = request.query.get("encryptPwd")
+            check = False
 
         device_id = request.match_info.get("devid")
         country_code = request.match_info.get("country", bumper_isc.ECOVACS_DEFAULT_COUNTRY)
@@ -84,52 +88,49 @@ async def login(request: Request) -> Response:
 
 def _auth_any(
     uid: str | None,
-    access_token: str | None,
+    token_str: str | None,
     device_id: str,
-    apptype: str,
+    app_type: str,
     country_code: str,
     check: bool,
 ) -> Response:
     if uid is None:
-        uid = _generate_uid("tmpuser")
+        uid = _generate_uid(bumper_isc.USER_USERNAME_DEFAULT)
 
-    body = response_error_v1(msg="Parameter error. Please try again later.", code=ERR_TOKEN_INVALID)
-    user = user_repo.get_by_id(uid)
+    body: Response = response_error_v1(msg="Parameter error. Please try again later.", code=ERR_TOKEN_INVALID)
+    user: models.BumperUser | None = user_repo.get_by_id(uid)
 
-    # anyway if it is a login or only checklogin
+    # anyway if it is a 'login' or only 'checkLogin'
     # we will create a user if not exists and generated always a token, to be always authenticated
     if user is None:
-        # Add a new user
         user_repo.add(uid)
         user = user_repo.get_by_id(uid)
 
     if user is not None:
-        _auth_any_clean(user, device_id)
+        _auth_any_user_extends(user, device_id)
         token = _generate_token(user.userid)
-        body = response_success_v1(_get_login_details(apptype, country_code, user, token))
+        body = response_success_v1(_get_login_details(app_type, country_code, user, token))
 
-        # If request was to check a token
-        if check is True and access_token is not None:
-            # NOTE: half used, if false the response will be true from above login
-            (success, result) = _check_token(apptype, country_code, user, access_token)
-            if success is True:
+        # If request was 'checkLogin'
+        if check is True and token_str is not None:
+            (success, result) = _check_token(app_type, country_code, user, token_str)
+            if success is True:  # We ignore when token check fails ;) and only use other result when not False
                 body = result
 
     return body
 
 
-def _auth_any_clean(user: models.BumperUser, device_id: str) -> None:
+def _auth_any_user_extends(user: models.BumperUser, device_id: str) -> None:
     # Add current used device to user
     user_repo.add_device(user.userid, device_id)
     # Add all known bots to the user
-    bots = bot_repo.list_all()
-    for bot in bots:
+    for bot in bot_repo.list_all():
         if bot.did is not None and bot.did != "":
             user_repo.add_bot(user.userid, bot.did)
         else:
-            _LOGGER.error(f"No DID for bot :: {bot}")
+            _LOGGER.error(f"Bot has not a DID assigned :: {bot.as_dict()}")
 
-    # Deactivate old tokens and authcodes
+    # Deactivate old tokens and auth_codes
     token_repo.revoke_user_expired(user.userid)
 
 
@@ -310,9 +311,9 @@ async def oauth_callback(request: Request) -> Response:
 # ******************************************************************************
 
 
-def _check_token(apptype: str, country_code: str, user: models.BumperUser, token: str) -> tuple[bool, Response]:
-    if token_repo.verify(user.userid, token):
-        return (True, response_success_v1(_get_login_details(apptype, country_code, user, token)))
+def _check_token(apptype: str, country_code: str, user: models.BumperUser, token_str: str) -> tuple[bool, Response]:
+    if token_repo.verify(user.userid, token_str):
+        return (True, response_success_v1(_get_login_details(apptype, country_code, user, token_str)))
     return (False, response_error_v1(msg="Parameter error. Please try again later.", code=ERR_TOKEN_INVALID))
 
 
@@ -336,10 +337,12 @@ def _get_login_details(apptype: str, country_code: str, user: models.BumperUser,
     return details
 
 
-def _generate_uid(email: str) -> str:
-    """Generate an uid from a given E-Mail."""
+def _generate_uid(account: str | None) -> str:
+    """Generate an uid from a given account name."""
+    if account is None:
+        account = bumper_isc.USER_USERNAME_DEFAULT
     hash_object = hashlib.sha256()
-    hash_object.update(email.encode("utf-8"))
+    hash_object.update(account.encode("utf-8"))
     return hash_object.hexdigest()[:20]
 
 

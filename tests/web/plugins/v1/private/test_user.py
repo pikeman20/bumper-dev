@@ -3,10 +3,11 @@ import json
 import pytest
 
 from bumper.db import bot_repo, token_repo, user_repo
+from bumper.utils.settings import config as bumper_isc
 from bumper.web.auth_util import _generate_uid
 from bumper.web.response_utils import ERR_TOKEN_INVALID, RETURN_API_SUCCESS
 
-USER_ID = _generate_uid("tmpuser")
+USER_ID = _generate_uid(bumper_isc.USER_USERNAME_DEFAULT)
 
 
 @pytest.mark.usefixtures("clean_database")
@@ -46,7 +47,7 @@ async def test_checkLogin(webserver_client) -> None:
     assert "uid" in jsonresp["data"]
     assert "username" in jsonresp["data"]
 
-    # Remove dev from tmpuser
+    # Remove dev from example user
     user_repo.remove_device(USER_ID, "dev_1234")
 
     # Add a token to user and test
