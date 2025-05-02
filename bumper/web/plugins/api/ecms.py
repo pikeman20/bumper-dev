@@ -115,6 +115,26 @@ async def _handle_resources(request: Request) -> Response:
                 "type": "svga",
             },
         ]
+    elif locations == "robot_setting_yiko_ops":
+        data = [
+            {
+                "resId": "61ceb7d1312d7c02f3b5f047",
+                "location": "robot_setting_yiko_ops",
+                "title": "",
+                "description": "",
+                "type": "jsonObject",
+                "action": {"clickAction": "0", "clickURL": ""},
+                "tags": [],
+                "content": [
+                    "\u201cStart cleaning\u201d",
+                    "\u201cPause task\u201d",
+                    "\u201cTurn to standard mode\u201d",
+                    "\u201cHave consumables expired?\u201d",
+                    "\u201cCurrent flow mode\u201d",
+                ],
+            },
+        ]
+
     if len(data) <= 0:
         _LOGGER.error(f"locations is not know :: {locations}")
     return response_success_v3(data=data, result_key=None, include_success=True)
