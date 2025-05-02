@@ -89,11 +89,11 @@ async def handle_commands(
             if cmd_request.td == "PollSCResult":  # Seen when doing initial wifi config
                 return web.json_response(
                     {
-                        "ret": "ok",
+                        "ret": "ok",  # TODO: extend below
                         # "did": "DID",
-                        # "type": "Class",
-                        # "resource": "rljY",
-                        # "name": "SN",
+                        # "type": "CLASS",
+                        # "resource": "RESOURCE",
+                        # "name": "USERNAME",
                     },
                 )
             if cmd_request.td == "HasUnreadMsg":  # EcoVacs Home

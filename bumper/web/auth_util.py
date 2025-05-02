@@ -232,7 +232,6 @@ async def get_auth_code_v2(request: Request) -> Response:
     try:
         post_body = json.loads(await request.text())
         user_id = post_body.get("auth", {}).get("userid")
-        # TODO: possible change to JWT, see oauth_callback, inside will be ac as authcode
         # access_token = post_body.get("auth", {}).get("token")
 
         user: models.BumperUser | None = None

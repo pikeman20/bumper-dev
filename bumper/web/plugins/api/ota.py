@@ -33,6 +33,7 @@ class OtaPlugin(WebserverPlugin):
 async def _handle_products_firmware_latest(_: Request) -> Response:
     # TODO: check what's needed to be implemented
     utils.default_log_warn_not_impl("_handle_products_firmware_latest")
-    # device_class = request.match_info.get("class")
     # did = request.query.get("did")
+    # device_class = request.match_info.get("class")
+    # username = request.query.get("sn")
     return response_success_v3(data=None, result_key=None, include_success=True)

@@ -7,7 +7,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.utils import utils
+from bumper.db import bot_repo
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_success_v3, response_success_v4
 
@@ -94,28 +94,26 @@ async def _handle_read(_: Request) -> Response:
 
 async def _handle_v2_message_push(_: Request) -> Response:
     # EcoVacs Home
-    # TODO: check what's needed to be implemented
-    utils.default_log_warn_not_impl("_handle_v2_message_push")
-    return response_success_v3(data="")
+    return response_success_v3(msg="", data="success")
 
 
 async def _handle_v3_message_push_status(request: Request) -> Response:
     # EcoVacs Home
-    # TODO: check what's needed to be implemented
-    utils.default_log_warn_not_impl("_handle_v3_message_push_status")
     userid = request.headers.get("userid", "")
     # token = request.headers.get("token", "")
     return response_success_v3(
+        result_key=None,
         data={
-            "devices": [
-                # {
-                #     "did": "...",
-                #     "msgPushStatus": True,
-                #     "nickName": "DEEBOT T10 PLUS",
-                # },
-            ],
-            "msgPushStatus": {"DEVICE": True, "SHARE": True},
             "uid": userid,
+            "msgPushStatus": {"DEVICE": True, "SHARE": True},
+            "devices": [
+                {
+                    "did": bot.did,
+                    "msgPushStatus": True,
+                    "nickName": bot.nick,
+                }
+                for bot in bot_repo.list_all()
+            ],
         },
     )
 

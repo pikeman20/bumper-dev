@@ -11,7 +11,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
-from bumper.db import bot_repo, token_repo
+from bumper.db import bot_repo, client_repo, token_repo, user_repo
 from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web import auth_util
@@ -139,8 +139,11 @@ async def _handle_delete_one_device(post_body: Mapping[str, Any], _: Request) ->
     return None
 
 
-async def _handle_logout(_: Mapping[str, Any], __: Request) -> Response | None:
-    return None
+async def _handle_logout(post_body: Mapping[str, Any], __: Request) -> Response | None:
+    user_id: str = post_body["userId"]
+    user_repo.remove(user_id)
+    client_repo.remove(user_id)
+    return web.json_response({"todo": "result", "result": "ok"})
 
 
 # ----------- Mapping -----------
@@ -153,5 +156,5 @@ _TODO_HANDLERS: dict[str, HandlerFunction] = {
     "SetDeviceNick": _handle_set_device_nick,
     "AddOneDevice": _handle_add_one_device,
     "DeleteOneDevice": _handle_delete_one_device,
-    # "logout": _handle_logout,  # TODO: sarch and implement
+    "logout": _handle_logout,
 }
