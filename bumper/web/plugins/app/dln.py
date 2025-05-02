@@ -2,6 +2,7 @@
 
 from collections.abc import Iterable
 import logging
+from typing import Any
 
 from aiohttp import web
 from aiohttp.web_exceptions import HTTPInternalServerError
@@ -63,8 +64,10 @@ async def _handle_clean_result_list(request: Request) -> Response:
     raise HTTPInternalServerError
 
 
-async def _handle_clean_result_del(_: Request) -> Response:
+async def _handle_clean_result_del(request: Request) -> Response:
     """Clean result delete."""
-    # TODO: check what's needed to be implemented
-    utils.default_log_warn_not_impl("_handle_clean_result_del")
+    json_data: dict[str, Any] = await request.json()
+    log_ids: list[str] = json_data.get("logIds", [])
+    for log_id in log_ids:
+        clean_log_repo.remove_by_id(log_id)
     return response_success_v3(data=None)

@@ -28,7 +28,8 @@ def test_clean_logs_db() -> None:
     clean_log_repo.add(did, cid, clean_log)
     assert len(clean_log_repo.list_by_did(did)) == 2
 
-    cid = "cas0cbasv"
+    clean_log.ts = 1699297517 + 1
+    clean_log.clean_log_id = f"{did}@{clean_log.ts}@{rid}"
     clean_log_repo.add(did, cid, clean_log)
     assert len(clean_log_repo.list_by_did(did)) == 3
 
@@ -38,7 +39,7 @@ def test_clean_logs_db() -> None:
     assert len(clean_log_repo.list_by_did(did)) == 4
 
     did = "cßa9sbas"
-    cid = "asicpasv98"
+    clean_log.clean_log_id = f"{did}@{clean_log.ts}@{rid}"
     clean_log_repo.add(did, cid, clean_log)
     assert len(clean_log_repo.list_by_did(did)) == 1
 
@@ -67,6 +68,3 @@ def test_clean_logs_db() -> None:
     clean_log.area = 28
     clean_log_repo.add(did, cid, clean_log)
     assert len(clean_log_repo.list_by_did(did)) == 2
-
-    # clean_log_repo._update_clean_logs_list_field(did, cid, clean_log, False)
-    # assert len(clean_log_repo.list_by_did(did)) == 1

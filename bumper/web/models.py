@@ -189,24 +189,26 @@ class CleanLogs:
 class CleanLog:
     """Clean log."""
 
-    # NEW and OLD bots
+    cid: str | None = None
+    # Older and Newer Bots
     aiavoid: int = 0
     aitypes: list[Any] = []
     area: int | None = None
     image_url: str | None = None
     stop_reason: int | None = None
-    last: int | None = None
-    ts: int | None = None
+    last: int | None = None  # time
+    ts: int | None = None  # start
     type: str | None = None
 
-    # # Only NEW bots
-    # aiopen:int|None = None
+    # Newer Bots
+    avoid_count: int | None = None
+    enable_power_mop: int | None = None
+    power_mop_type: int | None = None
+    ai_open: int | None = None
     # aq:int|None = None
     # cleanId:str|None = None
     # cornerDeep:int|None = None
-    # enablePowerMop:int|None = None
     # mapName:str|None = None
-    # powerMopType:int|None = None
     # sceneName:int|None = None
     # triggerMode:int|None = None
 
@@ -218,30 +220,72 @@ class CleanLog:
         """Convert for db."""
         return self.__dict__
 
-    def as_dict(self) -> dict[str, Any]:
-        """Convert to dict."""
-        return {
-            "aiavoid": self.aiavoid,
-            "aitypes": self.aitypes,
-            "area": self.area,
-            "id": self.clean_log_id,
-            "imageUrl": self.image_url if self.image_url is not None else "",
-            "last": self.last,
-            "stopReason": self.stop_reason if self.stop_reason is not None else -2,
-            "ts": self.ts,
-            "type": self.type,
-        }
-
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "CleanLog":
+    def from_db(cls, data: dict[str, Any]) -> "CleanLog":
         """Create a CleanLog instance from a dictionary."""
         clean_log = cls(clean_log_id=data["clean_log_id"])
+        clean_log.cid = data.get("cid")
+        # Older and Newer Bots
         clean_log.aiavoid = data.get("aiavoid", 0)
         clean_log.aitypes = data.get("aitypes", [])
         clean_log.area = data.get("area")
         clean_log.image_url = data.get("image_url")
-        clean_log.last = data.get("last")
         clean_log.stop_reason = data.get("stop_reason")
+        clean_log.last = data.get("last")
         clean_log.ts = data.get("ts")
         clean_log.type = data.get("type")
+        # Newer Bots
+        clean_log.avoid_count = data.get("avoid_count")
+        clean_log.enable_power_mop = data.get("enable_power_mop")
+        clean_log.power_mop_type = data.get("power_mop_type")
+        clean_log.ai_open = data.get("ai_open")
+        return clean_log
+
+    def as_dict(self) -> dict[str, Any]:
+        """Convert to dict."""
+        return {
+            "id": self.clean_log_id,
+            # "cid": self.cid,
+            # Older and Newer Bots
+            "aiavoid": self.aiavoid,
+            "aitypes": self.aitypes,
+            "area": self.area,
+            "imageUrl": self.image_url if self.image_url is not None else "",
+            "stopReason": self.stop_reason if self.stop_reason is not None else -2,
+            "last": self.last,
+            "ts": self.ts,
+            "type": self.type,
+            # Newer Bots
+            "avoidCount": self.avoid_count,
+            "enablePowerMop": self.enable_power_mop,
+            "powerMopType": self.power_mop_type,
+            "aiopen": self.ai_open,
+        }
+
+    @classmethod
+    def from_dict(cls, did: str, rid: str, data: dict[str, Any]) -> "CleanLog":
+        """Create a CleanLog instance from a dictionary."""
+        start = data.get("start")
+        clean_log = cls(clean_log_id=f"{did}@{start}@{rid}")
+        clean_log.cid = data.get("cid")
+
+        # Older and Newer Bots
+        clean_log.aiavoid = data.get("aiavoid", 0)
+        clean_log.aitypes = data.get("aitypes", [])
+        clean_log.area = data.get("area")
+        clean_log.image_url = data.get("imageUrl")
+        clean_log.stop_reason = data.get("stopReason")
+        clean_log.last = data.get("time")
+        clean_log.ts = start
+        clean_log.type = data.get("type")
+        # Newer Bots
+        clean_log.avoid_count = data.get("avoidCount")
+        clean_log.enable_power_mop = data.get("enablePowerMop")
+        clean_log.power_mop_type = data.get("powerMopType")
+        clean_log.ai_open = data.get("aiopen")
+
+        # stop = body.get("stop") # if the clean is started (0) or stopped (1)
+        # map_count = body.get("mapCount")
+        # content = body.get("content")
+
         return clean_log
