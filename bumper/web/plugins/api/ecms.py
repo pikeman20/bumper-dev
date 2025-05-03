@@ -134,9 +134,11 @@ async def _handle_resources(request: Request) -> Response:
                 ],
             },
         ]
+    elif locations == "home_manage_intro":
+        data = []
 
     if len(data) <= 0:
-        _LOGGER.error(f"locations is not know :: {locations}")
+        _LOGGER.warning(f"locations is not know :: {locations}")
     return response_success_v3(data=data, result_key=None, include_success=True)
 
 
