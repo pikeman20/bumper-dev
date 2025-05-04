@@ -118,7 +118,7 @@ async def _handle_resources(request: Request) -> Response:
     elif locations == "robot_setting_yiko_ops":
         data = [
             {
-                "resId": "61ceb7d1312d7c02f3b5f047",
+                "resId": "61ceb7d1312d7c02f3b5f047",  # pragma: allowlist secret
                 "location": "robot_setting_yiko_ops",
                 "title": "",
                 "description": "",

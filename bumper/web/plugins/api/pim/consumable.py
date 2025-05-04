@@ -83,7 +83,7 @@ async def _handle_get_purchase_url(_: Request) -> Response:
             msg_key="msg",
             data=[
                 {
-                    "id": "62df48fe55e82d6b346214d9",
+                    "id": "62df48fe55e82d6b346214d9",  # pragma: allowlist secret
                     "name": "Side Brush",
                     "icon": f"https://{bumper_isc.DOM_SUB_PORT}/api/pim/file/get/61a5f036ed50344bd5b52819",
                     "url": "",
@@ -100,7 +100,7 @@ async def _handle_get_purchase_url(_: Request) -> Response:
                     "hasLifeSpan": 0,
                 },
                 {
-                    "id": "62df495e176a4d3d8780acdc",
+                    "id": "62df495e176a4d3d8780acdc",  # pragma: allowlist secret
                     "name": "Main Brush",
                     "icon": f"https://{bumper_isc.DOM_SUB_PORT}/api/pim/file/get/61a5f0a45afd254c7a5c6959",
                     "url": "",
@@ -117,7 +117,7 @@ async def _handle_get_purchase_url(_: Request) -> Response:
                     "hasLifeSpan": 0,
                 },
                 {
-                    "id": "6284c3c0dd78021dc557ffbe",
+                    "id": "6284c3c0dd78021dc557ffbe",  # pragma: allowlist secret
                     "name": "Filter",
                     "icon": f"https://{bumper_isc.DOM_SUB_PORT}/api/pim/file/get/61a5f0e472e3052928c1160a",
                     "url": "",
@@ -134,7 +134,7 @@ async def _handle_get_purchase_url(_: Request) -> Response:
                     "hasLifeSpan": 0,
                 },
                 {
-                    "id": "62df49bb55e82d2a2c6214de",
+                    "id": "62df49bb55e82d2a2c6214de",  # pragma: allowlist secret
                     "name": "Dust Bag",
                     "icon": f"https://{bumper_isc.DOM_SUB_PORT}/api/pim/file/get/61a5f1fded5034391bb5281a",
                     "url": "",
@@ -151,7 +151,7 @@ async def _handle_get_purchase_url(_: Request) -> Response:
                     "hasLifeSpan": 0,
                 },
                 {
-                    "id": "6284c3c6dd7802847257ffc3",
+                    "id": "6284c3c6dd7802847257ffc3",  # pragma: allowlist secret
                     "name": "Disposable Cleaning Cloth",
                     "icon": f"https://{bumper_isc.DOM_SUB_PORT}/api/pim/file/get/61d6592cfe802336b9d12e7d",
                     "url": "",
@@ -168,7 +168,7 @@ async def _handle_get_purchase_url(_: Request) -> Response:
                     "hasLifeSpan": 0,
                 },
                 {
-                    "id": "6284c3c9dd78023a6057ffc5",
+                    "id": "6284c3c9dd78023a6057ffc5",  # pragma: allowlist secret
                     "name": "Other Components",
                     "icon": f"https://{bumper_isc.DOM_SUB_PORT}/api/pim/file/get/61a5f38172e305764bc1160c",
                     "url": "",
@@ -191,7 +191,7 @@ async def _handle_get_purchase_url(_: Request) -> Response:
                     "hasLifeSpan": 0,
                 },
                 {
-                    "id": "6284c3ccdd78024ea157ffc7",
+                    "id": "6284c3ccdd78024ea157ffc7",  # pragma: allowlist secret
                     "name": "Air Freshener Capsule",
                     "icon": f"https://{bumper_isc.DOM_SUB_PORT}/api/pim/file/get/61d659e6fd39e48ab8132dec",
                     "url": "",

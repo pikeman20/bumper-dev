@@ -134,7 +134,7 @@ async def handle_codepush_update_check(request: Request) -> Response:
             "is_mandatory": False,
         },
     }
-    if deployment_key == "RSYAx668chaf0tpKvf1kJNaVJmDzi4g83wsg78":
+    if deployment_key == "RSYAx668chaf0tpKvf1kJNaVJmDzi4g83wsg78":  # pragma: allowlist secret
         response = {
             "update_info": {
                 "download_url": "https://ecovacs-na-codepush.s3.us-west-1.amazonaws.com/FrxqD9fvyTZqY8umUP3kTEfGSTMl",
@@ -143,14 +143,14 @@ async def handle_codepush_update_check(request: Request) -> Response:
                 "is_disabled": False,
                 "target_binary_range": "1.0.0",
                 "label": "v5",
-                "package_hash": "df903c2d7db36907cdd31d583f68c125e49ecc03941fe360661803f3d92fe158",
+                "package_hash": "df903c2d7db36907cdd31d583f68c125e49ecc03941fe360661803f3d92fe158",  # pragma: allowlist secret
                 "package_size": 1859843,
                 "should_run_binary_version": False,
                 "update_app_version": False,
                 "is_mandatory": True,
             },
         }
-    elif deployment_key == "0XLlHQNfNd0YUpiD-gDe1h6oIctlsVKwpcmViH":
+    elif deployment_key == "0XLlHQNfNd0YUpiD-gDe1h6oIctlsVKwpcmViH":  # pragma: allowlist secret
         response = {
             "update_info": {
                 "download_url": "https://ecovacs-na-codepush.s3.us-west-1.amazonaws.com/lp9Tb7HxQCVq1kjtuLn1fbBm6qhz",
@@ -159,7 +159,7 @@ async def handle_codepush_update_check(request: Request) -> Response:
                 "is_disabled": False,
                 "target_binary_range": "1.0.0",
                 "label": "v5",
-                "package_hash": "64c5e72612ed6c19d51f2c8341c016e5942028a3e1e04d24bbfef224f05ee2cc",
+                "package_hash": "64c5e72612ed6c19d51f2c8341c016e5942028a3e1e04d24bbfef224f05ee2cc",  # pragma: allowlist secret
                 "package_size": 8342889,
                 "should_run_binary_version": False,
                 "update_app_version": False,

@@ -188,7 +188,7 @@ async def _handle_app_config(request: Request) -> Response:
     if code == "app_lang_enum":
         data = [
             {
-                "resId": "622ee4977404d4518fd575fb",
+                "resId": "622ee4977404d4518fd575fb",  # pragma: allowlist secret
                 "code": "app_lang_enum",
                 "name": "APP 语言枚举列表",
                 "description": "",
@@ -244,7 +244,7 @@ async def _handle_app_config(request: Request) -> Response:
     elif code == "base_station_guide":
         data = [
             {
-                "resId": "61cd0abe312d7cfc89acf608",
+                "resId": "61cd0abe312d7cfc89acf608",  # pragma: allowlist secret
                 "code": "base_station_guide",
                 "name": "Introduction to AES base stations",  # AES基站介绍
                 "description": "",
@@ -256,7 +256,7 @@ async def _handle_app_config(request: Request) -> Response:
     elif code == "time_zone_list":
         data = [
             {
-                "resId": "61a055be6533d2e6d9d8f0f1",
+                "resId": "61a055be6533d2e6d9d8f0f1",  # pragma: allowlist secret
                 "code": "time_zone_list",
                 "description": "",
                 "type": "json",
