@@ -26,7 +26,9 @@ This guide covers methods to bypass certificate pinning in the Ecovacs Home Andr
 
 ## 🚀 Automated Script
 
-Bumper includes a Bash script at `scripts/create-unpinned-app.sh` that automates the XAPK patching process inside Docker.
+Bumper includes a Bash script at
+[`scripts/create-unpinned-app.sh`](https://github.com/MVladislav/bumper/blob/main/scripts/create-unpined-app.sh)
+that automates the XAPK patching process inside Docker.
 
 ### How the Script Works
 

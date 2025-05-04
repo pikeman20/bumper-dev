@@ -27,7 +27,7 @@ NETWORK_MODE=overlay        # by default "bridge"
 BUMPER_ANNOUNCE_IP=192.168.0.100  # your server's public/local IP
 ```
 
-Full environment variable reference: [Wiki Environment Variables](https://MVladislav.github.io/bumper/infos/Env_Var/)
+Full environment variable reference: [Environment Variables](../configuration/environment.md)
 
 ---
 
@@ -110,4 +110,4 @@ $docker run -it \
 
 ---
 
-_For advanced Docker parameters (resource limits, secrets, configs), see the [Wiki Environment Variables](https://MVladislav.github.io/bumper/infos/Env_Var/)._
+_For advanced Docker parameters (resource limits, secrets, configs), see the [Environment Variables](../configuration/environment.md)._

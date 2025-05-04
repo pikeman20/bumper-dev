@@ -95,4 +95,4 @@ _Example Models: Deebot 600, 900, 901, Ozmo 950_
 
 ---
 
-_For further details, see the source modules in `bumper/web/server.py`, `bumper/xmpp/xmpp.py`, and `bumper/mqtt/server.py`._
+_For further details, see the source modules in [`bumper/web/server.py`](https://github.com/MVladislav/bumper/blob/main/bumper/web/server.py), [`bumper/xmpp/xmpp.py`](https://github.com/MVladislav/bumper/blob/main/bumper/xmpp/xmpp.py), and [`bumper/mqtt/server.py`](https://github.com/MVladislav/bumper/blob/main/bumper/mqtt/server.py)._

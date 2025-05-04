@@ -1,5 +1,6 @@
 ---
 site_name: Bumper Docs
+site_url: https://mvladislav.github.io/bumper
 repo_url: https://github.com/MVladislav/bumper
 edit_uri: edit/main/docs/
 
@@ -27,6 +28,8 @@ theme:
   name: material
   palette:
     scheme: slate
+    primary: black
+    accent: deep purple
   # features:
   #   - content.action.edit
   logo: images/favicon.ico
@@ -36,3 +39,8 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/MVladislav/bumper
+
+plugins:
+  - privacy
+  - search
+  # - social
