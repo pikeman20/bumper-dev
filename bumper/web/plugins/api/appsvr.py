@@ -170,6 +170,8 @@ async def _handle_app_do(request: Request) -> Response:
                 },
             )
 
+        # if todo =="DecodeQrCode": # TODO: implement (add bot per qrcode)
+
         _LOGGER.warning(f"todo is not know :: {todo}")
         return response_error_v5()
     except Exception:
@@ -313,6 +315,8 @@ async def _handle_app_config(request: Request) -> Response:
                 "content": {"lang": ["en"]},
             },
         ]
+
+    # elif code == "globalapp_netcfg_h5_url_list":  # TODO: implement (add bot per qrcode)
 
     if data is None:
         _LOGGER.error(f"code is not know :: {code}")
