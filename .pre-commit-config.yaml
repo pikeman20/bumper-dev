@@ -75,13 +75,13 @@ repos:
           - --exclude-files=bumper/web/plugins/api/pim/productIotMap.json
           - --exclude-files=tests/*
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.25.1
+    rev: v8.27.0
     hooks:
       - id: gitleaks
 
   # YAML Linting
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.37.0
+    rev: v1.37.1
     hooks:
       - id: yamllint
 
@@ -94,7 +94,7 @@ repos:
 
   # Python-specific hooks ######################################################
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.8
+    rev: v0.11.12
     hooks:
       - id: ruff
         args:
@@ -104,7 +104,7 @@ repos:
           - --exit-non-zero-on-fix
       - id: ruff-format
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.1
+    rev: v3.20.0
     hooks:
       - id: pyupgrade
         args: [--py313-plus]
