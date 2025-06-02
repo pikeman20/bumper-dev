@@ -29,4 +29,4 @@ class DimPlugin(WebserverPlugin):
 
 async def _handle_dev_manager(request: Request) -> Response:
     """Dev Manager."""
-    return await handle_commands(request, version=MQTTCommandModel.VERSION_OLD)  # , extended_check=True
+    return await handle_commands(request, version=MQTTCommandModel.VERSION_OLD, extended_check=True)
