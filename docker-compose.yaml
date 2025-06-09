@@ -56,7 +56,7 @@ services:
       dockerfile: ./Dockerfile
       args:
         # https://hub.docker.com/_/python/tags
-        PY_VERSION: 3.13.3-alpine3.21
+        PY_VERSION: 3.13.4-alpine3.21
         # https://github.com/astral-sh/uv/pkgs/container/uv
         UV_VERSION: python3.13-alpine
     image: ghcr.io/mvladislav/bumper:${VERSION_BUMPER:-develop}
