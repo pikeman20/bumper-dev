@@ -29,22 +29,22 @@ authors = [
 ]
 
 dependencies = [
-  "aiodns==3.4.0",                                      # https://pypi.org/project/aiodns
-  "aiofiles==24.1.0",                                   # https://pypi.org/project/aiofiles
-  "aiohttp-jinja2==1.6",                                # https://pypi.org/project/aiohttp-jinja2
-  "aiohttp==3.12.11",                                   # https://pypi.org/project/aiohttp
-  "aiomqtt==2.4.0",                                     # https://pypi.org/project/aiomqtt
-  "amqtt@git+https://github.com/MVladislav/amqtt@main", # => "amqtt@git+https://github.com/Yakifo/amqtt@main",
-  "cachetools==6.0.0",                                  # https://pypi.org/project/cachetools
-  "coloredlogs==15.0.1",                                # https://pypi.org/project/coloredlogs
-  "cryptography==45.0.3",                               # https://pypi.org/project/cryptography
-  "defusedxml==0.8.0rc2",                               # https://pypi.org/project/defusedxml
-  "Jinja2==3.1.6",                                      # https://pypi.org/project/Jinja2
-  "passlib==1.7.4",                                     # https://pypi.org/project/passlib
-  "PyJWT==2.10.1",                                      # https://pypi.org/project/PyJWT
-  "tinydb==4.8.2",                                      # https://pypi.org/project/tinydb
-  "validators==0.35.0",                                 # https://pypi.org/project/validators
-  "websockets==15.0.1",                                 # https://pypi.org/project/websockets
+  "aiodns==3.4.0",        # https://pypi.org/project/aiodns
+  "aiofiles==24.1.0",     # https://pypi.org/project/aiofiles
+  "aiohttp-jinja2==1.6",  # https://pypi.org/project/aiohttp-jinja2
+  "aiohttp==3.12.11",     # https://pypi.org/project/aiohttp
+  "aiomqtt==2.4.0",       # https://pypi.org/project/aiomqtt
+  "amqtt==0.11.0",        # https://pypi.org/project/amqtt
+  "cachetools==6.0.0",    # https://pypi.org/project/cachetools
+  "coloredlogs==15.0.1",  # https://pypi.org/project/coloredlogs
+  "cryptography==45.0.3", # https://pypi.org/project/cryptography
+  "defusedxml==0.8.0rc2", # https://pypi.org/project/defusedxml
+  "Jinja2==3.1.6",        # https://pypi.org/project/Jinja2
+  "passlib==1.7.4",       # https://pypi.org/project/passlib
+  "PyJWT==2.10.1",        # https://pypi.org/project/PyJWT
+  "tinydb==4.8.2",        # https://pypi.org/project/tinydb
+  "validators==0.35.0",   # https://pypi.org/project/validators
+  "websockets==15.0.1",   # https://pypi.org/project/websockets
 ]
 
 [dependency-groups]
