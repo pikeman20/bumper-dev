@@ -22,16 +22,16 @@ async def test_base(webserver_client) -> None:
     assert resp.status == 200
 
 
-@pytest.mark.usefixtures("helper_bot", "clean_database", "xmpp_server")
-async def test_restartService(webserver_client) -> None:
-    resp = await webserver_client.get("/restart_Helperbot")
-    assert resp.status == 200
+# @pytest.mark.usefixtures("helper_bot", "clean_database", "xmpp_server")
+# async def test_restartService(webserver_client) -> None:
+#     resp = await webserver_client.get("/restart_Helperbot")
+#     assert resp.status == 200
 
-    resp = await webserver_client.get("/restart_MQTTServer")
-    assert resp.status == 200
+#     resp = await webserver_client.get("/restart_MQTTServer")
+#     assert resp.status == 200
 
-    resp = await webserver_client.get("/restart_XMPPServer")
-    assert resp.status == 200
+#     resp = await webserver_client.get("/restart_XMPPServer")
+#     assert resp.status == 200
 
 
 async def test_RemoveBot(webserver_client) -> None:

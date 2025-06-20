@@ -127,9 +127,13 @@ async def _handle_app_do(request: Request) -> Response:
             )
 
         if todo == "RobotControl":
-            data_ctl: dict[str, dict[str, Any]] | None = post_body.get("data", {}).get("ctl", None)
-            if data_ctl is None:
+            data_ctl: Any | None = post_body.get("data", {})
+            if not isinstance(data_ctl, dict):
                 return response_error_v5()
+            data_ctl = data_ctl.get("ctl", None)
+            if not isinstance(data_ctl, dict):
+                return response_error_v5()
+
             cmd = next(iter(data_ctl.keys()))
             cmd_json: dict[str, Any] = data_ctl.get(cmd, {})
             cmd_request = MQTTCommandModel(cmd_json, version=MQTTCommandModel.VERSION_P2P)
@@ -137,7 +141,9 @@ async def _handle_app_do(request: Request) -> Response:
                 return await bumper_isc.mqtt_helperbot.send_command(cmd_request)
 
         if todo == "GetAppVideoUrl":
-            keys = post_body.get("keys", [])
+            keys: Any = post_body.get("keys", [])
+            if not isinstance(keys, list):
+                return response_error_v5()
             data = {}
             for key in keys:
                 if key == "t9_promotional_video":
@@ -170,7 +176,9 @@ async def _handle_app_do(request: Request) -> Response:
                 },
             )
 
-        _LOGGER.warning(f"todo is not know :: {todo}")
+        # if todo =="DecodeQrCode": # TODO: implement (add bot per qrcode)
+
+        _LOGGER.warning(f"todo is not know :: {todo!s}")
         return response_error_v5()
     except Exception:
         _LOGGER.exception(utils.default_exception_str_builder(info="during handling request"))
@@ -313,6 +321,8 @@ async def _handle_app_config(request: Request) -> Response:
                 "content": {"lang": ["en"]},
             },
         ]
+
+    # elif code == "globalapp_netcfg_h5_url_list":  # TODO: implement (add bot per qrcode)
 
     if data is None:
         _LOGGER.error(f"code is not know :: {code}")

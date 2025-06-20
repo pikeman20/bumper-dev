@@ -102,17 +102,17 @@ async def _handle_config_batch(request: Request) -> Response:
             file_content = await file.read()
             product_config_batch: list[dict[str, Any]] = json.loads(file_content)
 
+        # Build a pid -> config dict for fast lookup
+        pid_to_config = {item.get("pid", ""): item for item in product_config_batch}
+
         json_body = json.loads(await request.text())
         data = []
         for pid in json_body.get("pids", []):
-            for product_config in product_config_batch:
-                if pid == product_config.get("pid", ""):
-                    data.append(product_config)
-                    continue
-
-            # not found in product_config_batch
-            # some devices don't have any product configuration
-            data.append({"cfg": {}, "pid": pid})
+            if config := pid_to_config.get(pid):
+                data.append(config)
+            else:
+                # not found in product_config_batch
+                data.append({"cfg": {}, "pid": pid})
 
         return response_success_v3(data=data, code=200)
     except Exception:

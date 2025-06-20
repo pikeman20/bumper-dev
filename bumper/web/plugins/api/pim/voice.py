@@ -8,6 +8,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 from aiohttp.web_routedef import AbstractRouteDef
 
+from bumper.utils import utils
 from bumper.utils.settings import config as bumper_isc
 from bumper.web.plugins import WebserverPlugin
 from bumper.web.response_utils import response_success_v3
@@ -34,6 +35,11 @@ class VoicePlugin(WebserverPlugin):
                 "*",
                 "/v2/voice/getLanuages",
                 _handle_get_lanuages,
+            ),
+            web.route(
+                "*",
+                "/voice/download/{id}",
+                _handle_download,
             ),
         ]
 
@@ -96,3 +102,10 @@ def _get_voice_list() -> list[dict[str, str | list[str]]]:
         {"voiceLang": "it", "languageName": "Italiano", "support": ["yiko"]},
         {"voiceLang": "id", "languageName": "Indonesia", "support": ["yiko"]},
     ]
+
+
+async def _handle_download(_: Request) -> Response:
+    """Download."""
+    # TODO: check what's needed to be implemented
+    utils.default_log_warn_not_impl("_handle_download")
+    return response_success_v3(data_key="voices", data=None)

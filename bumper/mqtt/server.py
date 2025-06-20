@@ -94,8 +94,7 @@ class MQTTServer:
     @property
     def sessions(self) -> list[Session]:
         """Get sessions."""
-        # pylint: disable-next=protected-access
-        return [session for (session, _) in self._broker._sessions.values()]  # noqa: SLF001
+        return [session for (session, _) in self._broker.sessions.values()]
 
     async def start(self) -> None:
         """Start MQTT server."""

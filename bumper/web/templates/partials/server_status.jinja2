@@ -3,7 +3,7 @@
     <div class="card-header bg-dark text-white">
         <div class="d-flex justify-content-between align-items-center">
             {% for entry in entries %}
-                {% set is_running = entry.status == 'running' or entry.status == 'started' or entry.status == True %}
+                {% set is_running = entry.status if entry.status == 'running' or entry.status == 'started' or entry.status == True %}
                 {% set is_not_running = 'stopped' if entry.status == False else entry.status %}
                 <div class="text-start me-3">
                     <div class="card-title mb-1 card-title-with-badge">

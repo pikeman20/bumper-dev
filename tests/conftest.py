@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import os
 import ssl
 
@@ -44,8 +45,6 @@ def log_helper(level: str):
 @pytest.fixture(scope="session", autouse=True)
 def configure_logging():
     """Configure logging for the test session."""
-    import logging
-
     logging.basicConfig(level=logging.DEBUG)
     logger = logging.getLogger()
     logger.handlers.clear()
