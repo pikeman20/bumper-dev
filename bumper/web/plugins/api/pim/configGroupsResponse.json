@@ -4177,6 +4177,53 @@
           "seriesId": "5c19a743e916ba00019a4e32"
         },
         {
+          "groupId": "5e1418b2a1b2c30001c00ab3",
+          "category": "",
+          "groupName": "DEEBOT OZMO T5 Hero",
+          "sort": 45,
+          "isPopular": false,
+          "belongApp": ["ecoglobal"],
+          "smartType": "MQ_AP",
+          "failCount": 0,
+          "checkTips": 0,
+          "materialNo": "",
+          "mid": "eazo2f",
+          "ota": false,
+          "supportVer": {
+            "IOS": "1.3.0",
+            "Android": "1.3.0"
+          },
+          "service": {
+            "jmq": "jmq-ngiot-us.area.ww.ecouser.net"
+          },
+          "products": [],
+          "smartTypes": ["MQ_AP"],
+          "icon": "https://portal-ww.ecouser.net/api/pim/file/get/5e1d1e2af024120001a329b6",
+          "qrpStep": {},
+          "steps": [
+            {
+              "guideImageType": "",
+              "guideImageId": "",
+              "title": "",
+              "guideText": "",
+              "retryText": "",
+              "confirmText": "",
+              "btnText": ""
+            },
+            {
+              "guideImageType": "",
+              "guideImageId": "",
+              "title": "",
+              "guideText": "Briefly press the RESET button for 1 second and then release. You will hear that DEEBOT is ready for network setup.",
+              "retryText": "",
+              "confirmText": "I've heard the sound",
+              "btnText": ""
+            }
+          ],
+          "cusSteps": {},
+          "seriesId": "5c19a743e916ba00019a4e32"
+        },
+        {
           "groupId": "5bc8187422d57f00018c13ba",
           "category": "",
           "groupName": "DEEBOT OZMO 960 Series",
