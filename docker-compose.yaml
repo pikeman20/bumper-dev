@@ -50,6 +50,15 @@ services:
   ##############################################################################
   ##############################################################################
   ##############################################################################
+  
+  # Uncomment the following service to generate certificates on container start.
+  # certs_gen:
+  #   build: .
+  #   volumes:
+  #     - ./scripts:/scripts
+  #     - ./certs_gen:/certs
+  #   entrypoint: ["/scripts/create-cert.sh"]
+
   bumper:
     build:
       context: .
@@ -59,7 +68,6 @@ services:
         PY_VERSION: 3.13.5-alpine3.21
         # https://github.com/astral-sh/uv/pkgs/container/uv
         UV_VERSION: python3.13-alpine
-    image: ghcr.io/mvladislav/bumper:${VERSION_BUMPER:-latest}
     <<: *basic
     deploy:
       <<: *basic-deploy

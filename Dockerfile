@@ -24,6 +24,7 @@ LABEL org.opencontainers.image.source=https://github.com/MVladislav/bumper
 LABEL org.opencontainers.image.description="bumper"
 LABEL org.opencontainers.image.licenses=GPLv3
 
+RUN apk add --no-cache bash git openssl
 RUN addgroup -S -g 1000 bumper && adduser -S -u 1000 -G bumper bumper
 COPY --from=builder --chown=bumper:bumper /bumper/.venv /bumper/.venv
 
