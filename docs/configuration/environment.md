@@ -22,8 +22,8 @@ Variables not listed here are hardcoded or not configurable via environment.
 | `DB_FILE`      | `${BUMPER_DATA}/bumper.db` | Path to SQLite database file. Overrides default.      |
 | `BUMPER_CERTS` | `$PWD/certs`               | Directory for TLS certificate files.                  |
 | `BUMPER_CA`    | `ca.crt`                   | Filename of CA certificate inside `BUMPER_CERTS`.     |
-| `BUMPER_CERT`  | `bumper.crt`               | Filename of server certificate inside `BUMPER_CERTS`. |
-| `BUMPER_KEY`   | `bumper.key`               | Filename of server private key inside `BUMPER_CERTS`. |
+| `BUMPER_CERT`  | `bumper.crt`                | Filename of server certificate inside `BUMPER_CERTS`. |
+| `BUMPER_KEY`   | `bumper.key`                | Filename of server private key inside `BUMPER_CERTS`. |
 
 ---
 
@@ -79,12 +79,12 @@ These additional environment variables are used in the `docker-compose.yml` and 
 | `NETWORK_MODE`                  | `bridge`                 | Docker network driver (`bridge` or `overlay`).                              |
 | `RESOURCES_LIMITS_CPUS`         | `0.25`                   | CPU limit per container.                                                    |
 | `RESOURCES_LIMITS_MEMORY`       | `250m`                   | Memory limit per container.                                                 |
-| `RESOURCES_RESERVATIONS_CPUS`   | `0.001`                  | CPU reservation per container.                                              |
-| `RESOURCES_RESERVATIONS_MEMORY` | `32m`                    | Memory reservation per container.                                           |
-| `VERSION_BUMPER`                | `develop`                | Bumper image tag to deploy (branch, release, or tag).                       |
-| `VERSION_NGNIX`                 | `1.27.4-alpine3.21-slim` | NGINX image tag for the reverse proxy.                                      |
-| `TZ`                            | `Europe/Berlin`          | Timezone inside containers (binds to host timezone).                        |
-| `BUMPER_ANNOUNCE_IP`            | _required_               | IP address advertised to robots. Falls back to auto-detection if unset.     |
-| `BUMPER_LISTEN`                 | `0.0.0.0`                | Bind interface inside the container for Bumper listeners.                   |
-| `BUMPER_DEBUG_LEVEL`            | `INFO`                   | Logging level inside containers.                                            |
-| `BUMPER_DEBUG_VERBOSE`          | `1`                      | Verbose log output level inside containers.                                 |
+| `RESOURCES_RESERVATIONS_CPUS`   | `0.001`                   | CPU reservation per container.                                              |
+| `RESOURCES_RESERVATIONS_MEMORY` | `32m`                     | Memory reservation per container.                                           |
+| `VERSION_BUMPER`                | `develop`                 | Bumper image tag to deploy (branch, release, or tag).                       |
+| `VERSION_NGNIX`                 | `1.30.7-alpine3.24-slim` | NGINX stable image tag for the reverse proxy.                               |
+| `TZ`                            | `Europe/Berlin`           | Timezone inside containers (binds to host timezone).                        |
+| `BUMPER_ANNOUNCE_IP`            | _required_                | IP address advertised to robots. Falls back to auto-detection if unset.     |
+| `BUMPER_LISTEN`                 | `0.0.0.0`                 | Bind interface inside the container for Bumper listeners.                   |
+| `BUMPER_DEBUG_LEVEL`            | `INFO`                    | Logging level inside containers.                                            |
+| `BUMPER_DEBUG_VERBOSE`          | `1`                       | Verbose log output level inside containers.                                 |
